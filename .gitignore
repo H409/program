@@ -1,0 +1,10 @@
+project/.vs/
+*.sdf
+*.opensdf
+project/Release/
+project/shader/Release/
+project/shader/Debug/
+project/ipch/
+project/Debug/
+project/Develop/
+*.user

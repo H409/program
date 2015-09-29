@@ -1,0 +1,251 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Develop|Win32">
+      <Configuration>Develop</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="sources\application\actor\actor.cpp" />
+    <ClCompile Include="sources\application\application.cpp" />
+    <ClCompile Include="sources\application\object\object.cpp" />
+    <ClCompile Include="sources\application\scene\scene.cpp" />
+    <ClCompile Include="sources\application_system\application_system.cpp" />
+    <ClCompile Include="sources\common\math\math.cpp" />
+    <ClCompile Include="sources\common\shape\line.cpp" />
+    <ClCompile Include="sources\common\shape\shape.cpp" />
+    <ClCompile Include="sources\common\shape\sphere.cpp" />
+    <ClCompile Include="sources\default_include\debug_tool\debug_assert.cpp" />
+    <ClCompile Include="sources\default_include\debug_tool\debug_assert_trace.cpp" />
+    <ClCompile Include="sources\default_include\debug_tool\debug_trace.cpp" />
+    <ClCompile Include="sources\default_include\stdafx\stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Develop|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="sources\default_include\type_alias\float\float2.cpp" />
+    <ClCompile Include="sources\default_include\type_alias\float\float3.cpp" />
+    <ClCompile Include="sources\default_include\type_alias\float\float4.cpp" />
+    <ClCompile Include="sources\default_include\type_alias\float\float4x4.cpp" />
+    <ClCompile Include="sources\graphic\base\depth_buffer\base_depth_buffer.cpp" />
+    <ClCompile Include="sources\graphic\base\depth_buffer\base_depth_buffer_factory.cpp" />
+    <ClCompile Include="sources\graphic\base\device_holder\base_device_holder.cpp" />
+    <ClCompile Include="sources\graphic\base\device_manager\base_device_manager.cpp" />
+    <ClCompile Include="sources\graphic\base\render\base_render.cpp" />
+    <ClCompile Include="sources\graphic\base\shader\base_shader.cpp" />
+    <ClCompile Include="sources\graphic\base\shader\base_shader_loader.cpp" />
+    <ClCompile Include="sources\graphic\base\texture\base_render_texture.cpp" />
+    <ClCompile Include="sources\graphic\base\texture\base_render_texture_factory.cpp" />
+    <ClCompile Include="sources\graphic\base\texture\base_texture.cpp" />
+    <ClCompile Include="sources\graphic\base\texture\base_texture_loader.cpp" />
+    <ClCompile Include="sources\graphic\base\window\base_window.cpp" />
+    <ClCompile Include="sources\graphic\directx9\depth_buffer\dx9_depth_buffer.cpp" />
+    <ClCompile Include="sources\graphic\directx9\depth_buffer\dx9_depth_buffer_factory.cpp" />
+    <ClCompile Include="sources\graphic\directx9\device_holder\dx9_device_holder.cpp" />
+    <ClCompile Include="sources\graphic\directx9\device_manager\dx9_device_manager.cpp" />
+    <ClCompile Include="sources\graphic\directx9\element\base_element.cpp" />
+    <ClCompile Include="sources\graphic\directx9\element\base_sprite.cpp" />
+    <ClCompile Include="sources\graphic\directx9\shader\dx9_base_shader.cpp" />
+    <ClCompile Include="sources\graphic\directx9\shader\dx9_pixel_shader.cpp" />
+    <ClCompile Include="sources\graphic\directx9\shader\dx9_shader.cpp" />
+    <ClCompile Include="sources\graphic\directx9\shader\dx9_shader_loader.cpp" />
+    <ClCompile Include="sources\graphic\directx9\shader\dx9_vertex_shader.cpp" />
+    <ClCompile Include="sources\graphic\directx9\texture\dx9_render_texture_factory.cpp" />
+    <ClCompile Include="sources\graphic\directx9\texture\dx9_texture.cpp" />
+    <ClCompile Include="sources\graphic\directx9\texture\dx9_texture_loader.cpp" />
+    <ClCompile Include="sources\graphic\graphic.cpp" />
+    <ClCompile Include="sources\graphic\windows\window\win_window.cpp" />
+    <ClCompile Include="sources\main.cpp" />
+    <ClCompile Include="sources\platform\windows\win_main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resources\resource.h" />
+    <ClInclude Include="sources\application\actor\actor.h" />
+    <ClInclude Include="sources\application\application.h" />
+    <ClInclude Include="sources\application\object\object.h" />
+    <ClInclude Include="sources\application\scene\scene.h" />
+    <ClInclude Include="sources\application_system\application_system.h" />
+    <ClInclude Include="sources\common\base\base.h" />
+    <ClInclude Include="sources\common\base\flyweight.h" />
+    <ClInclude Include="sources\common\base\non_copyable.h" />
+    <ClInclude Include="sources\common\math\math.h" />
+    <ClInclude Include="sources\common\shape\line.h" />
+    <ClInclude Include="sources\common\shape\shape.h" />
+    <ClInclude Include="sources\common\shape\sphere.h" />
+    <ClInclude Include="sources\default_include\debug_tool\debug_assert.h" />
+    <ClInclude Include="sources\default_include\debug_tool\debug_assert_trace.h" />
+    <ClInclude Include="sources\default_include\debug_tool\debug_tool.h" />
+    <ClInclude Include="sources\default_include\debug_tool\debug_trace.h" />
+    <ClInclude Include="sources\default_include\default_constant_definition\default_constant_definition.h" />
+    <ClInclude Include="sources\default_include\default_include.h" />
+    <ClInclude Include="sources\default_include\safety\safety.h" />
+    <ClInclude Include="sources\default_include\stdafx\stdafx.h" />
+    <ClInclude Include="sources\default_include\stdafx\using_library.h" />
+    <ClInclude Include="sources\default_include\type_alias\float\float2.h" />
+    <ClInclude Include="sources\default_include\type_alias\float\float3.h" />
+    <ClInclude Include="sources\default_include\type_alias\float\float4.h" />
+    <ClInclude Include="sources\default_include\type_alias\float\float4x4.h" />
+    <ClInclude Include="sources\default_include\type_alias\type_alias.h" />
+    <ClInclude Include="sources\graphic\base\depth_buffer\base_depth_buffer.h" />
+    <ClInclude Include="sources\graphic\base\depth_buffer\base_depth_buffer_factory.h" />
+    <ClInclude Include="sources\graphic\base\depth_buffer\depth_buffer_format.h" />
+    <ClInclude Include="sources\graphic\base\device_holder\base_device_holder.h" />
+    <ClInclude Include="sources\graphic\base\device_manager\base_device_manager.h" />
+    <ClInclude Include="sources\graphic\base\render\base_render.h" />
+    <ClInclude Include="sources\graphic\base\shader\base_shader.h" />
+    <ClInclude Include="sources\graphic\base\shader\base_shader_loader.h" />
+    <ClInclude Include="sources\graphic\base\texture\base_render_texture.h" />
+    <ClInclude Include="sources\graphic\base\texture\base_render_texture_factory.h" />
+    <ClInclude Include="sources\graphic\base\texture\base_texture.h" />
+    <ClInclude Include="sources\graphic\base\texture\texture_format.h" />
+    <ClInclude Include="sources\graphic\base\texture\base_texture_loader.h" />
+    <ClInclude Include="sources\graphic\base\window\base_window.h" />
+    <ClInclude Include="sources\graphic\directx9\depth_buffer\dx9_depth_buffer.h" />
+    <ClInclude Include="sources\graphic\directx9\depth_buffer\dx9_depth_buffer_factory.h" />
+    <ClInclude Include="sources\graphic\directx9\device_holder\dx9_device_holder.h" />
+    <ClInclude Include="sources\graphic\directx9\device_manager\dx9_device_manager.h" />
+    <ClInclude Include="sources\graphic\directx9\element\base_element.h" />
+    <ClInclude Include="sources\graphic\directx9\element\base_sprite.h" />
+    <ClInclude Include="sources\graphic\directx9\shader\dx9_base_shader.h" />
+    <ClInclude Include="sources\graphic\directx9\shader\dx9_pixel_shader.h" />
+    <ClInclude Include="sources\graphic\directx9\shader\dx9_shader.h" />
+    <ClInclude Include="sources\graphic\directx9\shader\dx9_shader_loader.h" />
+    <ClInclude Include="sources\graphic\directx9\shader\dx9_vertex_shader.h" />
+    <ClInclude Include="sources\graphic\directx9\texture\dx9_render_texture_factory.h" />
+    <ClInclude Include="sources\graphic\directx9\texture\dx9_texture.h" />
+    <ClInclude Include="sources\graphic\directx9\texture\dx9_texture_loader.h" />
+    <ClInclude Include="sources\graphic\graphic.h" />
+    <ClInclude Include="sources\graphic\windows\window\win_window.h" />
+    <ClInclude Include="sources\main.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resources\resource.rc" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{D065D020-0DE1-4D84-929D-D472BD0380F4}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>DirectX_Test</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Develop|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Develop|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <TargetName>$(ProjectName)</TargetName>
+    <IncludePath>$(DXSDK_DIR)Include;$(IncludePath);$(SolutionDir)sources;$(SolutionDir)sources\interface;$(SolutionDir)sources\interface\character;$(SolutionDir)sources\interface\graphic;$(SolutionDir)sources\interface\input;$(SolutionDir)sources\interface\sound;$(SolutionDir)sources\common;$(SolutionDir)sources\application;$(SolutionDir)sources\application;$(SolutionDir)sources\interface;$(SolutionDir)sources\interface\character</IncludePath>
+    <IntDir>$(Configuration)\</IntDir>
+    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
+    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Develop|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <TargetName>$(ProjectName)</TargetName>
+    <IncludePath>$(DXSDK_DIR)Include;$(IncludePath);$(SolutionDir)sources;$(SolutionDir)sources\interface;$(SolutionDir)sources\interface\character;$(SolutionDir)sources\interface\graphic;$(SolutionDir)sources\interface\input;$(SolutionDir)sources\interface\sound;$(SolutionDir)sources\common;$(SolutionDir)sources\application;$(SolutionDir)sources\application;$(SolutionDir)sources\interface;$(SolutionDir)sources\interface\character</IncludePath>
+    <IntDir>$(Configuration)\</IntDir>
+    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)/../</OutDir>
+    <IncludePath>$(DXSDK_DIR)Include;$(IncludePath);$(SolutionDir)sources;$(SolutionDir)sources\interface;$(SolutionDir)sources\interface\character;$(SolutionDir)sources\interface\graphic;$(SolutionDir)sources\interface\input;$(SolutionDir)sources\interface\sound;$(SolutionDir)sources\common;$(SolutionDir)sources\application;$(SolutionDir)sources\basic;</IncludePath>
+    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level2</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeaderFile>$(SolutionDir)sources/default_include/stdafx/stdafx.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>$(SolutionDir)sources\default_include\stdafx\stdafx.h;$(SolutionDir)sources\default_include\default_include.h;</ForcedIncludeFiles>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Develop|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level2</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEVELOP;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeaderFile>$(SolutionDir)sources/default_include/stdafx/stdafx.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>$(SolutionDir)sources\default_include\stdafx\stdafx.h;$(SolutionDir)sources\default_include\default_include.h;</ForcedIncludeFiles>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level2</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_RELEASE;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ForcedIncludeFiles>$(SolutionDir)sources\default_include\stdafx\stdafx.h;$(SolutionDir)sources\default_include\default_include.h;</ForcedIncludeFiles>
+      <PrecompiledHeaderFile>$(SolutionDir)sources/default_include/stdafx/stdafx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
