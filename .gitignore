@@ -8,3 +8,7 @@ project/ipch/
 project/Debug/
 project/Develop/
 *.user
+*.tlog
+*.log
+*.cache
+*.lastbuildstate

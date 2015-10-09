@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AnimationLinear.cpp" />
+    <ClCompile Include="CBullet.cpp" />
+    <ClCompile Include="CCamera.cpp" />
+    <ClCompile Include="CColision.cpp" />
+    <ClCompile Include="CDebugProc.cpp" />
+    <ClCompile Include="CEnding.cpp" />
+    <ClCompile Include="CEnemy.cpp" />
+    <ClCompile Include="CExplosion.cpp" />
+    <ClCompile Include="CFade.cpp" />
+    <ClCompile Include="CGame.cpp" />
+    <ClCompile Include="CInput.cpp" />
+    <ClCompile Include="CInputKeyboard.cpp" />
+    <ClCompile Include="CLight.cpp" />
+    <ClCompile Include="Clogo.cpp" />
+    <ClCompile Include="CManager.cpp" />
+    <ClCompile Include="CMeshCylinder.cpp" />
+    <ClCompile Include="CMeshDome.cpp" />
+    <ClCompile Include="CMeshField.cpp" />
+    <ClCompile Include="CMeshWall.cpp" />
+    <ClCompile Include="CModel.cpp" />
+    <ClCompile Include="CNumber.cpp" />
+    <ClCompile Include="CPaticle.cpp" />
+    <ClCompile Include="CPause.cpp" />
+    <ClCompile Include="CPhase.cpp" />
+    <ClCompile Include="CPlayer.cpp" />
+    <ClCompile Include="CRender.cpp" />
+    <ClCompile Include="CScene.cpp" />
+    <ClCompile Include="CScene2D.cpp" />
+    <ClCompile Include="CScene3D.cpp" />
+    <ClCompile Include="CSceneBillboard.cpp" />
+    <ClCompile Include="CSceneX.cpp" />
+    <ClCompile Include="CScore.cpp" />
+    <ClCompile Include="CShader.cpp" />
+    <ClCompile Include="CShadow.cpp" />
+    <ClCompile Include="CSkinAnimetion.cpp" />
+    <ClCompile Include="CSkyBox.cpp" />
+    <ClCompile Include="CSound.cpp" />
+    <ClCompile Include="CTimer.cpp" />
+    <ClCompile Include="CTitle.cpp" />
+    <ClCompile Include="CTutorial.cpp" />
+    <ClCompile Include="Joy.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="RenderTarget.cpp" />
+    <ClCompile Include="yuka.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AnimationLinear.h" />
+    <ClInclude Include="CBullet.h" />
+    <ClInclude Include="CCamera.h" />
+    <ClInclude Include="CColision.h" />
+    <ClInclude Include="CDebugProc.h" />
+    <ClInclude Include="CEnding.h" />
+    <ClInclude Include="CEnemy.h" />
+    <ClInclude Include="CExplosion.h" />
+    <ClInclude Include="CFade.h" />
+    <ClInclude Include="CGame.h" />
+    <ClInclude Include="CInput.h" />
+    <ClInclude Include="CInputKeyboard.h" />
+    <ClInclude Include="CLight.h" />
+    <ClInclude Include="Clogo.h" />
+    <ClInclude Include="CManager.h" />
+    <ClInclude Include="CMeshCylinder.h" />
+    <ClInclude Include="CMeshDome.h" />
+    <ClInclude Include="CMeshField.h" />
+    <ClInclude Include="CMeshWall.h" />
+    <ClInclude Include="CModel.h" />
+    <ClInclude Include="CNumber.h" />
+    <ClInclude Include="CPaticle.h" />
+    <ClInclude Include="CPause.h" />
+    <ClInclude Include="CPhase.h" />
+    <ClInclude Include="CPlayer.h" />
+    <ClInclude Include="CPlayerLife.h" />
+    <ClInclude Include="CRender.h" />
+    <ClInclude Include="CScene.h" />
+    <ClInclude Include="CScene2D.h" />
+    <ClInclude Include="CScene3D.h" />
+    <ClInclude Include="CSceneBillboard.h" />
+    <ClInclude Include="CSceneX.h" />
+    <ClInclude Include="CScore.h" />
+    <ClInclude Include="CShader.h" />
+    <ClInclude Include="CShdow.h" />
+    <ClInclude Include="CSkinAnimetion.h" />
+    <ClInclude Include="CSkyBox.h" />
+    <ClInclude Include="CSound.h" />
+    <ClInclude Include="CTimer.h" />
+    <ClInclude Include="CTitle.h" />
+    <ClInclude Include="CTutorial.h" />
+    <ClInclude Include="debug.h" />
+    <ClInclude Include="Joy.h" />
+    <ClInclude Include="main.h" />
+    <ClInclude Include="RenderTarget.h" />
+    <ClInclude Include="utill_lib.h" />
+    <ClInclude Include="yuka.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{2C321808-6563-4C03-AF36-00DE1DBFB037}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>kadaiM</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
