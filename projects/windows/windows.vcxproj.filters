@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="sources">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>h;hpp;cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="sources\window">
+      <UniqueIdentifier>{90e0095b-4f4d-460b-a8f2-268cdb0a5a41}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="sources\win.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\window\win_window.h">
+      <Filter>sources\window</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="sources\window\win_window.cpp">
+      <Filter>sources\window</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -12,3 +12,9 @@ project/Develop/
 *.log
 *.cache
 *.lastbuildstate
+*.suo
+*.pdb
+*.obj
+*.idb
+*.lib
+*.enc

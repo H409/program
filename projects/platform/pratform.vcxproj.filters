@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="sources">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd;c;cpp;</Extensions>
+    </Filter>
+    <Filter Include="sources\windows">
+      <UniqueIdentifier>{97a60c57-beb9-42c7-b08d-4cad413c47ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\system">
+      <UniqueIdentifier>{422ba392-f1d0-4772-b0ef-5a1a3ed8761c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\object">
+      <UniqueIdentifier>{37139ce6-4ea0-421f-834f-97ccdc3d6d23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\mesh">
+      <UniqueIdentifier>{982b7f76-a875-4056-8d21-8329f19e33a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\observer">
+      <UniqueIdentifier>{7a4fef94-7c5b-4889-9832-d14d5108ffcd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="sources\windows\win_main.cpp">
+      <Filter>sources\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\system\win_system.cpp">
+      <Filter>sources\system</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\main.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\object\object.cpp">
+      <Filter>sources\object</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\mesh\mesh.cpp">
+      <Filter>sources\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\mesh\sprite.cpp">
+      <Filter>sources\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\mesh\sprite_3d.cpp">
+      <Filter>sources\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\observer\observer.cpp">
+      <Filter>sources\observer</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\observer\observer_2d.cpp">
+      <Filter>sources\observer</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\observer\observer_3d.cpp">
+      <Filter>sources\observer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="sources\main.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\system\win_system.h">
+      <Filter>sources\system</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\object\object.h">
+      <Filter>sources\object</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\mesh\mesh.h">
+      <Filter>sources\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\mesh\sprite.h">
+      <Filter>sources\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\mesh\sprite_3d.h">
+      <Filter>sources\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\observer\observer.h">
+      <Filter>sources\observer</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\observer\observer_2d.h">
+      <Filter>sources\observer</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\observer\observer_3d.h">
+      <Filter>sources\observer</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

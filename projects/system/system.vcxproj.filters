@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="sources">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>h;hpp;cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="sources\audio">
+      <UniqueIdentifier>{47af1d1a-d0c8-49fc-b60a-52f0c1e162fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\input">
+      <UniqueIdentifier>{af54de55-c663-478c-b1df-377a21e26a0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\window">
+      <UniqueIdentifier>{a1d3c5d6-5b7b-4dd9-96d2-a186b196667e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="sources\base_system.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="sources\base_system.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

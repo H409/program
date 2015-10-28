@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="sources">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>h;hpp;cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="sources\shader">
+      <UniqueIdentifier>{405051a5-540c-4522-9c2c-d839df437ba2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\texture">
+      <UniqueIdentifier>{489623f2-c103-4c66-9eb0-d21c0db28de7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="sources\dx9_device.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\directx9.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\shader\dx9_vertex_shader.h">
+      <Filter>sources\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\shader\dx9_shader.h">
+      <Filter>sources\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\shader\dx9_pixel_shader.h">
+      <Filter>sources\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\shader\dx9_pixel_shader_loader.h">
+      <Filter>sources\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\shader\dx9_vertex_shader_loader.h">
+      <Filter>sources\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\texture\dx9_texture.h">
+      <Filter>sources\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\texture\dx9_texture_loader.h">
+      <Filter>sources\texture</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="sources\shader\dx9_vertex_shader.cpp">
+      <Filter>sources\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\shader\dx9_shader.cpp">
+      <Filter>sources\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\dx9_device.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\shader\dx9_pixel_shader.cpp">
+      <Filter>sources\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\shader\dx9_pixel_shader_loader.cpp">
+      <Filter>sources\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\shader\dx9_vertex_shader_loader.cpp">
+      <Filter>sources\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\texture\dx9_texture.cpp">
+      <Filter>sources\texture</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\texture\dx9_texture_loader.cpp">
+      <Filter>sources\texture</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="sources">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="sources\render">
+      <UniqueIdentifier>{9d224420-0fec-4150-972b-80a0a330449e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\render\mesh">
+      <UniqueIdentifier>{f7ca267b-40eb-40ff-b13f-90497d31460d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="sources\application.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\render\mesh\sprite.h">
+      <Filter>sources\render\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\render\mesh\mesh_buffer.h">
+      <Filter>sources\render\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\render\mesh\mesh_format.h">
+      <Filter>sources\render\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\render\mesh\base_mesh_creater.h">
+      <Filter>sources\render\mesh</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="sources\application.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\render\mesh\sprite.cpp">
+      <Filter>sources\render\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\render\mesh\mesh_buffer.cpp">
+      <Filter>sources\render\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\render\mesh\base_mesh_creater.cpp">
+      <Filter>sources\render\mesh</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

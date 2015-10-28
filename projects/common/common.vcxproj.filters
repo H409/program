@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="sources">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx;h;hpp;</Extensions>
+    </Filter>
+    <Filter Include="sources\safety">
+      <UniqueIdentifier>{a2cc5603-2b56-4bd8-a5e6-dfcd3a1faa75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\type_alias">
+      <UniqueIdentifier>{65fa3eae-fcd7-49f0-af5c-25ca46ec1739}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\debug_tool">
+      <UniqueIdentifier>{de7a17f0-8a8e-4778-afea-a7f6ffccbd56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\type_alias\float">
+      <UniqueIdentifier>{5eddbacc-82ae-45a7-a53a-f7e4b6baf0d3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="sources\common.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\debug_tool\debug_tool.h">
+      <Filter>sources\debug_tool</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\debug_tool\debug_trace.h">
+      <Filter>sources\debug_tool</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\debug_tool\debug_assert.h">
+      <Filter>sources\debug_tool</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\debug_tool\debug_assert_trace.h">
+      <Filter>sources\debug_tool</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\safety\safety.h">
+      <Filter>sources\safety</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\type_alias\type_alias.h">
+      <Filter>sources\type_alias</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\type_alias\float\float2.h">
+      <Filter>sources\type_alias\float</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\type_alias\float\float3.h">
+      <Filter>sources\type_alias\float</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\type_alias\float\float4.h">
+      <Filter>sources\type_alias\float</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\type_alias\float\float4x4.h">
+      <Filter>sources\type_alias\float</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="sources\debug_tool\debug_trace.cpp">
+      <Filter>sources\debug_tool</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\debug_tool\debug_assert.cpp">
+      <Filter>sources\debug_tool</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\debug_tool\debug_assert_trace.cpp">
+      <Filter>sources\debug_tool</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\type_alias\float\float2.cpp">
+      <Filter>sources\type_alias\float</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\type_alias\float\float3.cpp">
+      <Filter>sources\type_alias\float</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\type_alias\float\float4.cpp">
+      <Filter>sources\type_alias\float</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\type_alias\float\float4x4.cpp">
+      <Filter>sources\type_alias\float</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
