@@ -20,6 +20,9 @@
     <Filter Include="sources\observer">
       <UniqueIdentifier>{7a4fef94-7c5b-4889-9832-d14d5108ffcd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\scene">
+      <UniqueIdentifier>{6e80e78b-4045-47f3-8f71-7f2a58527673}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\windows\win_main.cpp">
@@ -52,6 +55,12 @@
     <ClCompile Include="sources\observer\observer_3d.cpp">
       <Filter>sources\observer</Filter>
     </ClCompile>
+    <ClCompile Include="sources\mesh\mesh_sprite_3d.cpp">
+      <Filter>sources\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\observer\follower_observer.cpp">
+      <Filter>sources\observer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sources\main.h">
@@ -79,6 +88,12 @@
       <Filter>sources\observer</Filter>
     </ClInclude>
     <ClInclude Include="sources\observer\observer_3d.h">
+      <Filter>sources\observer</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\mesh\mesh_sprite_3d.h">
+      <Filter>sources\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\observer\follower_observer.h">
       <Filter>sources\observer</Filter>
     </ClInclude>
   </ItemGroup>

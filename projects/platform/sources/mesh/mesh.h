@@ -33,6 +33,9 @@ public:
 	// get primitive type
 	const D3DPRIMITIVETYPE& GetPrimitiveType(void)const;
 
+	// get vertex count
+	const u32& GetVertexCount(void)const;
+
 	// get primitive count
 	const u32& GetPrimitiveCount(void)const;
 
@@ -47,6 +50,7 @@ protected:
 
 	u32 stride_;
 	D3DPRIMITIVETYPE primitive_type_;
+	u32 vertex_count_;
 	u32 primitive_count_;
 	LPDIRECT3DVERTEXBUFFER9 direct3dvertexbuffer9_;
 	LPDIRECT3DINDEXBUFFER9 direct3dindexbuffer9_;

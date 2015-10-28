@@ -44,6 +44,14 @@ const D3DPRIMITIVETYPE& Mesh::GetPrimitiveType(void)const
 }
 
 //=============================================================================
+// get vertex count
+//=============================================================================
+const u32 & Mesh::GetVertexCount(void) const
+{
+	return vertex_count_;
+}
+
+//=============================================================================
 // get primitive count
 //=============================================================================
 const u32& Mesh::GetPrimitiveCount(void)const

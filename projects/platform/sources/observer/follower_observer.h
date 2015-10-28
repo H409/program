@@ -1,6 +1,6 @@
 //*****************************************************************************
 //
-// observer 3D
+// follower observer
 //
 // Author		: Kenji Kabutomori
 //
@@ -10,34 +10,38 @@
 // include guard
 //*****************************************************************************
 #pragma once
-#ifndef _OBSERVER_3D_H_
-#define _OBSERVER_3D_H_
+#ifndef _FOLLOWER_OBSERVER_H_
+#define _FOLLOWER_OBSERVER_H_
 
 //*****************************************************************************
 // include
 //*****************************************************************************
-#include "observer.h"
+#include "observer_3d.h"
 
 //*****************************************************************************
 // class declaration
 //*****************************************************************************
-class Observer3D : public Observer
+class FollowerObserver : public Observer3D
 {
 public:
 	// constructor
-	Observer3D(const f32& in_radian,const f32& in_width,const f32& in_height);
+	FollowerObserver(const f32& in_radian,const f32& in_width,const f32& in_height);
 
 	// 
-	virtual ~Observer3D(void) = default;
+	virtual ~FollowerObserver(void) = default;
+
+	// 
+	void SetPosition(const float3& in_position);
+
+	// 
+	void SetVector(const float3& in_vector);
 
 protected:
 
 private:
-	float3 position_;
-	float3 look_at_;
-	float3 up_;
+
 
 };
-#endif // _OBSERVER_3D_H_
+#endif // _FOLLOWER_OBSERVER_H_
 
 //---------------------------------- EOF --------------------------------------

@@ -120,9 +120,6 @@ WinWindow::WinWindow(const std::string& in_caption_name,const std::string& in_cl
 
 		condition_variable_.notify_one();
 	});
-	//std::thread thread_(thread);
-
-	//thread_id_ = thread.get_id();
 
 	thread.detach();
 
@@ -181,7 +178,7 @@ void WinWindow::Update(void)
 		}
 
 		// sleep
-		std::this_thread::sleep_until(start_time + std::chrono::microseconds(1000 / 60));
+		std::this_thread::sleep_until(start_time + std::chrono::milliseconds(1000 / 60));
 	}
 }
 

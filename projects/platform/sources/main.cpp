@@ -25,6 +25,7 @@
 #include "observer/observer_3d.h"
 #include "mesh/sprite_3d.h"
 #include "object/object.h"
+#include "mesh/mesh_sprite_3d.h"
 
 //=============================================================================
 // エントリーポイント
@@ -52,7 +53,7 @@ int main(int argc,char* argv)
 
 	directx9->CreateVertexDeclaration(vertex_elements,&vertex_declaration);
 
-	auto sprite = std::make_shared<mesh::Sprite3D>(float2(1.0f,1.0f));
+	auto sprite = std::make_shared<mesh::MeshSprite3D>(10,10);
 
 	auto texture = graphic_device->LoadTexture("resources/texture/test.png");
 
@@ -103,8 +104,9 @@ int main(int argc,char* argv)
 
 		directx9->SetVertexDeclaration(vertex_declaration);
 		directx9->SetStreamSource(0,sprite->GetBuffer(),0,sprite->GetStride());
-
-		directx9->DrawPrimitive(sprite->GetPrimitiveType(),0,sprite->GetPrimitiveCount());
+		directx9->SetIndices(sprite->GetIndexBuffer());
+		directx9->DrawIndexedPrimitive(sprite->GetPrimitiveType(),0,0,sprite->GetVertexCount(),0,sprite->GetPrimitiveCount());
+		//directx9->DrawPrimitive(sprite->GetPrimitiveType(),0,sprite->GetPrimitiveCount());
 
 		graphic_device->EndRendering();
 

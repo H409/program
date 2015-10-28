@@ -17,9 +17,11 @@
   <ItemGroup>
     <ClCompile Include="sources\main.cpp" />
     <ClCompile Include="sources\mesh\mesh.cpp" />
+    <ClCompile Include="sources\mesh\mesh_sprite_3d.cpp" />
     <ClCompile Include="sources\mesh\sprite.cpp" />
     <ClCompile Include="sources\mesh\sprite_3d.cpp" />
     <ClCompile Include="sources\object\object.cpp" />
+    <ClCompile Include="sources\observer\follower_observer.cpp" />
     <ClCompile Include="sources\observer\observer.cpp" />
     <ClCompile Include="sources\observer\observer_2d.cpp" />
     <ClCompile Include="sources\observer\observer_3d.cpp" />
@@ -29,9 +31,11 @@
   <ItemGroup>
     <ClInclude Include="sources\main.h" />
     <ClInclude Include="sources\mesh\mesh.h" />
+    <ClInclude Include="sources\mesh\mesh_sprite_3d.h" />
     <ClInclude Include="sources\mesh\sprite.h" />
     <ClInclude Include="sources\mesh\sprite_3d.h" />
     <ClInclude Include="sources\object\object.h" />
+    <ClInclude Include="sources\observer\follower_observer.h" />
     <ClInclude Include="sources\observer\observer.h" />
     <ClInclude Include="sources\observer\observer_2d.h" />
     <ClInclude Include="sources\observer\observer_3d.h" />
@@ -49,20 +53,20 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Develop|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
