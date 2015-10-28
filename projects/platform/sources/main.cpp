@@ -108,7 +108,7 @@ int main(int argc,char* argv)
 
 		graphic_device->EndRendering();
 
-		std::this_thread::sleep_until(start_time + std::chrono::microseconds(1000 / 60));
+		std::this_thread::sleep_until(start_time + std::chrono::milliseconds(1000 / 60));
 	}
 
 	SafeRelease(vertex_declaration);

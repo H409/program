@@ -18,3 +18,5 @@ project/Develop/
 *.idb
 *.lib
 *.enc
+*.ilk
+Debug/
