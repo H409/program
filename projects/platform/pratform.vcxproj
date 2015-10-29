@@ -15,6 +15,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="sources\action\action.cpp" />
+    <ClCompile Include="sources\action\move_by.cpp" />
+    <ClCompile Include="sources\action\move_to.cpp" />
+    <ClCompile Include="sources\action\sequence.cpp" />
     <ClCompile Include="sources\main.cpp" />
     <ClCompile Include="sources\mesh\mesh.cpp" />
     <ClCompile Include="sources\mesh\mesh_sprite_3d.cpp" />
@@ -29,6 +33,10 @@
     <ClCompile Include="sources\windows\win_main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="sources\action\action.h" />
+    <ClInclude Include="sources\action\move_by.h" />
+    <ClInclude Include="sources\action\move_to.h" />
+    <ClInclude Include="sources\action\sequence.h" />
     <ClInclude Include="sources\main.h" />
     <ClInclude Include="sources\mesh\mesh.h" />
     <ClInclude Include="sources\mesh\mesh_sprite_3d.h" />

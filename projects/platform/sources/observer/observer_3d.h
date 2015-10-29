@@ -31,11 +31,11 @@ public:
 	virtual ~Observer3D(void) = default;
 
 protected:
-
-private:
-	float3 position_;
+	float3 eye_;
 	float3 look_at_;
 	float3 up_;
+
+private:
 
 };
 #endif // _OBSERVER_3D_H_

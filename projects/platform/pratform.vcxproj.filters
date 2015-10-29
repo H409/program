@@ -23,6 +23,9 @@
     <Filter Include="sources\scene">
       <UniqueIdentifier>{6e80e78b-4045-47f3-8f71-7f2a58527673}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\action">
+      <UniqueIdentifier>{4cdd7809-ce2f-48b9-842d-d92f77819595}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\windows\win_main.cpp">
@@ -61,6 +64,18 @@
     <ClCompile Include="sources\observer\follower_observer.cpp">
       <Filter>sources\observer</Filter>
     </ClCompile>
+    <ClCompile Include="sources\action\action.cpp">
+      <Filter>sources\action</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\action\move_to.cpp">
+      <Filter>sources\action</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\action\sequence.cpp">
+      <Filter>sources\action</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\action\move_by.cpp">
+      <Filter>sources\action</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sources\main.h">
@@ -95,6 +110,18 @@
     </ClInclude>
     <ClInclude Include="sources\observer\follower_observer.h">
       <Filter>sources\observer</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\action\action.h">
+      <Filter>sources\action</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\action\move_to.h">
+      <Filter>sources\action</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\action\sequence.h">
+      <Filter>sources\action</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\action\move_by.h">
+      <Filter>sources\action</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

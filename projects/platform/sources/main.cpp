@@ -23,9 +23,13 @@
 #include "mesh/sprite.h"
 #include "observer/observer_2d.h"
 #include "observer/observer_3d.h"
+#include "observer/follower_observer.h"
 #include "mesh/sprite_3d.h"
 #include "object/object.h"
 #include "mesh/mesh_sprite_3d.h"
+#include "action/move_to.h"
+#include "action/move_by.h"
+#include "action/sequence.h"
 
 //=============================================================================
 // エントリーポイント
@@ -68,6 +72,19 @@ int main(int argc,char* argv)
 	//object->SetPositionX(100.0f);
 	//object->SetRotationZ(utility::math::ToRadian(-90.0f));
 	//object->SetScale(float2(2.0f,2.0f));
+
+	auto observer = std::make_shared<FollowerObserver>(utility::math::ToRadian(60.0f),800.0f,600.0f);
+	observer->SetPosition(float3(0.0f,0.0f,0.0f));
+	observer->SetVector(float3(0.0f,0.0f,1.0f));
+	observer->SetLength(5.0f);
+	observer->SetHeight(5.0f);
+	observer->Update();
+
+	auto move_to = std::make_shared<action::MoveTo>(180,float3(0.0f,0.0f,10.0f));
+	auto move_by = std::make_shared<action::MoveBy>(180,float3(1.0f,0.0f,0.0f),10.0f);
+	auto sequence = std::make_shared<action::Sequence>(move_to,move_by);
+	sequence->SetStartPosition(float3(10.0f,0.0f,0.0f));
+
 	while(is_loop)
 	{
 		auto start_time = std::chrono::system_clock::now();
@@ -77,25 +94,18 @@ int main(int argc,char* argv)
 		graphic_device->Clear(float4(1.0f,0.0f,0.0f,1.0f),1.0f);
 
 		float4x4 world_matrix;
-		float4x4 view_matrix;
-		float4x4 projection_matrix;
 		float4 color = float4(1.0f,1.0f,1.0f,1.0f);
-		float3 eye = float3(0.0f,0.0f,-5.0f);
-		float3 at = float3(0.0f,0.0f,0.0f);
-		float3 up = float3(0.0f,1.0f,0.0f);
 
+		sequence->Update();
+		observer->SetPosition(sequence->GetPosition());
+		observer->Update();
 		world_matrix = utility::math::Identity();
-		view_matrix = utility::math::Identity();
-		//projection_matrix = utility::math::OrthoLH(800.0f,600.0f,1.0f,1000.0f);
-		view_matrix = utility::math::LookAtLH(eye,at,up);
-		projection_matrix = utility::math::PerspectiveFovLH(utility::math::ToRadian(60.0f),800.0f / 600.0f,1.0f,1000.0f);
-		//projection_matrix = utility::math::PerspectiveFovRH(utility::math::ToRadian(60.0f),800.0f / 600.0f,1.0f,1000.0f);
 
 		world_matrix = object->GetMatrix();
 
 		vertex_shader->SetValue("_world_matrix",(f32*)&world_matrix,sizeof(float4x4));
-		vertex_shader->SetValue("_view_matrix",(f32*)&observer_3d->GetViewMatrix(),sizeof(float4x4));
-		vertex_shader->SetValue("_projection_matrix",(f32*)&observer_3d->GetProjectionMatrix(),sizeof(float4x4));
+		vertex_shader->SetValue("_view_matrix",(f32*)&observer->GetViewMatrix(),sizeof(float4x4));
+		vertex_shader->SetValue("_projection_matrix",(f32*)&observer->GetProjectionMatrix(),sizeof(float4x4));
 		vertex_shader->SetValue("_color",(f32*)&color,sizeof(float4));
 
 		pixel_shader->SetTexture("_texture_sampler",texture->GetTexture());

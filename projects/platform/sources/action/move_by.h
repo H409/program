@@ -1,6 +1,6 @@
 //*****************************************************************************
 //
-// follower observer
+// move by
 //
 // Author		: Kenji Kabutomori
 //
@@ -10,49 +10,35 @@
 // include guard
 //*****************************************************************************
 #pragma once
-#ifndef _FOLLOWER_OBSERVER_H_
-#define _FOLLOWER_OBSERVER_H_
+#ifndef _MOVE_BY_H_
+#define _MOVE_BY_H_
 
 //*****************************************************************************
 // include
 //*****************************************************************************
-#include "observer_3d.h"
+#include "action.h"
 
 //*****************************************************************************
 // class declaration
 //*****************************************************************************
-class FollowerObserver : public Observer3D
+namespace action {
+class MoveBy : public Action
 {
 public:
-	// constructor
-	FollowerObserver(const f32& in_radian,const f32& in_width,const f32& in_height);
+	MoveBy(const u32& in_duration,const float3& in_move);
+	MoveBy(const u32& in_duration,const float3& in_vector,const f32& in_length);
+	virtual ~MoveBy(void) = default;
 
-	// 
-	virtual ~FollowerObserver(void) = default;
-
-	// update
-	void Update(void);
-
-	// set position
-	void SetPosition(const float3& in_position);
-
-	// set vector
-	void SetVector(const float3& in_vector);
-
-	// set length
-	void SetLength(const f32& in_length);
-
-	// set height
-	void SetHeight(const f32& in_height);
+	// get reverse
+	TAction GetReverse(void)const override;
 
 private:
-	float3 position_;
-	float3 vector_;
-	f32 length_;
-	f32 height_;
-	float3 preview_position_;
-
+	void Update_(const u32& in_delta_time)override;
+	float3 move_;
 };
-#endif // _FOLLOWER_OBSERVER_H_
+
+} // namespace action
+
+#endif // _MOVE_BY_H_
 
 //---------------------------------- EOF --------------------------------------
