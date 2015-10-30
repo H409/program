@@ -14,7 +14,7 @@
 
 namespace action {
 //=============================================================================
-// 
+// constructor
 //=============================================================================
 MoveBy::MoveBy(const u32& in_duration,const float3& in_move)
 	:Action(in_duration)
@@ -23,7 +23,7 @@ MoveBy::MoveBy(const u32& in_duration,const float3& in_move)
 }
 
 //=============================================================================
-// 
+// constructor
 //=============================================================================
 MoveBy::MoveBy(const u32 & in_duration,const float3 & in_vector,const f32 & in_length)
 	:MoveBy(in_duration,utility::math::Normalize(in_vector) * in_length)
@@ -45,7 +45,7 @@ MoveBy::TAction MoveBy::GetReverse(void) const
 void MoveBy::Update_(const u32& in_delta_time)
 {
 	auto rate = static_cast<f32>(time_count_) / static_cast<f32>(duration_);
-	position_ = start_position_ + move_ * rate;
+	param_._position = start_param_._position + move_ * rate;
 
 }
 } // namespace action

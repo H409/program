@@ -1,6 +1,6 @@
 //*****************************************************************************
 //
-// sequence
+// fade to
 //
 // Author		: Kenji Kabutomori
 //
@@ -10,8 +10,8 @@
 // include guard
 //*****************************************************************************
 #pragma once
-#ifndef _SEQUENCE_H_
-#define _SEQUENCE_H_
+#ifndef _FADE_TO_H_
+#define _FADE_TO_H_
 
 //*****************************************************************************
 // include
@@ -22,20 +22,19 @@
 // class declaration
 //*****************************************************************************
 namespace action {
-class Sequence : public Action
+class FadeTo : public Action
 {
 public:
-	Sequence(TAction in_action_a,TAction in_action_b);
-	virtual ~Sequence(void) = default;
+	FadeTo(const u32& in_duration,const f32& in_alpha);
+	virtual ~FadeTo(void) = default;
 
 private:
 	void Update_(const u32& in_delta_time)override;
-	std::vector<TAction> actions_;
-	bool is_next_;
+	f32 goal_alpha_;
 };
 
 } // namespace action
 
-#endif // _SEQUENCE_H_
+#endif // _CALLBACK_H_
 
 //---------------------------------- EOF --------------------------------------

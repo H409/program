@@ -1,6 +1,6 @@
 //*****************************************************************************
 //
-// sequence
+// fade to
 //
 // Author		: Kenji Kabutomori
 //
@@ -9,49 +9,28 @@
 //*****************************************************************************
 // include
 //*****************************************************************************
-#include "sequence.h"
+#include "fade_to.h"
 #include "math/math.h"
 
 namespace action {
 //=============================================================================
 // constructor
 //=============================================================================
-Sequence::Sequence(TAction in_action_a,TAction in_action_b)
-	:is_next_(true)
+FadeTo::FadeTo(const u32& in_duration,const f32& in_alpha)
+	:Action(in_duration)
+	,goal_alpha_(in_alpha)
 {
-	actions_.push_back(in_action_a);
-	actions_.push_back(in_action_b);
 }
 
 //=============================================================================
 // update
 //=============================================================================
-void Sequence::Update_(const u32& in_delta_time)
+void FadeTo::Update_(const u32& in_delta_time)
 {
-	auto delta_time = in_delta_time;
-
-	for(auto action : actions_)
-	{
-		if(!action->IsEnd())
-		{
-			if(is_next_)
-			{
-				action->SetStartParam(param_);
-				is_next_ = false;
-			}
-			delta_time = action->Update(delta_time);
-			param_ = action->GetParam();
-			is_next_ = action->IsEnd();
-			if(delta_time <= 0)
-			{
-				return;
-			}
-		}
-	}
-
-	is_end_ = true;
+	auto rate = static_cast<f32>(time_count_) / static_cast<f32>(duration_);
+	auto v = goal_alpha_ - start_param_._color._a;
+	param_._color._a = start_param_._color._a + v * rate;
 }
-
 } // namespace action
 
 //---------------------------------- EOF --------------------------------------

@@ -76,6 +76,15 @@
     <ClCompile Include="sources\action\move_by.cpp">
       <Filter>sources\action</Filter>
     </ClCompile>
+    <ClCompile Include="sources\action\callback.cpp">
+      <Filter>sources\action</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\action\fade_to.cpp">
+      <Filter>sources\action</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\action\spawn.cpp">
+      <Filter>sources\action</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sources\main.h">
@@ -121,6 +130,15 @@
       <Filter>sources\action</Filter>
     </ClInclude>
     <ClInclude Include="sources\action\move_by.h">
+      <Filter>sources\action</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\action\callback.h">
+      <Filter>sources\action</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\action\fade_to.h">
+      <Filter>sources\action</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\action\spawn.h">
       <Filter>sources\action</Filter>
     </ClInclude>
   </ItemGroup>

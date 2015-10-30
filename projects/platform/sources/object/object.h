@@ -14,16 +14,31 @@
 #define _OBJECT_H_
 
 //*****************************************************************************
+// forward declaration
+//*****************************************************************************
+namespace action {
+class Action;
+}
+
+//*****************************************************************************
 // class declaration
 //*****************************************************************************
 class Object
 {
 public:
+	using TAction = std::shared_ptr<action::Action>;
+
 	// constructor
 	Object(void);
 
 	// destructor
 	virtual ~Object(void) = default;
+
+	// update
+	void Update(void);
+
+	// run action
+	void RunAction(TAction in_action);
 
 	// set position
 	void SetPosition(const float3& in_position);
@@ -46,6 +61,12 @@ public:
 	void SetScaleY(const f32& in_y);
 	void SetScaleZ(const f32& in_z);
 
+	// set color
+	void SetColor(const float3& in_color);
+	void SetColor(const f32& in_red,const f32& in_green,const f32& in_blue);
+	void SetColor(const float4& in_color);
+	void SetColor(const f32& in_red,const f32& in_green,const f32& in_blue,const f32& in_alpha);
+
 	// get position
 	const float3& GetPosition(void)const;
 	const f32& GetPositionX(void)const;
@@ -64,6 +85,14 @@ public:
 	const f32& GetScaleY(void)const;
 	const f32& GetScaleZ(void)const;
 
+	// get color
+	const float4& GetColor(void)const;
+	const float3& GetColorRGB(void)const;
+	const f32& GetColorRed(void)const;
+	const f32& GetColorGreen(void)const;
+	const f32& GetColorBlue(void)const;
+	const f32& GetColorAlpha(void)const;
+
 	// get matrix
 	const float4x4& GetMatrix(void);
 	const float4x4& GetMatrix(void)const;
@@ -73,7 +102,9 @@ protected:
 	float3 rotation_;
 	float3 scale_;
 	float4x4 matrix_;
+	float4 color_;
 	bool is_dirty_;
+	TAction action_;
 };
 
 #endif // _OBJECT_H_

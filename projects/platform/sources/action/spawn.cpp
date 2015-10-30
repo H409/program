@@ -1,6 +1,6 @@
 //*****************************************************************************
 //
-// sequence
+// spawn
 //
 // Author		: Kenji Kabutomori
 //
@@ -9,15 +9,14 @@
 //*****************************************************************************
 // include
 //*****************************************************************************
-#include "sequence.h"
+#include "spawn.h"
 #include "math/math.h"
 
 namespace action {
 //=============================================================================
 // constructor
 //=============================================================================
-Sequence::Sequence(TAction in_action_a,TAction in_action_b)
-	:is_next_(true)
+Spawn::Spawn(TAction in_action_a,TAction in_action_b)
 {
 	actions_.push_back(in_action_a);
 	actions_.push_back(in_action_b);
@@ -26,30 +25,46 @@ Sequence::Sequence(TAction in_action_a,TAction in_action_b)
 //=============================================================================
 // update
 //=============================================================================
-void Sequence::Update_(const u32& in_delta_time)
+void Spawn::Update_(const u32& in_delta_time)
 {
 	auto delta_time = in_delta_time;
+	PARAM params;
 
-	for(auto action : actions_)
+	if(!IsEnd())
 	{
-		if(!action->IsEnd())
+		auto is_run = false;
+		for(auto action : actions_)
 		{
-			if(is_next_)
+			if(!action->IsEnd())
 			{
-				action->SetStartParam(param_);
-				is_next_ = false;
-			}
-			delta_time = action->Update(delta_time);
-			param_ = action->GetParam();
-			is_next_ = action->IsEnd();
-			if(delta_time <= 0)
-			{
-				return;
+				action->Update(delta_time);
+				auto param = action->GetParam();
+				param = param - start_param_;
+				params += param;
+				is_run = true;
 			}
 		}
-	}
 
-	is_end_ = true;
+		if(is_run)
+		{
+			param_ = start_param_ + params;
+		}
+		else
+		{
+			is_end_ = true;
+		}
+	}
+}
+
+//=============================================================================
+// set start param
+//=============================================================================
+void Spawn::SetStartParam_(const PARAM& in_param)
+{
+	for(auto action : actions_)
+	{
+		action->SetStartParam(in_param);
+	}
 }
 
 } // namespace action

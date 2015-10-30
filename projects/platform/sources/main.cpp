@@ -30,6 +30,8 @@
 #include "action/move_to.h"
 #include "action/move_by.h"
 #include "action/sequence.h"
+#include "action/callback.h"
+#include "action/spawn.h"
 
 //=============================================================================
 // エントリーポイント
@@ -81,10 +83,12 @@ int main(int argc,char* argv)
 	observer->Update();
 
 	auto move_to = std::make_shared<action::MoveTo>(180,float3(0.0f,0.0f,10.0f));
-	auto move_by = std::make_shared<action::MoveBy>(180,float3(1.0f,0.0f,0.0f),10.0f);
+	auto move_by = std::make_shared<action::MoveBy>(180,float3(-1.0f,0.0f,0.0f),1.0f);
+	auto move_by_ = std::make_shared<action::MoveBy>(180,float3(0.0f,0.0f,1.0f),1.0f);
 	auto sequence = std::make_shared<action::Sequence>(move_to,move_by);
+	auto spaw = std::make_shared<action::Spawn>(move_by_,move_by);
 	sequence->SetStartPosition(float3(10.0f,0.0f,0.0f));
-
+	spaw->SetStartPosition(float3(10.0f,0.0f,0.0f));
 	while(is_loop)
 	{
 		auto start_time = std::chrono::system_clock::now();
@@ -97,7 +101,8 @@ int main(int argc,char* argv)
 		float4 color = float4(1.0f,1.0f,1.0f,1.0f);
 
 		sequence->Update();
-		observer->SetPosition(sequence->GetPosition());
+		spaw->Update();
+		observer->SetPosition(spaw->GetPosition());
 		observer->Update();
 		world_matrix = utility::math::Identity();
 

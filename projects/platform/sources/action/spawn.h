@@ -1,6 +1,6 @@
 //*****************************************************************************
 //
-// sequence
+// spawn
 //
 // Author		: Kenji Kabutomori
 //
@@ -10,8 +10,8 @@
 // include guard
 //*****************************************************************************
 #pragma once
-#ifndef _SEQUENCE_H_
-#define _SEQUENCE_H_
+#ifndef _SPAWN_H_
+#define _SPAWN_H_
 
 //*****************************************************************************
 // include
@@ -22,20 +22,21 @@
 // class declaration
 //*****************************************************************************
 namespace action {
-class Sequence : public Action
+class Spawn : public Action
 {
 public:
-	Sequence(TAction in_action_a,TAction in_action_b);
-	virtual ~Sequence(void) = default;
+	Spawn(TAction in_action_a,TAction in_action_b);
+	virtual ~Spawn(void) = default;
 
 private:
 	void Update_(const u32& in_delta_time)override;
+	void SetStartParam_(const PARAM& in_param)override;
 	std::vector<TAction> actions_;
-	bool is_next_;
+
 };
 
 } // namespace action
 
-#endif // _SEQUENCE_H_
+#endif // _SPAWN_H_
 
 //---------------------------------- EOF --------------------------------------
