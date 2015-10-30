@@ -30,6 +30,7 @@ public:
 
 private:
 	void Update_(const u32& in_delta_time)override;
+	void Reset_(void)override;
 	std::vector<TAction> actions_;
 	bool is_next_;
 };

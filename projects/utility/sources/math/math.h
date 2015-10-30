@@ -131,7 +131,7 @@ template<class T> T Maximum(const T& in_value1,const T& in_value2)
 // clamp
 template<class T> T Clamp(const T& in_value,const T& in_minimum,const T& in_maximum)
 {
-	DEBUG_ASSERT_EXP(in_minimum >= in_maximum,"in_minimum < in_maximum\n");
+	DEBUG_ASSERT(in_minimum < in_maximum);
 
 	if(in_minimum >= in_maximum)
 	{
@@ -146,7 +146,7 @@ template<class T> T Wrap(const T& in_value,const T& in_minimum,const T& in_maxim
 {
 	T wrap = in_value;
 
-	DEBUG_ASSERT_EXP(in_minimum >= in_maximum,"in_minimum < in_maximum\n");
+	DEBUG_ASSERT(in_minimum < in_maximum);
 
 	if(in_value < in_minimum)
 	{

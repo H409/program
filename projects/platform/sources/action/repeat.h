@@ -1,6 +1,6 @@
 //*****************************************************************************
 //
-// spawn
+// repeat
 //
 // Author		: Kenji Kabutomori
 //
@@ -10,8 +10,8 @@
 // include guard
 //*****************************************************************************
 #pragma once
-#ifndef _SPAWN_H_
-#define _SPAWN_H_
+#ifndef _REPEAT_H_
+#define _REPEAT_H_
 
 //*****************************************************************************
 // include
@@ -22,22 +22,23 @@
 // class declaration
 //*****************************************************************************
 namespace action {
-class Spawn : public Action
+class Repeat : public Action
 {
 public:
-	Spawn(TAction in_action_a,TAction in_action_b);
-	virtual ~Spawn(void) = default;
+	Repeat(const u32& in_repeat_count,TAction in_action);
+	virtual ~Repeat(void) = default;
 
 private:
 	void Update_(const u32& in_delta_time)override;
-	void Reset_(void)override;
 	void SetStartParam_(const PARAM& in_param)override;
-	std::vector<TAction> actions_;
+	TAction action_;
+	u32 repeat_count_;
+	u32 count_;
 
 };
 
 } // namespace action
 
-#endif // _SPAWN_H_
+#endif // _REPEAT_H_
 
 //---------------------------------- EOF --------------------------------------

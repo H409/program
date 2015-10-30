@@ -1,6 +1,6 @@
 //*****************************************************************************
 //
-// sequence
+// repeat
 //
 // Author		: Kenji Kabutomori
 //
@@ -9,58 +9,53 @@
 //*****************************************************************************
 // include
 //*****************************************************************************
-#include "sequence.h"
+#include "repeat.h"
 #include "math/math.h"
 
 namespace action {
 //=============================================================================
 // constructor
 //=============================================================================
-Sequence::Sequence(TAction in_action_a,TAction in_action_b)
-	:is_next_(true)
+Repeat::Repeat(const u32& in_repeat_count,TAction in_action)
+	:repeat_count_(in_repeat_count)
+	,action_(in_action)
 {
-	actions_.push_back(in_action_a);
-	actions_.push_back(in_action_b);
 }
 
 //=============================================================================
 // update
 //=============================================================================
-void Sequence::Update_(const u32& in_delta_time)
+void Repeat::Update_(const u32& in_delta_time)
 {
-	auto delta_time = in_delta_time;
-
-	for(auto action : actions_)
+	if(!IsEnd())
 	{
-		if(!action->IsEnd())
+		action_->Update(in_delta_time);
+		param_ = action_->GetParam();
+
+		if(action_->IsEnd())
 		{
-			if(is_next_)
+			if(repeat_count_ != 0)
 			{
-				action->SetStartParam(param_);
-				is_next_ = false;
+				count_++;
 			}
-			delta_time = action->Update(delta_time);
-			param_ = action->GetParam();
-			is_next_ = action->IsEnd();
-			if(delta_time <= 0)
+			if(repeat_count_ <= count_)
 			{
-				return;
+				action_->Reset();
+			}
+			else
+			{
+				is_end_ = true;
 			}
 		}
 	}
-
-	is_end_ = true;
 }
 
 //=============================================================================
-// reset
+// set start param
 //=============================================================================
-void Sequence::Reset_(void)
+void Repeat::SetStartParam_(const PARAM& in_param)
 {
-	for(auto action : actions_)
-	{
-		action->Reset();
-	}
+	action_->SetStartParam(in_param);
 }
 
 } // namespace action

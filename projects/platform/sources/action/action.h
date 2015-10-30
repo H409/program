@@ -29,7 +29,7 @@ public:
 		float3 _scale;
 		float4 _color;
 
-		PARAM() {};
+		PARAM():_scale(1.0f,1.0f,1.0f) {};
 		void operator+=(const PARAM& in_param)
 		{
 			_position += in_param._position;
@@ -62,6 +62,9 @@ public:
 	// update
 	void Update(void);
 	u32 Update(const u32& in_delta_time);
+
+	// reset
+	void Reset(void);
 
 	// get position
 	const float3& GetPosition(void)const;
@@ -107,6 +110,7 @@ protected:
 private:
 	virtual void Update_(const u32& in_delta_time) = 0;
 	virtual void SetStartParam_(const PARAM& in_param) {}
+	virtual void Reset_(void) {};
 	bool is_pause_;
 };
 

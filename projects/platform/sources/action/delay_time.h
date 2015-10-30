@@ -1,6 +1,6 @@
 //*****************************************************************************
 //
-// spawn
+// delay time
 //
 // Author		: Kenji Kabutomori
 //
@@ -10,8 +10,8 @@
 // include guard
 //*****************************************************************************
 #pragma once
-#ifndef _SPAWN_H_
-#define _SPAWN_H_
+#ifndef _DELAY_TIME_H_
+#define _DELAY_TIME_H_
 
 //*****************************************************************************
 // include
@@ -22,22 +22,18 @@
 // class declaration
 //*****************************************************************************
 namespace action {
-class Spawn : public Action
+class DelayTime : public Action
 {
 public:
-	Spawn(TAction in_action_a,TAction in_action_b);
-	virtual ~Spawn(void) = default;
+	explicit DelayTime(const u32& in_duration);
+	virtual ~DelayTime(void) = default;
 
 private:
 	void Update_(const u32& in_delta_time)override;
-	void Reset_(void)override;
-	void SetStartParam_(const PARAM& in_param)override;
-	std::vector<TAction> actions_;
-
 };
 
 } // namespace action
 
-#endif // _SPAWN_H_
+#endif // _DELAY_TIME_H_
 
 //---------------------------------- EOF --------------------------------------

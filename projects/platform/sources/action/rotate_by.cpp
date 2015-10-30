@@ -1,6 +1,6 @@
 //*****************************************************************************
 //
-// sequence
+// rotate by
 //
 // Author		: Kenji Kabutomori
 //
@@ -9,60 +9,36 @@
 //*****************************************************************************
 // include
 //*****************************************************************************
-#include "sequence.h"
+#include "rotate_by.h"
 #include "math/math.h"
 
 namespace action {
 //=============================================================================
 // constructor
 //=============================================================================
-Sequence::Sequence(TAction in_action_a,TAction in_action_b)
-	:is_next_(true)
+RotateBy::RotateBy(const u32& in_duration,const float3& in_rotation)
+	:Action(in_duration)
+	,rotation_(in_rotation)
 {
-	actions_.push_back(in_action_a);
-	actions_.push_back(in_action_b);
+}
+
+//=============================================================================
+// get reverse
+//=============================================================================
+RotateBy::TAction RotateBy::GetReverse(void) const
+{
+	return nullptr;
 }
 
 //=============================================================================
 // update
 //=============================================================================
-void Sequence::Update_(const u32& in_delta_time)
+void RotateBy::Update_(const u32& in_delta_time)
 {
-	auto delta_time = in_delta_time;
-
-	for(auto action : actions_)
-	{
-		if(!action->IsEnd())
-		{
-			if(is_next_)
-			{
-				action->SetStartParam(param_);
-				is_next_ = false;
-			}
-			delta_time = action->Update(delta_time);
-			param_ = action->GetParam();
-			is_next_ = action->IsEnd();
-			if(delta_time <= 0)
-			{
-				return;
-			}
-		}
-	}
-
-	is_end_ = true;
+	auto rate = static_cast<f32>(time_count_) / static_cast<f32>(duration_);
+	param_._rotation = start_param_._rotation + rotation_ * rate;
+	//param_._rotation._y = utility::math::Wrap(param_._rotation._y,utility::math::ToRadian(-180.0f),utility::math::ToRadian(180.0f));
 }
-
-//=============================================================================
-// reset
-//=============================================================================
-void Sequence::Reset_(void)
-{
-	for(auto action : actions_)
-	{
-		action->Reset();
-	}
-}
-
 } // namespace action
 
 //---------------------------------- EOF --------------------------------------
