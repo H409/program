@@ -1,0 +1,1339 @@
+//=============================================================================
+//
+// FBXを変換した独自形式モデル処理 : scene_kim.cpp
+// Author : Kenji IIZUKA
+//
+//=============================================================================
+
+//*****************************************************************************
+// インクルード
+//*****************************************************************************
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <stdio.h>
+#include "scene_kim.h"
+
+//*****************************************************************************
+// グローバル変数
+//*****************************************************************************
+int anime_speed = 1;
+float value_ = 0.0f;
+float times_ = 15.0f;
+int cursor_bone_ = 0;
+int cursor_mesh_ = 0;
+int anim_type_ = 0;
+int anime_value = 1;
+int all_vertex_num_ = 0;
+
+LPSTR debug_string[4] =
+{ "内蔵ｱﾆﾒｰｼｮﾝ", "Y軸回転", "X軸回転", "Z軸回転" };
+LPSTR type_string[2] =
+{ "FBX", "独自形式" };
+
+
+//=============================================================================
+// 役割 : コンストラクタ
+//=============================================================================
+SCENE_KIM::SCENE_KIM(LPDIRECT3DDEVICE9 d3d_device)
+{
+	d3d_device_ = d3d_device;
+
+	mesh_ = NULL;
+	bone_ = NULL;
+	decl_ = NULL;
+
+	vertex_shader_ = NULL;
+	pixel_shader_ = NULL;
+
+	mesh_num_ = 0;
+	bone_num_ = 0;
+
+	current_anime_ = 0;
+	next_anime_ = 0;
+	set_anime_ = 0;
+
+	draw_type_ = TYPE_MULTI_MY;
+
+	light_directional = D3DXVECTOR3(0.5f, -0.5f, 0.5f);
+	D3DXVec3Normalize(&light_directional, &light_directional);
+
+	D3DXMatrixIdentity(&world_);
+
+	//--  このﾌﾚｰﾑﾜｰｸ用  --//
+	all_vertex_num_ = 0;
+}
+
+//=============================================================================
+// 役割 : デストラクタ
+//=============================================================================
+SCENE_KIM::~SCENE_KIM( void )
+{
+}
+
+//=============================================================================
+// 役割 : 初期化処理
+//=============================================================================
+HRESULT SCENE_KIM::Load(const char* file_name)
+{
+	// ﾌｧｲﾙポインタ
+	FILE *file = NULL;
+
+	// ﾌｧｲﾙ読み込み(失敗したら終了)
+	file = fopen(file_name, "rb");
+	if (file == NULL)
+		return true;
+
+	// 先頭に戻る
+	fseek(file, 0, SEEK_SET);
+
+	// ﾒｯｼｭ数読み込み
+	fread(&mesh_num_, sizeof(int), 1, file);
+
+	// ﾎﾞｰﾝ数読み込み
+	fread(&bone_num_, sizeof(int), 1, file);
+
+	// ﾒｯｼｭ数分だけ生成
+	mesh_ = new KIM_MESH_DATA[mesh_num_];
+
+	// ﾒｯｼｭ情報の読み込み
+	for (int i = 0; i < mesh_num_; i++)
+	{
+		// 頂点数の読み込み
+		fread(&mesh_[i].vertex_num_, sizeof(int), 1, file);
+
+		// 頂点数が０なら次のメッシュへ
+		if (mesh_[i].vertex_num_ == 0)
+			continue;
+
+		// ｲﾝﾃﾞｯｸｽ数の読み込み
+		fread(&mesh_[i].index_num_, sizeof(int), 1, file);
+
+		// ﾃｸｽﾁｬ名の読み込み
+		fread(&mesh_[i].texture_filename_, sizeof(char), 128, file);
+
+		// ﾏﾃﾘｱﾙの獲得
+		fread(&mesh_[i].material_, sizeof(D3DMATERIAL9), 1, file);
+
+		// ﾃﾞｨﾌｰｽﾞのαが0の時,情報抜けの可能性があるため,全部に1を入れる
+		if (mesh_[i].material_.Diffuse.a == 0.0f)
+			mesh_[i].material_.Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+
+		// 頂点バッファの生成
+		d3d_device_->CreateVertexBuffer(mesh_[i].vertex_num_ * sizeof(VERTEX_KIM), D3DUSAGE_SOFTWAREPROCESSING, NULL, D3DPOOL_MANAGED, &mesh_[i].vertex_buffer_, NULL);
+
+		// 頂点情報の読み込み用
+		VERTEX_KIM* vtx;
+
+		// 頂点バッファの解放
+		mesh_[i].vertex_buffer_->Lock(0, 0, (void**)&vtx, 0);
+
+		// 頂点情報の読み込み
+		fread(vtx, sizeof(VERTEX_KIM), mesh_[i].vertex_num_, file);
+
+		// 頂点数のカウント
+		all_vertex_num_ += mesh_[i].vertex_num_;
+
+		for (int j = 0; j < mesh_[i].vertex_num_; j++)
+		{
+			if (vertex_max_.x < vtx[j].coord.x)
+			{
+				vertex_max_.x = vtx[j].coord.x;
+			}
+
+			if (vertex_min_.x > vtx[j].coord.x)
+			{
+				vertex_min_.x = vtx[j].coord.x;
+			}
+
+			if (vertex_max_.y < vtx[j].coord.y)
+			{
+				vertex_max_.y = vtx[j].coord.y;
+			}
+
+			if (vertex_min_.y > vtx[j].coord.y)
+			{
+				vertex_min_.y = vtx[j].coord.y;
+			}
+
+			if (vertex_max_.z < vtx[j].coord.z)
+			{
+				vertex_max_.z = vtx[j].coord.z;
+			}
+
+			if (vertex_min_.z > vtx[j].coord.z)
+			{
+				vertex_min_.z = vtx[j].coord.z;
+			}
+
+		}
+
+		// ﾎﾞｰﾝｲﾝﾃﾞｯｸｽの正規化
+		if (draw_type_ > 1 && bone_num_ != 0)
+			BoneIndexNormalize(i, vtx);
+
+		// 頂点ﾊﾞｯﾌｧのｱﾝﾛｯｸ
+		mesh_[i].vertex_buffer_->Unlock();
+
+		// ｲﾝﾃﾞｯｸｽバッファの生成
+		if (FAILED(d3d_device_->CreateIndexBuffer(mesh_[i].index_num_ * sizeof(DWORD), D3DUSAGE_SOFTWAREPROCESSING, D3DFMT_INDEX32, D3DPOOL_MANAGED, &mesh_[i].index_buffer_, NULL)))
+			MessageBox(NULL, "ｲﾝﾃﾞｯｸｽﾊﾞｯﾌｧの生成に失敗しました", "頂点ﾊﾞｯﾌｧの生成に失敗しました", MB_OK);
+
+		// index情報の読み込み
+		DWORD* workIndex(nullptr);
+		mesh_[i].index_buffer_->Lock(0, 0, (void**)&workIndex, 0);
+
+		// ｲﾝﾃﾞｯｸｽ番号
+		fread(workIndex, sizeof(DWORD), mesh_[i].index_num_, file);
+
+		// ｲﾝﾃﾞｯｸｽﾊﾞｯﾌｧの解放
+		if (FAILED(mesh_[i].index_buffer_->Unlock()))
+			MessageBox(NULL, "ｲﾝﾃﾞｯｸｽﾊﾞｯﾌｧの解放に失敗しました", "頂点ﾊﾞｯﾌｧの生成に失敗しました", MB_OK);
+
+		// ﾃｸｽﾁｬの生成
+		D3DXCreateTextureFromFile(d3d_device_, mesh_[i].texture_filename_, &mesh_[i].texture_);
+
+	}
+
+	// ﾎﾞｰﾝ情報の入ってないﾓﾃﾞﾙの場合は読み込まない
+	if (bone_num_ != 0)
+	{
+		// ﾎﾞｰﾝの生成
+		bone_ = new KIM_BONE_DATA[bone_num_];
+		int *chile_id = new int[bone_num_];
+		int *sibling_id = new int[bone_num_];
+
+		// ﾎﾞｰﾝ情報読み込み
+		for (int i = 0; i < bone_num_; i++)
+		{
+			bone_[i].anime_num = 1;
+			//bone_[i].anime = new KIM_ANIMATION_DATA[bone_[i].anime_num];
+
+			// ボーン名
+			fread(bone_[i].name, sizeof(char), 64, file);
+			// ボーンID
+			fread(&bone_[i].id, sizeof(int), 1, file);
+			// 子のID
+			fread(&chile_id[i], sizeof(int), 1, file);
+			// 兄弟のID
+			fread(&sibling_id[i], sizeof(int), 1, file);
+			// 初期姿勢ﾏﾄﾘｸｽ
+			fread(&bone_[i].init_matrix, sizeof(D3DXMATRIX), 1, file);
+			// ｵﾌｾｯﾄﾏﾄﾘｸｽ
+			fread(&bone_[i].offset_matrix, sizeof(D3DXMATRIX), 1, file);
+
+			// ｱﾆﾒｰｼｮﾝ数
+			fread(&bone_[i].anime_num, sizeof(int), 1, file);
+
+			// ｱﾆﾒｰｼｮﾝの生成
+			bone_[i].anime = new KIM_ANIMATION_DATA[bone_[i].anime_num];
+
+			// ｱﾆﾒｰｼｮﾝの読み込み
+			for (int anime_id = 0; anime_id < bone_[i].anime_num; anime_id++)
+			{
+				// 最大ｷｰ数
+				fread(&bone_[i].anime[anime_id].num_key, sizeof(int), 1, file);
+
+				// ｷｰﾌﾚｰﾑの生成
+				bone_[i].anime[anime_id].keyframe = new KIM_KEY_FRAME[bone_[i].anime[anime_id].num_key];
+
+				// ｷｰﾌﾚｰﾑの読み込み
+				fread(bone_[i].anime[anime_id].keyframe, sizeof(KIM_KEY_FRAME), bone_[i].anime[anime_id].num_key, file);
+			}
+		}
+
+		// 親子関係の生成
+		for (int i = 0; i < bone_num_; i++)
+		{
+			// 親子関係の構築
+			if (chile_id[i] >= 0)
+				bone_[i].child = &bone_[chile_id[i]];
+			if (sibling_id[i] >= 0)
+				bone_[i].sibling = &bone_[sibling_id[i]];
+		}
+
+		// ﾛｰｶﾙID情報の解放
+		delete[] chile_id;
+		delete[] sibling_id;
+
+		// ﾎﾞｰﾝを親に対しての相対位置に移動
+		CalcRelativeMat(bone_, 0);
+	}
+
+	// 読み込みの終了
+	fclose(file);
+
+	// 送信する頂点情報の設定
+	CreateVertexDecl();
+
+	// 一枚ﾒｯｼｭの定数ﾚｼﾞｽﾀを超えた
+	if (bone_num_ > BONE_MAX && draw_type_ == TYPE_ONE_MY)
+	{
+		MessageBox(NULL, "最大頂点数を超えました", "最大頂点数を超えました", MB_OK);
+		return E_FAIL;
+	}
+
+	// ｼｪｰﾀﾞｰのｺﾝﾊﾟｲﾙ
+	if (draw_type_ == TYPE_ONE_MY || draw_type_ == TYPE_MULTI_MY)
+		return CompileShader();
+
+	return S_OK ;
+}
+
+//=============================================================================
+// 役割 : 終了処理
+//=============================================================================
+void SCENE_KIM::Uninit( void )
+{
+	if (toon_map)
+	{
+		toon_map->Release();
+		toon_map = NULL;
+	}
+
+
+	if (decl_)
+	{
+		decl_->Release();
+		decl_ = NULL;
+	}
+
+	if (vertex_shader_)
+	{
+		vertex_shader_->Release();
+		vertex_shader_ = NULL;
+	}
+
+	if (pixel_shader_)
+	{
+		pixel_shader_->Release();
+		pixel_shader_ = NULL;
+	}
+
+	// ﾒｯｼｭ情報の解放
+	for (int i = 0; i < mesh_num_; i++)
+	{
+		if (mesh_[i].vertex_buffer_ != NULL)
+			mesh_[i].vertex_buffer_->Release();
+		if (mesh_[i].index_buffer_ != NULL)
+			mesh_[i].index_buffer_->Release();
+		if (mesh_[i].texture_ != NULL)
+			mesh_[i].texture_->Release();
+		if (mesh_[i].bind_index != NULL)
+			delete[] mesh_[i].bind_index;
+	}
+	if (mesh_ != NULL)
+		delete[] mesh_;
+
+	// ﾎﾞｰﾝ情報の解放
+	for (int i = 0; i < bone_num_; i++)
+	{
+		for (int j = 0; j < bone_[i].anime_num; j++)
+		{
+			if (bone_[i].anime[j].keyframe != NULL)
+			{
+				delete[] bone_[i].anime[j].keyframe;
+				bone_[i].anime[j].keyframe = NULL;
+			}
+		}
+
+		delete[] bone_[i].anime;
+
+	}
+
+	if (bone_ != NULL)
+		delete[] bone_;
+}
+
+//=============================================================================
+// 処理:更新
+//=============================================================================
+void SCENE_KIM::Update(void)
+{
+
+#ifdef _DEBUG
+	if (DebugUpdate() == false)
+		return;
+#endif
+
+	if (!GetAsyncKeyState('Y') & 0x0001)
+	{
+		// ﾎﾞｰﾝがなければそもそもｽｷﾆﾝｸﾞされてない
+		if (bone_ == NULL)
+			return;
+
+		// ｱﾆﾒｰｼｮﾝが無いときは全てのﾎﾞｰﾝを単位行列にしとく
+		if (bone_[cursor_bone_].anime_num == 0)
+		{
+			for (int i = 0; i < bone_num_; i++)
+			{
+				D3DXMatrixIdentity(&bone_[i].bone_matrix);
+				bone_[i].bone_matrix *= bone_[i].init_matrix;
+			}
+			UpdateBone(bone_, &world_);
+			return;
+		}
+
+		if (bone_->current_time == 1)
+			next_anime_ = set_anime_;
+
+	//	// 普通のｱﾆﾒｰｼｮﾝ
+	//	for (int i = 0; i < bone_num_; i++)
+	//	{
+	//		// 初期化
+	//		D3DXMatrixIdentity(&bone_[i].bone_matrix);
+
+	//		// 可読性がヤバイのでﾃﾝﾎﾟﾗﾘを用意
+	//		KIM_BONE_DATA *dest_bone = &bone_[i];
+	//			
+	//		// ｷｰ数がない場合はおそらくｱﾆﾒｰｼｮﾝ無いので初期姿勢だけかけて次
+	//		if (dest_bone->anime[current_anime_].num_key == 0)
+	//		{
+	//			bone_[i].bone_matrix *= bone_[i].init_matrix;
+	//			continue;
+	//		}
+
+	//		// 可読性がヤバイのでﾃﾝﾎﾟﾗﾘを用意
+	//		int current_key = dest_bone->anime[current_anime_].current_key;
+	//		int next_key = (dest_bone->anime[next_anime_].current_key + 1) % (dest_bone->anime[next_anime_].num_key);
+
+	//		KIM_KEY_FRAME *cur_flame = &dest_bone->anime[current_anime_].keyframe[current_key];
+	//		KIM_KEY_FRAME *next_flame;
+
+	//		if (next_anime_ == current_anime_)
+	//		{
+	//			next_flame = &dest_bone->anime[next_anime_].keyframe[next_key];
+	//		}
+	//		else
+	//		{
+	//			next_flame = &dest_bone->anime[next_anime_].keyframe[0];
+	//		}
+
+	//		// 線形補間に使う時間の計算
+	//		float t = (float)(dest_bone->current_time) / (float)next_flame->frame_chenge;
+
+	//		// それぞれの変換情報線形補間
+	//		D3DXVECTOR3 scaling = (1.0f - t)*cur_flame->scaling + (t * next_flame->scaling);
+	//		D3DXVECTOR3 translation = (1.0f - t)*cur_flame->translation + (t * next_flame->translation);
+	//		D3DXQUATERNION rotation = (1.0f - t)*cur_flame->rotation + (t * next_flame->rotation);
+
+	//		// それぞれの行列変換
+	//		D3DXMATRIX scl, rot, trans;
+	//		D3DXMatrixScaling(&scl, scaling.x, scaling.y, scaling.z);
+	//		D3DXMatrixRotationQuaternion(&rot, &rotation);
+	//		D3DXMatrixTranslation(&trans, translation.x, translation.y, translation.z);
+
+	//		// 行列合成
+	//		bone_[i].bone_matrix = scl * rot * trans * bone_[i].init_matrix;
+
+	//		// 次のﾌﾚｰﾑに移動
+	//		if (dest_bone->current_time >= next_flame->frame_chenge)
+	//		{
+	//			dest_bone->current_time = 0;
+
+	//			if (current_anime_ == next_anime_)
+	//			{
+	//				dest_bone->anime[current_anime_].current_key++;
+
+	//				if (dest_bone->anime[current_anime_].current_key >= dest_bone->anime[next_anime_].num_key)
+	//				{
+	//					dest_bone->anime[current_anime_].current_key = next_key;
+	//					dest_bone->anime[current_anime_].current_key %= dest_bone->anime[next_anime_].num_key;
+	//				}
+	//			}
+	//			else
+	//			{
+	//				dest_bone->anime[current_anime_].current_key = 0;
+	//				dest_bone->anime[next_anime_].current_key = 0;
+
+	//				if (i == bone_num_-1)
+	//				{
+	//					current_anime_ = next_anime_;
+	//				}
+	//			}
+	//		}
+
+	//		// 時を進める
+	//		dest_bone->current_time += anime_speed;
+
+	//}
+
+		//for (int i = 0; i < bone_num_; i++)
+		//{
+		//	auto next_flame = bone_[i].anime[next_anime_].keyframe[1];
+
+		//	// それぞれの変換情報線形補間
+		//	D3DXVECTOR3 scaling = next_flame.scaling;
+		//	D3DXVECTOR3 translation = next_flame.translation;
+		//	D3DXQUATERNION rotation = next_flame.rotation;
+
+		//	// それぞれの行列変換
+		//	D3DXMATRIX scl, rot, trans;
+		//	D3DXMatrixScaling(&scl, scaling.x, scaling.y, scaling.z);
+		//	D3DXMatrixRotationQuaternion(&rot, &rotation);
+		//	D3DXMatrixTranslation(&trans, translation.x, translation.y, translation.z);
+
+		//	// 行列合成
+		//	bone_[i].bone_matrix = scl * rot * trans * bone_[i].init_matrix;
+		//}
+
+		// 普通のｱﾆﾒｰｼｮﾝ
+		for (int i = 0; i < bone_num_; i++)
+		{
+			// 初期化
+			D3DXMatrixIdentity(&bone_[i].bone_matrix);
+
+			// 可読性がヤバイのでﾃﾝﾎﾟﾗﾘを用意
+			KIM_BONE_DATA *dest_bone = &bone_[i];
+				
+			//// ｷｰ数がない場合はおそらくｱﾆﾒｰｼｮﾝ無いので初期姿勢だけかけて次
+			//if (dest_bone->anime[current_anime_].num_key == 0)
+			//{
+			//	bone_[i].bone_matrix *= bone_[i].init_matrix;
+			//	continue;
+			//}
+
+			// 可読性がヤバイのでﾃﾝﾎﾟﾗﾘを用意
+			int current_key = dest_bone->anime[current_anime_].current_key;
+			int next_key = (dest_bone->anime[next_anime_].current_key + 1) % (dest_bone->anime[next_anime_].num_key);
+
+			KIM_KEY_FRAME *cur_flame = &dest_bone->anime[current_anime_].keyframe[current_key];
+			KIM_KEY_FRAME *next_flame;
+
+			//if (next_anime_ == current_anime_)
+			{
+				next_flame = &dest_bone->anime[next_anime_].keyframe[next_key];
+			}
+
+			// それぞれの変換情報線形補間
+			D3DXVECTOR3 scaling = cur_flame->scaling ;
+			D3DXVECTOR3 translation = cur_flame->translation ;
+			D3DXQUATERNION rotation = cur_flame->rotation ;
+
+			// それぞれの行列変換
+			D3DXMATRIX scl, rot, trans;
+			D3DXMatrixScaling(&scl, scaling.x, scaling.y, scaling.z);
+			D3DXMatrixRotationQuaternion(&rot, &rotation);
+			D3DXMatrixTranslation(&trans, translation.x, translation.y, translation.z);
+
+			// 行列合成
+			bone_[i].bone_matrix = scl * rot * trans * bone_[i].init_matrix;
+
+			// 次のﾌﾚｰﾑに移動
+			if (dest_bone->current_time >= next_flame->frame_chenge)
+			{
+				dest_bone->current_time = 0;
+
+			//	if (current_anime_ == next_anime_)
+				{
+					dest_bone->anime[current_anime_].current_key++;
+
+					if (dest_bone->anime[current_anime_].current_key >= dest_bone->anime[next_anime_].num_key)
+					{
+						dest_bone->anime[current_anime_].current_key = 31;		// 
+						//dest_bone->anime[current_anime_].current_key %= dest_bone->anime[next_anime_].num_key;
+					}
+				}
+			}
+
+			// 時を進める
+			dest_bone->current_time += anime_speed;
+		}
+
+		// 座標の更新:掛ける順番は 子 × 親 
+		UpdateBone(bone_, &world_);
+
+	}
+}
+
+//=============================================================================
+// 処理:ボーンの更新(行列変換)
+//=============================================================================
+void SCENE_KIM::Draw(void)
+{
+	LPDIRECT3DVERTEXDECLARATION9 before_decl;
+	d3d_device_->GetVertexDeclaration(&before_decl);
+
+	// 送信する頂点情報の設定
+	d3d_device_->SetVertexDeclaration(decl_);
+
+#ifdef _DEBUG
+	static bool _bone = false ;
+
+	// ﾒｯｼｭの描画
+	if (GetAsyncKeyState('B'))
+	{
+		_bone = !_bone ;
+	}
+#endif
+	if( !GetAsyncKeyState('N') )
+	{
+		switch (draw_type_)
+		{
+		case TYPE_ONE_MY:
+			OneMeshMyShader();
+			break;
+		case TYPE_ONE_ORIGINE:
+			OneMeshOriginShader();
+			break;
+		case TYPE_MULTI_MY:
+			MultiMeshMyShader();
+			break;
+		case TYPE_MULTI_ORIGINE:
+			MultiMeshOriginShader();
+			break;
+		case TYPE_STATIC_MESH:
+			StaticMesh();
+			break;
+		}
+	}
+#ifdef _DEBUG
+	
+	if( _bone == true )
+	{
+		DrawBone();
+	}
+#endif
+
+	d3d_device_->SetVertexDeclaration(before_decl);
+}
+
+//=============================================================================
+// 処理:生成
+//=============================================================================
+SCENE_KIM* SCENE_KIM::Create(LPDIRECT3DDEVICE9 d3d_device, const char* file_name)
+{
+	SCENE_KIM* obj = new SCENE_KIM(d3d_device);
+	obj->Load(file_name);
+
+	return obj;
+
+}
+
+//=============================================================================
+// 処理:解放
+//=============================================================================
+void SCENE_KIM::Release(void)
+{
+	Uninit();
+	delete this;
+}
+
+//=============================================================================
+// 処理:ﾎﾞｰﾝｲﾝﾃﾞｯｸｽの正規化
+//=============================================================================
+void SCENE_KIM::BoneIndexNormalize(int mesh_idx, VERTEX_KIM* vtx)
+{
+	//FILE *normalize_index = NULL;
+	//normalize_index = fopen("data/log/normalize_index.txt", "w");
+
+	// ﾎﾞｰﾝｲﾝﾃﾞｯｸｽ情報のﾃﾝﾎﾟﾗﾘ
+	int *bone_index_data = new int[mesh_[mesh_idx].vertex_num_ * 4];
+
+	//fprintf(normalize_index, "ここからindex\n");
+	// ｲﾝﾃﾞｯｸｽ情報をint型にして持っておく
+	for (int idx_cnt = 0; idx_cnt < mesh_[mesh_idx].vertex_num_; idx_cnt++)
+	{
+		bone_index_data[0 + idx_cnt * 4] = (vtx[idx_cnt].bone_index & 0x000000ff);
+		bone_index_data[1 + idx_cnt * 4] = (vtx[idx_cnt].bone_index & 0x0000ff00) >> 8;
+		bone_index_data[2 + idx_cnt * 4] = (vtx[idx_cnt].bone_index & 0x00ff0000) >> 16;
+		bone_index_data[3 + idx_cnt * 4] = (vtx[idx_cnt].bone_index & 0xff000000) >> 24;
+
+		// 対応ｲﾝﾃﾞｯｸｽが0の場合は-1を入れる後に例外処理
+		if (vtx[idx_cnt].bone_index == 0)
+		{
+			for (int weight_cnt = 0; weight_cnt < 4; weight_cnt++)
+			{
+				if (vtx[idx_cnt].weight[weight_cnt] > 0.0f)
+				{
+					if (bone_index_data[weight_cnt + idx_cnt * 4] == 0)
+					{
+						bone_index_data[weight_cnt + idx_cnt * 4] = -1;
+					}
+
+				}
+			}
+		}
+
+		//fprintf(normalize_index, "[0]:%d   [1]:%d   [2]:%d   [3]:%d\n"
+		//	, bone_index_data[0 + idx_cnt * 4]
+		//	, bone_index_data[1 + idx_cnt * 4]
+		//	, bone_index_data[2 + idx_cnt * 4]
+		//	, bone_index_data[3 + idx_cnt * 4]);
+	}
+
+	//fprintf(normalize_index, "ここからweight\n");
+	for (int idx_cnt = 0; idx_cnt < mesh_[mesh_idx].vertex_num_; idx_cnt++)
+	{
+		//fprintf(normalize_index, "[0]:%f   [1]:%f   [2]:%f   [3]:%f\n"
+		//	, vtx[idx_cnt].weight[0]
+		//	, vtx[idx_cnt].weight[1]
+		//	, vtx[idx_cnt].weight[2]
+		//	, vtx[idx_cnt].weight[3]);
+	}
+	// 後で頂点情報に入れるｲﾝﾃﾞｯｸｽ
+	int *push_index = new int[bone_num_];
+	memset(push_index, 0, sizeof(int) * bone_num_);
+
+	// このﾒｯｼｭに関連付けされてる、ｲﾝﾃﾞｯｸｽとその数の習得
+	for (int vtx_cnt = 0; vtx_cnt < mesh_[mesh_idx].vertex_num_ * 4; vtx_cnt++)
+	{
+		int bind_weight = mesh_[mesh_idx].bind_weight;
+
+		if (push_index[bind_weight] != bone_index_data[vtx_cnt])
+		{
+			bool is_push = true;
+			for (int idx_cnt = 0; idx_cnt < bind_weight; idx_cnt++)
+			{
+				if (push_index[idx_cnt] == bone_index_data[vtx_cnt])
+				{
+					is_push = false;
+				}
+			}
+			if (is_push && bone_index_data[vtx_cnt] != 0)
+			{
+				push_index[bind_weight] = bone_index_data[vtx_cnt];
+				mesh_[mesh_idx].bind_weight++;
+			}
+		}
+	}
+
+	// 関連付け情報をｲﾝﾃﾞｯｸｽに登録
+	mesh_[mesh_idx].bind_index = new int[mesh_[mesh_idx].bind_weight];
+	for (int j = 0; j < mesh_[mesh_idx].bind_weight; j++)
+	{
+		if (push_index[j] == -1)
+			push_index[j] = 0;
+		mesh_[mesh_idx].bind_index[j] = push_index[j];
+	}
+
+	// 分割した内容を適応
+	for (int idx_cnt = 0; idx_cnt < mesh_[mesh_idx].vertex_num_; idx_cnt++)
+	{
+		DWORD bone_index = 0;
+		DWORD index_array_dword = vtx[idx_cnt].bone_index;
+
+		for (int digit = 0; digit < 4; digit++)
+		{
+			for (int push_num = 0; push_num < mesh_[mesh_idx].bind_weight; push_num++)
+			{
+				if (bone_index_data[digit + idx_cnt * 4] == mesh_[mesh_idx].bind_index[push_num])
+				{
+					bone_index |= push_num << (8 * digit);
+					break;
+				}
+			}
+		}
+
+		vtx[idx_cnt].bone_index = bone_index;
+	}
+
+	// ﾛｰｶﾙ情報の削除
+	delete[] bone_index_data;
+	delete[] push_index;
+
+	//fclose(normalize_index);
+}
+
+//=============================================================================
+// 処理:送信する頂点情報の設定
+//=============================================================================
+void SCENE_KIM::CreateVertexDecl(void)
+{
+	// 頂点宣言
+	D3DVERTEXELEMENT9 declAry[] = {
+			{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
+			{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },
+			{ 0, 24, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
+			{ 0, 32, D3DDECLTYPE_UBYTE4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0 },
+			{ 0, 36, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BLENDWEIGHT, 0 },
+			{ 0, 52, D3DDECLTYPE_UBYTE4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BLENDINDICES, 0 },
+			D3DDECL_END()
+	};
+
+	d3d_device_->CreateVertexDeclaration(declAry, &decl_);
+}
+
+//=============================================================================
+// 処理:ボーンの更新(行列変換)
+//=============================================================================
+void SCENE_KIM::UpdateBone(KIM_BONE_DATA* me, D3DXMATRIX *parentWorldMat)
+{
+	me->bone_matrix *= *parentWorldMat;
+
+	if (me->child)
+		UpdateBone(me->child, &me->bone_matrix);
+	if (me->sibling)
+		UpdateBone(me->sibling, parentWorldMat);
+
+	me->wold_matrix = me->offset_matrix * me->bone_matrix;
+}
+
+//=============================================================================
+// 処理:ﾎﾞｰﾝ配列の初期位置の設定
+//=============================================================================
+void SCENE_KIM::CalcRelativeMat(KIM_BONE_DATA* me, D3DXMATRIX *parentoffsetMat)
+{
+	// 初期姿勢を親の初期姿勢を反映した初期姿勢の設定(親に対し相対的な場所へにする)
+	if (me->child)
+		CalcRelativeMat(me->child, &me->offset_matrix);
+	if (me->sibling)
+		CalcRelativeMat(me->sibling, parentoffsetMat);
+	if (parentoffsetMat)
+		me->init_matrix *= *parentoffsetMat;
+}
+
+//=============================================================================
+// 処理:ｼｪｰﾀﾞｰのｺﾝﾊﾟｲﾙ
+//=============================================================================
+HRESULT SCENE_KIM::CompileShader(void)
+{
+	// シェーダのコンパイルとシェーダ作成
+	ID3DXBuffer *shader, *error;
+
+	// 返り値用変数
+	HRESULT res;
+
+	if (bone_num_ != 0)
+	{
+		res = D3DXCompileShaderFromFile("resources/shader/SkiningShader.hlsl", NULL, 0, "vs_main", "vs_3_0", 0, &shader, &error, 0);
+	}
+	else
+	{
+		draw_type_ = TYPE_STATIC_MESH;
+		res = D3DXCompileShaderFromFile("resources/shader/StaticFBX.hlsl", NULL, 0, "vs_main", "vs_3_0", 0, &shader, &error, 0);
+	}
+
+	if (FAILED(res)) {
+		MessageBox(NULL, (LPSTR)error->GetBufferPointer(), NULL, 0);
+		return E_FAIL;
+	};
+
+	d3d_device_->CreateVertexShader((const DWORD*)shader->GetBufferPointer(), &vertex_shader_);
+	shader->Release();
+
+	res = D3DXCompileShaderFromFile("resources/shader/SkiningShader.hlsl", NULL, 0, "ps_main", "ps_3_0", 0, &shader, &error, 0);
+	if (FAILED(res)) {
+		MessageBox(NULL, (LPSTR)error->GetBufferPointer(), NULL, 0);
+		return E_FAIL;
+	};
+
+	d3d_device_->CreatePixelShader((const DWORD*)shader->GetBufferPointer(), &pixel_shader_);
+	shader->Release();
+
+	//D3DXCreateTextureFromFile(d3d_device_, "data/texture/mapping_textrue/toon_map.png", &toon_map);
+
+}
+
+//=============================================================================
+// ﾏﾃﾘｱﾙの設定
+//=============================================================================
+void SCENE_KIM::SetMaterial(D3DMATERIAL9 *material)
+{
+	if (draw_type_ == TYPE_ONE_MY || draw_type_ == TYPE_MULTI_MY || draw_type_ == TYPE_STATIC_MESH)
+	{
+		d3d_device_->SetVertexShaderConstantF(12, (float*)(&material->Diffuse), 1);
+		d3d_device_->SetVertexShaderConstantF(13, (float*)(&material->Ambient), 1);
+		d3d_device_->SetVertexShaderConstantF(14, (float*)(&material->Emissive), 1);
+		d3d_device_->SetVertexShaderConstantF(15, (float*)(&material->Specular), 1);
+
+	}
+	else
+	{
+		d3d_device_->SetMaterial(material);
+	}
+}
+
+
+//=============================================================================
+// 処理:ﾎﾞｰﾝの描画
+//=============================================================================
+void SCENE_KIM::DrawBone(void)
+{
+	// 固定ｼｪｰﾀﾞの頂点ﾌﾞﾚﾝﾄﾞを切る
+	d3d_device_->SetRenderState(D3DRS_INDEXEDVERTEXBLENDENABLE, FALSE);
+
+	for (int i = 0; i < bone_num_; i++)
+	{
+		ID3DXMesh *boneObj;
+		D3DXCreateCylinder(d3d_device_, 0.2f, 0.5f, 5.0f, 16, 1, &boneObj, 0);
+
+		D3DMATERIAL9 material = { { 1.0f, 1.0f, 1.0f, 1.0f } }; material.Power = 10.0f;
+		D3DLIGHT9 light = { D3DLIGHT_DIRECTIONAL, { 1.0f, 0.7f, 0.5f, 1.0f } };
+		light.Direction = (D3DVECTOR)D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+
+		d3d_device_->SetLight(0, &light);
+		d3d_device_->LightEnable(0, TRUE);
+		d3d_device_->SetRenderState(D3DRS_LIGHTING, TRUE);
+		d3d_device_->SetMaterial(&material);
+		d3d_device_->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+		d3d_device_->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+		D3DXMATRIX boneObjRot;
+		D3DXMatrixRotationY(&boneObjRot, D3DXToRadian(-90.0f));
+		d3d_device_->SetTransform(D3DTS_WORLD, &(boneObjRot * bone_[i].bone_matrix));
+		boneObj->DrawSubset(0);
+		boneObj->Release();
+	}
+}
+
+//=============================================================================
+// 1ﾒｯｼｭ	自作ｼｪｰﾀﾞｰ用描画
+//=============================================================================
+void SCENE_KIM::OneMeshMyShader(void)
+{
+	// 現在のシェーダー情報の確保
+	LPDIRECT3DVERTEXSHADER9 current_vertex_shader;
+	LPDIRECT3DPIXELSHADER9 current_pixelshader;
+	d3d_device_->GetVertexShader(&current_vertex_shader);
+	d3d_device_->GetPixelShader(&current_pixelshader);
+
+	// シェーダ設定
+	d3d_device_->SetVertexShader(vertex_shader_);
+	d3d_device_->SetPixelShader(pixel_shader_);
+
+	// 送信する頂点情報の設定
+	d3d_device_->SetVertexDeclaration(decl_);
+
+	// ﾋﾞｭｰ,ﾌﾟﾛｼﾞｪｸｼｮﾝの取得
+	D3DXMATRIX view, proj;
+	d3d_device_->GetTransform(D3DTS_VIEW, &view);
+	d3d_device_->GetTransform(D3DTS_PROJECTION, &proj);
+
+	D3DXMatrixTranspose(&view, &view);
+	D3DXMatrixTranspose(&proj, &proj);
+
+	// ﾜｰﾙﾄﾞ,ﾋﾞｭｰ,ﾌﾟﾛｼﾞｪｸｼｮﾝ,指向性ﾗｲﾄ情報の転送
+	d3d_device_->SetVertexShaderConstantF(0, static_cast<const float*>(world_), 4);
+	d3d_device_->SetVertexShaderConstantF(4, static_cast<const float*>(view), 4);
+	d3d_device_->SetVertexShaderConstantF(8, static_cast<const float*>(proj), 4);
+	d3d_device_->SetVertexShaderConstantF(16, static_cast<const float*>(light_directional), 4);
+
+	// GPUに送信する行列の生成
+	D3DXMATRIX *export_bone = new D3DXMATRIX[bone_num_];
+	for (int cnt = 0; cnt < bone_num_; cnt++)
+	{
+		export_bone[cnt] = bone_[cnt].wold_matrix;
+		D3DXMatrixTranspose(&export_bone[cnt], &export_bone[cnt]);
+	}
+
+	d3d_device_->SetVertexShaderConstantF(18, static_cast<const float*>(*export_bone), 4 * bone_num_);
+
+	// ﾄｩｰﾝﾏｯﾌﾟの設定
+	d3d_device_->SetTexture(1, toon_map);
+
+	// 全ﾒｯｼｭの描画
+	for (int i = 0; i < mesh_num_; i++)
+	{
+		SetMaterial(&mesh_[i].material_);
+		d3d_device_->SetTexture(0, mesh_[i].texture_);
+		d3d_device_->SetIndices(mesh_[i].index_buffer_);
+		d3d_device_->SetStreamSource(0, mesh_[i].vertex_buffer_, 0, sizeof(VERTEX_KIM));	// 頂点ﾊﾞｯﾌｧをﾃﾞﾊﾞｲｽに関連付け
+		d3d_device_->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, mesh_[i].vertex_num_, 0, mesh_[i].index_num_ / 3);
+
+	}
+	// 前回のシェーダーに戻す
+	d3d_device_->SetVertexShader(current_vertex_shader);
+	d3d_device_->SetPixelShader(current_pixelshader);
+
+	// 正規化したﾎﾞｰﾝ情報の転送の削除
+	delete[] export_bone;
+}
+
+//=============================================================================
+// 複数ﾒｯｼｭ	自作ｼｪｰﾀﾞｰ用描画
+//=============================================================================
+void SCENE_KIM::MultiMeshMyShader(void)
+{
+	// 現在のシェーダー情報の確保
+	LPDIRECT3DVERTEXSHADER9 current_vertex_shader;
+	LPDIRECT3DPIXELSHADER9 current_pixelshader;
+	d3d_device_->GetVertexShader(&current_vertex_shader);
+	d3d_device_->GetPixelShader(&current_pixelshader);
+
+	// シェーダ設定
+	d3d_device_->SetVertexShader(vertex_shader_);
+	d3d_device_->SetPixelShader(pixel_shader_);
+
+	// 送信する頂点情報の設定
+	d3d_device_->SetVertexDeclaration(decl_);
+
+	// ﾋﾞｭｰ,ﾌﾟﾛｼﾞｪｸｼｮﾝの取得
+	D3DXMATRIX view, proj;
+	d3d_device_->GetTransform(D3DTS_VIEW, &view);
+	d3d_device_->GetTransform(D3DTS_PROJECTION, &proj);
+
+	D3DXMatrixTranspose(&view, &view);
+	D3DXMatrixTranspose(&proj, &proj);
+
+	// ﾜｰﾙﾄﾞ,ﾋﾞｭｰ,ﾌﾟﾛｼﾞｪｸｼｮﾝ,指向性ﾗｲﾄ情報の転送
+	d3d_device_->SetVertexShaderConstantF(0, static_cast<const float*>(world_), 4);
+	d3d_device_->SetVertexShaderConstantF(4, static_cast<const float*>(view), 4);
+	d3d_device_->SetVertexShaderConstantF(8, static_cast<const float*>(proj), 4);
+	d3d_device_->SetVertexShaderConstantF(16, static_cast<const float*>(light_directional), 4);
+
+	//// ﾄｩｰﾝﾏｯﾌﾟの設定
+	//d3d_device_->SetTexture(1, toon_map);
+
+	// 全ﾒｯｼｭの描画
+	for (int i = 0; i < mesh_num_; i++)
+	{
+		// GPUに送信する行列の生成
+		D3DXMATRIX *export_bone = new D3DXMATRIX[mesh_[i].bind_weight];
+		for (int cnt = 0; cnt < mesh_[i].bind_weight; cnt++)
+		{
+			if (bone_num_ > mesh_[i].bind_index[cnt])
+			{
+				export_bone[cnt] = bone_[mesh_[i].bind_index[cnt]].wold_matrix;
+				D3DXMatrixTranspose(&export_bone[cnt], &export_bone[cnt]);
+			}
+		}
+		d3d_device_->SetVertexShaderConstantF(18, static_cast<const float*>(*export_bone), 4 * mesh_[i].bind_weight);
+
+		SetMaterial(&mesh_[i].material_);
+		d3d_device_->SetTexture(0, mesh_[i].texture_);
+		d3d_device_->SetIndices(mesh_[i].index_buffer_);
+		d3d_device_->SetStreamSource(0, mesh_[i].vertex_buffer_, 0, sizeof(VERTEX_KIM));	// 頂点ﾊﾞｯﾌｧをﾃﾞﾊﾞｲｽに関連付け
+
+		d3d_device_->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, mesh_[i].vertex_num_, 0, mesh_[i].index_num_ / 3);
+		// 正規化したﾎﾞｰﾝ情報の削除
+		delete[] export_bone;
+
+	}
+
+	// 前回のシェーダーに戻す
+	d3d_device_->SetVertexShader(current_vertex_shader);
+	d3d_device_->SetPixelShader(current_pixelshader);
+
+}
+
+//=============================================================================
+// 1ﾒｯｼｭ	固定ｼｪｰﾀﾞｰ用描画
+//=============================================================================
+void SCENE_KIM::OneMeshOriginShader(void)
+{
+	//ハードの頂点ブレンド行列数
+	int indexMtxNum = 0;
+
+	//ハードの情報
+	D3DCAPS9 caps;
+	d3d_device_->GetDeviceCaps(&caps);
+	indexMtxNum = caps.MaxVertexBlendMatrixIndex;
+
+	//マテリアル退避
+	D3DMATERIAL9 defaultMat;
+	d3d_device_->GetMaterial(&defaultMat);
+
+	//頂点ブレンドを使用(4matrix)
+	d3d_device_->SetRenderState(D3DRS_VERTEXBLEND, D3DVBF_3WEIGHTS);
+	//インデックス付き頂点ブレンド
+	d3d_device_->SetRenderState(D3DRS_INDEXEDVERTEXBLENDENABLE, TRUE);
+	// 頂点色ではなくﾏﾃﾘｱﾙｶﾗｰでﾗｲﾃｨﾝｸﾞ
+	d3d_device_->SetRenderState(D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_MATERIAL);
+
+	//ﾌﾞﾚﾝﾄﾞできる行列数が足りない場合は頂点処理をｿﾌﾄｳｪｱ
+	if (indexMtxNum < bone_num_)
+		d3d_device_->SetSoftwareVertexProcessing(true);
+	for (int cnt = 0; cnt < bone_num_; cnt++)
+		d3d_device_->SetTransform(D3DTS_WORLDMATRIX(cnt), &(bone_[cnt].wold_matrix));
+
+	// 全ﾒｯｼｭの描画
+	for (int i = 0; i < mesh_num_; i++)
+	{
+		// 固定シェーダ用描画
+		SetMaterial(&mesh_[i].material_);
+		d3d_device_->SetTexture(0, mesh_[i].texture_);
+		d3d_device_->SetMaterial(&mesh_[i].material_);
+		d3d_device_->SetIndices(mesh_[i].index_buffer_);
+		d3d_device_->SetStreamSource(0, mesh_[i].vertex_buffer_, 0, sizeof(VERTEX_KIM));	// 頂点ﾊﾞｯﾌｧをﾃﾞﾊﾞｲｽに関連付け
+		d3d_device_->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, mesh_[i].vertex_num_, 0, mesh_[i].index_num_ / 3);
+	}
+
+	// 変更した情報を元にもどす
+	d3d_device_->SetMaterial(&defaultMat);
+	d3d_device_->SetRenderState(D3DRS_INDEXEDVERTEXBLENDENABLE, FALSE);
+	d3d_device_->SetRenderState(D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_COLOR1);
+
+	//頂点処理をハードウェアに戻す
+	d3d_device_->SetSoftwareVertexProcessing(false);
+
+}
+
+//=============================================================================
+// 複数ﾒｯｼｭ	固定ｼｪｰﾀﾞｰ用描画
+//=============================================================================
+void SCENE_KIM::MultiMeshOriginShader(void)
+{
+	//ハードの頂点ブレンド行列数
+	int indexMtxNum = 0;
+
+	//ハードの情報
+	D3DCAPS9 caps;
+	d3d_device_->GetDeviceCaps(&caps);
+	indexMtxNum = caps.MaxVertexBlendMatrixIndex;
+
+	//マテリアル退避
+	D3DMATERIAL9 defaultMat;
+	d3d_device_->GetMaterial(&defaultMat);
+
+	//頂点ブレンドを使用(4matrix)
+	d3d_device_->SetRenderState(D3DRS_VERTEXBLEND, D3DVBF_3WEIGHTS);
+	//インデックス付き頂点ブレンド
+	d3d_device_->SetRenderState(D3DRS_INDEXEDVERTEXBLENDENABLE, TRUE);
+	// 頂点色ではなくﾏﾃﾘｱﾙｶﾗｰでﾗｲﾃｨﾝｸﾞ
+	d3d_device_->SetRenderState(D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_MATERIAL);
+
+	// 全ﾒｯｼｭの描画
+	for (int i = 0; i < mesh_num_; i++)
+	{
+		//ﾌﾞﾚﾝﾄﾞできる行列数が足りない場合は頂点処理をｿﾌﾄｳｪｱ
+		if (indexMtxNum < mesh_[i].bind_weight)
+			d3d_device_->SetSoftwareVertexProcessing(true);
+		else
+			d3d_device_->SetSoftwareVertexProcessing(false);
+
+		// ボーンの変換行列をGPUに送る 
+		for (int cnt = 0; cnt < mesh_[i].bind_weight; cnt++)
+			d3d_device_->SetTransform(D3DTS_WORLDMATRIX(cnt), &(bone_[mesh_[i].bind_index[cnt]].wold_matrix));
+
+		// 固定シェーダ用描画
+		SetMaterial(&mesh_[i].material_);
+		d3d_device_->SetTexture(0, mesh_[i].texture_);
+		d3d_device_->SetMaterial(&mesh_[i].material_);
+		d3d_device_->SetIndices(mesh_[i].index_buffer_);
+		d3d_device_->SetStreamSource(0, mesh_[i].vertex_buffer_, 0, sizeof(VERTEX_KIM));	// 頂点ﾊﾞｯﾌｧをﾃﾞﾊﾞｲｽに関連付け
+		d3d_device_->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, mesh_[i].vertex_num_, 0, mesh_[i].index_num_ / 3);
+	}
+
+	// 変更した情報を元にもどす
+	d3d_device_->SetMaterial(&defaultMat);
+	d3d_device_->SetRenderState(D3DRS_INDEXEDVERTEXBLENDENABLE, FALSE);
+	d3d_device_->SetRenderState(D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_COLOR1);
+
+	//頂点処理をハードウェアに戻す
+	d3d_device_->SetSoftwareVertexProcessing(false);
+}
+
+//=============================================================================
+// 静的ﾒｯｼｭの描画
+//=============================================================================
+void SCENE_KIM::StaticMesh(void)
+{
+	// 現在のシェーダー情報の確保
+	LPDIRECT3DVERTEXSHADER9 current_vertex_shader;
+	LPDIRECT3DPIXELSHADER9 current_pixelshader;
+	d3d_device_->GetVertexShader(&current_vertex_shader);
+	d3d_device_->GetPixelShader(&current_pixelshader);
+
+	// シェーダ設定
+	d3d_device_->SetVertexShader(vertex_shader_);
+	d3d_device_->SetPixelShader(pixel_shader_);
+
+	// 送信する頂点情報の設定
+	d3d_device_->SetVertexDeclaration(decl_);
+
+	// ﾋﾞｭｰ,ﾌﾟﾛｼﾞｪｸｼｮﾝの取得
+	D3DXMATRIX view, proj;
+	d3d_device_->GetTransform(D3DTS_VIEW, &view);
+	d3d_device_->GetTransform(D3DTS_PROJECTION, &proj);
+
+	D3DXMatrixTranspose(&view, &view);
+	D3DXMatrixTranspose(&proj, &proj);
+
+	// ﾜｰﾙﾄﾞ,ﾋﾞｭｰ,ﾌﾟﾛｼﾞｪｸｼｮﾝ,指向性ﾗｲﾄ情報の転送
+	d3d_device_->SetVertexShaderConstantF(0, static_cast<const float*>(world_), 4);
+	d3d_device_->SetVertexShaderConstantF(4, static_cast<const float*>(view), 4);
+	d3d_device_->SetVertexShaderConstantF(8, static_cast<const float*>(proj), 4);
+	d3d_device_->SetVertexShaderConstantF(16, static_cast<const float*>(light_directional), 4);
+
+	// ﾄｩｰﾝﾏｯﾌﾟの設定
+	d3d_device_->SetTexture(1, toon_map);
+
+	// 全ﾒｯｼｭの描画
+	for (int i = 0; i < mesh_num_; i++)
+	{
+		SetMaterial(&mesh_[i].material_);
+		d3d_device_->SetTexture(0, mesh_[i].texture_);
+		d3d_device_->SetIndices(mesh_[i].index_buffer_);
+		d3d_device_->SetStreamSource(0, mesh_[i].vertex_buffer_, 0, sizeof(VERTEX_KIM));	// 頂点ﾊﾞｯﾌｧをﾃﾞﾊﾞｲｽに関連付け
+		d3d_device_->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, mesh_[i].vertex_num_, 0, mesh_[i].index_num_ / 3);
+
+	}
+
+	// 前回のシェーダーに戻す
+	d3d_device_->SetVertexShader(current_vertex_shader);
+	d3d_device_->SetPixelShader(current_pixelshader);
+
+
+}
+
+//=============================================================================
+// ﾃﾞﾊﾞｯｸﾞ用関数
+//=============================================================================
+bool SCENE_KIM::DebugUpdate(void)
+{
+	bool return_data = true;
+
+	//CDebugProc::Print("F5:再読み込み\n");
+	//CDebugProc::Print("//--  メッシュ系  --//\n");
+	//CDebugProc::Print("総頂点数:%d\n", all_vertex_num_);
+	//CDebugProc::Print("最小頂点 x:%f y:%f z:%f\n", vertex_max_.x, vertex_max_.y, vertex_max_.z);
+	//CDebugProc::Print("最大頂点 x:%f y:%f z:%f\n", vertex_min_.x, vertex_min_.y, vertex_min_.z);
+	//CDebugProc::Print("P:ｶﾘﾝｸﾞを切る O:ﾜｲﾔｰﾌﾚｰﾑ\n");
+	//CDebugProc::Print("//--  カメラ系  --//\n");
+	//CDebugProc::Print("W,S:ｶﾒﾗの遠近 Q,E:ｶﾒﾗの左右回り込み\n");
+	//CDebugProc::Print("R,F:ｶﾒﾗの高さ調節\n");
+	//CDebugProc::Print("//--  ボーン系  --//\n");
+	//CDebugProc::Print("B:ﾎﾞｰﾝの描画 M:ﾎﾞｰﾝの稼働\n");
+	//CDebugProc::Print("左右:選択ﾎﾞｰﾝの変更\n");
+	//CDebugProc::Print("//--  ｱﾆﾒｰｼｮﾝ系  --//\n");
+	//CDebugProc::Print("T,G:ｱﾆﾒｰｼｮﾝ速度の増減\n");
+	//CDebugProc::Print("上下:ﾓｰｼｮﾝﾀｲﾌﾟの変更\n");
+
+	////switch (draw_type_)
+	////{
+	////case TYPE_ONE_MY:
+	////	CDebugProc::Print("1ﾒｯｼｭ	自作ｼｪｰﾀﾞｰ\n");
+	////	break;
+	////case TYPE_ONE_ORIGINE:
+	////	CDebugProc::Print("1ﾒｯｼｭ	固定ｼｪｰﾀﾞｰ\n");
+	////	break;
+	////case TYPE_MULTI_MY:
+	////	CDebugProc::Print("複数ﾒｯｼｭ	自作ｼｪｰﾀﾞｰ\n");
+	////	break;
+	////case TYPE_MULTI_ORIGINE:
+	////	CDebugProc::Print("複数ﾒｯｼｭ	固定ｼｪｰﾀﾞｰ\n");
+	////	break;
+	////}
+	//
+	//if (bone_ != NULL)
+	//{
+	//	CDebugProc::Print("ｱﾆﾒｰｼｮﾝ変更:数字キー\n");
+	//	CDebugProc::Print("現在のｱﾆﾒ:%d 速度:%d\n", current_anime_, anime_speed);
+	//	CDebugProc::Print("現在の動かし方:%s\n", debug_string[anim_type_]);
+	//	CDebugProc::Print("ｷｰﾌﾚｰﾑ数:%d 時間:%d\n", bone_[cursor_bone_].anime[current_anime_].current_key, bone_[cursor_bone_].current_time);
+	//	CDebugProc::Print("ﾎﾞｰﾝ数:%d ﾒｯｼｭ数:%d\n", bone_num_, mesh_num_);
+	//	CDebugProc::Print("左右:選択ﾎﾞｰﾝの変更\n");
+	//	CDebugProc::Print("現在のﾎﾞｰﾝ番号:%d\n", cursor_bone_);
+	//	CDebugProc::Print("現在のﾎﾞｰﾝ:%s\n", bone_[cursor_bone_].name);
+	//	if (bone_[cursor_bone_].anime_num != 0)
+	//	{
+	//		CDebugProc::Print("現在のﾎﾞｰﾝの移動: x:%f y:%f z:%f\n",
+	//			bone_[cursor_bone_].anime[current_anime_].keyframe[bone_[cursor_bone_].anime[current_anime_].current_key].translation.x,
+	//			bone_[cursor_bone_].anime[current_anime_].keyframe[bone_[cursor_bone_].anime[current_anime_].current_key].translation.y,
+	//			bone_[cursor_bone_].anime[current_anime_].keyframe[bone_[cursor_bone_].anime[current_anime_].current_key].translation.z);
+	//		CDebugProc::Print("現在のﾎﾞｰﾝの回転: x:%e y:%e z:%e\n",
+	//			bone_[cursor_bone_].anime[current_anime_].keyframe[bone_[cursor_bone_].anime[current_anime_].current_key].rotation.x,
+	//			bone_[cursor_bone_].anime[current_anime_].keyframe[bone_[cursor_bone_].anime[current_anime_].current_key].rotation.y,
+	//			bone_[cursor_bone_].anime[current_anime_].keyframe[bone_[cursor_bone_].anime[current_anime_].current_key].rotation.z);
+	//	}
+
+	//	if (GetAsyncKeyState('M'))
+	//	{	// ﾃﾞﾊﾞｯｸﾞ用
+	//		value_ += 0.03f;
+	//		float temp = D3DXToRadian(sinf(value_) * times_);
+
+	//		for (int i = 0; i < bone_num_; i++)
+	//		{
+	//			D3DXMatrixIdentity(&bone_[i].bone_matrix);
+	//			bone_[i].bone_matrix *= bone_[i].init_matrix;
+	//			switch (anim_type_)
+	//			{
+	//			case 0:
+	//				D3DXMatrixRotationYawPitchRoll(&bone_[cursor_bone_].bone_matrix, temp, temp, temp);
+	//				break;
+	//			case 1:
+	//				D3DXMatrixRotationX(&bone_[cursor_bone_].bone_matrix, temp);
+	//				break;
+	//			case 2:
+	//				D3DXMatrixRotationY(&bone_[cursor_bone_].bone_matrix, temp);
+	//				break;
+	//			case 3:
+	//				D3DXMatrixRotationZ(&bone_[cursor_bone_].bone_matrix, temp);
+	//				break;
+	//			default:
+	//				break;
+	//			}
+	//			bone_[cursor_bone_].bone_matrix *= bone_[cursor_bone_].init_matrix;
+	//		}
+	//		CDebugProc::Print("うごいた量:%f\n", temp);
+	//		UpdateBone(bone_, &world_);
+	//		return_data = false;
+	//	}
+	//}
+
+	//d3d_device_->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);				// 裏面をカリング
+	//d3d_device_->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);				// 裏面をカリング
+
+	//if (GetAsyncKeyState('P'))
+	//{
+	//	d3d_device_->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);				// 裏面をカリング
+	//}
+	//if (GetAsyncKeyState('O'))
+	//{
+	//	d3d_device_->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);				// 裏面をカリング
+	//}
+
+	//if (GetAsyncKeyState('T') & 0x0001)
+	//	anime_speed++;
+	//if (GetAsyncKeyState('G') & 0x0001)
+	//	anime_speed--;
+	//
+	//if (GetAsyncKeyState(VK_UP) & 0x0001)
+	//	anim_type_++;
+	//if (GetAsyncKeyState(VK_DOWN) & 0x0001)
+	//	anim_type_--;
+
+	//if (!GetAsyncKeyState(VK_LSHIFT))
+	//{
+	//	if (GetAsyncKeyState(VK_LEFT) & 0x0001)
+	//		cursor_bone_++;
+	//	if (GetAsyncKeyState(VK_RIGHT) & 0x0001)
+	//		cursor_bone_--;
+	//}
+	//else
+	//{
+	//	CDebugProc::Print("左右:選択ﾒｯｼｭの変更\n");
+	//	if (GetAsyncKeyState(VK_LEFT) & 0x0001)
+	//		cursor_mesh_++;
+	//	if (GetAsyncKeyState(VK_RIGHT) & 0x0001)
+	//		cursor_mesh_--;
+	//}
+
+	//if (cursor_bone_ < 0)
+	//	cursor_bone_ = bone_num_ - 1;
+	//if (cursor_bone_ == bone_num_)
+	//	cursor_bone_ = 0;
+
+	//if (cursor_mesh_ < 0)
+	//	cursor_mesh_ = mesh_num_ - 1;
+	//if (cursor_mesh_ == mesh_num_)
+	//	cursor_mesh_ = 0;
+
+	//if (anim_type_ < 0)
+	//	anim_type_ = 3;
+	//if (anim_type_ > 3)
+	//	anim_type_ = 0;
+
+	//for (int i = 48; i < 58; i++)
+	//{
+	//	if (GetAsyncKeyState(i))
+	//	{
+	//		set_anime_ = i - 48;
+	//	}
+	//}
+
+	//if (bone_ != NULL)
+	//{
+	//	if (set_anime_ >= bone_->anime_num)
+	//	{
+	//		set_anime_ = bone_->anime_num - 1;
+	//	}
+
+	//}
+
+
+
+	return return_data;
+}
+
+
+// EOF

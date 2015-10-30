@@ -33,6 +33,9 @@
 #include "action/callback.h"
 #include "action/spawn.h"
 
+
+#include "fbx/scene_kim.h"
+
 //=============================================================================
 // エントリーポイント
 //=============================================================================
@@ -81,6 +84,12 @@ int main(int argc,char* argv)
 	observer->SetLength(5.0f);
 	observer->SetHeight(5.0f);
 	observer->Update();
+	auto aa = observer->GetViewMatrix();
+
+	//ビューマトリックスの設定
+	graphic_device->GetDevice()->SetTransform(D3DTS_VIEW,( D3DMATRIX* )&observer->GetViewMatrix());
+	graphic_device->GetDevice()->SetTransform(D3DTS_PROJECTION,( D3DMATRIX* )&observer->GetProjectionMatrix());
+
 
 	auto move_to = std::make_shared<action::MoveTo>(180,float3(0.0f,0.0f,10.0f));
 	auto move_by = std::make_shared<action::MoveBy>(180,float3(-1.0f,0.0f,0.0f),1.0f);
@@ -89,6 +98,9 @@ int main(int argc,char* argv)
 	auto spaw = std::make_shared<action::Spawn>(move_by_,move_by);
 	sequence->SetStartPosition(float3(10.0f,0.0f,0.0f));
 	spaw->SetStartPosition(float3(10.0f,0.0f,0.0f));
+
+	auto _kim = SCENE_KIM::Create( graphic_device->GetDevice() , "resources/model/ZZI_taiki4.kim" );
+	
 	while(is_loop)
 	{
 		auto start_time = std::chrono::system_clock::now();
@@ -121,7 +133,45 @@ int main(int argc,char* argv)
 		directx9->SetStreamSource(0,sprite->GetBuffer(),0,sprite->GetStride());
 		directx9->SetIndices(sprite->GetIndexBuffer());
 		directx9->DrawIndexedPrimitive(sprite->GetPrimitiveType(),0,0,sprite->GetVertexCount(),0,sprite->GetPrimitiveCount());
-		//directx9->DrawPrimitive(sprite->GetPrimitiveType(),0,sprite->GetPrimitiveCount());
+		directx9->DrawPrimitive(sprite->GetPrimitiveType(),0,sprite->GetPrimitiveCount());
+
+
+
+
+		D3DXMATRIX world , mtxScl , mtxPos ;
+		D3DXVECTOR3 scl( 0.025f , 0.025f , 0.025f );
+		static D3DXVECTOR3 pos( 0.025f , 0.025f , 0.025f );
+
+
+		if( GetAsyncKeyState('W') )
+		{
+			pos.z += 0.05f ;
+		}
+		if( GetAsyncKeyState('S') )
+		{
+			pos.z -= 0.05f ;
+		}
+		if( GetAsyncKeyState('A') )
+		{
+			pos.x += 0.05f ;
+		}
+		if( GetAsyncKeyState('D') )
+		{
+			pos.x -= 0.05f ;
+		}
+		D3DXMatrixIdentity( &world );
+
+		//--  スケールの反映  --//
+		D3DXMatrixScaling( &mtxScl , scl.x , scl.y , scl.z );
+		D3DXMatrixMultiply( &world , &world , &mtxScl );	//行列の掛け算
+
+		//--  位置の反映  --//
+		D3DXMatrixTranslation( &mtxPos , pos.x , pos.y , pos.z );
+		D3DXMatrixMultiply( &world , &world , &mtxPos );	//行列の掛け算
+
+		_kim->Update();
+		_kim->SetWorld( world );
+		_kim->Draw();
 
 		graphic_device->EndRendering();
 

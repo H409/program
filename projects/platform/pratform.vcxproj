@@ -22,6 +22,7 @@
     <ClCompile Include="sources\action\move_to.cpp" />
     <ClCompile Include="sources\action\sequence.cpp" />
     <ClCompile Include="sources\action\spawn.cpp" />
+    <ClCompile Include="sources\fbx\scene_kim.cpp" />
     <ClCompile Include="sources\main.cpp" />
     <ClCompile Include="sources\mesh\mesh.cpp" />
     <ClCompile Include="sources\mesh\mesh_sprite_3d.cpp" />
@@ -43,6 +44,7 @@
     <ClInclude Include="sources\action\move_to.h" />
     <ClInclude Include="sources\action\sequence.h" />
     <ClInclude Include="sources\action\spawn.h" />
+    <ClInclude Include="sources\fbx\scene_kim.h" />
     <ClInclude Include="sources\main.h" />
     <ClInclude Include="sources\mesh\mesh.h" />
     <ClInclude Include="sources\mesh\mesh_sprite_3d.h" />
@@ -99,7 +101,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <TargetName>$(ProjectName)</TargetName>
-    <IncludePath>$(ProjectDir)sources;$(SolutionDir)projects/windows/sources;$(SolutionDir)projects/system/sources;$(SolutionDir)projects/directx9/sources;$(SolutionDir)projects/utility/sources;$(SolutionDir)projects/application/sources;$(IncludePath);</IncludePath>
+    <IncludePath>$(ProjectDir)sources;$(SolutionDir)projects/windows/sources;$(SolutionDir)projects/system/sources;$(SolutionDir)projects/directx9/sources;$(SolutionDir)projects/utility/sources;$(SolutionDir)projects/application/sources;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
     <IntDir>$(Configuration)\</IntDir>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
     <LibraryPath>$(DXSDK_DIR)Lib\x86;$(LibraryPath);</LibraryPath>

@@ -26,6 +26,9 @@
     <Filter Include="sources\action">
       <UniqueIdentifier>{4cdd7809-ce2f-48b9-842d-d92f77819595}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\fbx">
+      <UniqueIdentifier>{c18f048a-ded3-4cc0-b99d-b31a09c09a25}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\windows\win_main.cpp">
@@ -85,6 +88,9 @@
     <ClCompile Include="sources\action\spawn.cpp">
       <Filter>sources\action</Filter>
     </ClCompile>
+    <ClCompile Include="sources\fbx\scene_kim.cpp">
+      <Filter>sources\fbx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sources\main.h">
@@ -140,6 +146,9 @@
     </ClInclude>
     <ClInclude Include="sources\action\spawn.h">
       <Filter>sources\action</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\fbx\scene_kim.h">
+      <Filter>sources\fbx</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
