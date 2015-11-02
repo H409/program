@@ -31,7 +31,8 @@ MeshSprite3D::MeshSprite3D(const u32& in_width_count,const u32& in_height_count)
 // constructor
 //=============================================================================
 MeshSprite3D::MeshSprite3D(const f32& in_block_width,const f32& in_block_height,const u32& in_width_count,const u32& in_height_count)
-	:width_(in_block_width)
+	:Mesh(true,true)
+	,width_(in_block_width)
 	,height_(in_block_height)
 	,width_count_(in_width_count)
 	,height_count_(in_height_count)

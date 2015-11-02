@@ -27,6 +27,7 @@ class Object
 {
 public:
 	using TAction = std::shared_ptr<action::Action>;
+	using TObject = std::shared_ptr<Object>;
 
 	// constructor
 	Object(void);
@@ -36,6 +37,9 @@ public:
 
 	// update
 	void Update(void);
+
+	// draw
+	virtual void Draw(void) {}
 
 	// run action
 	void RunAction(TAction in_action);
@@ -105,6 +109,7 @@ protected:
 	float4 color_;
 	bool is_dirty_;
 	TAction action_;
+	u32 priority_;
 };
 
 #endif // _OBJECT_H_
