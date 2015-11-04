@@ -56,6 +56,8 @@ int main(int argc,char* argv)
 	observer->Update();
 	auto object = std::make_shared<MeshObject>(sprite);
 
+	object->SetTexture(0,texture);
+
 	while(is_loop)
 	{
 		auto start_time = std::chrono::system_clock::now();
@@ -68,9 +70,6 @@ int main(int argc,char* argv)
 		directx9->SetVertexShader(vertex_shader->GetShader());
 		directx9->SetPixelShader(pixel_shader->GetShader());
 
-		// set texture
-		pixel_shader->SetTexture("_texture_sampler",texture->GetTexture());
-
 		// observer
 		vertex_shader->SetValue("_view_matrix",(f32*)&observer->GetViewMatrix(),sizeof(float4x4));
 		vertex_shader->SetValue("_projection_matrix",(f32*)&observer->GetProjectionMatrix(),sizeof(float4x4));
@@ -78,6 +77,7 @@ int main(int argc,char* argv)
 		// object
 		vertex_shader->SetValue("_world_matrix",(f32*)&object->GetMatrix(),sizeof(float4x4));
 		vertex_shader->SetValue("_color",(f32*)&object->GetColor(),sizeof(float4));
+		pixel_shader->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
 
 		object->Draw();
 

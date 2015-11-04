@@ -110,7 +110,8 @@
     <IncludePath>$(ProjectDir)sources;$(SolutionDir)projects/windows/sources;$(SolutionDir)projects/system/sources;$(SolutionDir)projects/directx9/sources;$(SolutionDir)projects/utility/sources;$(SolutionDir)projects/application/sources;$(IncludePath);</IncludePath>
     <IntDir>$(Configuration)\</IntDir>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
-    <LibraryPath>$(LibraryPath);</LibraryPath>
+    <LibraryPath>
+    </LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Develop|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -118,13 +119,15 @@
     <TargetName>$(ProjectName)</TargetName>
     <IncludePath>$(ProjectDir)sources;$(SolutionDir)projects/windows/sources;$(SolutionDir)projects/system/sources;$(SolutionDir)projects/directx9/sources;$(SolutionDir)projects/utility/sources;$(SolutionDir)projects/application/sources;$(IncludePath);</IncludePath>
     <IntDir>$(Configuration)\</IntDir>
-    <LibraryPath>$(LibraryPath);</LibraryPath>
+    <LibraryPath>
+    </LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <IncludePath>$(ProjectDir)sources;$(SolutionDir)projects/windows/sources;$(SolutionDir)projects/system/sources;$(SolutionDir)projects/directx9/sources;$(SolutionDir)projects/utility/sources;$(SolutionDir)projects/application/sources;$(IncludePath);</IncludePath>
-    <LibraryPath>$(LibraryPath);</LibraryPath>
+    <LibraryPath>
+    </LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -135,7 +138,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <ForcedIncludeFiles>$(SolutionDir)projects/directx9/sources/directx9.h;$(SolutionDir)projects/common/sources/common.h;</ForcedIncludeFiles>
+      <ForcedIncludeFiles>d3dx9.h;$(SolutionDir)projects/common/sources/common.h;</ForcedIncludeFiles>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -157,7 +160,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <ForcedIncludeFiles>$(SolutionDir)projects/directx9/sources/directx9.h;$(SolutionDir)projects/common/sources/common.h;</ForcedIncludeFiles>
+      <ForcedIncludeFiles>d3dx9.h;$(SolutionDir)projects/common/sources/common.h;</ForcedIncludeFiles>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -179,7 +182,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_RELEASE;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <ForcedIncludeFiles>$(SolutionDir)projects/directx9/sources/directx9.h;$(SolutionDir)projects/common/sources/common.h;</ForcedIncludeFiles>
+      <ForcedIncludeFiles>d3dx9.h;$(SolutionDir)projects/common/sources/common.h;</ForcedIncludeFiles>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>
