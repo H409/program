@@ -25,6 +25,8 @@
 #include "observer/observer_3d.h"
 #include "mesh/sprite_3d.h"
 #include "object/object.h"
+#include "system/mouseinput.h"
+#include "system/keyboardinput.h"
 
 //=============================================================================
 // エントリーポイント
@@ -53,7 +55,6 @@ int main(int argc,char* argv)
 	directx9->CreateVertexDeclaration(vertex_elements,&vertex_declaration);
 
 	auto sprite = std::make_shared<mesh::Sprite3D>(float2(1.0f,1.0f));
-
 	auto texture = graphic_device->LoadTexture("resources/texture/test.png");
 
 	auto vertex_shader = graphic_device->LoadVertexShader("resources/shader/basic.vsc");
@@ -67,9 +68,22 @@ int main(int argc,char* argv)
 	//object->SetPositionX(100.0f);
 	//object->SetRotationZ(utility::math::ToRadian(-90.0f));
 	//object->SetScale(float2(2.0f,2.0f));
+
+	// eyeposition
+	D3DXVECTOR3 eye_pos_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
 	while(is_loop)
 	{
 		auto start_time = std::chrono::system_clock::now();
+
+		//Get and Update Input Classes
+		std::shared_ptr<InputMouse> p_mouse = win_system->GetMouse();
+		std::shared_ptr<InputKeyboard> p_keyboard = win_system->GetKeyboard();
+		p_mouse->Update();
+		p_keyboard->Update();
+
+		//Get Mouse Point Accelelation When Mouse Dragging
+		D3DXVECTOR2 point_accelelation = p_mouse->GetDrag(MOUSE_KEY::MOUSE_KEY_RIGHT);
 
 		graphic_device->BeginRendering();
 
@@ -82,6 +96,14 @@ int main(int argc,char* argv)
 		float3 eye = float3(0.0f,0.0f,-5.0f);
 		float3 at = float3(0.0f,0.0f,0.0f);
 		float3 up = float3(0.0f,1.0f,0.0f);
+
+		//eyepotionsettings
+		eye_pos_rot.y += p_mouse->GetDrag(MOUSE_KEY::MOUSE_KEY_RIGHT).x;
+		eye_pos_rot.x += p_mouse->GetDrag(MOUSE_KEY::MOUSE_KEY_RIGHT).y;
+		eye._x = 0.0f - sinf(eye_pos_rot.y) * -5.0f;
+		eye._y = 0.0f - sinf(eye_pos_rot.x) * -5.0f;
+		eye._z = 0.0f - cosf(eye_pos_rot.y) * -5.0f;
+		
 
 		world_matrix = utility::math::Identity();
 		view_matrix = utility::math::Identity();

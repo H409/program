@@ -7,24 +7,24 @@
 #ifndef _INPUT_KEYBOARD_H_
 #define _INPUT_KEYBOARD_H_
 
-#include "Input.h"
+#include "input.h"
 //=============================================================================
 // プロトタイプ宣言
 //=============================================================================
-class CInputKeyboard :public CInput
+class InputKeyboard :public Input
 {
 public:
-	CInputKeyboard(void);
-	~CInputKeyboard(void);
+	InputKeyboard(void);
+	~InputKeyboard(void);
 	void Init(HINSTANCE hInstance, HWND hWnd);
 	void Uninit(void);
 	void Update(void);
 	void ReInit();
 
-	bool GetKeyboardPress(int nKey);
-	bool GetKeyboardTrigger(int nKey);
-	bool GetKeyboardRepeat(int nKey);
-	bool GetKeyboardRelease(int nKey);
+	bool GetPress(int nKey);
+	bool GetTrigger(int nKey);
+	bool GetRepeat(int nKey);
+	bool GetRelease(int nKey);
 private:
 
 	BYTE m_aKeyState[256];

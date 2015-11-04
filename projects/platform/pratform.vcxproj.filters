@@ -52,6 +52,15 @@
     <ClCompile Include="sources\observer\observer_3d.cpp">
       <Filter>sources\observer</Filter>
     </ClCompile>
+    <ClCompile Include="sources\system\input.cpp">
+      <Filter>sources\system</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\system\keyboardinput.cpp">
+      <Filter>sources\system</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\system\mouseinput.cpp">
+      <Filter>sources\system</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sources\main.h">
@@ -80,6 +89,15 @@
     </ClInclude>
     <ClInclude Include="sources\observer\observer_3d.h">
       <Filter>sources\observer</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\system\input.h">
+      <Filter>sources\system</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\system\keyboardinput.h">
+      <Filter>sources\system</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\system\mouseinput.h">
+      <Filter>sources\system</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

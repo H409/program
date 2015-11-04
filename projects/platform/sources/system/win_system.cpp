@@ -102,11 +102,11 @@ WinSystem::WinSystem(void)
 
 	graphic_device_ = std::make_shared<graphic::directx9::DX9Device>(hwnd_,(u16)DEFAULT_DISPLAY_SIZE._x,(u16)DEFAULT_DISPLAY_SIZE._y);
 
-	input_keyboard_ = std::make_shared<CInputKeyboard>();
+	input_keyboard_ = std::make_shared<InputKeyboard>();
 
 	input_keyboard_->Init(NULL, hwnd_);
 
-	input_mouse_ = std::make_shared<CInputMouse>();
+	input_mouse_ = std::make_shared<InputMouse>();
 
 	input_mouse_->Init(NULL, hwnd_);
 }

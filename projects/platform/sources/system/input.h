@@ -22,11 +22,11 @@
 //=============================================================================
 // プロトタイプ宣言
 //=============================================================================
-class CInput
+class Input
 {
 public:
-	CInput(void);
-	~CInput(void);
+	Input(void);
+	virtual ~Input(void);
 	virtual void Init(HINSTANCE hInstance, HWND hWnd);
 	virtual void Uninit(void);
 	virtual void Update(void) = 0;

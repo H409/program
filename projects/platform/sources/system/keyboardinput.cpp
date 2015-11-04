@@ -21,19 +21,19 @@
 //=============================================================================
 // キーボードのコンストラクタ
 //=============================================================================
-CInputKeyboard::CInputKeyboard(void)
+InputKeyboard::InputKeyboard(void)
 {
 }
 //=============================================================================
 // キーボードのコンストラクタ
 //=============================================================================
-CInputKeyboard::~CInputKeyboard(void)
+InputKeyboard::~InputKeyboard(void)
 {
 }
 //=============================================================================
 // キーボードのInit
 //=============================================================================
-void CInputKeyboard::Init(HINSTANCE hInstance, HWND hWnd)
+void InputKeyboard::Init(HINSTANCE hInstance, HWND hWnd)
 {
 
 	// DirectInputオブジェクトの作成
@@ -63,7 +63,7 @@ void CInputKeyboard::Init(HINSTANCE hInstance, HWND hWnd)
 //=============================================================================
 // キーボードのUpdate
 //=============================================================================
-void CInputKeyboard::Update(void)
+void InputKeyboard::Update(void)
 {
 	BYTE aKeyState[256];
 	KeyCount[256];
@@ -105,7 +105,7 @@ void CInputKeyboard::Update(void)
 //=============================================================================
 // キーボードのUninit
 //=============================================================================
-void CInputKeyboard::Uninit(void)
+void InputKeyboard::Uninit(void)
 {
 	// DirectInputオブジェクトの開放
 	if (m_pDInput != NULL)
@@ -124,7 +124,7 @@ void CInputKeyboard::Uninit(void)
 //=============================================================================
 // キーボードのプレス状態を取得
 //=============================================================================
-bool CInputKeyboard::GetKeyboardPress(int nKey)
+bool InputKeyboard::GetPress(int nKey)
 {
 
 	if (m_aKeyState[nKey] & 0x080)
@@ -141,7 +141,7 @@ bool CInputKeyboard::GetKeyboardPress(int nKey)
 //=============================================================================
 // キーボードのトリガー状態を取得
 //=============================================================================
-bool CInputKeyboard::GetKeyboardTrigger(int nKey)
+bool InputKeyboard::GetTrigger(int nKey)
 {
 	if (m_aKeyTrigger[nKey] & 0x080)
 	{
@@ -156,7 +156,7 @@ bool CInputKeyboard::GetKeyboardTrigger(int nKey)
 //=============================================================================
 // キーボードのリピート状態を取得
 //=============================================================================
-bool CInputKeyboard::GetKeyboardRepeat(int nKey)
+bool InputKeyboard::GetRepeat(int nKey)
 {
 	return m_aKeyboardRepeat[nKey];
 }
@@ -164,7 +164,7 @@ bool CInputKeyboard::GetKeyboardRepeat(int nKey)
 //=============================================================================
 // キーボードのリリ－ス状態を取得
 //=============================================================================
-bool CInputKeyboard::GetKeyboardRelease(int nKey)
+bool InputKeyboard::GetRelease(int nKey)
 {
 	if (m_aKeyRelease[nKey] & 0x080)
 	{
@@ -179,7 +179,7 @@ bool CInputKeyboard::GetKeyboardRelease(int nKey)
 //=============================================================================
 // キーボードのアクティベート
 //=============================================================================
-void CInputKeyboard::ReInit(void)
+void InputKeyboard::ReInit(void)
 {
 	m_pDIDevice->Acquire(); //キーボードへのアクセス権を取得
 }
