@@ -32,8 +32,8 @@ class WinWindow;
 } // namespace window
 } // namespace windows
 
-class CInputKeyboard;
-class CInputMouse;
+class InputKeyboard;
+class InputMouse;
 
 
 //*****************************************************************************
@@ -46,8 +46,8 @@ public:
 	using TGraphicDevice = std::shared_ptr<graphic::directx9::DX9Device>;
 	using TCallback = std::function<void(void)>;
 	using TCallbacks = std::vector<TCallback>;
-	using TInputKeyboard = std::shared_ptr<CInputKeyboard>;
-	using TInputMouse = std::shared_ptr<CInputMouse>;
+	using TInputKeyboard = std::shared_ptr<InputKeyboard>;
+	using TInputMouse = std::shared_ptr<InputMouse>;
 	
 	enum class EVENT
 	{
@@ -64,6 +64,7 @@ public:
 	// set callback
 	void SetCallbacks(EVENT in_event,const TCallbacks& in_callbacks);
 
+	//Inputclass
 	TInputKeyboard GetKeyboard(void);
 	TInputMouse GetMouse(void);
 

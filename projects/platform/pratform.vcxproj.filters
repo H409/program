@@ -103,6 +103,15 @@
     <ClCompile Include="sources\object\mesh_object.cpp">
       <Filter>sources\object</Filter>
     </ClCompile>
+    <ClCompile Include="sources\system\input.cpp">
+      <Filter>sources\system</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\system\keyboardinput.cpp">
+      <Filter>sources\system</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\system\mouseinput.cpp">
+      <Filter>sources\system</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sources\main.h">
@@ -132,6 +141,7 @@
     <ClInclude Include="sources\observer\observer_3d.h">
       <Filter>sources\observer</Filter>
     </ClInclude>
+
     <ClInclude Include="sources\mesh\mesh_sprite_3d.h">
       <Filter>sources\mesh</Filter>
     </ClInclude>
@@ -173,6 +183,15 @@
     </ClInclude>
     <ClInclude Include="sources\object\mesh_object.h">
       <Filter>sources\object</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\system\input.h">
+      <Filter>sources\system</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\system\keyboardinput.h">
+      <Filter>sources\system</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\system\mouseinput.h">
+      <Filter>sources\system</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
