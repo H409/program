@@ -42,7 +42,7 @@ struct KIM_MESH_DATA
 	}
 };
 
-#define FVF_KIM (D3DFVF_XYZB4 | D3DFVF_LASTBETA_UBYTE4 | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX1)
+//#define FVF_KIM (D3DFVF_XYZB4 | D3DFVF_LASTBETA_UBYTE4 | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX1)
 // 頂点情報構造体
 struct VERTEX_KIM
 {
@@ -162,6 +162,9 @@ public :
 	// 処理:ﾜｰﾙﾄﾞﾏﾄﾘｸｽのｾｯﾀ
 	void SetWorld(D3DXMATRIX world){ world_ = world; };
 
+	void SetView( D3DXMATRIX view ){ view_ = view ; }
+	void SetProjection( D3DXMATRIX projection ){ projection_ = projection ; }
+
 private:
 	// 処理:ｼｪｰﾀﾞｰのｺﾝﾊﾟｲﾙ
 	HRESULT CompileShader(void);
@@ -185,6 +188,7 @@ private:
 	void MultiMeshOriginShader(void);
 	// 静的ﾒｯｼｭ描画
 	void StaticMesh(void);
+
 	//===========================================================================
 	// ﾃﾞﾊﾞｯｸﾞ用関数
 	//===========================================================================
@@ -193,6 +197,7 @@ private:
 	// 処理:ﾃﾞﾊﾞｯｸﾞ用関数
 	bool DebugUpdate(void);
 	
+
 private : 
 	LPDIRECT3DDEVICE9 d3d_device_;
 
@@ -206,6 +211,9 @@ private :
 
 	D3DXMATRIX world_;
 	D3DXVECTOR3 light_directional;
+
+	D3DXMATRIX view_ ;
+	D3DXMATRIX projection_ ;
 
 	int mesh_num_;
 	int bone_num_;

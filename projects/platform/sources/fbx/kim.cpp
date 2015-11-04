@@ -272,9 +272,9 @@ HRESULT Kim::Load(const char* file_name)
 		return E_FAIL;
 	}
 
-	//// ¼ª°ÀÞ°‚ÌºÝÊß²Ù
-	//if (draw_type_ == TYPE_ONE_MY || draw_type_ == TYPE_MULTI_MY)
-	//	return CompileShader();
+	// ¼ª°ÀÞ°‚ÌºÝÊß²Ù
+	if (draw_type_ == TYPE_ONE_MY || draw_type_ == TYPE_MULTI_MY)
+		return CompileShader();
 
 	return S_OK ;
 }
@@ -820,18 +820,21 @@ void Kim::MultiMeshMyShader(void)
 	// ‘—M‚·‚é’¸“_î•ñ‚ÌÝ’è
 	d3d_device_->SetVertexDeclaration(decl_);
 
-	// ËÞ­°,ÌßÛ¼Þª¸¼®Ý‚ÌŽæ“¾
-	D3DXMATRIX view, proj;
-	d3d_device_->GetTransform(D3DTS_VIEW, &view);
-	d3d_device_->GetTransform(D3DTS_PROJECTION, &proj);
+	//// ËÞ­°,ÌßÛ¼Þª¸¼®Ý‚ÌŽæ“¾
+	//D3DXMATRIX view, proj;
+	//d3d_device_->GetTransform(D3DTS_VIEW, &view);
+	//d3d_device_->GetTransform(D3DTS_PROJECTION, &proj);
 
-	D3DXMatrixTranspose(&view, &view);
-	D3DXMatrixTranspose(&proj, &proj);
+	//D3DXMatrixTranspose(&view, &view);
+	//D3DXMatrixTranspose(&proj, &proj);
+
+	D3DXMatrixTranspose( &view_, &view_ );
+	D3DXMatrixTranspose( &projection_ , &projection_ );
 
 	// Ü°ÙÄÞ,ËÞ­°,ÌßÛ¼Þª¸¼®Ý,ŽwŒü«×²Äî•ñ‚Ì“]‘—
 	d3d_device_->SetVertexShaderConstantF(0, static_cast<const float*>(world_), 4);
-	d3d_device_->SetVertexShaderConstantF(4, static_cast<const float*>(view), 4);
-	d3d_device_->SetVertexShaderConstantF(8, static_cast<const float*>(proj), 4);
+	d3d_device_->SetVertexShaderConstantF(4, static_cast<const float*>(view_), 4);
+	d3d_device_->SetVertexShaderConstantF(8, static_cast<const float*>(projection_), 4);
 	d3d_device_->SetVertexShaderConstantF(16, static_cast<const float*>(light_directional), 4);
 
 	//// Ä©°ÝÏ¯Ìß‚ÌÝ’è
@@ -1119,12 +1122,12 @@ HRESULT Kim::CompileShader(void)
 
 	if (bone_num_ != 0)
 	{
-		res = D3DXCompileShaderFromFile("resources/shader/SkiningShader.hlsl", NULL, 0, "vs_main", "vs_3_0", 0, &shader, &error, 0);
+		res = D3DXCompileShaderFromFile("resources/shader/skining_shader.hlsl", NULL, 0, "vs_main", "vs_3_0", 0, &shader, &error, 0);
 	}
 	else
 	{
 		draw_type_ = TYPE_STATIC_MESH;
-		res = D3DXCompileShaderFromFile("resources/shader/StaticFBX.hlsl", NULL, 0, "vs_main", "vs_3_0", 0, &shader, &error, 0);
+		res = D3DXCompileShaderFromFile("resources/shader/static_fbx.hlsl", NULL, 0, "vs_main", "vs_3_0", 0, &shader, &error, 0);
 	}
 
 	if (FAILED(res)) {
@@ -1135,7 +1138,7 @@ HRESULT Kim::CompileShader(void)
 	d3d_device_->CreateVertexShader((const DWORD*)shader->GetBufferPointer(), &vertex_shader_);
 	shader->Release();
 
-	res = D3DXCompileShaderFromFile("resources/shader/SkiningShader.hlsl", NULL, 0, "ps_main", "ps_3_0", 0, &shader, &error, 0);
+	res = D3DXCompileShaderFromFile("resources/shader/skining_shader.hlsl", NULL, 0, "ps_main", "ps_3_0", 0, &shader, &error, 0);
 	if (FAILED(res)) {
 		MessageBox(NULL, (LPSTR)error->GetBufferPointer(), NULL, 0);
 		return E_FAIL;
@@ -1144,8 +1147,9 @@ HRESULT Kim::CompileShader(void)
 	d3d_device_->CreatePixelShader((const DWORD*)shader->GetBufferPointer(), &pixel_shader_);
 	shader->Release();
 
-	//D3DXCreateTextureFromFile(d3d_device_, "data/texture/mapping_textrue/toon_map.png", &toon_map);
+	D3DXCreateTextureFromFile(d3d_device_, "data/texture/mapping_textrue/toon_map.png", &toon_map);
 
+	return S_OK ;
 }
 
 //=============================================================================

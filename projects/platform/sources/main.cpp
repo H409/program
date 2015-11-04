@@ -32,6 +32,7 @@
 #include "system/mouseinput.h"
 #include "system/keyboardinput.h"
 
+#include "player/player.h"
 
 //=============================================================================
 // エントリーポイント
@@ -85,6 +86,9 @@ int main(int argc,char* argv)
 	// eyeposition
 	D3DXVECTOR3 eye_pos_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
+
+	auto player = std::make_shared<Player>( graphic_device->GetDevice() );
+	player->Init( float3( 0 , 0 , 0 ) );
 
 	while(is_loop)
 	{
@@ -146,6 +150,10 @@ int main(int argc,char* argv)
 		vertex_shader->SetValue("_projection_matrix",(f32*)&observer->GetProjectionMatrix(),sizeof(float4x4));
 
 
+		player->GetKimPointer()->SetProjection( ( D3DXMATRIX& )observer->GetProjectionMatrix() );
+		player->GetKimPointer()->SetView( ( D3DXMATRIX& )observer->GetViewMatrix() );
+		player->Update();
+		player->Draw();
 
 
 		graphic_device->EndRendering();

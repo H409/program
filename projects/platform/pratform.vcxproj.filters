@@ -29,6 +29,9 @@
     <Filter Include="sources\scene">
       <UniqueIdentifier>{6e80e78b-4045-47f3-8f71-7f2a58527673}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\player">
+      <UniqueIdentifier>{cd05187b-ffbb-4201-82f1-3a6c1a3caed2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\windows\win_main.cpp">
@@ -112,6 +115,9 @@
     <ClCompile Include="sources\system\mouseinput.cpp">
       <Filter>sources\system</Filter>
     </ClCompile>
+    <ClCompile Include="sources\player\player.cpp">
+      <Filter>sources\player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sources\main.h">
@@ -141,7 +147,6 @@
     <ClInclude Include="sources\observer\observer_3d.h">
       <Filter>sources\observer</Filter>
     </ClInclude>
-
     <ClInclude Include="sources\mesh\mesh_sprite_3d.h">
       <Filter>sources\mesh</Filter>
     </ClInclude>
@@ -192,6 +197,9 @@
     </ClInclude>
     <ClInclude Include="sources\system\mouseinput.h">
       <Filter>sources\system</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\player\player.h">
+      <Filter>sources\player</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

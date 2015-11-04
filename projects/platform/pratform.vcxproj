@@ -37,6 +37,7 @@
     <ClCompile Include="sources\observer\observer.cpp" />
     <ClCompile Include="sources\observer\observer_2d.cpp" />
     <ClCompile Include="sources\observer\observer_3d.cpp" />
+    <ClCompile Include="sources\player\player.cpp" />
     <ClCompile Include="sources\system\input.cpp" />
     <ClCompile Include="sources\system\keyboardinput.cpp" />
     <ClCompile Include="sources\system\mouseinput.cpp" />
@@ -66,6 +67,7 @@
     <ClInclude Include="sources\observer\observer.h" />
     <ClInclude Include="sources\observer\observer_2d.h" />
     <ClInclude Include="sources\observer\observer_3d.h" />
+    <ClInclude Include="sources\player\player.h" />
     <ClInclude Include="sources\system\input.h" />
     <ClInclude Include="sources\system\keyboardinput.h" />
     <ClInclude Include="sources\system\mouseinput.h" />
