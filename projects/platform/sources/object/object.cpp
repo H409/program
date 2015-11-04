@@ -20,6 +20,8 @@ Object::Object(void)
 	:position_(0.0f,0.0f,0.0f)
 	,rotation_(0.0f,0.0f,0.0f)
 	,scale_(1.0f,1.0f,1.0f)
+	,color_(1.0f,1.0f,1.0f,1.0f)
+	,priority_(0)
 {
 }
 
@@ -28,7 +30,14 @@ Object::Object(void)
 //=============================================================================
 void Object::Update(void)
 {
-	action_->Update();
+	if(action_ != nullptr)
+	{
+		action_->Update();
+		auto param = action_->GetParam();
+		SetPosition(param._position);
+		SetRotation(param._rotation);
+		SetScale(param._scale);
+	}
 }
 
 //=============================================================================
@@ -36,6 +45,7 @@ void Object::Update(void)
 //=============================================================================
 void Object::RunAction(TAction in_action)
 {
+	action_ = in_action;
 	in_action->SetStartPosition(position_);
 }
 

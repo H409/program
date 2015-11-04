@@ -10,6 +10,36 @@
 // include
 //*****************************************************************************
 #include "mesh.h"
+#include "system/win_system.h"
+
+namespace mesh {
+//*****************************************************************************
+// constant definition
+//*****************************************************************************
+const D3DVERTEXELEMENT9 Mesh::VERTEXELEMENTS[] =
+{
+	{ 0,0,D3DDECLTYPE_FLOAT3,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_POSITION,0 },
+	{ 0,sizeof(float3),D3DDECLTYPE_FLOAT2,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD,0 },
+	{ 0,sizeof(float3) + sizeof(float2),D3DDECLTYPE_FLOAT3,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_NORMAL,0 },
+	{ 0,sizeof(float3) + sizeof(float2) + sizeof(float3),D3DDECLTYPE_D3DCOLOR,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_COLOR,0 },
+	D3DDECL_END()
+};
+
+std::unordered_map<const D3DVERTEXELEMENT9*,std::shared_ptr<IDirect3DVertexDeclaration9>> Mesh::vertex_declarations_;
+
+//=============================================================================
+// constructor
+//=============================================================================
+Mesh::Mesh(bool in_is_3d,bool in_is_used_index_buffer)
+	:stride_(0)
+	,primitive_type_(D3DPT_TRIANGLELIST)
+	,vertex_count_(0)
+	,direct3dvertexbuffer9_(nullptr)
+	,direct3dindexbuffer9_(nullptr)
+	,is_used_index_buffer_(in_is_3d)
+	,is_3d_(in_is_used_index_buffer)
+{
+}
 
 //=============================================================================
 // get buffer
@@ -74,5 +104,38 @@ bool Mesh::Is3D(void) const
 {
 	return is_3d_;
 }
+
+//=============================================================================
+// get vertex declaration
+//=============================================================================
+const LPDIRECT3DVERTEXDECLARATION9 Mesh::GetVertexDeclaration(void)
+{
+	auto key = GetVertexElements_();
+	auto it = vertex_declarations_.find(key);
+
+	if(it == vertex_declarations_.end())
+	{
+		LPDIRECT3DVERTEXDECLARATION9 vertex_declaration = nullptr;
+		auto directx9 = GET_DIRECTX9_DEVICE();
+
+		directx9->CreateVertexDeclaration(key,&vertex_declaration);
+		auto vertex_ = std::shared_ptr<IDirect3DVertexDeclaration9>(vertex_declaration,[](IDirect3DVertexDeclaration9* vertex) {vertex->Release();});
+
+		vertex_declarations_.insert(std::make_pair(key,vertex_));
+		return vertex_declaration;
+	}
+
+	return it->second.get();
+}
+
+//=============================================================================
+// get vertex elements
+//=============================================================================
+const D3DVERTEXELEMENT9* Mesh::GetVertexElements_(void) const
+{
+	return VERTEXELEMENTS;
+}
+
+} // namespace mesh
 
 //---------------------------------- EOF --------------------------------------

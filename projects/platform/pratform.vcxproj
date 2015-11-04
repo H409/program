@@ -17,9 +17,12 @@
   <ItemGroup>
     <ClCompile Include="sources\action\action.cpp" />
     <ClCompile Include="sources\action\callback.cpp" />
+    <ClCompile Include="sources\action\delay_time.cpp" />
     <ClCompile Include="sources\action\fade_to.cpp" />
     <ClCompile Include="sources\action\move_by.cpp" />
     <ClCompile Include="sources\action\move_to.cpp" />
+    <ClCompile Include="sources\action\repeat.cpp" />
+    <ClCompile Include="sources\action\rotate_by.cpp" />
     <ClCompile Include="sources\action\sequence.cpp" />
     <ClCompile Include="sources\action\spawn.cpp" />
     <ClCompile Include="sources\fbx\kim.cpp" />
@@ -28,6 +31,7 @@
     <ClCompile Include="sources\mesh\mesh_sprite_3d.cpp" />
     <ClCompile Include="sources\mesh\sprite.cpp" />
     <ClCompile Include="sources\mesh\sprite_3d.cpp" />
+    <ClCompile Include="sources\object\mesh_object.cpp" />
     <ClCompile Include="sources\object\object.cpp" />
     <ClCompile Include="sources\observer\follower_observer.cpp" />
     <ClCompile Include="sources\observer\observer.cpp" />
@@ -39,9 +43,12 @@
   <ItemGroup>
     <ClInclude Include="sources\action\action.h" />
     <ClInclude Include="sources\action\callback.h" />
+    <ClInclude Include="sources\action\delay_time.h" />
     <ClInclude Include="sources\action\fade_to.h" />
     <ClInclude Include="sources\action\move_by.h" />
     <ClInclude Include="sources\action\move_to.h" />
+    <ClInclude Include="sources\action\repeat.h" />
+    <ClInclude Include="sources\action\rotate_by.h" />
     <ClInclude Include="sources\action\sequence.h" />
     <ClInclude Include="sources\action\spawn.h" />
     <ClInclude Include="sources\fbx\kim.h" />
@@ -50,6 +57,7 @@
     <ClInclude Include="sources\mesh\mesh_sprite_3d.h" />
     <ClInclude Include="sources\mesh\sprite.h" />
     <ClInclude Include="sources\mesh\sprite_3d.h" />
+    <ClInclude Include="sources\object\mesh_object.h" />
     <ClInclude Include="sources\object\object.h" />
     <ClInclude Include="sources\observer\follower_observer.h" />
     <ClInclude Include="sources\observer\observer.h" />
@@ -104,7 +112,7 @@
     <IncludePath>$(ProjectDir)sources;$(SolutionDir)projects/windows/sources;$(SolutionDir)projects/system/sources;$(SolutionDir)projects/directx9/sources;$(SolutionDir)projects/utility/sources;$(SolutionDir)projects/application/sources;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
     <IntDir>$(Configuration)\</IntDir>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
-    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(LibraryPath);</LibraryPath>
+    <LibraryPath>$(LibraryPath);</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Develop|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -112,13 +120,13 @@
     <TargetName>$(ProjectName)</TargetName>
     <IncludePath>$(ProjectDir)sources;$(SolutionDir)projects/windows/sources;$(SolutionDir)projects/system/sources;$(SolutionDir)projects/directx9/sources;$(SolutionDir)projects/utility/sources;$(SolutionDir)projects/application/sources;$(IncludePath);</IncludePath>
     <IntDir>$(Configuration)\</IntDir>
-    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(LibraryPath);</LibraryPath>
+    <LibraryPath>$(LibraryPath);</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <IncludePath>$(ProjectDir)sources;$(SolutionDir)projects/windows/sources;$(SolutionDir)projects/system/sources;$(SolutionDir)projects/directx9/sources;$(SolutionDir)projects/utility/sources;$(SolutionDir)projects/application/sources;$(IncludePath);</IncludePath>
-    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(LibraryPath);</LibraryPath>
+    <LibraryPath>$(LibraryPath);</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

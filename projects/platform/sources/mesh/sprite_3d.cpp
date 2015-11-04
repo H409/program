@@ -32,7 +32,8 @@ Sprite3D::Sprite3D(void)
 // constructor
 //=============================================================================
 Sprite3D::Sprite3D(const float2& in_size)
-	:size_(in_size)
+	:Mesh(true,false)
+	,size_(in_size)
 	,anchor_point_(DEFAULT_ANCHOR_POINT)
 {
 	struct VERTEX

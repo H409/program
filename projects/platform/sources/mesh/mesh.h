@@ -16,6 +16,7 @@
 //*****************************************************************************
 // class declaration
 //*****************************************************************************
+namespace mesh {
 class Mesh
 {
 public:
@@ -45,8 +46,11 @@ public:
 	// is 3D
 	bool Is3D(void)const;
 
+	// get vertex declaration
+	const LPDIRECT3DVERTEXDECLARATION9 GetVertexDeclaration(void);
+
 protected:
-	Mesh(void) = default;
+	Mesh(bool in_is_3d,bool in_is_used_index_buffer);
 
 	u32 stride_;
 	D3DPRIMITIVETYPE primitive_type_;
@@ -57,9 +61,14 @@ protected:
 	bool is_used_index_buffer_;
 	bool is_3d_;
 
-private:
+	static const D3DVERTEXELEMENT9 VERTEXELEMENTS[];
+	static std::unordered_map<const D3DVERTEXELEMENT9*,std::shared_ptr<IDirect3DVertexDeclaration9>> vertex_declarations_;
 
+private:
+	virtual const D3DVERTEXELEMENT9* GetVertexElements_(void)const;
 };
-#endif // _OBJECT_H_
+} // namespace mesh
+
+#endif // _MESH_H_
 
 //---------------------------------- EOF --------------------------------------

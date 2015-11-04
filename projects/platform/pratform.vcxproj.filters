@@ -20,14 +20,14 @@
     <Filter Include="sources\observer">
       <UniqueIdentifier>{7a4fef94-7c5b-4889-9832-d14d5108ffcd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="sources\scene">
-      <UniqueIdentifier>{6e80e78b-4045-47f3-8f71-7f2a58527673}</UniqueIdentifier>
-    </Filter>
     <Filter Include="sources\action">
       <UniqueIdentifier>{4cdd7809-ce2f-48b9-842d-d92f77819595}</UniqueIdentifier>
     </Filter>
     <Filter Include="sources\fbx">
       <UniqueIdentifier>{c18f048a-ded3-4cc0-b99d-b31a09c09a25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\scene">
+      <UniqueIdentifier>{6e80e78b-4045-47f3-8f71-7f2a58527673}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +91,18 @@
     <ClCompile Include="sources\fbx\kim.cpp">
       <Filter>sources\fbx</Filter>
     </ClCompile>
+    <ClCompile Include="sources\action\repeat.cpp">
+      <Filter>sources\action</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\action\delay_time.cpp">
+      <Filter>sources\action</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\action\rotate_by.cpp">
+      <Filter>sources\action</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\object\mesh_object.cpp">
+      <Filter>sources\object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sources\main.h">
@@ -149,6 +161,18 @@
     </ClInclude>
     <ClInclude Include="sources\fbx\kim.h">
       <Filter>sources\fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\action\repeat.h">
+      <Filter>sources\action</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\action\delay_time.h">
+      <Filter>sources\action</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\action\rotate_by.h">
+      <Filter>sources\action</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\object\mesh_object.h">
+      <Filter>sources\object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
