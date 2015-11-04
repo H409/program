@@ -25,7 +25,6 @@
     <ClCompile Include="sources\action\rotate_by.cpp" />
     <ClCompile Include="sources\action\sequence.cpp" />
     <ClCompile Include="sources\action\spawn.cpp" />
-    <ClCompile Include="sources\fbx\kim.cpp" />
     <ClCompile Include="sources\main.cpp" />
     <ClCompile Include="sources\mesh\mesh.cpp" />
     <ClCompile Include="sources\mesh\mesh_sprite_3d.cpp" />
@@ -37,10 +36,6 @@
     <ClCompile Include="sources\observer\observer.cpp" />
     <ClCompile Include="sources\observer\observer_2d.cpp" />
     <ClCompile Include="sources\observer\observer_3d.cpp" />
-    <ClCompile Include="sources\player\player.cpp" />
-    <ClCompile Include="sources\system\input.cpp" />
-    <ClCompile Include="sources\system\keyboardinput.cpp" />
-    <ClCompile Include="sources\system\mouseinput.cpp" />
     <ClCompile Include="sources\system\win_system.cpp" />
     <ClCompile Include="sources\windows\win_main.cpp" />
   </ItemGroup>
@@ -55,7 +50,6 @@
     <ClInclude Include="sources\action\rotate_by.h" />
     <ClInclude Include="sources\action\sequence.h" />
     <ClInclude Include="sources\action\spawn.h" />
-    <ClInclude Include="sources\fbx\kim.h" />
     <ClInclude Include="sources\main.h" />
     <ClInclude Include="sources\mesh\mesh.h" />
     <ClInclude Include="sources\mesh\mesh_sprite_3d.h" />
@@ -67,10 +61,6 @@
     <ClInclude Include="sources\observer\observer.h" />
     <ClInclude Include="sources\observer\observer_2d.h" />
     <ClInclude Include="sources\observer\observer_3d.h" />
-    <ClInclude Include="sources\player\player.h" />
-    <ClInclude Include="sources\system\input.h" />
-    <ClInclude Include="sources\system\keyboardinput.h" />
-    <ClInclude Include="sources\system\mouseinput.h" />
     <ClInclude Include="sources\system\win_system.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -117,10 +107,11 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <TargetName>$(ProjectName)</TargetName>
-    <IncludePath>$(ProjectDir)sources;$(SolutionDir)projects/windows/sources;$(SolutionDir)projects/system/sources;$(SolutionDir)projects/directx9/sources;$(SolutionDir)projects/utility/sources;$(SolutionDir)projects/application/sources;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)sources;$(SolutionDir)projects/windows/sources;$(SolutionDir)projects/system/sources;$(SolutionDir)projects/directx9/sources;$(SolutionDir)projects/utility/sources;$(SolutionDir)projects/application/sources;$(IncludePath);</IncludePath>
     <IntDir>$(Configuration)\</IntDir>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
-    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
+    <LibraryPath>
+    </LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Develop|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -128,13 +119,15 @@
     <TargetName>$(ProjectName)</TargetName>
     <IncludePath>$(ProjectDir)sources;$(SolutionDir)projects/windows/sources;$(SolutionDir)projects/system/sources;$(SolutionDir)projects/directx9/sources;$(SolutionDir)projects/utility/sources;$(SolutionDir)projects/application/sources;$(IncludePath);</IncludePath>
     <IntDir>$(Configuration)\</IntDir>
-    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
+    <LibraryPath>
+    </LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <IncludePath>$(ProjectDir)sources;$(SolutionDir)projects/windows/sources;$(SolutionDir)projects/system/sources;$(SolutionDir)projects/directx9/sources;$(SolutionDir)projects/utility/sources;$(SolutionDir)projects/application/sources;$(IncludePath);</IncludePath>
-    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
+    <LibraryPath>
+    </LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -145,7 +138,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <ForcedIncludeFiles>$(SolutionDir)projects/directx9/sources/directx9.h;$(SolutionDir)projects/common/sources/common.h;</ForcedIncludeFiles>
+      <ForcedIncludeFiles>d3dx9.h;$(SolutionDir)projects/common/sources/common.h;</ForcedIncludeFiles>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -167,7 +160,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <ForcedIncludeFiles>$(SolutionDir)projects/directx9/sources/directx9.h;$(SolutionDir)projects/common/sources/common.h;</ForcedIncludeFiles>
+      <ForcedIncludeFiles>d3dx9.h;$(SolutionDir)projects/common/sources/common.h;</ForcedIncludeFiles>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -189,7 +182,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_RELEASE;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <ForcedIncludeFiles>$(SolutionDir)projects/directx9/sources/directx9.h;$(SolutionDir)projects/common/sources/common.h;</ForcedIncludeFiles>
+      <ForcedIncludeFiles>d3dx9.h;$(SolutionDir)projects/common/sources/common.h;</ForcedIncludeFiles>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>
