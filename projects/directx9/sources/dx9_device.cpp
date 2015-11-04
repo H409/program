@@ -230,8 +230,7 @@ DX9Device::TVertexShader DX9Device::LoadVertexShader(const std::string & in_path
 //=============================================================================
 DX9Device::TVertexShader DX9Device::LoadVertexShader(const std::string & in_path,const std::string & in_function,const std::string & in_version)
 {
-	DEBUG_TRACE("HACK : load vertex shader");
-	return nullptr;
+	return vertex_shader_loader_->Load(in_path , in_function , in_version );
 }
 
 //=============================================================================

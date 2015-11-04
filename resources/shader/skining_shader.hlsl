@@ -65,6 +65,8 @@ VS_OUT vs_main(VS_IN In)
 	return Out;
 }
 
+
+
 sampler tex_sumpler:register(s0);
 sampler toon_sumpler:register(s1);
 

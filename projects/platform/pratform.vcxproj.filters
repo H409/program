@@ -88,7 +88,7 @@
     <ClCompile Include="sources\action\spawn.cpp">
       <Filter>sources\action</Filter>
     </ClCompile>
-    <ClCompile Include="sources\fbx\scene_kim.cpp">
+    <ClCompile Include="sources\fbx\kim.cpp">
       <Filter>sources\fbx</Filter>
     </ClCompile>
   </ItemGroup>
@@ -147,7 +147,7 @@
     <ClInclude Include="sources\action\spawn.h">
       <Filter>sources\action</Filter>
     </ClInclude>
-    <ClInclude Include="sources\fbx\scene_kim.h">
+    <ClInclude Include="sources\fbx\kim.h">
       <Filter>sources\fbx</Filter>
     </ClInclude>
   </ItemGroup>

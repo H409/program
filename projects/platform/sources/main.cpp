@@ -34,7 +34,7 @@
 #include "action/spawn.h"
 
 
-#include "fbx/scene_kim.h"
+#include "fbx/kim.h"
 
 //=============================================================================
 // エントリーポイント
@@ -69,6 +69,8 @@ int main(int argc,char* argv)
 	auto vertex_shader = graphic_device->LoadVertexShader("resources/shader/basic.vsc");
 	auto pixel_shader = graphic_device->LoadPixelShader("resources/shader/basic.psc");
 
+	//auto vertex_shader_fbx = graphic_device->LoadVertexShader("resources/shader/basic")
+
 	auto observer_2d = std::make_shared<Observer2D>(800.0f,600.0f);
 	auto observer_3d = std::make_shared<Observer3D>(utility::math::ToRadian(60.0f),800.0f,600.0f);
 
@@ -99,7 +101,7 @@ int main(int argc,char* argv)
 	sequence->SetStartPosition(float3(10.0f,0.0f,0.0f));
 	spaw->SetStartPosition(float3(10.0f,0.0f,0.0f));
 
-	auto _kim = SCENE_KIM::Create( graphic_device->GetDevice() , "resources/model/ZZI_taiki4.kim" );
+	auto _kim = Kim::Create( graphic_device->GetDevice() , "resources/model/ZZI_taiki4.kim" );
 	
 	while(is_loop)
 	{
@@ -133,7 +135,7 @@ int main(int argc,char* argv)
 		directx9->SetStreamSource(0,sprite->GetBuffer(),0,sprite->GetStride());
 		directx9->SetIndices(sprite->GetIndexBuffer());
 		directx9->DrawIndexedPrimitive(sprite->GetPrimitiveType(),0,0,sprite->GetVertexCount(),0,sprite->GetPrimitiveCount());
-		directx9->DrawPrimitive(sprite->GetPrimitiveType(),0,sprite->GetPrimitiveCount());
+		//directx9->DrawPrimitive(sprite->GetPrimitiveType(),0,sprite->GetPrimitiveCount());
 
 
 

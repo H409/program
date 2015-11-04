@@ -122,7 +122,7 @@ struct KIM_BONE_DATA
 //=============================================================================
 // FBXを変換した独自形式モデルクラス
 //=============================================================================
-class SCENE_KIM
+class Kim
 {
 	static const int BONE_MAX = 13;
 
@@ -136,10 +136,10 @@ class SCENE_KIM
 
 public : 
 	// 処理:コンストラクタ
-	SCENE_KIM(LPDIRECT3DDEVICE9 d3d_device);
+	Kim(LPDIRECT3DDEVICE9 d3d_device);
 		
 	// 処理:デストラクタ
-	~SCENE_KIM(void);
+	~Kim(void);
 
 	// 処理:読み込み
 	HRESULT Load(const char* file_name);
@@ -157,7 +157,7 @@ public :
 	void Release(void);
 
 	// 処理:生成
-	static SCENE_KIM* Create(LPDIRECT3DDEVICE9 d3d_device,const char* file_name);
+	static Kim* Create(LPDIRECT3DDEVICE9 d3d_device,const char* file_name);
 
 	// 処理:ﾜｰﾙﾄﾞﾏﾄﾘｸｽのｾｯﾀ
 	void SetWorld(D3DXMATRIX world){ world_ = world; };

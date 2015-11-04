@@ -11,7 +11,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <stdio.h>
-#include "scene_kim.h"
+#include "kim.h"
 
 //*****************************************************************************
 // グローバル変数
@@ -34,7 +34,7 @@ LPSTR type_string[2] =
 //=============================================================================
 // 役割 : コンストラクタ
 //=============================================================================
-SCENE_KIM::SCENE_KIM(LPDIRECT3DDEVICE9 d3d_device)
+Kim::Kim(LPDIRECT3DDEVICE9 d3d_device)
 {
 	d3d_device_ = d3d_device;
 
@@ -66,14 +66,14 @@ SCENE_KIM::SCENE_KIM(LPDIRECT3DDEVICE9 d3d_device)
 //=============================================================================
 // 役割 : デストラクタ
 //=============================================================================
-SCENE_KIM::~SCENE_KIM( void )
+Kim::~Kim( void )
 {
 }
 
 //=============================================================================
 // 役割 : 初期化処理
 //=============================================================================
-HRESULT SCENE_KIM::Load(const char* file_name)
+HRESULT Kim::Load(const char* file_name)
 {
 	// ﾌｧｲﾙポインタ
 	FILE *file = NULL;
@@ -272,9 +272,9 @@ HRESULT SCENE_KIM::Load(const char* file_name)
 		return E_FAIL;
 	}
 
-	// ｼｪｰﾀﾞｰのｺﾝﾊﾟｲﾙ
-	if (draw_type_ == TYPE_ONE_MY || draw_type_ == TYPE_MULTI_MY)
-		return CompileShader();
+	//// ｼｪｰﾀﾞｰのｺﾝﾊﾟｲﾙ
+	//if (draw_type_ == TYPE_ONE_MY || draw_type_ == TYPE_MULTI_MY)
+	//	return CompileShader();
 
 	return S_OK ;
 }
@@ -282,7 +282,7 @@ HRESULT SCENE_KIM::Load(const char* file_name)
 //=============================================================================
 // 役割 : 終了処理
 //=============================================================================
-void SCENE_KIM::Uninit( void )
+void Kim::Uninit( void )
 {
 	if (toon_map)
 	{
@@ -347,7 +347,7 @@ void SCENE_KIM::Uninit( void )
 //=============================================================================
 // 処理:更新
 //=============================================================================
-void SCENE_KIM::Update(void)
+void Kim::Update(void)
 {
 
 #ifdef _DEBUG
@@ -548,7 +548,7 @@ void SCENE_KIM::Update(void)
 //=============================================================================
 // 処理:ボーンの更新(行列変換)
 //=============================================================================
-void SCENE_KIM::Draw(void)
+void Kim::Draw(void)
 {
 	LPDIRECT3DVERTEXDECLARATION9 before_decl;
 	d3d_device_->GetVertexDeclaration(&before_decl);
@@ -569,18 +569,10 @@ void SCENE_KIM::Draw(void)
 	{
 		switch (draw_type_)
 		{
-		case TYPE_ONE_MY:
-			OneMeshMyShader();
-			break;
-		case TYPE_ONE_ORIGINE:
-			OneMeshOriginShader();
-			break;
 		case TYPE_MULTI_MY:
 			MultiMeshMyShader();
 			break;
-		case TYPE_MULTI_ORIGINE:
-			MultiMeshOriginShader();
-			break;
+
 		case TYPE_STATIC_MESH:
 			StaticMesh();
 			break;
@@ -598,21 +590,9 @@ void SCENE_KIM::Draw(void)
 }
 
 //=============================================================================
-// 処理:生成
-//=============================================================================
-SCENE_KIM* SCENE_KIM::Create(LPDIRECT3DDEVICE9 d3d_device, const char* file_name)
-{
-	SCENE_KIM* obj = new SCENE_KIM(d3d_device);
-	obj->Load(file_name);
-
-	return obj;
-
-}
-
-//=============================================================================
 // 処理:解放
 //=============================================================================
-void SCENE_KIM::Release(void)
+void Kim::Release(void)
 {
 	Uninit();
 	delete this;
@@ -621,7 +601,7 @@ void SCENE_KIM::Release(void)
 //=============================================================================
 // 処理:ﾎﾞｰﾝｲﾝﾃﾞｯｸｽの正規化
 //=============================================================================
-void SCENE_KIM::BoneIndexNormalize(int mesh_idx, VERTEX_KIM* vtx)
+void Kim::BoneIndexNormalize(int mesh_idx, VERTEX_KIM* vtx)
 {
 	//FILE *normalize_index = NULL;
 	//normalize_index = fopen("data/log/normalize_index.txt", "w");
@@ -734,29 +714,11 @@ void SCENE_KIM::BoneIndexNormalize(int mesh_idx, VERTEX_KIM* vtx)
 	//fclose(normalize_index);
 }
 
-//=============================================================================
-// 処理:送信する頂点情報の設定
-//=============================================================================
-void SCENE_KIM::CreateVertexDecl(void)
-{
-	// 頂点宣言
-	D3DVERTEXELEMENT9 declAry[] = {
-			{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
-			{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },
-			{ 0, 24, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
-			{ 0, 32, D3DDECLTYPE_UBYTE4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0 },
-			{ 0, 36, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BLENDWEIGHT, 0 },
-			{ 0, 52, D3DDECLTYPE_UBYTE4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BLENDINDICES, 0 },
-			D3DDECL_END()
-	};
-
-	d3d_device_->CreateVertexDeclaration(declAry, &decl_);
-}
 
 //=============================================================================
 // 処理:ボーンの更新(行列変換)
 //=============================================================================
-void SCENE_KIM::UpdateBone(KIM_BONE_DATA* me, D3DXMATRIX *parentWorldMat)
+void Kim::UpdateBone(KIM_BONE_DATA* me, D3DXMATRIX *parentWorldMat)
 {
 	me->bone_matrix *= *parentWorldMat;
 
@@ -771,7 +733,7 @@ void SCENE_KIM::UpdateBone(KIM_BONE_DATA* me, D3DXMATRIX *parentWorldMat)
 //=============================================================================
 // 処理:ﾎﾞｰﾝ配列の初期位置の設定
 //=============================================================================
-void SCENE_KIM::CalcRelativeMat(KIM_BONE_DATA* me, D3DXMATRIX *parentoffsetMat)
+void Kim::CalcRelativeMat(KIM_BONE_DATA* me, D3DXMATRIX *parentoffsetMat)
 {
 	// 初期姿勢を親の初期姿勢を反映した初期姿勢の設定(親に対し相対的な場所へにする)
 	if (me->child)
@@ -783,51 +745,9 @@ void SCENE_KIM::CalcRelativeMat(KIM_BONE_DATA* me, D3DXMATRIX *parentoffsetMat)
 }
 
 //=============================================================================
-// 処理:ｼｪｰﾀﾞｰのｺﾝﾊﾟｲﾙ
-//=============================================================================
-HRESULT SCENE_KIM::CompileShader(void)
-{
-	// シェーダのコンパイルとシェーダ作成
-	ID3DXBuffer *shader, *error;
-
-	// 返り値用変数
-	HRESULT res;
-
-	if (bone_num_ != 0)
-	{
-		res = D3DXCompileShaderFromFile("resources/shader/SkiningShader.hlsl", NULL, 0, "vs_main", "vs_3_0", 0, &shader, &error, 0);
-	}
-	else
-	{
-		draw_type_ = TYPE_STATIC_MESH;
-		res = D3DXCompileShaderFromFile("resources/shader/StaticFBX.hlsl", NULL, 0, "vs_main", "vs_3_0", 0, &shader, &error, 0);
-	}
-
-	if (FAILED(res)) {
-		MessageBox(NULL, (LPSTR)error->GetBufferPointer(), NULL, 0);
-		return E_FAIL;
-	};
-
-	d3d_device_->CreateVertexShader((const DWORD*)shader->GetBufferPointer(), &vertex_shader_);
-	shader->Release();
-
-	res = D3DXCompileShaderFromFile("resources/shader/SkiningShader.hlsl", NULL, 0, "ps_main", "ps_3_0", 0, &shader, &error, 0);
-	if (FAILED(res)) {
-		MessageBox(NULL, (LPSTR)error->GetBufferPointer(), NULL, 0);
-		return E_FAIL;
-	};
-
-	d3d_device_->CreatePixelShader((const DWORD*)shader->GetBufferPointer(), &pixel_shader_);
-	shader->Release();
-
-	//D3DXCreateTextureFromFile(d3d_device_, "data/texture/mapping_textrue/toon_map.png", &toon_map);
-
-}
-
-//=============================================================================
 // ﾏﾃﾘｱﾙの設定
 //=============================================================================
-void SCENE_KIM::SetMaterial(D3DMATERIAL9 *material)
+void Kim::SetMaterial(D3DMATERIAL9 *material)
 {
 	if (draw_type_ == TYPE_ONE_MY || draw_type_ == TYPE_MULTI_MY || draw_type_ == TYPE_STATIC_MESH)
 	{
@@ -847,7 +767,7 @@ void SCENE_KIM::SetMaterial(D3DMATERIAL9 *material)
 //=============================================================================
 // 処理:ﾎﾞｰﾝの描画
 //=============================================================================
-void SCENE_KIM::DrawBone(void)
+void Kim::DrawBone(void)
 {
 	// 固定ｼｪｰﾀﾞの頂点ﾌﾞﾚﾝﾄﾞを切る
 	d3d_device_->SetRenderState(D3DRS_INDEXEDVERTEXBLENDENABLE, FALSE);
@@ -878,70 +798,14 @@ void SCENE_KIM::DrawBone(void)
 //=============================================================================
 // 1ﾒｯｼｭ	自作ｼｪｰﾀﾞｰ用描画
 //=============================================================================
-void SCENE_KIM::OneMeshMyShader(void)
+void Kim::OneMeshMyShader(void)
 {
-	// 現在のシェーダー情報の確保
-	LPDIRECT3DVERTEXSHADER9 current_vertex_shader;
-	LPDIRECT3DPIXELSHADER9 current_pixelshader;
-	d3d_device_->GetVertexShader(&current_vertex_shader);
-	d3d_device_->GetPixelShader(&current_pixelshader);
-
-	// シェーダ設定
-	d3d_device_->SetVertexShader(vertex_shader_);
-	d3d_device_->SetPixelShader(pixel_shader_);
-
-	// 送信する頂点情報の設定
-	d3d_device_->SetVertexDeclaration(decl_);
-
-	// ﾋﾞｭｰ,ﾌﾟﾛｼﾞｪｸｼｮﾝの取得
-	D3DXMATRIX view, proj;
-	d3d_device_->GetTransform(D3DTS_VIEW, &view);
-	d3d_device_->GetTransform(D3DTS_PROJECTION, &proj);
-
-	D3DXMatrixTranspose(&view, &view);
-	D3DXMatrixTranspose(&proj, &proj);
-
-	// ﾜｰﾙﾄﾞ,ﾋﾞｭｰ,ﾌﾟﾛｼﾞｪｸｼｮﾝ,指向性ﾗｲﾄ情報の転送
-	d3d_device_->SetVertexShaderConstantF(0, static_cast<const float*>(world_), 4);
-	d3d_device_->SetVertexShaderConstantF(4, static_cast<const float*>(view), 4);
-	d3d_device_->SetVertexShaderConstantF(8, static_cast<const float*>(proj), 4);
-	d3d_device_->SetVertexShaderConstantF(16, static_cast<const float*>(light_directional), 4);
-
-	// GPUに送信する行列の生成
-	D3DXMATRIX *export_bone = new D3DXMATRIX[bone_num_];
-	for (int cnt = 0; cnt < bone_num_; cnt++)
-	{
-		export_bone[cnt] = bone_[cnt].wold_matrix;
-		D3DXMatrixTranspose(&export_bone[cnt], &export_bone[cnt]);
-	}
-
-	d3d_device_->SetVertexShaderConstantF(18, static_cast<const float*>(*export_bone), 4 * bone_num_);
-
-	// ﾄｩｰﾝﾏｯﾌﾟの設定
-	d3d_device_->SetTexture(1, toon_map);
-
-	// 全ﾒｯｼｭの描画
-	for (int i = 0; i < mesh_num_; i++)
-	{
-		SetMaterial(&mesh_[i].material_);
-		d3d_device_->SetTexture(0, mesh_[i].texture_);
-		d3d_device_->SetIndices(mesh_[i].index_buffer_);
-		d3d_device_->SetStreamSource(0, mesh_[i].vertex_buffer_, 0, sizeof(VERTEX_KIM));	// 頂点ﾊﾞｯﾌｧをﾃﾞﾊﾞｲｽに関連付け
-		d3d_device_->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, mesh_[i].vertex_num_, 0, mesh_[i].index_num_ / 3);
-
-	}
-	// 前回のシェーダーに戻す
-	d3d_device_->SetVertexShader(current_vertex_shader);
-	d3d_device_->SetPixelShader(current_pixelshader);
-
-	// 正規化したﾎﾞｰﾝ情報の転送の削除
-	delete[] export_bone;
 }
 
 //=============================================================================
 // 複数ﾒｯｼｭ	自作ｼｪｰﾀﾞｰ用描画
 //=============================================================================
-void SCENE_KIM::MultiMeshMyShader(void)
+void Kim::MultiMeshMyShader(void)
 {
 	// 現在のシェーダー情報の確保
 	LPDIRECT3DVERTEXSHADER9 current_vertex_shader;
@@ -1008,114 +872,22 @@ void SCENE_KIM::MultiMeshMyShader(void)
 //=============================================================================
 // 1ﾒｯｼｭ	固定ｼｪｰﾀﾞｰ用描画
 //=============================================================================
-void SCENE_KIM::OneMeshOriginShader(void)
+void Kim::OneMeshOriginShader(void)
 {
-	//ハードの頂点ブレンド行列数
-	int indexMtxNum = 0;
-
-	//ハードの情報
-	D3DCAPS9 caps;
-	d3d_device_->GetDeviceCaps(&caps);
-	indexMtxNum = caps.MaxVertexBlendMatrixIndex;
-
-	//マテリアル退避
-	D3DMATERIAL9 defaultMat;
-	d3d_device_->GetMaterial(&defaultMat);
-
-	//頂点ブレンドを使用(4matrix)
-	d3d_device_->SetRenderState(D3DRS_VERTEXBLEND, D3DVBF_3WEIGHTS);
-	//インデックス付き頂点ブレンド
-	d3d_device_->SetRenderState(D3DRS_INDEXEDVERTEXBLENDENABLE, TRUE);
-	// 頂点色ではなくﾏﾃﾘｱﾙｶﾗｰでﾗｲﾃｨﾝｸﾞ
-	d3d_device_->SetRenderState(D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_MATERIAL);
-
-	//ﾌﾞﾚﾝﾄﾞできる行列数が足りない場合は頂点処理をｿﾌﾄｳｪｱ
-	if (indexMtxNum < bone_num_)
-		d3d_device_->SetSoftwareVertexProcessing(true);
-	for (int cnt = 0; cnt < bone_num_; cnt++)
-		d3d_device_->SetTransform(D3DTS_WORLDMATRIX(cnt), &(bone_[cnt].wold_matrix));
-
-	// 全ﾒｯｼｭの描画
-	for (int i = 0; i < mesh_num_; i++)
-	{
-		// 固定シェーダ用描画
-		SetMaterial(&mesh_[i].material_);
-		d3d_device_->SetTexture(0, mesh_[i].texture_);
-		d3d_device_->SetMaterial(&mesh_[i].material_);
-		d3d_device_->SetIndices(mesh_[i].index_buffer_);
-		d3d_device_->SetStreamSource(0, mesh_[i].vertex_buffer_, 0, sizeof(VERTEX_KIM));	// 頂点ﾊﾞｯﾌｧをﾃﾞﾊﾞｲｽに関連付け
-		d3d_device_->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, mesh_[i].vertex_num_, 0, mesh_[i].index_num_ / 3);
-	}
-
-	// 変更した情報を元にもどす
-	d3d_device_->SetMaterial(&defaultMat);
-	d3d_device_->SetRenderState(D3DRS_INDEXEDVERTEXBLENDENABLE, FALSE);
-	d3d_device_->SetRenderState(D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_COLOR1);
-
-	//頂点処理をハードウェアに戻す
-	d3d_device_->SetSoftwareVertexProcessing(false);
 
 }
 
 //=============================================================================
 // 複数ﾒｯｼｭ	固定ｼｪｰﾀﾞｰ用描画
 //=============================================================================
-void SCENE_KIM::MultiMeshOriginShader(void)
+void Kim::MultiMeshOriginShader(void)
 {
-	//ハードの頂点ブレンド行列数
-	int indexMtxNum = 0;
-
-	//ハードの情報
-	D3DCAPS9 caps;
-	d3d_device_->GetDeviceCaps(&caps);
-	indexMtxNum = caps.MaxVertexBlendMatrixIndex;
-
-	//マテリアル退避
-	D3DMATERIAL9 defaultMat;
-	d3d_device_->GetMaterial(&defaultMat);
-
-	//頂点ブレンドを使用(4matrix)
-	d3d_device_->SetRenderState(D3DRS_VERTEXBLEND, D3DVBF_3WEIGHTS);
-	//インデックス付き頂点ブレンド
-	d3d_device_->SetRenderState(D3DRS_INDEXEDVERTEXBLENDENABLE, TRUE);
-	// 頂点色ではなくﾏﾃﾘｱﾙｶﾗｰでﾗｲﾃｨﾝｸﾞ
-	d3d_device_->SetRenderState(D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_MATERIAL);
-
-	// 全ﾒｯｼｭの描画
-	for (int i = 0; i < mesh_num_; i++)
-	{
-		//ﾌﾞﾚﾝﾄﾞできる行列数が足りない場合は頂点処理をｿﾌﾄｳｪｱ
-		if (indexMtxNum < mesh_[i].bind_weight)
-			d3d_device_->SetSoftwareVertexProcessing(true);
-		else
-			d3d_device_->SetSoftwareVertexProcessing(false);
-
-		// ボーンの変換行列をGPUに送る 
-		for (int cnt = 0; cnt < mesh_[i].bind_weight; cnt++)
-			d3d_device_->SetTransform(D3DTS_WORLDMATRIX(cnt), &(bone_[mesh_[i].bind_index[cnt]].wold_matrix));
-
-		// 固定シェーダ用描画
-		SetMaterial(&mesh_[i].material_);
-		d3d_device_->SetTexture(0, mesh_[i].texture_);
-		d3d_device_->SetMaterial(&mesh_[i].material_);
-		d3d_device_->SetIndices(mesh_[i].index_buffer_);
-		d3d_device_->SetStreamSource(0, mesh_[i].vertex_buffer_, 0, sizeof(VERTEX_KIM));	// 頂点ﾊﾞｯﾌｧをﾃﾞﾊﾞｲｽに関連付け
-		d3d_device_->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, mesh_[i].vertex_num_, 0, mesh_[i].index_num_ / 3);
-	}
-
-	// 変更した情報を元にもどす
-	d3d_device_->SetMaterial(&defaultMat);
-	d3d_device_->SetRenderState(D3DRS_INDEXEDVERTEXBLENDENABLE, FALSE);
-	d3d_device_->SetRenderState(D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_COLOR1);
-
-	//頂点処理をハードウェアに戻す
-	d3d_device_->SetSoftwareVertexProcessing(false);
 }
 
 //=============================================================================
 // 静的ﾒｯｼｭの描画
 //=============================================================================
-void SCENE_KIM::StaticMesh(void)
+void Kim::StaticMesh(void)
 {
 	// 現在のシェーダー情報の確保
 	LPDIRECT3DVERTEXSHADER9 current_vertex_shader;
@@ -1165,10 +937,11 @@ void SCENE_KIM::StaticMesh(void)
 
 }
 
+
 //=============================================================================
 // ﾃﾞﾊﾞｯｸﾞ用関数
 //=============================================================================
-bool SCENE_KIM::DebugUpdate(void)
+bool Kim::DebugUpdate(void)
 {
 	bool return_data = true;
 
@@ -1330,10 +1103,80 @@ bool SCENE_KIM::DebugUpdate(void)
 
 	//}
 
-
-
 	return return_data;
 }
 
+//=============================================================================
+// 処理:ｼｪｰﾀﾞｰのｺﾝﾊﾟｲﾙ
+//=============================================================================
+HRESULT Kim::CompileShader(void)
+{
+	// シェーダのコンパイルとシェーダ作成
+	ID3DXBuffer *shader, *error;
+
+	// 返り値用変数
+	HRESULT res;
+
+	if (bone_num_ != 0)
+	{
+		res = D3DXCompileShaderFromFile("resources/shader/SkiningShader.hlsl", NULL, 0, "vs_main", "vs_3_0", 0, &shader, &error, 0);
+	}
+	else
+	{
+		draw_type_ = TYPE_STATIC_MESH;
+		res = D3DXCompileShaderFromFile("resources/shader/StaticFBX.hlsl", NULL, 0, "vs_main", "vs_3_0", 0, &shader, &error, 0);
+	}
+
+	if (FAILED(res)) {
+		MessageBox(NULL, (LPSTR)error->GetBufferPointer(), NULL, 0);
+		return E_FAIL;
+	};
+
+	d3d_device_->CreateVertexShader((const DWORD*)shader->GetBufferPointer(), &vertex_shader_);
+	shader->Release();
+
+	res = D3DXCompileShaderFromFile("resources/shader/SkiningShader.hlsl", NULL, 0, "ps_main", "ps_3_0", 0, &shader, &error, 0);
+	if (FAILED(res)) {
+		MessageBox(NULL, (LPSTR)error->GetBufferPointer(), NULL, 0);
+		return E_FAIL;
+	};
+
+	d3d_device_->CreatePixelShader((const DWORD*)shader->GetBufferPointer(), &pixel_shader_);
+	shader->Release();
+
+	//D3DXCreateTextureFromFile(d3d_device_, "data/texture/mapping_textrue/toon_map.png", &toon_map);
+
+}
+
+//=============================================================================
+// 処理:送信する頂点情報の設定
+//=============================================================================
+void Kim::CreateVertexDecl(void)
+{
+	// 頂点宣言
+	D3DVERTEXELEMENT9 declAry[] = {
+			{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
+			{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },
+			{ 0, 24, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
+			{ 0, 32, D3DDECLTYPE_UBYTE4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0 },
+			{ 0, 36, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BLENDWEIGHT, 0 },
+			{ 0, 52, D3DDECLTYPE_UBYTE4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BLENDINDICES, 0 },
+			D3DDECL_END()
+	};
+
+	d3d_device_->CreateVertexDeclaration(declAry, &decl_);
+}
+
+//=============================================================================
+// 処理:生成
+//=============================================================================
+Kim* Kim::Create(LPDIRECT3DDEVICE9 d3d_device, const char* file_name)
+{
+	Kim* obj = new Kim(d3d_device);
+	obj->Load(file_name);
+
+	return obj;
+
+}
 
 // EOF
