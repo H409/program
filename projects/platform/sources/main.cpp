@@ -51,7 +51,6 @@ int main(int argc,char* argv)
 
 	auto directx9 = GET_DIRECTX9_DEVICE();
 	auto sprite = std::make_shared<mesh::MeshSprite3D>(10,10);
-	auto directx9 = GET_DIRECTX9_DEVICE();
 
 	D3DVERTEXELEMENT9 vertex_elements[] =
 	{
@@ -63,7 +62,6 @@ int main(int argc,char* argv)
 
 	directx9->CreateVertexDeclaration(vertex_elements,&vertex_declaration);
 
-	auto sprite = std::make_shared<mesh::Sprite3D>(float2(1.0f,1.0f));
 
 	auto texture = graphic_device->LoadTexture("resources/texture/test.png");
 	auto vertex_shader = graphic_device->LoadVertexShader("resources/shader/basic.vsc");
@@ -79,7 +77,6 @@ int main(int argc,char* argv)
 	auto observer_2d = std::make_shared<Observer2D>(800.0f,600.0f);
 	auto observer_3d = std::make_shared<Observer3D>(utility::math::ToRadian(60.0f),800.0f,600.0f);
 
-	auto object = std::make_shared<Object>();
 
 	//object->SetPositionX(100.0f);
 	//object->SetRotationZ(utility::math::ToRadian(-90.0f));
@@ -130,7 +127,6 @@ int main(int argc,char* argv)
 		projection_matrix = utility::math::PerspectiveFovLH(utility::math::ToRadian(60.0f),800.0f / 600.0f,1.0f,1000.0f);
 		//projection_matrix = utility::math::PerspectiveFovRH(utility::math::ToRadian(60.0f),800.0f / 600.0f,1.0f,1000.0f);
 
-		world_matrix = object->GetMatrix();
 
 		vertex_shader->SetValue("_world_matrix",(f32*)&world_matrix,sizeof(float4x4));
 		vertex_shader->SetValue("_view_matrix",(f32*)&observer_3d->GetViewMatrix(),sizeof(float4x4));
@@ -149,11 +145,8 @@ int main(int argc,char* argv)
 		vertex_shader->SetValue("_view_matrix",(f32*)&observer->GetViewMatrix(),sizeof(float4x4));
 		vertex_shader->SetValue("_projection_matrix",(f32*)&observer->GetProjectionMatrix(),sizeof(float4x4));
 
-		// object
-		vertex_shader->SetValue("_world_matrix",(f32*)&object->GetMatrix(),sizeof(float4x4));
-		vertex_shader->SetValue("_color",(f32*)&object->GetColor(),sizeof(float4));
 
-		object->Draw();
+
 
 		graphic_device->EndRendering();
 
