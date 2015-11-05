@@ -15,6 +15,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\..\..\..\DirectX9\projects\pixel_shader\shader\deferred.hlsl" />
     <FxCompile Include="shader\basic.hlsl" />
     <FxCompile Include="shader\basic_format.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>

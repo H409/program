@@ -74,6 +74,15 @@ public:
 	// load texture
 	TTexture LoadTexture(const std::string& in_path);
 
+	// create texture
+	TTexture CreateTexture(const u16& in_width,const u16& in_height,const D3DFORMAT& in_format);
+
+	// set render target
+	void SetRenderTarget(const u32& in_index,TTexture in_texture);
+
+	// get render target
+	TTexture GetRenderTarget(const u32& in_index);
+
 	// load vertex shader
 	TVertexShader LoadVertexShader(const std::string& in_path);
 	TVertexShader LoadVertexShader(const std::string& in_path,const std::string& in_function,const std::string& in_version);
@@ -81,6 +90,12 @@ public:
 	// load pixel shader
 	TPixelShader LoadPixelShader(const std::string& in_path);
 	TPixelShader LoadPixelShader(const std::string& in_path,const std::string& in_function,const std::string& in_version);
+
+	// set vertex shader
+	void SetVertexShader(TVertexShader in_vertex_shader);
+
+	// set pixel shader
+	void SetPixelShader(TPixelShader in_pixel_shader);
 
 private:
 	// constructor

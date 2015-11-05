@@ -33,9 +33,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pixel_shader", "projects\pixel_shader\pixel_shader.vcxproj", "{352B12D2-B145-446F-872F-861542BE6100}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shader", "shader", "{E18270C5-AA7A-4669-AA17-AE4672E8351C}"
-	ProjectSection(SolutionItems) = preProject
-		resources\shader\SkiningShader.hlsl = resources\shader\SkiningShader.hlsl
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

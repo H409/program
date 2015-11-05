@@ -17,7 +17,7 @@ namespace mesh {
 // constant definition
 //*****************************************************************************
 const float2 Sprite::DEFAULT_SIZE = float2(1.0f,1.0f);
-const float2 Sprite::DEFAULT_ANCHOR_POINT = float2(0.5f,0.5f);
+const float2 Sprite::DEFAULT_ANCHOR_POINT = float2(0.0f,0.0f);
 const float4 Sprite::DEFAULT_COLOR = float4(1.0f,1.0f,1.0f,1.0f);
 
 //=============================================================================
@@ -36,12 +36,6 @@ Sprite::Sprite(const float2& in_size)
 	,size_(in_size)
 	,anchor_point_(DEFAULT_ANCHOR_POINT)
 {
-	struct VERTEX
-	{
-		float3 _position;
-		float2 _texcoord;
-	};
-
 	float3 positions[4] =
 	{
 		float3(-size_._x * (       anchor_point_._x),-size_._y * (       anchor_point_._y),0.0f),
@@ -56,6 +50,12 @@ Sprite::Sprite(const float2& in_size)
 		float2(1.0f,0.0f),
 		float2(0.0f,1.0f),
 		float2(1.0f,1.0f),
+	};
+
+	struct VERTEX
+	{
+		float3 _position;
+		float2 _texcoord;
 	};
 
 	auto directx9 = GET_DIRECTX9_DEVICE();

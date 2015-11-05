@@ -12,6 +12,8 @@
 #include "object.h"
 #include "action/action.h"
 #include "math/math.h"
+#include "system/win_system.h"
+#include "dx9_device.h"
 
 //*****************************************************************************
 // constant definition
@@ -29,6 +31,13 @@ Object::Object(void)
 	,priority_(0)
 {
 	textures_.resize(TEXTURE_MAX);
+
+	auto graphic_device = GET_GRAPHIC_DEVICE();
+
+	for(auto& texture : textures_)
+	{
+		texture = graphic_device->LoadTexture("resources/texture/default.png");
+	}
 }
 
 //=============================================================================

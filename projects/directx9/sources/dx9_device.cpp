@@ -13,8 +13,9 @@
 #include "vertex/dx9_vertex_buffer.h"
 #include "vertex/dx9_vertex_declaration.h"
 #include "texture/dx9_texture_loader.h"
+#include "shader/dx9_vertex_shader.h"
+#include "shader/dx9_pixel_shader.h"
 #include "shader/dx9_vertex_shader_loader.h"
-
 #include "shader/dx9_pixel_shader_loader.h"
 #include "texture/dx9_texture.h"
 #include "texture/dx9_render_texture_factory.h"
@@ -218,6 +219,34 @@ DX9Device::TTexture DX9Device::LoadTexture(const std::string & in_path)
 }
 
 //=============================================================================
+// create texture
+//=============================================================================
+DX9Device::TTexture DX9Device::CreateTexture(const u16 & in_width,const u16 & in_height,const D3DFORMAT & in_format)
+{
+	return std::make_shared<texture::DX9Texture>(in_width,in_height,in_format,direct3ddevice9_);
+}
+
+//=============================================================================
+// set render target
+//=============================================================================
+void DX9Device::SetRenderTarget(const u32& in_index,TTexture in_texture)
+{
+	direct3ddevice9_->SetRenderTarget(in_index,in_texture->GetSurface());
+}
+
+//=============================================================================
+// get render target
+//=============================================================================
+DX9Device::TTexture DX9Device::GetRenderTarget(const u32 & in_index)
+{
+	LPDIRECT3DSURFACE9 direct3dsurface9 = nullptr;
+
+	direct3ddevice9_->GetRenderTarget(in_index,&direct3dsurface9);
+
+	return std::make_shared<texture::DX9Texture>(direct3dsurface9);
+}
+
+//=============================================================================
 // load vertex shader
 //=============================================================================
 DX9Device::TVertexShader DX9Device::LoadVertexShader(const std::string & in_path)
@@ -248,6 +277,22 @@ DX9Device::TPixelShader DX9Device::LoadPixelShader(const std::string & in_path,c
 {
 	DEBUG_TRACE("HACK : load vertex shader");
 	return nullptr;
+}
+
+//=============================================================================
+// set vertex shader
+//=============================================================================
+void DX9Device::SetVertexShader(TVertexShader in_vertex_shader)
+{
+	direct3ddevice9_->SetVertexShader(in_vertex_shader->GetShader());
+}
+
+//=============================================================================
+// set pixel shader
+//=============================================================================
+void DX9Device::SetPixelShader(TPixelShader in_pixel_shader)
+{
+	direct3ddevice9_->SetPixelShader(in_pixel_shader->GetShader());
 }
 
 //=============================================================================
