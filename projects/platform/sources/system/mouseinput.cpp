@@ -158,9 +158,7 @@ D3DXVECTOR2 InputMouse::GetDrag(MOUSE_KEY nKey)
 		//前フレームと現在フレームのマウスカーソルポジションの差分を返す
 		return D3DXVECTOR2((float)(m_Mousepos.x - m_Prev_Mousepos.x), (float)(m_Mousepos.y - m_Prev_Mousepos.y));
 	}
-	else
-	{
-		//そうでない場合は移動していないので0を返す。
-		D3DXVECTOR2(0.0f, 0.0f);
-	}
+
+	//そうでない場合は移動していないので0を返す。
+	return D3DXVECTOR2(0.0f, 0.0f);
 }
