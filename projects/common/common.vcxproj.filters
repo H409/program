@@ -31,9 +31,6 @@
     <ClInclude Include="sources\debug_tool\debug_assert.h">
       <Filter>sources\debug_tool</Filter>
     </ClInclude>
-    <ClInclude Include="sources\debug_tool\debug_assert_trace.h">
-      <Filter>sources\debug_tool</Filter>
-    </ClInclude>
     <ClInclude Include="sources\safety\safety.h">
       <Filter>sources\safety</Filter>
     </ClInclude>
@@ -58,9 +55,6 @@
       <Filter>sources\debug_tool</Filter>
     </ClCompile>
     <ClCompile Include="sources\debug_tool\debug_assert.cpp">
-      <Filter>sources\debug_tool</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\debug_tool\debug_assert_trace.cpp">
       <Filter>sources\debug_tool</Filter>
     </ClCompile>
     <ClCompile Include="sources\type_alias\float\float2.cpp">

@@ -231,7 +231,14 @@ DX9Device::TTexture DX9Device::CreateTexture(const u16 & in_width,const u16 & in
 //=============================================================================
 void DX9Device::SetRenderTarget(const u32& in_index,TTexture in_texture)
 {
-	direct3ddevice9_->SetRenderTarget(in_index,in_texture->GetSurface());
+	if(in_texture != nullptr)
+	{
+		direct3ddevice9_->SetRenderTarget(in_index,in_texture->GetSurface());
+		return;
+	}
+
+	direct3ddevice9_->SetRenderTarget(in_index,nullptr);
+
 }
 
 //=============================================================================

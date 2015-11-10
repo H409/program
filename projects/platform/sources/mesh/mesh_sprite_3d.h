@@ -51,6 +51,7 @@ private:
 	{
 		float3 _position;
 		float2 _texcoord;
+		float3 _normal;
 	};
 	static const D3DXVECTOR2 DEFAULT_SIZE;
 	static const D3DCOLOR DEFAULT_COLOR;

@@ -112,6 +112,12 @@
     <ClCompile Include="sources\system\mouseinput.cpp">
       <Filter>sources\system</Filter>
     </ClCompile>
+    <ClCompile Include="sources\fbx\kim.cpp">
+      <Filter>sources\fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\player\player.cpp">
+      <Filter>sources\player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sources\main.h">
@@ -188,6 +194,12 @@
     </ClInclude>
     <ClInclude Include="sources\system\keyboardinput.h">
       <Filter>sources\system</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\fbx\kim.h">
+      <Filter>sources\fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\player\player.h">
+      <Filter>sources\player</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

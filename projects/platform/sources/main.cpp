@@ -43,20 +43,40 @@ int main(int argc,char* argv)
 
 	win_system->SetCallbacks(WinSystem::EVENT::STOP,{ [&is_loop] {is_loop = false;} });
 
-	auto directx9 = GET_DIRECTX9_DEVICE();
-	auto sprite = std::make_shared<mesh::MeshSprite3D>(10,10);
+	auto mesh_sprite_3d = std::make_shared<mesh::MeshSprite3D>(10,10);
 	auto texture = graphic_device->LoadTexture("resources/texture/test.png");
+
 	auto vertex_shader = graphic_device->LoadVertexShader("resources/shader/basic.vsc");
 	auto pixel_shader = graphic_device->LoadPixelShader("resources/shader/basic.psc");
+
 	auto observer = std::make_shared<FollowerObserver>(utility::math::ToRadian(60.0f),800.0f,600.0f);
-	observer->SetPosition(float3(0.0f,0.0f,0.0f));
-	observer->SetVector(float3(0.0f,0.0f,1.0f));
+	observer->SetPosition(float3(0.0f,0.0f,2.0f));
+	observer->SetVector(float3(1.0f,0.0f,1.0f));
 	observer->SetLength(5.0f);
 	observer->SetHeight(5.0f);
 	observer->Update();
-	auto object = std::make_shared<MeshObject>(sprite);
+	auto object = std::make_shared<MeshObject>(mesh_sprite_3d);
+
+	auto sprite = std::make_shared<mesh::Sprite>(float2(800,600));
+	auto observer_2d = std::make_shared<Observer2D>(800.0f,600.0f);
 
 	object->SetTexture(0,texture);
+
+	auto directx9 = GET_DIRECTX9_DEVICE();
+
+	auto color_texture = graphic_device->CreateTexture(800,600,D3DFMT_A8R8G8B8);
+	auto normal_texture = graphic_device->CreateTexture(800,600,D3DFMT_A32B32G32R32F);
+	auto position_texture = graphic_device->CreateTexture(800,600,D3DFMT_A32B32G32R32F);
+
+	auto default_texture = graphic_device->GetRenderTarget(0);
+	auto sprite_object = std::make_shared<MeshObject>(sprite);
+	sprite->SetAnchorPoint(float2(0.0f,0.0f));
+
+	auto gb_vs = graphic_device->LoadVertexShader("resources/shader/graphics_buffer.vsc");
+	auto gb_ps = graphic_device->LoadPixelShader("resources/shader/graphics_buffer.psc");
+
+	auto d_vs = graphic_device->LoadVertexShader("resources/shader/deferred.vsc");
+	auto d_ps = graphic_device->LoadPixelShader("resources/shader/deferred.psc");
 
 	while(is_loop)
 	{
@@ -64,22 +84,58 @@ int main(int argc,char* argv)
 
 		graphic_device->BeginRendering();
 
+		graphic_device->SetRenderTarget(0,color_texture);
+		graphic_device->SetRenderTarget(1,normal_texture);
+		graphic_device->SetRenderTarget(2,position_texture);
+
 		graphic_device->Clear(float4(1.0f,0.0f,0.0f,1.0f),1.0f);
 
 		// set shader
-		directx9->SetVertexShader(vertex_shader->GetShader());
-		directx9->SetPixelShader(pixel_shader->GetShader());
+		graphic_device->SetVertexShader(gb_vs);
+		graphic_device->SetPixelShader(gb_ps);
+		//graphic_device->SetVertexShader(vertex_shader);
+		//graphic_device->SetPixelShader(pixel_shader);
 
 		// observer
-		vertex_shader->SetValue("_view_matrix",(f32*)&observer->GetViewMatrix(),sizeof(float4x4));
-		vertex_shader->SetValue("_projection_matrix",(f32*)&observer->GetProjectionMatrix(),sizeof(float4x4));
+		gb_vs->SetValue("_view_matrix",(f32*)&observer->GetViewMatrix(),sizeof(float4x4));
+		gb_vs->SetValue("_projection_matrix",(f32*)&observer->GetProjectionMatrix(),sizeof(float4x4));
+		//vertex_shader->SetValue("_view_matrix",(f32*)&observer->GetViewMatrix(),sizeof(float4x4));
+		//vertex_shader->SetValue("_projection_matrix",(f32*)&observer->GetProjectionMatrix(),sizeof(float4x4));
 
 		// object
-		vertex_shader->SetValue("_world_matrix",(f32*)&object->GetMatrix(),sizeof(float4x4));
-		vertex_shader->SetValue("_color",(f32*)&object->GetColor(),sizeof(float4));
-		pixel_shader->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
+		gb_vs->SetValue("_world_matrix",(f32*)&object->GetMatrix(),sizeof(float4x4));
+		gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
+		//vertex_shader->SetValue("_world_matrix",(f32*)&object->GetMatrix(),sizeof(float4x4));
+		//vertex_shader->SetValue("_color",(f32*)&object->GetColor(),sizeof(float4));
+		//pixel_shader->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
 
 		object->Draw();
+
+		graphic_device->SetRenderTarget(0,default_texture);
+		graphic_device->SetRenderTarget(1,nullptr);
+		graphic_device->SetRenderTarget(2,nullptr);
+		graphic_device->SetRenderTarget(3,nullptr);
+
+		graphic_device->Clear(float4(0.0f,0.0f,0.0f,0.0f),1.0f);
+
+		graphic_device->SetVertexShader(d_vs);
+		graphic_device->SetPixelShader(d_ps);
+
+		d_vs->SetValue("_view_matrix",(f32*)&observer_2d->GetViewMatrix(),sizeof(float4x4));
+		d_vs->SetValue("_projection_matrix",(f32*)&observer_2d->GetProjectionMatrix(),sizeof(float4x4));
+		d_vs->SetValue("_world_matrix",(f32*)&sprite_object->GetMatrix(),sizeof(float4x4));
+
+		d_ps->SetValue("_light_vector",(f32*)&float3(0.0f,-1.0f,0.0f),sizeof(float3));
+		d_ps->SetValue("_light_deffuse",(f32*)&float3(1.0f,1.0f,1.0f),sizeof(float3));
+		d_ps->SetTexture("_color_sampler",color_texture->GetTexture());
+		d_ps->SetTexture("_normal_sampler",normal_texture->GetTexture());
+		d_ps->SetTexture("_position_sampler",position_texture->GetTexture());
+		//vertex_shader->SetValue("_view_matrix",(f32*)&observer_2d->GetViewMatrix(),sizeof(float4x4));
+		//vertex_shader->SetValue("_projection_matrix",(f32*)&observer_2d->GetProjectionMatrix(),sizeof(float4x4));
+		//vertex_shader->SetValue("_world_matrix",(f32*)&sprite_object->GetMatrix(),sizeof(float4x4));
+		//pixel_shader->SetTexture("_texture_sampler",color_texture->GetTexture());
+
+		sprite_object->Draw();
 
 		graphic_device->EndRendering();
 

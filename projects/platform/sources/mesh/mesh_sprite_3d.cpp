@@ -78,6 +78,11 @@ MeshSprite3D::MeshSprite3D(const f32& in_block_width,const f32& in_block_height,
 			vertex[(i * width_count_ + j) * 4 + 2]._position = float3(width_ * (j + 1),0.0f,height_ * (i + 0));
 			vertex[(i * width_count_ + j) * 4 + 3]._position = float3(width_ * (j + 1),0.0f,height_ * (i + 1));
 
+			vertex[(i * width_count_ + j) * 4 + 0]._normal = float3(0.0f,1.0f,0.0f);
+			vertex[(i * width_count_ + j) * 4 + 1]._normal = float3(0.0f,1.0f,0.0f);
+			vertex[(i * width_count_ + j) * 4 + 2]._normal = float3(0.0f,1.0f,0.0f);
+			vertex[(i * width_count_ + j) * 4 + 3]._normal = float3(0.0f,1.0f,0.0f);
+
 			//vertex[(i * width_count_ + j) * 4 + 0]._color = color_;
 			//vertex[(i * width_count_ + j) * 4 + 1]._color = color_;
 			//vertex[(i * width_count_ + j) * 4 + 2]._color = color_;

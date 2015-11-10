@@ -13,7 +13,10 @@
     <FxCompile Include="shader\basic_format.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
-    <FxCompile Include="..\..\..\..\DirectX9\projects\pixel_shader\shader\deferred.hlsl">
+    <FxCompile Include="shader\graphics_buffer.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\deferred.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
   </ItemGroup>

@@ -56,7 +56,7 @@ DX9Texture::DX9Texture(const u32& in_id,LPDIRECT3DDEVICE9 in_direct3ddevice9)
 //=============================================================================
 // constructor
 //=============================================================================
-DX9Texture::DX9Texture(const u16 & in_width,const u16 & in_height,const D3DFORMAT & in_format,LPDIRECT3DDEVICE9 in_direct3ddevice9)
+DX9Texture::DX9Texture(const u16 & in_width,const u16 & in_height,const D3DFORMAT& in_format,LPDIRECT3DDEVICE9 in_direct3ddevice9)
 	:DX9Texture()
 {
 	in_direct3ddevice9->CreateTexture(in_width,in_height,1,D3DUSAGE_RENDERTARGET,in_format,D3DPOOL_DEFAULT,&direct3dtexture9_,NULL);

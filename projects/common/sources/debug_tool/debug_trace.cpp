@@ -33,7 +33,7 @@ void Trace(const s8* in_message,...)
 
 	sprintf_s(message,"trace : %s",work);
 
-	//OutputDebugString(message);
+	OutputDebugString(message);
 }
 
 #endif // _DEBUG

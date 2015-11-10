@@ -18,6 +18,14 @@
 //*****************************************************************************
 
 
+namespace graphic {
+namespace directx9 {
+namespace texture {
+class DX9Texture;
+} // namespace texture
+} // namespace directx9
+} // namespace graphic
+
 //*****************************************************************************
 // class definition
 //*****************************************************************************
@@ -27,6 +35,8 @@ namespace shader {
 class DX9Shader
 {
 public:
+	using TTexture = std::shared_ptr<texture::DX9Texture>;
+
 	// destructor
 	virtual ~DX9Shader(void);
 
@@ -37,6 +47,7 @@ public:
 	// set texture
 	void SetTexture(const std::string& in_handle_name,LPDIRECT3DTEXTURE9 in_direct3dtexture9);
 	void SetTexture(const u32& in_handle,LPDIRECT3DTEXTURE9 in_direct3dtexture9);
+	void SetTexture(const std::string& in_handle_name,TTexture in_texture);
 
 	// get constant table
 	LPD3DXCONSTANTTABLE GetConstantTable(void)const;

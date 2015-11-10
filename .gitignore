@@ -20,3 +20,5 @@ project/Develop/
 *.enc
 *.ilk
 Debug/
+*.vsc
+*.psc

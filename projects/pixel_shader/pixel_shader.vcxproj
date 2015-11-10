@@ -15,13 +15,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\..\..\..\DirectX9\projects\pixel_shader\shader\deferred.hlsl" />
     <FxCompile Include="shader\basic.hlsl" />
     <FxCompile Include="shader\basic_format.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Develop|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </FxCompile>
+    <FxCompile Include="shader\deferred.hlsl" />
+    <FxCompile Include="shader\graphics_buffer.hlsl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{352B12D2-B145-446F-872F-861542BE6100}</ProjectGuid>
