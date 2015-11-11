@@ -39,6 +39,12 @@
     <ClCompile Include="sources\observer\observer_2d.cpp" />
     <ClCompile Include="sources\observer\observer_3d.cpp" />
     <ClCompile Include="sources\player\player.cpp" />
+    <ClCompile Include="sources\scene\base\scene_manager.cpp" />
+    <ClCompile Include="sources\scene\demo\demo.cpp" />
+    <ClCompile Include="sources\scene\game\game.cpp" />
+    <ClCompile Include="sources\scene\result\result.cpp" />
+    <ClCompile Include="sources\scene\title\title.cpp" />
+    <ClCompile Include="sources\scene\tutorial\tutorial.cpp" />
     <ClCompile Include="sources\system\input.cpp" />
     <ClCompile Include="sources\system\input_keyboard.cpp" />
     <ClCompile Include="sources\system\input_mouse.cpp" />
@@ -70,6 +76,14 @@
     <ClInclude Include="sources\observer\observer_2d.h" />
     <ClInclude Include="sources\observer\observer_3d.h" />
     <ClInclude Include="sources\player\player.h" />
+    <ClInclude Include="sources\scene\base\scene_base.h" />
+    <ClInclude Include="sources\scene\base\scene_factory.h" />
+    <ClInclude Include="sources\scene\base\scene_manager.h" />
+    <ClInclude Include="sources\scene\demo\demo.h" />
+    <ClInclude Include="sources\scene\game\game.h" />
+    <ClInclude Include="sources\scene\result\result.h" />
+    <ClInclude Include="sources\scene\title\title.h" />
+    <ClInclude Include="sources\scene\tutorial\tutorial.h" />
     <ClInclude Include="sources\system\input.h" />
     <ClInclude Include="sources\system\input_keyboard.h" />
     <ClInclude Include="sources\system\input_mouse.h" />

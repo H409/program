@@ -35,6 +35,24 @@
     <Filter Include="sources\object\field">
       <UniqueIdentifier>{2254b91b-abee-42ee-b3f5-dbeeeaae482c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\scene\base">
+      <UniqueIdentifier>{a9141462-0511-450b-b985-7c3fc42f545d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\scene\demo">
+      <UniqueIdentifier>{5584d4fc-a0a4-4e17-b730-b54688f39b12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\scene\title">
+      <UniqueIdentifier>{80273549-715c-463e-90ff-fc3580c24475}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\scene\result">
+      <UniqueIdentifier>{9d9ec928-40b7-4bb4-9051-acca449a4418}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\scene\game">
+      <UniqueIdentifier>{e1692b3f-8617-4242-8d0d-c0ce6602611d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\scene\tutorial">
+      <UniqueIdentifier>{fa05c3e6-4657-4166-bcdf-116984569a92}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\windows\win_main.cpp">
@@ -124,6 +142,24 @@
     <ClCompile Include="sources\object\field\field.cpp">
       <Filter>sources\object\field</Filter>
     </ClCompile>
+    <ClCompile Include="sources\scene\base\scene_manager.cpp">
+      <Filter>sources\scene\base</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\scene\demo\demo.cpp">
+      <Filter>sources\scene\demo</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\scene\game\game.cpp">
+      <Filter>sources\scene\game</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\scene\result\result.cpp">
+      <Filter>sources\scene\result</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\scene\tutorial\tutorial.cpp">
+      <Filter>sources\scene\tutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\scene\title\title.cpp">
+      <Filter>sources\scene\title</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sources\main.h">
@@ -209,6 +245,30 @@
     </ClInclude>
     <ClInclude Include="sources\object\field\field.h">
       <Filter>sources\object\field</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\scene\base\scene_manager.h">
+      <Filter>sources\scene\base</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\scene\base\scene_base.h">
+      <Filter>sources\scene\base</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\scene\base\scene_factory.h">
+      <Filter>sources\scene\base</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\scene\demo\demo.h">
+      <Filter>sources\scene\demo</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\scene\game\game.h">
+      <Filter>sources\scene\game</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\scene\result\result.h">
+      <Filter>sources\scene\result</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\scene\tutorial\tutorial.h">
+      <Filter>sources\scene\tutorial</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\scene\title\title.h">
+      <Filter>sources\scene\title</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -17,6 +17,7 @@
 #include "math/math.h"
 #include "system/input_keyboard.h"
 #include "system/input_mouse.h"
+#include "scene/base/scene_manager.h"
 
 // HACK
 #include "shader/dx9_vertex_shader.h"
@@ -42,6 +43,7 @@ int main(int argc,char* argv)
 	auto win_system = WinSystem::GetInstance();
 	auto graphic_device = GET_GRAPHIC_DEVICE();
 	bool is_loop = true;
+	auto& scene_manager = SceneManager::Instance();
 
 	win_system->SetCallbacks(WinSystem::EVENT::STOP,{ [&is_loop] {is_loop = false;} });
 
@@ -84,7 +86,11 @@ int main(int argc,char* argv)
 		GET_INPUT_KEYBOARD()->Update();
 		GET_INPUT_MOUSE()->Update();
 
+		scene_manager.Update();
+
 		graphic_device->BeginRendering();
+
+		scene_manager.Draw();
 
 		graphic_device->SetRenderTarget(0,color_texture);
 		graphic_device->SetRenderTarget(1,normal_texture);
