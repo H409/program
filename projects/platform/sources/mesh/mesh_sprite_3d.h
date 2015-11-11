@@ -32,9 +32,6 @@ public:
 	// destructor
 	virtual ~MeshSprite3D(void);
 
-	// set parameter
-	void SetParameter(void);
-
 	// set index
 	void SetIndex(u32 x,u32 y,u32 index);
 
@@ -69,6 +66,8 @@ private:
 	u32 division_height_;
 	u32 index_count_;
 	u32* indexs_;
+	float2 anchor_point_;
+
 };
 
 } // namespace mesh

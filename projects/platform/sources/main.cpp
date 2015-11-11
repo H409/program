@@ -22,14 +22,11 @@
 #include "texture/dx9_texture.h"
 #include "mesh/sprite.h"
 #include "observer/observer_2d.h"
-#include "observer/observer_3d.h"
 #include "observer/follower_observer.h"
 #include "mesh/sprite_3d.h"
 #include "object/mesh_object.h"
-#include "mesh/mesh_sprite_3d.h"
 #include "object/object.h"
-#include "system/input_mouse.h"
-#include "system/input_keyboard.h"
+#include "object/field/field.h"
 
 //=============================================================================
 // エントリーポイント
@@ -46,24 +43,18 @@ int main(int argc,char* argv)
 
 	win_system->SetCallbacks(WinSystem::EVENT::STOP,{ [&is_loop] {is_loop = false;} });
 
-	auto mesh_sprite_3d = std::make_shared<mesh::MeshSprite3D>(10,10);
-	auto texture = graphic_device->LoadTexture("resources/texture/test.png");
-
 	auto vertex_shader = graphic_device->LoadVertexShader("resources/shader/basic.vsc");
 	auto pixel_shader = graphic_device->LoadPixelShader("resources/shader/basic.psc");
 
 	auto observer = std::make_shared<FollowerObserver>(utility::math::ToRadian(60.0f),800.0f,600.0f);
-	observer->SetPosition(float3(0.0f,0.0f,2.0f));
-	observer->SetVector(float3(1.0f,0.0f,1.0f));
+	observer->SetPosition(float3(0.0f,0.0f,0.0f));
+	observer->SetVector(float3(0.0f,0.0f,1.0f));
 	observer->SetLength(5.0f);
 	observer->SetHeight(5.0f);
 	observer->Update();
-	auto object = std::make_shared<MeshObject>(mesh_sprite_3d);
 
 	auto sprite = std::make_shared<mesh::Sprite>(float2(800,600));
 	auto observer_2d = std::make_shared<Observer2D>(800.0f,600.0f);
-
-	object->SetTexture(0,texture);
 
 	auto directx9 = GET_DIRECTX9_DEVICE();
 
@@ -81,6 +72,9 @@ int main(int argc,char* argv)
 	auto d_vs = graphic_device->LoadVertexShader("resources/shader/deferred.vsc");
 	auto d_ps = graphic_device->LoadPixelShader("resources/shader/deferred.psc");
 
+	auto field = std::make_shared<Field>();
+
+	sprite_object->SetPosition(-0.5f,-0.5f,0.0f);
 	while(is_loop)
 	{
 		auto start_time = std::chrono::system_clock::now();
@@ -105,6 +99,7 @@ int main(int argc,char* argv)
 		//vertex_shader->SetValue("_view_matrix",(f32*)&observer->GetViewMatrix(),sizeof(float4x4));
 		//vertex_shader->SetValue("_projection_matrix",(f32*)&observer->GetProjectionMatrix(),sizeof(float4x4));
 
+		auto object = field->GetObject();
 		// object
 		gb_vs->SetValue("_world_matrix",(f32*)&object->GetMatrix(),sizeof(float4x4));
 		gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());

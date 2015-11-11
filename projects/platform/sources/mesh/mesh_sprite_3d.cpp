@@ -40,6 +40,7 @@ MeshSprite3D::MeshSprite3D(const f32& in_block_width,const f32& in_block_height,
 	,indexs_(nullptr)
 	,division_width_(1)
 	,division_height_(1)
+	,anchor_point_(0.5f,0.5f)
 {
 	auto directx9 = GET_DIRECTX9_DEVICE();
 
@@ -60,6 +61,8 @@ MeshSprite3D::MeshSprite3D(const f32& in_block_width,const f32& in_block_height,
 	VERTEX* vertex = nullptr;
 	u32* index = nullptr;
 	u32 rect_count = vertex_count_ / 4;
+	float2 size = float2(in_block_width * in_width_count,in_block_height * in_height_count);
+	float2 offset = float2(-size._x * anchor_point_._x,size._y * anchor_point_._y);
 
 	// lock
 	direct3dvertexbuffer9_->Lock(0,0,(void**)&vertex,0);
@@ -73,10 +76,10 @@ MeshSprite3D::MeshSprite3D(const f32& in_block_width,const f32& in_block_height,
 			float top = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 0);
 			float bottom = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 1);
 
-			vertex[(i * width_count_ + j) * 4 + 0]._position = float3(width_ * (j + 0),0.0f,height_ * (i + 0));
-			vertex[(i * width_count_ + j) * 4 + 1]._position = float3(width_ * (j + 0),0.0f,height_ * (i + 1));
-			vertex[(i * width_count_ + j) * 4 + 2]._position = float3(width_ * (j + 1),0.0f,height_ * (i + 0));
-			vertex[(i * width_count_ + j) * 4 + 3]._position = float3(width_ * (j + 1),0.0f,height_ * (i + 1));
+			vertex[(i * width_count_ + j) * 4 + 0]._position = float3(offset._x + width_ * (j + 0),0.0f,offset._y - height_ * (i + 1));
+			vertex[(i * width_count_ + j) * 4 + 1]._position = float3(offset._x + width_ * (j + 0),0.0f,offset._y - height_ * (i + 0));
+			vertex[(i * width_count_ + j) * 4 + 2]._position = float3(offset._x + width_ * (j + 1),0.0f,offset._y - height_ * (i + 1));
+			vertex[(i * width_count_ + j) * 4 + 3]._position = float3(offset._x + width_ * (j + 1),0.0f,offset._y - height_ * (i + 0));
 
 			vertex[(i * width_count_ + j) * 4 + 0]._normal = float3(0.0f,1.0f,0.0f);
 			vertex[(i * width_count_ + j) * 4 + 1]._normal = float3(0.0f,1.0f,0.0f);

@@ -31,6 +31,7 @@
     <ClCompile Include="sources\mesh\mesh_sprite_3d.cpp" />
     <ClCompile Include="sources\mesh\sprite.cpp" />
     <ClCompile Include="sources\mesh\sprite_3d.cpp" />
+    <ClCompile Include="sources\object\field\field.cpp" />
     <ClCompile Include="sources\object\mesh_object.cpp" />
     <ClCompile Include="sources\object\object.cpp" />
     <ClCompile Include="sources\observer\follower_observer.cpp" />
@@ -61,6 +62,7 @@
     <ClInclude Include="sources\mesh\mesh_sprite_3d.h" />
     <ClInclude Include="sources\mesh\sprite.h" />
     <ClInclude Include="sources\mesh\sprite_3d.h" />
+    <ClInclude Include="sources\object\field\field.h" />
     <ClInclude Include="sources\object\mesh_object.h" />
     <ClInclude Include="sources\object\object.h" />
     <ClInclude Include="sources\observer\follower_observer.h" />
