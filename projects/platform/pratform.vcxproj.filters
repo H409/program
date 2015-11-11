@@ -112,6 +112,24 @@
     <ClCompile Include="sources\system\input_mouse.cpp">
       <Filter>sources\system</Filter>
     </ClCompile>
+    <ClCompile Include="sources\scene\base\scene_manager.cpp">
+      <Filter>sources\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\scene\demo\demo.cpp">
+      <Filter>sources\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\scene\game\game.cpp">
+      <Filter>sources\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\scene\result\result.cpp">
+      <Filter>sources\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\scene\title\title.cpp">
+      <Filter>sources\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\scene\tutorial\tutorial.cpp">
+      <Filter>sources\scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sources\main.h">
@@ -191,6 +209,30 @@
     </ClInclude>
     <ClInclude Include="sources\system\input_mouse.h">
       <Filter>sources\system</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\scene\base\scene_base.h">
+      <Filter>sources\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\scene\base\scene_factory.h">
+      <Filter>sources\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\scene\base\scene_manager.h">
+      <Filter>sources\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\scene\demo\demo.h">
+      <Filter>sources\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\scene\game\game.h">
+      <Filter>sources\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\scene\result\result.h">
+      <Filter>sources\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\scene\title\title.h">
+      <Filter>sources\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\scene\tutorial\tutorial.h">
+      <Filter>sources\scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

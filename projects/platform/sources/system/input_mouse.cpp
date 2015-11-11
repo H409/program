@@ -161,6 +161,6 @@ D3DXVECTOR2 InputMouse::GetDrag(MOUSE_KEY nKey)
 	else
 	{
 		//‚»‚¤‚Å‚È‚¢ê‡‚ÍˆÚ“®‚µ‚Ä‚¢‚È‚¢‚Ì‚Å0‚ğ•Ô‚·B
-		D3DXVECTOR2(0.0f, 0.0f);
+		return D3DXVECTOR2(0.0f, 0.0f);
 	}
 }
