@@ -15,6 +15,8 @@
 #include "render/mesh/mesh_format.h"
 #include "render/mesh/mesh_buffer.h"
 #include "math/math.h"
+#include "system/input_keyboard.h"
+#include "system/input_mouse.h"
 
 // HACK
 #include "shader/dx9_vertex_shader.h"
@@ -78,6 +80,9 @@ int main(int argc,char* argv)
 	while(is_loop)
 	{
 		auto start_time = std::chrono::system_clock::now();
+
+		GET_INPUT_KEYBOARD()->Update();
+		GET_INPUT_MOUSE()->Update();
 
 		graphic_device->BeginRendering();
 
