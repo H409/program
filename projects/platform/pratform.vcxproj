@@ -38,8 +38,8 @@
     <ClCompile Include="sources\observer\observer_2d.cpp" />
     <ClCompile Include="sources\observer\observer_3d.cpp" />
     <ClCompile Include="sources\system\input.cpp" />
-    <ClCompile Include="sources\system\keyboardinput.cpp" />
-    <ClCompile Include="sources\system\mouseinput.cpp" />
+    <ClCompile Include="sources\system\input_keyboard.cpp" />
+    <ClCompile Include="sources\system\input_mouse.cpp" />
     <ClCompile Include="sources\system\win_system.cpp" />
     <ClCompile Include="sources\windows\win_main.cpp" />
   </ItemGroup>
@@ -67,8 +67,8 @@
     <ClInclude Include="sources\observer\observer_2d.h" />
     <ClInclude Include="sources\observer\observer_3d.h" />
     <ClInclude Include="sources\system\input.h" />
-    <ClInclude Include="sources\system\keyboardinput.h" />
-    <ClInclude Include="sources\system\mouseinput.h" />
+    <ClInclude Include="sources\system\input_keyboard.h" />
+    <ClInclude Include="sources\system\input_mouse.h" />
     <ClInclude Include="sources\system\win_system.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -83,20 +83,20 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Develop|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -118,7 +118,7 @@
     <IncludePath>$(ProjectDir)sources;$(SolutionDir)projects/windows/sources;$(SolutionDir)projects/system/sources;$(SolutionDir)projects/directx9/sources;$(SolutionDir)projects/utility/sources;$(SolutionDir)projects/application/sources;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
     <IntDir>$(Configuration)\</IntDir>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
-    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
+    <LibraryPath>D:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;$(DXSDK_DIR)Lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Develop|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -126,13 +126,13 @@
     <TargetName>$(ProjectName)</TargetName>
     <IncludePath>$(ProjectDir)sources;$(SolutionDir)projects/windows/sources;$(SolutionDir)projects/system/sources;$(SolutionDir)projects/directx9/sources;$(SolutionDir)projects/utility/sources;$(SolutionDir)projects/application/sources;$(IncludePath);</IncludePath>
     <IntDir>$(Configuration)\</IntDir>
-    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
+    <LibraryPath>D:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;$(DXSDK_DIR)Lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <IncludePath>$(ProjectDir)sources;$(SolutionDir)projects/windows/sources;$(SolutionDir)projects/system/sources;$(SolutionDir)projects/directx9/sources;$(SolutionDir)projects/utility/sources;$(SolutionDir)projects/application/sources;$(IncludePath);</IncludePath>
-    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
+    <LibraryPath>D:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;$(DXSDK_DIR)Lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

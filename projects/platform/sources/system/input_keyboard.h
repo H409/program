@@ -21,10 +21,10 @@ public:
 	void Update(void);
 	void ReInit();
 
-	bool GetPress(int nKey);
-	bool GetTrigger(int nKey);
-	bool GetRepeat(int nKey);
-	bool GetRelease(int nKey);
+	bool GetPress(int nKey)const;
+	bool GetTrigger(int nKey)const;
+	bool GetRepeat(int nKey)const;
+	bool GetRelease(int nKey)const;
 private:
 
 	BYTE m_aKeyState[256];

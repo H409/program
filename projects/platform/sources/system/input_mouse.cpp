@@ -1,4 +1,4 @@
-#include "mouseinput.h"
+#include "input_mouse.h"
 
 InputMouse::InputMouse(void)
 {
@@ -104,9 +104,9 @@ D3DXVECTOR2 InputMouse::GetPrevPosition(void)
 	return D3DXVECTOR2((float)m_Prev_Mousepos.x, (float)m_Prev_Mousepos.y);
 }
 
-bool InputMouse::GetPress(MOUSE_KEY nKey)
+bool InputMouse::GetPress(MOUSE_KEY nKey)const
 {
-	if (m_aMouseKeyState[nKey] & 0x080)
+	if (m_aMouseKeyState[(int)nKey] & 0x080)
 	{
 		return true;
 	}
@@ -116,9 +116,9 @@ bool InputMouse::GetPress(MOUSE_KEY nKey)
 	}
 }
 
-bool InputMouse::GetTrigger(MOUSE_KEY nKey)
+bool InputMouse::GetTrigger(MOUSE_KEY nKey)const
 {
-	if (m_aMouseKeyTrigger[nKey] & 0x080)
+	if (m_aMouseKeyTrigger[(int)nKey] & 0x080)
 	{
 		return true;
 	}
@@ -128,15 +128,15 @@ bool InputMouse::GetTrigger(MOUSE_KEY nKey)
 	}
 }
 
-bool InputMouse::GetRepeat(MOUSE_KEY nKey)
+bool InputMouse::GetRepeat(MOUSE_KEY nKey)const
 {
 	
 	return false;
 }
 
-bool InputMouse::GetRelease(MOUSE_KEY nKey)
+bool InputMouse::GetRelease(MOUSE_KEY nKey)const
 {
-	if (m_aMouseKeyRelease[nKey] & 0x080)
+	if (m_aMouseKeyRelease[(int)nKey] & 0x080)
 	{
 		return true;
 	}
@@ -153,7 +153,7 @@ bool InputMouse::GetRelease(MOUSE_KEY nKey)
 D3DXVECTOR2 InputMouse::GetDrag(MOUSE_KEY nKey)
 {
 	//前フレームから引き続きマウスクリックし続けている場合
-	if (m_aPrevMouseKeyState[nKey] && m_aMouseKeyState[nKey])
+	if (m_aPrevMouseKeyState[(int)nKey] && m_aMouseKeyState[(int)nKey])
 	{
 		//前フレームと現在フレームのマウスカーソルポジションの差分を返す
 		return D3DXVECTOR2((float)(m_Mousepos.x - m_Prev_Mousepos.x), (float)(m_Mousepos.y - m_Prev_Mousepos.y));

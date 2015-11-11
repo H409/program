@@ -106,10 +106,10 @@
     <ClCompile Include="sources\system\input.cpp">
       <Filter>sources\system</Filter>
     </ClCompile>
-    <ClCompile Include="sources\system\keyboardinput.cpp">
+    <ClCompile Include="sources\system\input_keyboard.cpp">
       <Filter>sources\system</Filter>
     </ClCompile>
-    <ClCompile Include="sources\system\mouseinput.cpp">
+    <ClCompile Include="sources\system\input_mouse.cpp">
       <Filter>sources\system</Filter>
     </ClCompile>
   </ItemGroup>
@@ -141,7 +141,6 @@
     <ClInclude Include="sources\observer\observer_3d.h">
       <Filter>sources\observer</Filter>
     </ClInclude>
-
     <ClInclude Include="sources\mesh\mesh_sprite_3d.h">
       <Filter>sources\mesh</Filter>
     </ClInclude>
@@ -187,10 +186,10 @@
     <ClInclude Include="sources\system\input.h">
       <Filter>sources\system</Filter>
     </ClInclude>
-    <ClInclude Include="sources\system\keyboardinput.h">
+    <ClInclude Include="sources\system\input_keyboard.h">
       <Filter>sources\system</Filter>
     </ClInclude>
-    <ClInclude Include="sources\system\mouseinput.h">
+    <ClInclude Include="sources\system\input_mouse.h">
       <Filter>sources\system</Filter>
     </ClInclude>
   </ItemGroup>

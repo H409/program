@@ -4,7 +4,7 @@
 // Author : 
 //
 //=============================================================================
-#include "KeyBoardInput.h"
+#include "input_keyboard.h"
 #pragma warning (disable : 4800)
 //=============================================================================
 // マクロ定義
@@ -124,7 +124,7 @@ void InputKeyboard::Uninit(void)
 //=============================================================================
 // キーボードのプレス状態を取得
 //=============================================================================
-bool InputKeyboard::GetPress(int nKey)
+bool InputKeyboard::GetPress(int nKey) const
 {
 
 	if (m_aKeyState[nKey] & 0x080)
@@ -141,7 +141,7 @@ bool InputKeyboard::GetPress(int nKey)
 //=============================================================================
 // キーボードのトリガー状態を取得
 //=============================================================================
-bool InputKeyboard::GetTrigger(int nKey)
+bool InputKeyboard::GetTrigger(int nKey)const
 {
 	if (m_aKeyTrigger[nKey] & 0x080)
 	{
@@ -156,7 +156,7 @@ bool InputKeyboard::GetTrigger(int nKey)
 //=============================================================================
 // キーボードのリピート状態を取得
 //=============================================================================
-bool InputKeyboard::GetRepeat(int nKey)
+bool InputKeyboard::GetRepeat(int nKey)const
 {
 	return m_aKeyboardRepeat[nKey];
 }
@@ -164,7 +164,7 @@ bool InputKeyboard::GetRepeat(int nKey)
 //=============================================================================
 // キーボードのリリ－ス状態を取得
 //=============================================================================
-bool InputKeyboard::GetRelease(int nKey)
+bool InputKeyboard::GetRelease(int nKey)const
 {
 	if (m_aKeyRelease[nKey] & 0x080)
 	{

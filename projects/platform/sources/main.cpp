@@ -29,8 +29,8 @@
 #include "mesh/mesh_sprite_3d.h"
 
 #include "object/object.h"
-#include "system/mouseinput.h"
-#include "system/keyboardinput.h"
+#include "system/input_mouse.h"
+#include "system/input_keyboard.h"
 
 
 //=============================================================================
@@ -90,14 +90,14 @@ int main(int argc,char* argv)
 	{
 		auto start_time = std::chrono::system_clock::now();
 
-		//Get and Update Input Classes
+		//入力クラスの取得と更新
 		std::shared_ptr<InputMouse> p_mouse = win_system->GetMouse();
 		std::shared_ptr<InputKeyboard> p_keyboard = win_system->GetKeyboard();
 		p_mouse->Update();
 		p_keyboard->Update();
 
-		//Get Mouse Point Accelelation When Mouse Dragging
-		D3DXVECTOR2 point_accelelation = p_mouse->GetDrag(MOUSE_KEY::MOUSE_KEY_RIGHT);
+		//マウスのドラッグを取得
+		D3DXVECTOR2 point_accelelation = p_mouse->GetDrag(MOUSE_KEY::RIGHT);
 
 		graphic_device->BeginRendering();
 
@@ -113,8 +113,8 @@ int main(int argc,char* argv)
 		float3 up = float3(0.0f,1.0f,0.0f);
 
 		//eyepotionsettings
-		eye_pos_rot.y += p_mouse->GetDrag(MOUSE_KEY::MOUSE_KEY_RIGHT).x;
-		eye_pos_rot.x += p_mouse->GetDrag(MOUSE_KEY::MOUSE_KEY_RIGHT).y;
+		eye_pos_rot.y += p_mouse->GetDrag(MOUSE_KEY::RIGHT).x;
+		eye_pos_rot.x += p_mouse->GetDrag(MOUSE_KEY::RIGHT).y;
 		eye._x = 0.0f - sinf(eye_pos_rot.y) * -5.0f;
 		eye._y = 0.0f - sinf(eye_pos_rot.x) * -5.0f;
 		eye._z = 0.0f - cosf(eye_pos_rot.y) * -5.0f;
