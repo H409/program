@@ -10,7 +10,11 @@
 // include
 //*****************************************************************************
 #include "tutorial.h"
-
+#include "system/win_system.h"
+#include "dx9_device.h"
+#include "system/input_mouse.h"
+#include "../base/scene_manager.h"
+#include "../title/title.h"
 //=============================================================================
 // constructor
 //=============================================================================
@@ -47,7 +51,12 @@ void Tutorial::Finalize()
 //=============================================================================
 void Tutorial::Update()
 {
-
+	auto p_mouse = GET_INPUT_MOUSE();
+	if (p_mouse->GetTrigger(MOUSE_KEY::LEFT))
+	{
+		SceneManager::Instance().set_p_next_scene(SceneManager::Instance().get_title());
+		SceneManager::Instance().set_scene_change_flag(true);
+	}
 }
 
 //=============================================================================
@@ -55,5 +64,6 @@ void Tutorial::Update()
 //=============================================================================
 void Tutorial::Draw()
 {
-
+	auto graphic_device = GET_GRAPHIC_DEVICE();
+	graphic_device->Clear(float4(0.0f, 0.0f, 0.0f, 0.0f), 1.0f);
 }

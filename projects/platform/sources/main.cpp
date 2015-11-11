@@ -32,6 +32,8 @@
 #include "system/input_mouse.h"
 #include "system/input_keyboard.h"
 
+#include "scene/base/scene_manager.h"
+
 
 //=============================================================================
 // エントリーポイント
@@ -47,7 +49,6 @@ int main(int argc,char* argv)
 	bool is_loop = true;
 
 	win_system->SetCallbacks(WinSystem::EVENT::STOP,{ [&is_loop] {is_loop = false;} });
-
 
 	auto directx9 = GET_DIRECTX9_DEVICE();
 	auto sprite = std::make_shared<mesh::MeshSprite3D>(10,10);
@@ -78,9 +79,9 @@ int main(int argc,char* argv)
 	auto observer_3d = std::make_shared<Observer3D>(utility::math::ToRadian(60.0f),800.0f,600.0f);
 
 
-	//object->SetPositionX(100.0f);
-	//object->SetRotationZ(utility::math::ToRadian(-90.0f));
-	//object->SetScale(float2(2.0f,2.0f));
+	object->SetPositionX(100.0f);
+	object->SetRotationZ(utility::math::ToRadian(-90.0f));
+	object->SetScale(float2(2.0f,2.0f));
 
 	// eyeposition
 	D3DXVECTOR3 eye_pos_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -91,18 +92,20 @@ int main(int argc,char* argv)
 		auto start_time = std::chrono::system_clock::now();
 
 		//入力クラスの取得と更新
-		std::shared_ptr<InputMouse> p_mouse = win_system->GetMouse();
-		std::shared_ptr<InputKeyboard> p_keyboard = win_system->GetKeyboard();
+		auto p_mouse = GET_INPUT_MOUSE();
+		auto p_keyboard = GET_INPUT_KEYBOARD();
 		p_mouse->Update();
 		p_keyboard->Update();
 
-		//マウスのドラッグを取得
-		D3DXVECTOR2 point_accelelation = p_mouse->GetDrag(MOUSE_KEY::RIGHT);
+		//シーンの更新
+		SceneManager::Instance().Update();
 
 		graphic_device->BeginRendering();
 
 		graphic_device->Clear(float4(1.0f,0.0f,0.0f,1.0f),1.0f);
 
+		//シーンの描画
+		SceneManager::Instance().Draw();
 
 		float4x4 world_matrix;
 		float4x4 view_matrix;
@@ -119,14 +122,12 @@ int main(int argc,char* argv)
 		eye._y = 0.0f - sinf(eye_pos_rot.x) * -5.0f;
 		eye._z = 0.0f - cosf(eye_pos_rot.y) * -5.0f;
 		
-
 		world_matrix = utility::math::Identity();
 		view_matrix = utility::math::Identity();
 		//projection_matrix = utility::math::OrthoLH(800.0f,600.0f,1.0f,1000.0f);
 		view_matrix = utility::math::LookAtLH(eye,at,up);
 		projection_matrix = utility::math::PerspectiveFovLH(utility::math::ToRadian(60.0f),800.0f / 600.0f,1.0f,1000.0f);
 		//projection_matrix = utility::math::PerspectiveFovRH(utility::math::ToRadian(60.0f),800.0f / 600.0f,1.0f,1000.0f);
-
 
 		vertex_shader->SetValue("_world_matrix",(f32*)&world_matrix,sizeof(float4x4));
 		vertex_shader->SetValue("_view_matrix",(f32*)&observer_3d->GetViewMatrix(),sizeof(float4x4));
@@ -144,9 +145,6 @@ int main(int argc,char* argv)
 		// observer
 		vertex_shader->SetValue("_view_matrix",(f32*)&observer->GetViewMatrix(),sizeof(float4x4));
 		vertex_shader->SetValue("_projection_matrix",(f32*)&observer->GetProjectionMatrix(),sizeof(float4x4));
-
-
-
 
 		graphic_device->EndRendering();
 

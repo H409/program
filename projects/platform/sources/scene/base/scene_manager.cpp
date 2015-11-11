@@ -65,6 +65,15 @@ void SceneManager::Update()
 	{
 		p_current_scene_->Update();
 	}
+
+	//シーン切り替えフラグがONになっていたらシーン切り替え
+	if (SceneManager::Instance().get_scene_change_flag())
+	{
+		p_current_scene_->Finalize();
+		p_current_scene_ = p_next_scene_;
+		p_current_scene_->Initialize(&Instance());
+		//scene_change_flag_ = false;
+	}
 }
 
 //=============================================================================

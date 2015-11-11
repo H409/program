@@ -39,6 +39,8 @@ public:
 	using TGame = std::shared_ptr<Game>;
 	using TResult = std::shared_ptr<Result>;
 
+	
+
 	//インスタンス
 	static SceneManager& Instance(void)
 	{
@@ -100,16 +102,17 @@ public:
 		scene_change_flag_ = flag;
 	}
 
-private:
-
 	// ctor
 	SceneManager();
 
 	// dtor
 	~SceneManager();
 
-	TBase p_current_scene_;
-	TBase p_next_scene_;
+protected:
+
+	
+
+private:
 
 	//各シーンのポインタ
 	TTitle p_title_;
@@ -117,6 +120,9 @@ private:
 	TTutorial p_tutorial_;
 	TGame p_game_;
 	TResult p_result_;
+
+	TBase p_current_scene_;
+	TBase p_next_scene_;
 
 	//シーン切り替えフラグ
 	bool scene_change_flag_;
