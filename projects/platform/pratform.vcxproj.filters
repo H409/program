@@ -32,6 +32,9 @@
     <Filter Include="sources\player">
       <UniqueIdentifier>{cd05187b-ffbb-4201-82f1-3a6c1a3caed2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\field">
+      <UniqueIdentifier>{2254b91b-abee-42ee-b3f5-dbeeeaae482c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\windows\win_main.cpp">
@@ -99,9 +102,6 @@
     </ClCompile>
     <ClCompile Include="sources\action\rotate_by.cpp">
       <Filter>sources\action</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\object\mesh_object.cpp">
-      <Filter>sources\object</Filter>
     </ClCompile>
     <ClCompile Include="sources\system\input.cpp">
       <Filter>sources\system</Filter>
@@ -182,9 +182,6 @@
     </ClInclude>
     <ClInclude Include="sources\action\rotate_by.h">
       <Filter>sources\action</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\object\mesh_object.h">
-      <Filter>sources\object</Filter>
     </ClInclude>
     <ClInclude Include="sources\system\mouseinput.h">
       <Filter>sources\system</Filter>
