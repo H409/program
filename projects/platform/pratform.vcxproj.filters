@@ -106,17 +106,20 @@
     <ClCompile Include="sources\system\input.cpp">
       <Filter>sources\system</Filter>
     </ClCompile>
-    <ClCompile Include="sources\system\keyboardinput.cpp">
-      <Filter>sources\system</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\system\mouseinput.cpp">
-      <Filter>sources\system</Filter>
-    </ClCompile>
     <ClCompile Include="sources\fbx\kim.cpp">
       <Filter>sources\fbx</Filter>
     </ClCompile>
     <ClCompile Include="sources\player\player.cpp">
       <Filter>sources\player</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\system\input_keyboard.cpp">
+      <Filter>sources\system</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\system\input_mouse.cpp">
+      <Filter>sources\system</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\object\mesh_object.cpp">
+      <Filter>sources\object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -183,13 +186,7 @@
     <ClInclude Include="sources\action\rotate_by.h">
       <Filter>sources\action</Filter>
     </ClInclude>
-    <ClInclude Include="sources\system\mouseinput.h">
-      <Filter>sources\system</Filter>
-    </ClInclude>
     <ClInclude Include="sources\system\input.h">
-      <Filter>sources\system</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\system\keyboardinput.h">
       <Filter>sources\system</Filter>
     </ClInclude>
     <ClInclude Include="sources\fbx\kim.h">
@@ -197,6 +194,15 @@
     </ClInclude>
     <ClInclude Include="sources\player\player.h">
       <Filter>sources\player</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\system\input_mouse.h">
+      <Filter>sources\system</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\system\input_keyboard.h">
+      <Filter>sources\system</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\object\mesh_object.h">
+      <Filter>sources\object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

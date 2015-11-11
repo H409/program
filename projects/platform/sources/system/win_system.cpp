@@ -17,8 +17,8 @@
 // directx9
 #include "dx9_device.h"
 
-#include "keyboardinput.h"
-#include "mouseinput.h"
+#include "input_keyboard.h"
+#include "input_mouse.h"
 
 //*****************************************************************************
 // constant definition

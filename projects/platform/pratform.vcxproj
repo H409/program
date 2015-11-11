@@ -31,6 +31,7 @@
     <ClCompile Include="sources\mesh\mesh_sprite_3d.cpp" />
     <ClCompile Include="sources\mesh\sprite.cpp" />
     <ClCompile Include="sources\mesh\sprite_3d.cpp" />
+    <ClCompile Include="sources\object\mesh_object.cpp" />
     <ClCompile Include="sources\object\object.cpp" />
     <ClCompile Include="sources\observer\follower_observer.cpp" />
     <ClCompile Include="sources\observer\observer.cpp" />
@@ -38,8 +39,8 @@
     <ClCompile Include="sources\observer\observer_3d.cpp" />
     <ClCompile Include="sources\player\player.cpp" />
     <ClCompile Include="sources\system\input.cpp" />
-    <ClCompile Include="sources\system\keyboardinput.cpp" />
-    <ClCompile Include="sources\system\mouseinput.cpp" />
+    <ClCompile Include="sources\system\input_keyboard.cpp" />
+    <ClCompile Include="sources\system\input_mouse.cpp" />
     <ClCompile Include="sources\system\win_system.cpp" />
     <ClCompile Include="sources\windows\win_main.cpp" />
   </ItemGroup>
@@ -60,6 +61,7 @@
     <ClInclude Include="sources\mesh\mesh_sprite_3d.h" />
     <ClInclude Include="sources\mesh\sprite.h" />
     <ClInclude Include="sources\mesh\sprite_3d.h" />
+    <ClInclude Include="sources\object\mesh_object.h" />
     <ClInclude Include="sources\object\object.h" />
     <ClInclude Include="sources\observer\follower_observer.h" />
     <ClInclude Include="sources\observer\observer.h" />
@@ -67,8 +69,8 @@
     <ClInclude Include="sources\observer\observer_3d.h" />
     <ClInclude Include="sources\player\player.h" />
     <ClInclude Include="sources\system\input.h" />
-    <ClInclude Include="sources\system\keyboardinput.h" />
-    <ClInclude Include="sources\system\mouseinput.h" />
+    <ClInclude Include="sources\system\input_keyboard.h" />
+    <ClInclude Include="sources\system\input_mouse.h" />
     <ClInclude Include="sources\system\win_system.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -118,7 +120,7 @@
     <IncludePath>$(ProjectDir)sources;$(SolutionDir)projects/windows/sources;$(SolutionDir)projects/system/sources;$(SolutionDir)projects/directx9/sources;$(SolutionDir)projects/utility/sources;$(SolutionDir)projects/application/sources;$(IncludePath);</IncludePath>
     <IntDir>$(Configuration)\</IntDir>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
-    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(LibraryPath);</LibraryPath>
     <LibraryWPath>$(WindowsSDK_MetadataPath);</LibraryWPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Develop|Win32'">
@@ -127,14 +129,14 @@
     <TargetName>$(ProjectName)</TargetName>
     <IncludePath>$(ProjectDir)sources;$(SolutionDir)projects/windows/sources;$(SolutionDir)projects/system/sources;$(SolutionDir)projects/directx9/sources;$(SolutionDir)projects/utility/sources;$(SolutionDir)projects/application/sources;$(IncludePath);</IncludePath>
     <IntDir>$(Configuration)\</IntDir>
-    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(LibraryPath);</LibraryPath>
     <LibraryWPath>$(WindowsSDK_MetadataPath);</LibraryWPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <IncludePath>$(ProjectDir)sources;$(SolutionDir)projects/windows/sources;$(SolutionDir)projects/system/sources;$(SolutionDir)projects/directx9/sources;$(SolutionDir)projects/utility/sources;$(SolutionDir)projects/application/sources;$(IncludePath);</IncludePath>
-    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(LibraryPath);</LibraryPath>
     <LibraryWPath>$(WindowsSDK_MetadataPath);</LibraryWPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

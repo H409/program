@@ -27,6 +27,9 @@
 #include "mesh/sprite_3d.h"
 #include "object/mesh_object.h"
 #include "mesh/mesh_sprite_3d.h"
+#include "object/object.h"
+#include "system/input_mouse.h"
+#include "system/input_keyboard.h"
 
 //=============================================================================
 // エントリーポイント

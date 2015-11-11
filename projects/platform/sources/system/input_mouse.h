@@ -9,11 +9,12 @@
 
 #include "Input.h"
 
-typedef enum
+
+enum class MOUSE_KEY
 {
-	MOUSE_KEY_LEFT = 0,
-	MOUSE_KEY_RIGHT,
-}MOUSE_KEY;
+	LEFT = 0,
+	RIGHT,
+};
 
 class InputMouse :public Input
 {
@@ -27,10 +28,10 @@ public:
 	D3DXVECTOR2 GetPosition(void);
 	D3DXVECTOR2 GetPrevPosition(void);
 
-	bool GetPress(MOUSE_KEY nKey);
-	bool GetTrigger(MOUSE_KEY nKey);
-	bool GetRepeat(MOUSE_KEY nKey);
-	bool GetRelease(MOUSE_KEY nKey);
+	bool GetPress(MOUSE_KEY nKey)const;
+	bool GetTrigger(MOUSE_KEY nKey)const;
+	bool GetRepeat(MOUSE_KEY nKey)const;
+	bool GetRelease(MOUSE_KEY nKey)const;
 	D3DXVECTOR2 GetDrag(MOUSE_KEY nKey);
 
 private:
