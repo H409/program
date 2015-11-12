@@ -47,6 +47,9 @@ public:
 	// get object
 	TMeshObject GetObject(void)const;
 
+	// set basic position
+	void SetBasicPosition(const float3& in_position);
+
 	// set front vector
 	void SetFrontVector(const float3& in_front_vector);
 
@@ -55,6 +58,8 @@ public:
 
 private:
 	float3 position_;
+	float3 basic_position_;
+	f32 range_;
 	TSprite3D sprite_3d_;
 	TMeshObject mesh_object_;
 	float3 front_vector_;

@@ -27,6 +27,8 @@
 FieldIcon::FieldIcon(void)
 	:position_(0.0f,0.0f,0.0f)
 	,front_vector_(0.0f,0.0f,1.0f)
+	,basic_position_(0.0f,0.0f,0.0f)
+	,range_(5.0f)
 {
 	sprite_3d_ = std::make_shared<mesh::Sprite3D>(float2(1.0f,2.0f));
 	mesh_object_ = std::make_shared<MeshObject>(sprite_3d_);
@@ -70,6 +72,16 @@ void FieldIcon::Update(void)
 	{
 		position_ += right_vector;
 	}
+
+	auto vector = position_ - basic_position_;
+	auto length = utility::math::Length(vector);
+
+	if(range_ < length)
+	{
+		vector = utility::math::Normalize(vector);
+		position_ = basic_position_ + vector * range_;
+	}
+
 	mesh_object_->SetPosition(position_);
 }
 
