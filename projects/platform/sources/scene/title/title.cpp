@@ -53,7 +53,7 @@ void Title::Finalize()
 void Title::Update()
 {
 	auto p_mouse = GET_INPUT_MOUSE();
-	if (p_mouse->GetTrigger(MOUSE_KEY::LEFT))
+	if (p_mouse->GetTrigger(InputMouse::MOUSE_KEY::LEFT))
 	{
 		
 		SceneManager::Instance().set_p_next_scene(SceneManager::Instance().get_tutorial());

@@ -56,6 +56,7 @@ protected:
 	// constructor
 	DX9Shader(LPDIRECT3DDEVICE9 in_direct3ddevice9,const std::string& in_path,const std::string& in_function_name,const std::string& in_version_name);
 	DX9Shader(LPDIRECT3DDEVICE9 in_direct3ddevice9,const std::string& in_path);
+	DX9Shader(const DX9Shader& in_dx9shader) = delete;
 
 	LPDIRECT3DDEVICE9 direct3ddevice9_;
 	LPD3DXCONSTANTTABLE d3dxconstanttable_;

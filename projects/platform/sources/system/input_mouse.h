@@ -9,16 +9,16 @@
 
 #include "Input.h"
 
-
-enum class MOUSE_KEY
-{
-	LEFT = 0,
-	RIGHT,
-};
-
 class InputMouse :public Input
 {
 public:
+	enum class MOUSE_KEY
+	{
+		LEFT = 0,
+		RIGHT,
+		MAX,
+	};
+
 	InputMouse(void);
 	~InputMouse(void);
 
@@ -35,6 +35,8 @@ public:
 	D3DXVECTOR2 GetDrag(MOUSE_KEY nKey);
 
 private:
+	static const u32 KEY_BIT = 0x80;
+
 	BYTE m_aMouseKeyState[3];
 	BYTE m_aPrevMouseKeyState[3];
 	BYTE m_aMouseKeyTrigger[3];

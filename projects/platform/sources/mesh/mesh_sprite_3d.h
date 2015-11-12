@@ -48,7 +48,6 @@ private:
 	static const D3DXVECTOR2 DEFAULT_POSITION;
 
 	s32 index_;
-	bool is_flip_;
 
 	float2 size_;
 	float2 block_size_;

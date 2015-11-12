@@ -29,6 +29,7 @@ Object::Object(void)
 	,scale_(1.0f,1.0f,1.0f)
 	,color_(1.0f,1.0f,1.0f,1.0f)
 	,priority_(0)
+	,is_dirty_(true)
 {
 	textures_.resize(TEXTURE_MAX);
 

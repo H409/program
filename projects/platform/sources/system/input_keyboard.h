@@ -26,11 +26,13 @@ public:
 	bool GetRepeat(int nKey)const;
 	bool GetRelease(int nKey)const;
 private:
+	static const u32 KEYBOARD_MAX = 256;
+	static const u32 KEY_BIT = 0x80;
 
-	BYTE m_aKeyState[256];
-	BYTE m_aKeyTrigger[256];
-	BYTE m_aKeyRelease[256];
-	BYTE m_aKeyboardRepeat[256];
-	int KeyCount[256];
+	BYTE m_aKeyState[KEYBOARD_MAX];
+	BYTE m_aKeyTrigger[KEYBOARD_MAX];
+	BYTE m_aKeyRelease[KEYBOARD_MAX];
+	BYTE m_aKeyboardRepeat[KEYBOARD_MAX];
+	int KeyCount[KEYBOARD_MAX];
 };
 #endif

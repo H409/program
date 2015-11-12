@@ -34,7 +34,7 @@ public:
 	};
 
 	// constructor
-	float2(f32 xy = 0.0f);
+	explicit float2(f32 xy = 0.0f);
 	float2(f32 x,f32 y);
 	float2(const float2& xy);
 

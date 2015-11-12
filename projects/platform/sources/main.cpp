@@ -12,8 +12,6 @@
 #include "main.h"
 #include "system/win_system.h"
 #include "dx9_device.h"
-#include "render/mesh/mesh_format.h"
-#include "render/mesh/mesh_buffer.h"
 #include "math/math.h"
 #include "system/input_keyboard.h"
 #include "system/input_mouse.h"
@@ -108,15 +106,10 @@ int main(int argc,char* argv)
 		// set shader
 		graphic_device->SetVertexShader(gb_vs);
 		graphic_device->SetPixelShader(gb_ps);
-		//graphic_device->SetVertexShader(vertex_shader);
-		//graphic_device->SetPixelShader(pixel_shader);
 
 		// observer
 		gb_vs->SetValue("_view_matrix",(f32*)&observer->GetViewMatrix(),sizeof(float4x4));
 		gb_vs->SetValue("_projection_matrix",(f32*)&observer->GetProjectionMatrix(),sizeof(float4x4));
-		//vertex_shader->SetValue("_view_matrix",(f32*)&observer->GetViewMatrix(),sizeof(float4x4));
-		//vertex_shader->SetValue("_projection_matrix",(f32*)&observer->GetProjectionMatrix(),sizeof(float4x4));
-
 
 		auto object = field->GetObject();
 
@@ -137,9 +130,6 @@ int main(int argc,char* argv)
 		// object
 		gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,sizeof(float4x4));
 		gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
-		//vertex_shader->SetValue("_world_matrix",(f32*)&object->GetMatrix(),sizeof(float4x4));
-		//vertex_shader->SetValue("_color",(f32*)&object->GetColor(),sizeof(float4));
-		//pixel_shader->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
 
 		object->Draw();
 
@@ -162,10 +152,6 @@ int main(int argc,char* argv)
 		d_ps->SetTexture("_color_sampler",color_texture->GetTexture());
 		d_ps->SetTexture("_normal_sampler",normal_texture->GetTexture());
 		d_ps->SetTexture("_position_sampler",position_texture->GetTexture());
-		//vertex_shader->SetValue("_view_matrix",(f32*)&observer_2d->GetViewMatrix(),sizeof(float4x4));
-		//vertex_shader->SetValue("_projection_matrix",(f32*)&observer_2d->GetProjectionMatrix(),sizeof(float4x4));
-		//vertex_shader->SetValue("_world_matrix",(f32*)&sprite_object->GetMatrix(),sizeof(float4x4));
-		//pixel_shader->SetTexture("_texture_sampler",color_texture->GetTexture());
 
 		sprite_object->Draw();
 

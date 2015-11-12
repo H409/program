@@ -28,6 +28,7 @@ Action::Action(const u32& in_duration)
 	,time_count_(0)
 	,is_end_(false)
 	,param_()
+	,is_pause_(false)
 {
 }
 

@@ -102,9 +102,6 @@ public:
 		scene_change_flag_ = flag;
 	}
 
-	// ctor
-	SceneManager();
-
 	// dtor
 	~SceneManager();
 
@@ -113,6 +110,9 @@ protected:
 	
 
 private:
+
+	// ctor
+	SceneManager();
 
 	//各シーンのポインタ
 	TTitle p_title_;

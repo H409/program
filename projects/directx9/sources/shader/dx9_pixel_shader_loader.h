@@ -40,7 +40,7 @@ public:
 	using TPixelShader = std::shared_ptr<DX9PixelShader>;
 
 	// constructor
-	DX9PixelShaderLoader(LPDIRECT3DDEVICE9 in_direct3ddevice9);
+	explicit DX9PixelShaderLoader(LPDIRECT3DDEVICE9 in_direct3ddevice9);
 
 	// destructor
 	virtual ~DX9PixelShaderLoader(void);
