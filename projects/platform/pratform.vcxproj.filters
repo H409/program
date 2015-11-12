@@ -32,9 +32,6 @@
     <Filter Include="sources\player">
       <UniqueIdentifier>{cd05187b-ffbb-4201-82f1-3a6c1a3caed2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="sources\object\field">
-      <UniqueIdentifier>{2254b91b-abee-42ee-b3f5-dbeeeaae482c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="sources\scene\base">
       <UniqueIdentifier>{a9141462-0511-450b-b985-7c3fc42f545d}</UniqueIdentifier>
     </Filter>
@@ -52,6 +49,12 @@
     </Filter>
     <Filter Include="sources\scene\tutorial">
       <UniqueIdentifier>{fa05c3e6-4657-4166-bcdf-116984569a92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\field_icon">
+      <UniqueIdentifier>{7ccfe92e-5a35-411c-8449-7b30aaffdfa5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\field">
+      <UniqueIdentifier>{2254b91b-abee-42ee-b3f5-dbeeeaae482c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -139,9 +142,6 @@
     <ClCompile Include="sources\object\mesh_object.cpp">
       <Filter>sources\object</Filter>
     </ClCompile>
-    <ClCompile Include="sources\object\field\field.cpp">
-      <Filter>sources\object\field</Filter>
-    </ClCompile>
     <ClCompile Include="sources\scene\base\scene_manager.cpp">
       <Filter>sources\scene\base</Filter>
     </ClCompile>
@@ -159,6 +159,12 @@
     </ClCompile>
     <ClCompile Include="sources\scene\title\title.cpp">
       <Filter>sources\scene\title</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\field_icon\field_icon.cpp">
+      <Filter>sources\field_icon</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\field\field.cpp">
+      <Filter>sources\field</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -243,9 +249,6 @@
     <ClInclude Include="sources\object\mesh_object.h">
       <Filter>sources\object</Filter>
     </ClInclude>
-    <ClInclude Include="sources\object\field\field.h">
-      <Filter>sources\object\field</Filter>
-    </ClInclude>
     <ClInclude Include="sources\scene\base\scene_manager.h">
       <Filter>sources\scene\base</Filter>
     </ClInclude>
@@ -269,6 +272,12 @@
     </ClInclude>
     <ClInclude Include="sources\scene\title\title.h">
       <Filter>sources\scene\title</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\field_icon\field_icon.h">
+      <Filter>sources\field_icon</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\field\field.h">
+      <Filter>sources\field</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

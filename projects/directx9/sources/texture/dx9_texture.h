@@ -30,7 +30,7 @@ public:
 	//using TFormat = graphic::texture::FORMAT;
 
 	// constructor
-	DX9Texture(LPDIRECT3DSURFACE9 in_surface);
+	explicit DX9Texture(LPDIRECT3DSURFACE9 in_surface);
 	DX9Texture(const std::string& in_path,LPDIRECT3DDEVICE9 in_direct3ddevice9);
 	DX9Texture(const u32& in_id,LPDIRECT3DDEVICE9 in_direct3ddevice9);
 	DX9Texture(const u16& in_width,const u16& in_height,const D3DFORMAT& in_format,LPDIRECT3DDEVICE9 in_direct3ddevice9);

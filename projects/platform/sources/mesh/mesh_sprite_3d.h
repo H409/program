@@ -35,14 +35,6 @@ public:
 	// set index
 	void SetIndex(u32 x,u32 y,u32 index);
 
-	// accessor
-	void __index(const s32& index) { index_ = index; }
-	void __division_width(const u32& division_width) { division_width_ = division_width; }
-	void __division_height(const u32& division_height) { division_height_ = division_height; }
-	bool __is_flip(void)const { return is_flip_; }
-	void __is_flip(bool is_flip) { is_flip_ = is_flip; }
-	void __width(f32 width) { width_ = width; }
-	void __height(f32 height) { height_ = height; }
 private:
 	struct VERTEX
 	{
@@ -50,16 +42,16 @@ private:
 		float2 _texcoord;
 		float3 _normal;
 	};
+
 	static const D3DXVECTOR2 DEFAULT_SIZE;
 	static const D3DCOLOR DEFAULT_COLOR;
 	static const D3DXVECTOR2 DEFAULT_POSITION;
 
-	D3DCOLOR color_;
 	s32 index_;
 	bool is_flip_;
 
-	f32 width_;
-	f32 height_;
+	float2 size_;
+	float2 block_size_;
 	u32 width_count_;
 	u32 height_count_;
 	u32 division_width_;
@@ -68,6 +60,7 @@ private:
 	u32* indexs_;
 	float2 anchor_point_;
 
+	void UpdateVertexBuffer_(void)override;
 };
 
 } // namespace mesh

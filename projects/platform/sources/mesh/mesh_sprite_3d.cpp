@@ -32,8 +32,8 @@ MeshSprite3D::MeshSprite3D(const u32& in_width_count,const u32& in_height_count)
 //=============================================================================
 MeshSprite3D::MeshSprite3D(const f32& in_block_width,const f32& in_block_height,const u32& in_width_count,const u32& in_height_count)
 	:Mesh(true,true)
-	,width_(in_block_width)
-	,height_(in_block_height)
+	,size_(in_width_count * in_block_width,in_height_count *in_block_height)
+	,block_size_(in_block_width,in_block_height)
 	,width_count_(in_width_count)
 	,height_count_(in_height_count)
 	,index_count_(0)
@@ -58,48 +58,8 @@ MeshSprite3D::MeshSprite3D(const f32& in_block_width,const f32& in_block_height,
 	// create index buffer
 	directx9->CreateIndexBuffer(sizeof(u32) * index_count_,D3DUSAGE_WRITEONLY,D3DFMT_INDEX32,D3DPOOL_MANAGED,&direct3dindexbuffer9_,NULL);
 
-	VERTEX* vertex = nullptr;
 	u32* index = nullptr;
 	u32 rect_count = vertex_count_ / 4;
-	float2 size = float2(in_block_width * in_width_count,in_block_height * in_height_count);
-	float2 offset = float2(-size._x * anchor_point_._x,size._y * anchor_point_._y);
-
-	// lock
-	direct3dvertexbuffer9_->Lock(0,0,(void**)&vertex,0);
-
-	for(u32 i = 0;i < height_count_;++i)
-	{
-		for(u32 j = 0;j < width_count_;++j)
-		{
-			float left = 1.0f / division_width_  * ((indexs_[i * width_count_ + j] % division_width_) + 0);
-			float right = 1.0f / division_width_  * ((indexs_[i * width_count_ + j] % division_width_) + 1);
-			float top = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 0);
-			float bottom = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 1);
-
-			vertex[(i * width_count_ + j) * 4 + 0]._position = float3(offset._x + width_ * (j + 0),0.0f,offset._y - height_ * (i + 1));
-			vertex[(i * width_count_ + j) * 4 + 1]._position = float3(offset._x + width_ * (j + 0),0.0f,offset._y - height_ * (i + 0));
-			vertex[(i * width_count_ + j) * 4 + 2]._position = float3(offset._x + width_ * (j + 1),0.0f,offset._y - height_ * (i + 1));
-			vertex[(i * width_count_ + j) * 4 + 3]._position = float3(offset._x + width_ * (j + 1),0.0f,offset._y - height_ * (i + 0));
-
-			vertex[(i * width_count_ + j) * 4 + 0]._normal = float3(0.0f,1.0f,0.0f);
-			vertex[(i * width_count_ + j) * 4 + 1]._normal = float3(0.0f,1.0f,0.0f);
-			vertex[(i * width_count_ + j) * 4 + 2]._normal = float3(0.0f,1.0f,0.0f);
-			vertex[(i * width_count_ + j) * 4 + 3]._normal = float3(0.0f,1.0f,0.0f);
-
-			//vertex[(i * width_count_ + j) * 4 + 0]._color = color_;
-			//vertex[(i * width_count_ + j) * 4 + 1]._color = color_;
-			//vertex[(i * width_count_ + j) * 4 + 2]._color = color_;
-			//vertex[(i * width_count_ + j) * 4 + 3]._color = color_;
-
-			vertex[(i * width_count_ + j) * 4 + 0]._texcoord = float2(left,bottom);
-			vertex[(i * width_count_ + j) * 4 + 1]._texcoord = float2(left,top);
-			vertex[(i * width_count_ + j) * 4 + 2]._texcoord = float2(right,bottom);
-			vertex[(i * width_count_ + j) * 4 + 3]._texcoord = float2(right,top);
-		}
-	}
-
-	// unlock
-	direct3dvertexbuffer9_->Unlock();
 
 	u32 count = 0;
 
@@ -136,6 +96,9 @@ MeshSprite3D::MeshSprite3D(const f32& in_block_width,const f32& in_block_height,
 	primitive_count_ = index_count_ - 2;
 	primitive_type_ = D3DPT_TRIANGLESTRIP;
 	stride_ = sizeof(VERTEX);
+
+	UpdateVertexBuffer_();
+
 }
 
 //=============================================================================
@@ -155,6 +118,48 @@ MeshSprite3D::~MeshSprite3D(void)
 void MeshSprite3D::SetIndex(u32 x,u32 y,u32 index)
 {
 	indexs_[y * width_count_ + x] = index;
+	is_dirty_ = true;
+}
+
+//=============================================================================
+// update vertex buffer
+//=============================================================================
+void MeshSprite3D::UpdateVertexBuffer_(void)
+{
+	VERTEX* vertex = nullptr;
+	float2 offset = float2(-size_._x * anchor_point_._x,size_._y * anchor_point_._y);
+
+	// lock
+	direct3dvertexbuffer9_->Lock(0,0,(void**)&vertex,0);
+
+	for(u32 i = 0;i < height_count_;++i)
+	{
+		for(u32 j = 0;j < width_count_;++j)
+		{
+			float left = 1.0f / division_width_  * ((indexs_[i * width_count_ + j] % division_width_) + 0);
+			float right = 1.0f / division_width_  * ((indexs_[i * width_count_ + j] % division_width_) + 1);
+			float top = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 0);
+			float bottom = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 1);
+
+			vertex[(i * width_count_ + j) * 4 + 0]._position = float3(offset._x + block_size_._width * (j + 0),0.0f,offset._y - block_size_._height * (i + 1));
+			vertex[(i * width_count_ + j) * 4 + 1]._position = float3(offset._x + block_size_._width * (j + 0),0.0f,offset._y - block_size_._height * (i + 0));
+			vertex[(i * width_count_ + j) * 4 + 2]._position = float3(offset._x + block_size_._width * (j + 1),0.0f,offset._y - block_size_._height * (i + 1));
+			vertex[(i * width_count_ + j) * 4 + 3]._position = float3(offset._x + block_size_._width * (j + 1),0.0f,offset._y - block_size_._height * (i + 0));
+
+			vertex[(i * width_count_ + j) * 4 + 0]._normal = float3(0.0f,1.0f,0.0f);
+			vertex[(i * width_count_ + j) * 4 + 1]._normal = float3(0.0f,1.0f,0.0f);
+			vertex[(i * width_count_ + j) * 4 + 2]._normal = float3(0.0f,1.0f,0.0f);
+			vertex[(i * width_count_ + j) * 4 + 3]._normal = float3(0.0f,1.0f,0.0f);
+
+			vertex[(i * width_count_ + j) * 4 + 0]._texcoord = float2(left,bottom);
+			vertex[(i * width_count_ + j) * 4 + 1]._texcoord = float2(left,top);
+			vertex[(i * width_count_ + j) * 4 + 2]._texcoord = float2(right,bottom);
+			vertex[(i * width_count_ + j) * 4 + 3]._texcoord = float2(right,top);
+		}
+	}
+
+	// unlock
+	direct3dvertexbuffer9_->Unlock();
 }
 
 } // namespace mesh

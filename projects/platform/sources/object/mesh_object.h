@@ -31,7 +31,7 @@ public:
 	using TMesh = std::shared_ptr<mesh::Mesh>;
 
 	// constructor
-	MeshObject(TMesh in_mesh);
+	explicit MeshObject(TMesh in_mesh);
 
 	// destructor
 	virtual ~MeshObject(void) = default;

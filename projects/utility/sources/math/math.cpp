@@ -503,6 +503,50 @@ float4x4 LookAtRH(const float3 & in_eye,const float3 & in_look_at,const float3 &
 }
 
 //=============================================================================
+// transpose
+//=============================================================================
+float4x4 Transpose(const float4x4 & in_matrix)
+{
+	float4x4 matrix;
+
+	matrix._11 = in_matrix._11;
+	matrix._12 = in_matrix._21;
+	matrix._13 = in_matrix._31;
+	matrix._14 = in_matrix._41;
+
+	matrix._21 = in_matrix._12;
+	matrix._22 = in_matrix._22;
+	matrix._23 = in_matrix._32;
+	matrix._24 = in_matrix._42;
+
+	matrix._31 = in_matrix._13;
+	matrix._32 = in_matrix._23;
+	matrix._33 = in_matrix._33;
+	matrix._34 = in_matrix._43;
+
+	matrix._41 = in_matrix._14;
+	matrix._42 = in_matrix._24;
+	matrix._43 = in_matrix._34;
+	matrix._44 = in_matrix._44;
+
+	return matrix;
+}
+
+//=============================================================================
+// inverse transpose
+//=============================================================================
+float4x4 InverseT(const float4x4& in_matrix)
+{
+	auto matrix = Transpose(in_matrix);
+
+	matrix._41 = 0.0f;
+	matrix._42 = 0.0f;
+	matrix._43 = 0.0f;
+
+	return matrix;
+}
+
+//=============================================================================
 // to radian
 //=============================================================================
 f32 ToRadian(const f32& in_degree)

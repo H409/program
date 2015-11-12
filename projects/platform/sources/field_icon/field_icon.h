@@ -1,6 +1,6 @@
 //*****************************************************************************
 //
-// directx9 vertex shader loader
+// field icon
 //
 // Author		: Kenji Kabutomori
 //
@@ -10,54 +10,56 @@
 // include guard
 //*****************************************************************************
 #pragma once
-#ifndef _DIRECTX9_VERTEX_SHADER_LOADER_H_
-#define _DIRECTX9_VERTEX_SHADER_LOADER_H_
+#ifndef _FIELD_ICON_H_
+#define _FIELD_ICON_H_
 
 //*****************************************************************************
 // include
 //*****************************************************************************
+//#include "../mesh_object.h"
 
 //*****************************************************************************
 // forward declaration
 //*****************************************************************************
-namespace graphic {
-namespace directx9 {
-namespace shader {
-class DX9VertexShader;
-} // namespace shader
-} // namespace directx9
-} // namespace graphic
+namespace mesh {
+class Sprite3D;
+} // namespace mesh
+class MeshObject;
 
 //*****************************************************************************
-// class definition
+// class declaration
 //*****************************************************************************
-namespace graphic {
-namespace directx9 {
-namespace shader {
-class DX9VertexShaderLoader
+class FieldIcon// : public MeshObject
 {
 public:
-	using TVertexShader = std::shared_ptr<shader::DX9VertexShader>;
+	using TSprite3D = std::shared_ptr<mesh::Sprite3D>;
+	using TMeshObject = std::shared_ptr<MeshObject>;
 
 	// constructor
-	explicit DX9VertexShaderLoader(LPDIRECT3DDEVICE9 direct3ddevice9);
+	FieldIcon(void);
 
 	// destructor
-	virtual ~DX9VertexShaderLoader(void);
+	virtual ~FieldIcon(void);
 
-	// get
-	TVertexShader Load(const std::string& in_path);
-	TVertexShader Load(const std::string& in_path,const std::string& in_function_name,const std::string& in_version);
+	// update
+	void Update(void);
+
+	// get object
+	TMeshObject GetObject(void)const;
+
+	// set front vector
+	void SetFrontVector(const float3& in_front_vector);
+
+	// get position
+	const float3 GetPosition(void)const;
 
 private:
-	LPDIRECT3DDEVICE9 direct3ddevice9_;
-	std::unordered_map<std::string,TVertexShader> container_;
+	float3 position_;
+	TSprite3D sprite_3d_;
+	TMeshObject mesh_object_;
+	float3 front_vector_;
 };
 
-} // namespace shader
-} // namespace directx9
-} // namespace graphic
-
-#endif // _DIRECTX9_VERTEX_SHADER_LOADER_H_
+#endif // _FIELD_ICON_H_
 
 //---------------------------------- EOF --------------------------------------

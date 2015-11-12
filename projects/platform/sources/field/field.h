@@ -47,9 +47,11 @@ public:
 	// is in range
 	bool IsInRange(const float3& in_position)const;
 
+	// set type
+	void SetType(const float3& in_position,const u32& in_type);
+
 	// get type
 	u32 GetType(const float3& in_position)const;
-
 private:
 	f32 block_width_;
 	f32 block_height_;

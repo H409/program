@@ -25,8 +25,9 @@
 Field::Field(void)
 {
 	mesh_sprite_3d_ = std::make_shared<mesh::MeshSprite3D>(30,30);
+	types_.resize(30 * 30);
 	mesh_object_ = std::make_shared<MeshObject>(mesh_sprite_3d_);
-	mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/test.png"));
+	mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/field.png"));
 }
 
 //=============================================================================
@@ -72,6 +73,30 @@ bool Field::IsInRange(const float3& in_position)const
 	}
 
 	return true;
+}
+
+//=============================================================================
+// set type
+//=============================================================================
+void Field::SetType(const float3& in_position,const u32& in_type)
+{
+	if(!IsInRange(in_position))
+	{
+		return;
+	}
+
+	float3 position = float3(in_position._x + size_._x * 0.5f,in_position._y,in_position._z - size_._y * 0.5f);
+
+	auto x_index = static_cast<u32>(position._x / block_width_);
+	auto y_index = static_cast<u32>(position._z / block_height_);
+
+	u32 index = y_index * width_count_ + x_index;
+
+	DEBUG_ASSERT(types_.size() > index);
+
+	types_[index] = in_type;
+
+	mesh_sprite_3d_->SetIndex(x_index,y_index,in_type);
 }
 
 //=============================================================================

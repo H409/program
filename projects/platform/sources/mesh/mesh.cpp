@@ -36,9 +36,22 @@ Mesh::Mesh(bool in_is_3d,bool in_is_used_index_buffer)
 	,vertex_count_(0)
 	,direct3dvertexbuffer9_(nullptr)
 	,direct3dindexbuffer9_(nullptr)
-	,is_used_index_buffer_(in_is_3d)
-	,is_3d_(in_is_used_index_buffer)
+	,is_3d_(in_is_3d)
+	,is_used_index_buffer_(in_is_used_index_buffer)
+	,is_dirty_(true)
 {
+}
+
+//=============================================================================
+// apply
+//=============================================================================
+void Mesh::Apply(void)
+{
+	if(is_dirty_)
+	{
+		UpdateVertexBuffer_();
+		is_dirty_ = false;
+	}
 }
 
 //=============================================================================

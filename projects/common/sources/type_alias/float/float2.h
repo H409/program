@@ -26,6 +26,11 @@ public:
 			f32 _x;
 			f32 _y;
 		};
+		struct
+		{
+			f32 _width;
+			f32 _height;
+		};
 	};
 
 	// constructor

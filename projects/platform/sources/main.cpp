@@ -29,7 +29,8 @@
 #include "mesh/sprite_3d.h"
 #include "object/mesh_object.h"
 #include "object/object.h"
-#include "object/field/field.h"
+#include "field/field.h"
+#include "field_icon/field_icon.h"
 
 //=============================================================================
 // エントリーポイント
@@ -52,7 +53,7 @@ int main(int argc,char* argv)
 
 	auto observer = std::make_shared<FollowerObserver>(utility::math::ToRadian(60.0f),800.0f,600.0f);
 	observer->SetPosition(float3(0.0f,0.0f,0.0f));
-	observer->SetVector(float3(0.0f,0.0f,1.0f));
+	observer->SetVector(float3(0.0f,0.0f,-1.0f));
 	observer->SetLength(5.0f);
 	observer->SetHeight(5.0f);
 	observer->Update();
@@ -63,7 +64,7 @@ int main(int argc,char* argv)
 	auto directx9 = GET_DIRECTX9_DEVICE();
 
 	auto color_texture = graphic_device->CreateTexture(800,600,D3DFMT_A8R8G8B8);
-	auto normal_texture = graphic_device->CreateTexture(800,600,D3DFMT_A32B32G32R32F);
+	auto normal_texture = graphic_device->CreateTexture(800,600,D3DFMT_A16B16G16R16F);
 	auto position_texture = graphic_device->CreateTexture(800,600,D3DFMT_A32B32G32R32F);
 
 	auto default_texture = graphic_device->GetRenderTarget(0);
@@ -79,6 +80,9 @@ int main(int argc,char* argv)
 	auto field = std::make_shared<Field>();
 
 	sprite_object->SetPosition(-0.5f,-0.5f,0.0f);
+
+	auto field_icon = std::make_shared<FieldIcon>();
+
 	while(is_loop)
 	{
 		auto start_time = std::chrono::system_clock::now();
@@ -88,6 +92,10 @@ int main(int argc,char* argv)
 
 		scene_manager.Update();
 
+		field_icon->SetFrontVector(float3(0.0f,0.0f,-1.0f));
+		field_icon->Update();
+
+		field->GetType(field_icon->GetPosition());
 		graphic_device->BeginRendering();
 
 		scene_manager.Draw();
@@ -96,7 +104,7 @@ int main(int argc,char* argv)
 		graphic_device->SetRenderTarget(1,normal_texture);
 		graphic_device->SetRenderTarget(2,position_texture);
 
-		graphic_device->Clear(float4(1.0f,0.0f,0.0f,1.0f),1.0f);
+		graphic_device->Clear(float4(0.0f,0.0f,0.0f,0.0f),1.0f);
 
 		// set shader
 		graphic_device->SetVertexShader(gb_vs);
@@ -110,9 +118,25 @@ int main(int argc,char* argv)
 		//vertex_shader->SetValue("_view_matrix",(f32*)&observer->GetViewMatrix(),sizeof(float4x4));
 		//vertex_shader->SetValue("_projection_matrix",(f32*)&observer->GetProjectionMatrix(),sizeof(float4x4));
 
+
 		auto object = field->GetObject();
+
+		auto view_matrix = observer->GetViewMatrix();
+		auto i_view_matrix = utility::math::InverseT(view_matrix);
+		auto world_matrix = object->GetMatrix();
+
+		gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,sizeof(float4x4));
+		gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
+
+		object->Draw();
+
+		object = field_icon->GetObject();
+
+		world_matrix = object->GetMatrix();
+		world_matrix = utility::math::Multiply(i_view_matrix,world_matrix);
+
 		// object
-		gb_vs->SetValue("_world_matrix",(f32*)&object->GetMatrix(),sizeof(float4x4));
+		gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,sizeof(float4x4));
 		gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
 		//vertex_shader->SetValue("_world_matrix",(f32*)&object->GetMatrix(),sizeof(float4x4));
 		//vertex_shader->SetValue("_color",(f32*)&object->GetColor(),sizeof(float4));

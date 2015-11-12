@@ -66,7 +66,7 @@ void InputKeyboard::Init(HINSTANCE hInstance, HWND hWnd)
 void InputKeyboard::Update(void)
 {
 	BYTE aKeyState[256];
-	KeyCount[256];
+
 	if (FAILED(m_pDIDevice->GetDeviceState(sizeof(aKeyState), &aKeyState[0])))
 	{
 		m_pDIDevice->Acquire();
