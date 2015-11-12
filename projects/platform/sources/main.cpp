@@ -76,7 +76,6 @@ int main(int argc,char* argv)
 
 	auto d_vs = graphic_device->LoadVertexShader("resources/shader/deferred.vsc");
 	auto d_ps = graphic_device->LoadPixelShader("resources/shader/deferred.psc");
-
 	auto field = std::make_shared<Field>();
 
 	sprite_object->SetPosition(-0.5f,-0.5f,0.0f);
