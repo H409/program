@@ -62,6 +62,8 @@ private:
 	f32 length_;
 	f32 height_;
 	float3 rotation_ ;
+
+	void MouseMove_( void );
 };
 #endif // _FOLLOWER_OBSERVER_H_
 

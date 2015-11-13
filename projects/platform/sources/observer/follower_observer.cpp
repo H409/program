@@ -28,13 +28,19 @@ void FollowerObserver::Update(void)
 {
 	look_at_ = target_position_;
 	//eye_ = look_at_ - target_vector_ * length_;
-	eye_ = float3(look_at_._x,look_at_._y,look_at_._z + length_);
+	eye_ = float3(look_at_._x,look_at_._y,look_at_._z - length_);
 
 	eye_._y = height_;
 
 	view_matrix_ = utility::math::LookAtLH(eye_,look_at_,up_);
 
 	//rotation_ 
+
+	MouseMove_();
+}
+
+void FollowerObserver::MouseMove_( void )
+{
 }
 
 //=============================================================================

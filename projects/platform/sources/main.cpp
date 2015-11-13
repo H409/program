@@ -69,6 +69,7 @@ int main(int argc,char* argv)
 
 	auto default_texture = graphic_device->GetRenderTarget(0);
 	auto sprite_object = std::make_shared<MeshObject>(sprite);
+
 	sprite->SetAnchorPoint(float2(0.0f,0.0f));
 
 	auto gb_vs = graphic_device->LoadVertexShader("resources/shader/graphics_buffer.vsc");
@@ -76,11 +77,19 @@ int main(int argc,char* argv)
 
 	auto d_vs = graphic_device->LoadVertexShader("resources/shader/deferred.vsc");
 	auto d_ps = graphic_device->LoadPixelShader("resources/shader/deferred.psc");
+
+	auto basic_vs = graphic_device->LoadVertexShader("resources/shader/basic.vsc" );
+	auto basic_ps = graphic_device->LoadPixelShader("resources/shader/basic.psc" );
+
 	auto field = std::make_shared<Field>();
 
 	sprite_object->SetPosition(-0.5f,-0.5f,0.0f);
 
 	auto field_icon = std::make_shared<FieldIcon>();
+
+	//
+	auto debug_sprite_object = std::make_shared<MeshObject>(sprite);
+	debug_sprite_object->SetPosition( -0.5f,-0.5f,0.0f );
 
 
 	auto player = std::make_shared<Player>( graphic_device->GetDevice() ); 
@@ -137,7 +146,7 @@ int main(int argc,char* argv)
 		gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,sizeof(float4x4));
 		gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
 
-		//object->Draw();
+		object->Draw();
 
 		object = field_icon->GetObject();
 
@@ -180,6 +189,58 @@ int main(int argc,char* argv)
 		d_ps->SetTexture("_position_sampler",position_texture->GetTexture());
 
 		sprite_object->Draw();
+
+#ifdef _DEBUG 
+		static bool _debugRenderTarget = false ;
+		static int _debugRenderTargetIndex = 0 ;
+
+		LPDIRECT3DTEXTURE9 tex[ 3 ];
+		tex[ 0 ] = color_texture->GetTexture();
+		tex[ 1 ] = normal_texture->GetTexture();
+		tex[ 2 ] = position_texture->GetTexture();
+
+
+		if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_0 ) == true )
+		{
+			_debugRenderTarget  = !_debugRenderTarget ;
+		}
+
+		if( _debugRenderTarget == true )
+		{
+			if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_LEFT ) == true )
+			{
+				_debugRenderTargetIndex-- ;
+			
+				if( _debugRenderTargetIndex == -1 )
+				{
+					_debugRenderTargetIndex = 0 ;
+				}
+			}
+			if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_RIGHT ) == true )
+			{
+				_debugRenderTargetIndex++ ;
+			
+				if( _debugRenderTargetIndex == 3 )
+				{
+					_debugRenderTargetIndex = 2 ;
+				}
+			}
+			
+			graphic_device->SetVertexShader(basic_vs);
+			graphic_device->SetPixelShader(basic_ps);
+
+			basic_vs->SetValue("_view_matrix",(f32*)&observer_2d->GetViewMatrix(),sizeof(float4x4));
+			basic_vs->SetValue("_projection_matrix",(f32*)&observer_2d->GetProjectionMatrix(),sizeof(float4x4));
+			basic_vs->SetValue("_world_matrix",(f32*)&debug_sprite_object->GetMatrix(),sizeof(float4x4));
+
+			basic_ps->SetTexture("_texture_sampler",tex[ _debugRenderTargetIndex ] );
+
+			debug_sprite_object->SetScaleX( 0.25f );
+			debug_sprite_object->SetScaleY( 0.25f );
+			
+			debug_sprite_object->Draw();
+		}
+#endif
 
 		graphic_device->EndRendering();
 
