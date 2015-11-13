@@ -9,9 +9,14 @@
 
 #include "Input.h"
 
+
+
 class InputMouse :public Input
 {
 public:
+	InputMouse(void);
+	~InputMouse(void);
+
 	enum class MOUSE_KEY
 	{
 		LEFT = 0,
@@ -19,32 +24,30 @@ public:
 		MAX,
 	};
 
-	InputMouse(void);
-	~InputMouse(void);
 
 	void Init(HINSTANCE hInstance, HWND hWnd);
 	void Uninit(void);
 	void Update(void);
-	D3DXVECTOR2 GetPosition(void);
-	D3DXVECTOR2 GetPrevPosition(void);
+	const float2& GetPosition(void)const;
+	const float2& GetPrevPosition(void)const;
 
 	bool GetPress(MOUSE_KEY nKey)const;
 	bool GetTrigger(MOUSE_KEY nKey)const;
 	bool GetRepeat(MOUSE_KEY nKey)const;
 	bool GetRelease(MOUSE_KEY nKey)const;
-	D3DXVECTOR2 GetDrag(MOUSE_KEY nKey);
+	const float3& GetDiff(void)const;
 
 private:
-	static const u32 KEY_BIT = 0x80;
-
 	BYTE m_aMouseKeyState[3];
 	BYTE m_aPrevMouseKeyState[3];
 	BYTE m_aMouseKeyTrigger[3];
 	BYTE m_aMouseKeyRelease[3];
-	BYTE m_aMouseKeyboardRepeat[3];
+	BYTE m_aMouseKeyRepeat[3];
+	int m_KeyCount[3];
 	DIMOUSESTATE2 m_MouseState;	//マウスのステータス
-	POINT m_Mousepos;			//マウスのポジション
-	POINT m_Prev_Mousepos;		//1フレーム前のマウスのポジション
+	float2 m_Mousepos;			//マウスのポジション
+	float2 m_Prev_Mousepos;		//1フレーム前のマウスのポジション
+	float3 m_MouseDiff;
 	HWND m_hWnd;				//ウィンドウハンドル
 
 
