@@ -167,6 +167,174 @@ u32 Field::GetType(const float3& in_position)const
 //=============================================================================
 bool Field::CheckType(const u32& in_x,const u32& in_y,const u32& in_type)
 {
+	if(CheckTypeLeftTop(in_x,in_y,in_type))
+	{
+		return true;
+	}
+
+	if(CheckTypeLeftBottom(in_x,in_y,in_type))
+	{
+		return true;
+	}
+
+	if(CheckTypeRightTop(in_x,in_y,in_type))
+	{
+		return true;
+	}
+
+	if(CheckTypeRightBottom(in_x,in_y,in_type))
+	{
+		return true;
+	}
+
+	return false;
+}
+
+//=============================================================================
+// check type left top
+//=============================================================================
+bool Field::CheckTypeLeftTop(const u32& in_x,const u32& in_y,const u32& in_type)
+{
+	if(in_x < 1)
+	{
+		return false;
+	}
+
+	if(in_y < 1)
+	{
+		return false;
+	}
+
+	if(in_x > width_count_)
+	{
+		return false;
+	}
+
+	if(in_y > height_count_)
+	{
+		return false;
+	}
+
+	auto index = in_y * width_count_ + in_x;
+
+	if(types_[index] != in_type)
+	{
+		return false;
+	}
+
+	if(types_[index - 1] != in_type)
+	{
+		return false;
+	}
+
+	if(types_[index - width_count_] != in_type)
+	{
+		return false;
+	}
+
+	if(types_[index - width_count_ - 1] != in_type)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+//=============================================================================
+// check type left top
+//=============================================================================
+bool Field::CheckTypeLeftBottom(const u32& in_x,const u32& in_y,const u32& in_type)
+{
+	if(in_x < 1)
+	{
+		return false;
+	}
+
+	if(in_x > width_count_)
+	{
+		return false;
+	}
+
+	if(in_y >= height_count_)
+	{
+		return false;
+	}
+
+	auto index = in_y * width_count_ + in_x;
+
+	if(types_[index] != in_type)
+	{
+		return false;
+	}
+
+	if(types_[index - 1] != in_type)
+	{
+		return false;
+	}
+
+	if(types_[index + width_count_] != in_type)
+	{
+		return false;
+	}
+
+	if(types_[index + width_count_ - 1] != in_type)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+//=============================================================================
+// check type right top
+//=============================================================================
+bool Field::CheckTypeRightTop(const u32& in_x,const u32& in_y,const u32& in_type)
+{
+	if(in_y < 1)
+	{
+		return false;
+	}
+
+	if(in_x >= width_count_)
+	{
+		return false;
+	}
+
+	if(in_y > height_count_)
+	{
+		return false;
+	}
+
+	auto index = in_y * width_count_ + in_x;
+
+	if(types_[index] != in_type)
+	{
+		return false;
+	}
+
+	if(types_[index + 1] != in_type)
+	{
+		return false;
+	}
+
+	if(types_[index - width_count_] != in_type)
+	{
+		return false;
+	}
+
+	if(types_[index - width_count_ + 1] != in_type)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+//=============================================================================
+// check type right bottom
+//=============================================================================
+bool Field::CheckTypeRightBottom(const u32& in_x,const u32& in_y,const u32& in_type)
+{
 	if(in_x >= width_count_)
 	{
 		return false;

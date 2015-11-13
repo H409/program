@@ -55,6 +55,7 @@ void FieldIcon::Update(void)
 
 	if(IsOverRange_())
 	{
+		vector = utility::math::Normalize(position_ - basic_position_);
 		position_ = basic_position_ + vector * range_;
 	}
 
@@ -67,6 +68,14 @@ void FieldIcon::Update(void)
 FieldIcon::TMeshObject FieldIcon::GetObject(void) const
 {
 	return mesh_object_;
+}
+
+//=============================================================================
+// set basic position
+//=============================================================================
+void FieldIcon::SetBasicPosition(const float3& in_position)
+{
+	basic_position_ = in_position;
 }
 
 //=============================================================================
