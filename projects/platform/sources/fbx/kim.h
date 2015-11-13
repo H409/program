@@ -162,8 +162,8 @@ public :
 	// ˆ—:Ü°ÙÄŞÏÄØ¸½‚Ì¾¯À
 	void SetWorld(D3DXMATRIX world){ world_ = world; };
 
-	void SetView( D3DXMATRIX view ){ view_ = view ; }
-	void SetProjection( D3DXMATRIX projection ){ projection_ = projection ; }
+	void SetView( D3DXMATRIX *view ){ view_ = *view ; }
+	void SetProjection( D3DXMATRIX *projection ){ projection_ = *projection ; }
 
 private:
 	// ˆ—:¼ª°ÀŞ°‚ÌºİÊß²Ù

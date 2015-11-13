@@ -38,6 +38,7 @@ Kim::Kim(LPDIRECT3DDEVICE9 d3d_device)
 {
 	d3d_device_ = d3d_device;
 
+	toon_map = NULL ;
 	mesh_ = NULL;
 	bone_ = NULL;
 	decl_ = NULL;
@@ -765,37 +766,6 @@ void Kim::SetMaterial(D3DMATERIAL9 *material)
 
 
 //=============================================================================
-// ˆ—:ÎÞ°Ý‚Ì•`‰æ
-//=============================================================================
-void Kim::DrawBone(void)
-{
-	// ŒÅ’è¼ª°ÀÞ‚Ì’¸“_ÌÞÚÝÄÞ‚ðØ‚é
-	d3d_device_->SetRenderState(D3DRS_INDEXEDVERTEXBLENDENABLE, FALSE);
-
-	for (int i = 0; i < bone_num_; i++)
-	{
-		ID3DXMesh *boneObj;
-		D3DXCreateCylinder(d3d_device_, 0.2f, 0.5f, 5.0f, 16, 1, &boneObj, 0);
-
-		D3DMATERIAL9 material = { { 1.0f, 1.0f, 1.0f, 1.0f } }; material.Power = 10.0f;
-		D3DLIGHT9 light = { D3DLIGHT_DIRECTIONAL, { 1.0f, 0.7f, 0.5f, 1.0f } };
-		light.Direction = (D3DVECTOR)D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-
-		d3d_device_->SetLight(0, &light);
-		d3d_device_->LightEnable(0, TRUE);
-		d3d_device_->SetRenderState(D3DRS_LIGHTING, TRUE);
-		d3d_device_->SetMaterial(&material);
-		d3d_device_->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-		d3d_device_->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-		D3DXMATRIX boneObjRot;
-		D3DXMatrixRotationY(&boneObjRot, D3DXToRadian(-90.0f));
-		d3d_device_->SetTransform(D3DTS_WORLD, &(boneObjRot * bone_[i].bone_matrix));
-		boneObj->DrawSubset(0);
-		boneObj->Release();
-	}
-}
-
-//=============================================================================
 // 1Ò¯¼­	Ž©ì¼ª°ÀÞ°—p•`‰æ
 //=============================================================================
 void Kim::OneMeshMyShader(void)
@@ -940,6 +910,36 @@ void Kim::StaticMesh(void)
 
 }
 
+//=============================================================================
+// ˆ—:ÎÞ°Ý‚Ì•`‰æ
+//=============================================================================
+void Kim::DrawBone(void)
+{
+	// ŒÅ’è¼ª°ÀÞ‚Ì’¸“_ÌÞÚÝÄÞ‚ðØ‚é
+	d3d_device_->SetRenderState(D3DRS_INDEXEDVERTEXBLENDENABLE, FALSE);
+
+	for (int i = 0; i < bone_num_; i++)
+	{
+		ID3DXMesh *boneObj;
+		D3DXCreateCylinder(d3d_device_, 0.2f, 0.5f, 5.0f, 16, 1, &boneObj, 0);
+
+		D3DMATERIAL9 material = { { 1.0f, 1.0f, 1.0f, 1.0f } }; material.Power = 10.0f;
+		D3DLIGHT9 light = { D3DLIGHT_DIRECTIONAL, { 1.0f, 0.7f, 0.5f, 1.0f } };
+		light.Direction = (D3DVECTOR)D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+
+		d3d_device_->SetLight(0, &light);
+		d3d_device_->LightEnable(0, TRUE);
+		d3d_device_->SetRenderState(D3DRS_LIGHTING, TRUE);
+		d3d_device_->SetMaterial(&material);
+		d3d_device_->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+		d3d_device_->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+		D3DXMATRIX boneObjRot;
+		D3DXMatrixRotationY(&boneObjRot, D3DXToRadian(-90.0f));
+		d3d_device_->SetTransform(D3DTS_WORLD, &(boneObjRot * bone_[i].bone_matrix));
+		boneObj->DrawSubset(0);
+		boneObj->Release();
+	}
+}
 
 //=============================================================================
 // ÃÞÊÞ¯¸Þ—pŠÖ”
@@ -1148,6 +1148,7 @@ HRESULT Kim::CompileShader(void)
 	shader->Release();
 
 	D3DXCreateTextureFromFile(d3d_device_, "data/texture/mapping_textrue/toon_map.png", &toon_map);
+	//toon_map = NULL ;
 
 	return S_OK ;
 }

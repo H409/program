@@ -30,6 +30,8 @@
 #include "field/field.h"
 #include "field_icon/field_icon.h"
 
+#include "player/player.h"
+
 //=============================================================================
 // エントリーポイント
 //=============================================================================
@@ -50,10 +52,9 @@ int main(int argc,char* argv)
 	auto pixel_shader = graphic_device->LoadPixelShader("resources/shader/basic.psc");
 
 	auto observer = std::make_shared<FollowerObserver>(utility::math::ToRadian(60.0f),800.0f,600.0f);
-	auto position = float3(0.0f,0.0f,0.0f);
-	observer->SetPosition(position);
-	observer->SetVector(float3(0.0f,0.0f,-1.0f));
-	observer->SetLength(10.0f);
+	observer->SetTargetPosition(float3(0.0f,0.0f,0.0f));
+	observer->SetTargetVector(float3(0.0f,0.0f,1.0f));
+	observer->SetLength(5.0f);
 	observer->SetHeight(5.0f);
 	observer->Update();
 
@@ -81,6 +82,10 @@ int main(int argc,char* argv)
 
 	auto field_icon = std::make_shared<FieldIcon>();
 
+
+	auto player = std::make_shared<Player>( graphic_device->GetDevice() ); 
+	player->Init( float3( 0 , 0 , 0 ) );
+
 	while(is_loop)
 	{
 		auto start_time = std::chrono::system_clock::now();
@@ -91,6 +96,7 @@ int main(int argc,char* argv)
 		scene_manager.Update();
 
 		field_icon->SetFrontVector(float3(0.0f,0.0f,-1.0f));
+		field_icon->SetBasicPosition(player->GetPosition());
 		field_icon->Update();
 
 		if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_SPACE))
@@ -100,6 +106,10 @@ int main(int argc,char* argv)
 
 		field->SelectBlock(field_icon->GetPosition());
 
+		observer->SetTargetPosition( player->GetPosition() );
+		observer->SetTargetVector( float3( sinf( player->GetRotation()._y ) , 0 , cosf( player->GetRotation()._y ) ) );
+		observer->Update();
+
 		graphic_device->BeginRendering();
 
 		scene_manager.Draw();
@@ -108,7 +118,7 @@ int main(int argc,char* argv)
 		graphic_device->SetRenderTarget(1,normal_texture);
 		graphic_device->SetRenderTarget(2,position_texture);
 
-		graphic_device->Clear(float4(0.0f,0.0f,0.0f,0.0f),1.0f);
+		graphic_device->Clear(float4(1.0f,0.0f,0.0f,0.0f),1.0f);
 
 		// set shader
 		graphic_device->SetVertexShader(gb_vs);
@@ -127,7 +137,7 @@ int main(int argc,char* argv)
 		gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,sizeof(float4x4));
 		gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
 
-		object->Draw();
+		//object->Draw();
 
 		object = field_icon->GetObject();
 
@@ -139,6 +149,15 @@ int main(int argc,char* argv)
 		gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
 
 		object->Draw();
+
+
+		player->SetCameraVector( observer->GetLookAt() -  observer->GetEye() );
+		player->GetKimPointer()->SetView( ( D3DXMATRIX* )&observer->GetViewMatrix() );
+		player->GetKimPointer()->SetProjection( ( D3DXMATRIX* )&observer->GetProjectionMatrix() );
+		player->Update();
+		player->Draw();
+
+
 
 		graphic_device->SetRenderTarget(0,default_texture);
 		graphic_device->SetRenderTarget(1,nullptr);
@@ -163,6 +182,7 @@ int main(int argc,char* argv)
 		sprite_object->Draw();
 
 		graphic_device->EndRendering();
+
 
 		std::this_thread::sleep_until(start_time + std::chrono::milliseconds(1000 / 60));
 	}
