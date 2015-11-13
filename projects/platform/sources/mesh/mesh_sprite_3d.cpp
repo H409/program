@@ -122,6 +122,23 @@ void MeshSprite3D::SetIndex(u32 x,u32 y,u32 index)
 }
 
 //=============================================================================
+// set color
+//=============================================================================
+void MeshSprite3D::SetColor(u32 in_x,u32 in_y,const float4& in_color)
+{
+	VERTEX* vertex = nullptr;
+	direct3dvertexbuffer9_->Lock(0,0,(void**)&vertex,0);
+
+	vertex[(in_y * width_count_ + in_x) * 4 + 0]._color = D3DXCOLOR(in_color._r,in_color._g,in_color._b,in_color._a);
+	vertex[(in_y * width_count_ + in_x) * 4 + 1]._color = D3DXCOLOR(in_color._r,in_color._g,in_color._b,in_color._a);
+	vertex[(in_y * width_count_ + in_x) * 4 + 2]._color = D3DXCOLOR(in_color._r,in_color._g,in_color._b,in_color._a);
+	vertex[(in_y * width_count_ + in_x) * 4 + 3]._color = D3DXCOLOR(in_color._r,in_color._g,in_color._b,in_color._a);
+
+	// unlock
+	direct3dvertexbuffer9_->Unlock();
+}
+
+//=============================================================================
 // update vertex buffer
 //=============================================================================
 void MeshSprite3D::UpdateVertexBuffer_(void)
@@ -155,6 +172,11 @@ void MeshSprite3D::UpdateVertexBuffer_(void)
 			vertex[(i * width_count_ + j) * 4 + 1]._texcoord = float2(left,top);
 			vertex[(i * width_count_ + j) * 4 + 2]._texcoord = float2(right,bottom);
 			vertex[(i * width_count_ + j) * 4 + 3]._texcoord = float2(right,top);
+
+			vertex[(i * width_count_ + j) * 4 + 0]._color = D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
+			vertex[(i * width_count_ + j) * 4 + 1]._color = D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
+			vertex[(i * width_count_ + j) * 4 + 2]._color = D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
+			vertex[(i * width_count_ + j) * 4 + 3]._color = D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
 		}
 	}
 

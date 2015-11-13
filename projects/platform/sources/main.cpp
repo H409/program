@@ -52,7 +52,7 @@ int main(int argc,char* argv)
 	auto observer = std::make_shared<FollowerObserver>(utility::math::ToRadian(60.0f),800.0f,600.0f);
 	observer->SetPosition(float3(0.0f,0.0f,0.0f));
 	observer->SetVector(float3(0.0f,0.0f,-1.0f));
-	observer->SetLength(5.0f);
+	observer->SetLength(10.0f);
 	observer->SetHeight(5.0f);
 	observer->Update();
 
@@ -92,7 +92,9 @@ int main(int argc,char* argv)
 		field_icon->SetFrontVector(float3(0.0f,0.0f,-1.0f));
 		field_icon->Update();
 
+		field->SelectBlock(field_icon->GetPosition());
 		field->GetType(field_icon->GetPosition());
+
 		graphic_device->BeginRendering();
 
 		scene_manager.Draw();

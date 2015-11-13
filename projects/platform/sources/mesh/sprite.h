@@ -51,11 +51,13 @@ private:
 	{
 		float3 _position;
 		float2 _texcoord;
+		D3DCOLOR _color;
 	};
 
 	static const float2 DEFAULT_SIZE;
 	static const float4 DEFAULT_COLOR;
 	static const float2 DEFAULT_ANCHOR_POINT;
+	static const D3DVERTEXELEMENT9 VERTEXELEMENTS[];
 
 	float2 anchor_point_;
 	float2 size_;
@@ -64,6 +66,7 @@ private:
 	u32 division_height_;
 	float4 texcoord_;
 
+	const D3DVERTEXELEMENT9* GetVertexElements_(void)const override;
 	// update vertex buffer
 	void UpdateVertexBuffer_(void)override;
 };

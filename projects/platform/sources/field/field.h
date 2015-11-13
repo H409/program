@@ -47,19 +47,26 @@ public:
 	// is in range
 	bool IsInRange(const float3& in_position)const;
 
+	// select block
+	void SelectBlock(const float3& in_position);
+
 	// set type
 	void SetType(const float3& in_position,const u32& in_type);
 
 	// get type
 	u32 GetType(const float3& in_position)const;
 private:
+	static const float4 DEFAULT_COLOR;
+	static const float4 SELECT_COLOR;
+
 	f32 block_width_;
 	f32 block_height_;
 	u32 width_count_;
 	u32 height_count_;
 	float2 size_;
 	std::vector<u32> types_;
-
+	u32 select_index_x_;
+	u32 select_index_y_;
 	TMeshSprite3D mesh_sprite_3d_;
 	TMeshObject mesh_object_;
 };

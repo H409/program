@@ -53,6 +53,7 @@ private:
 		float3 _position;
 		float2 _texcoord;
 		float3 _normal;
+		D3DCOLOR _color;
 	};
 
 	static const float2 DEFAULT_SIZE;

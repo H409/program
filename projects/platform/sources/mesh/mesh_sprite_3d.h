@@ -33,7 +33,10 @@ public:
 	virtual ~MeshSprite3D(void);
 
 	// set index
-	void SetIndex(u32 x,u32 y,u32 index);
+	void SetIndex(u32 in_x,u32 in_y,u32 in_index);
+
+	// set color
+	void SetColor(u32 in_x,u32 in_y,const float4& in_color);
 
 private:
 	struct VERTEX
@@ -41,6 +44,7 @@ private:
 		float3 _position;
 		float2 _texcoord;
 		float3 _normal;
+		D3DCOLOR _color;
 	};
 
 	static const D3DXVECTOR2 DEFAULT_SIZE;

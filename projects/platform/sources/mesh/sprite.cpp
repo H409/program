@@ -19,6 +19,14 @@ namespace mesh {
 const float2 Sprite::DEFAULT_SIZE = float2(1.0f,1.0f);
 const float2 Sprite::DEFAULT_ANCHOR_POINT = float2(0.0f,0.0f);
 const float4 Sprite::DEFAULT_COLOR = float4(1.0f,1.0f,1.0f,1.0f);
+const D3DVERTEXELEMENT9 Sprite::VERTEXELEMENTS[] =
+{
+	{ 0,0,D3DDECLTYPE_FLOAT3,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_POSITION,0 },
+	{ 0,sizeof(float3),D3DDECLTYPE_FLOAT2,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_TEXCOORD,0 },
+	{ 0,sizeof(float3) + sizeof(float2),D3DDECLTYPE_FLOAT3,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_NORMAL,0 },
+	{ 0,sizeof(float3) + sizeof(float2) + sizeof(float3),D3DDECLTYPE_D3DCOLOR,D3DDECLMETHOD_DEFAULT,D3DDECLUSAGE_COLOR,0 },
+	D3DDECL_END()
+};
 
 //=============================================================================
 // constructor
@@ -140,6 +148,14 @@ void Sprite::SetTexcoord(const u32& in_index,const u32& in_division_width,const 
 }
 
 //=============================================================================
+// get vertex elements
+//=============================================================================
+const D3DVERTEXELEMENT9* Sprite::GetVertexElements_(void) const
+{
+	return VERTEXELEMENTS;
+}
+
+//=============================================================================
 // update vertex buffer
 //=============================================================================
 void Sprite::UpdateVertexBuffer_(void)
@@ -168,6 +184,7 @@ void Sprite::UpdateVertexBuffer_(void)
 	{
 		vertex[i]._position = positions[i];
 		vertex[i]._texcoord = texcoords[i];
+		vertex[i]._color = D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
 	}
 
 	direct3dvertexbuffer9_->Unlock();

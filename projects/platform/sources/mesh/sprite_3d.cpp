@@ -164,6 +164,7 @@ void Sprite3D::UpdateVertexBuffer_(void)
 		vertex[i]._position = positions[i];
 		vertex[i]._texcoord = texcoords[i];
 		vertex[i]._normal = float3(0.0f,0.0f,-1.0f);
+		vertex[i]._color = D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
 	}
 
 	direct3dvertexbuffer9_->Unlock();

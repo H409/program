@@ -18,14 +18,24 @@
 //*****************************************************************************
 // constant definition
 //*****************************************************************************
+const float4 Field::DEFAULT_COLOR = float4(1.0f,1.0f,1.0f,1.0f);
+const float4 Field::SELECT_COLOR = float4(0.0f,0.0f,1.0f,1.0f);
 
 //=============================================================================
 // constructor
 //=============================================================================
 Field::Field(void)
 {
-	mesh_sprite_3d_ = std::make_shared<mesh::MeshSprite3D>(30,30);
-	types_.resize(30 * 30);
+	size_._x = 30.0f * 1.0f;
+	size_._y = 30.0f * 1.0f;
+	select_index_x_ = 0;
+	select_index_y_ = 0;
+	block_width_ = 1.0f;
+	block_height_ = 1.0f;
+	width_count_ = 30;
+	height_count_ = 30;
+	mesh_sprite_3d_ = std::make_shared<mesh::MeshSprite3D>(block_width_,block_height_,width_count_,height_count_);
+	types_.resize(width_count_ * height_count_);
 	mesh_object_ = std::make_shared<MeshObject>(mesh_sprite_3d_);
 	mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/field.png"));
 }
@@ -76,6 +86,26 @@ bool Field::IsInRange(const float3& in_position)const
 }
 
 //=============================================================================
+// select block
+//=============================================================================
+void Field::SelectBlock(const float3& in_position)
+{
+	if(!IsInRange(in_position))
+	{
+		return;
+	}
+
+	mesh_sprite_3d_->SetColor(select_index_x_,select_index_y_,DEFAULT_COLOR);
+
+	float3 position = float3(in_position._x + size_._x * 0.5f,in_position._y,-(in_position._z - size_._y * 0.5f));
+
+	select_index_x_ = static_cast<u32>(position._x / block_width_);
+	select_index_y_ = static_cast<u32>(position._z / block_height_);
+
+	mesh_sprite_3d_->SetColor(select_index_x_,select_index_y_,SELECT_COLOR);
+}
+
+//=============================================================================
 // set type
 //=============================================================================
 void Field::SetType(const float3& in_position,const u32& in_type)
@@ -85,7 +115,7 @@ void Field::SetType(const float3& in_position,const u32& in_type)
 		return;
 	}
 
-	float3 position = float3(in_position._x + size_._x * 0.5f,in_position._y,in_position._z - size_._y * 0.5f);
+	float3 position = float3(in_position._x + size_._x * 0.5f,in_position._y,-(in_position._z - size_._y * 0.5f));
 
 	auto x_index = static_cast<u32>(position._x / block_width_);
 	auto y_index = static_cast<u32>(position._z / block_height_);
@@ -109,7 +139,7 @@ u32 Field::GetType(const float3& in_position)const
 		return -1;
 	}
 
-	float3 position = float3(in_position._x + size_._x * 0.5f,in_position._y,in_position._z - size_._y * 0.5f);
+	float3 position = float3(in_position._x + size_._x * 0.5f,in_position._y,-(in_position._z - size_._y * 0.5f));
 
 	auto x_index = static_cast<u32>(position._x / block_width_);
 	auto y_index = static_cast<u32>(position._z / block_height_);
