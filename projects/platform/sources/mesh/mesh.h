@@ -25,6 +25,12 @@ public:
 	// apply
 	void Apply(void);
 
+	// attach render state
+	void AttachRenderState(void);
+
+	// detach render state
+	void DetachRenderState(void);
+
 	// get buffer
 	const LPDIRECT3DVERTEXBUFFER9 GetBuffer(void)const;
 
@@ -70,6 +76,8 @@ protected:
 private:
 	virtual const D3DVERTEXELEMENT9* GetVertexElements_(void)const;
 	virtual void UpdateVertexBuffer_(void) = 0;
+	virtual void AttachRenderState_(void){};
+	virtual void DetachRenderState_(void){};
 };
 } // namespace mesh
 

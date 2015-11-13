@@ -33,6 +33,8 @@ void MeshObject::Draw(void)
 	directx9->SetVertexDeclaration(mesh_->GetVertexDeclaration());
 	directx9->SetStreamSource(0,mesh_->GetBuffer(),0,mesh_->GetStride());
 
+	mesh_->AttachRenderState();
+
 	if(mesh_->IsUsedIndexBuffer())
 	{
 		directx9->SetIndices(mesh_->GetIndexBuffer());
@@ -42,6 +44,8 @@ void MeshObject::Draw(void)
 	{
 		directx9->DrawPrimitive(mesh_->GetPrimitiveType(),0,mesh_->GetPrimitiveCount());
 	}
+
+	mesh_->DetachRenderState();
 }
 
 //---------------------------------- EOF --------------------------------------

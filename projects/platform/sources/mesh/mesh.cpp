@@ -55,6 +55,19 @@ void Mesh::Apply(void)
 }
 
 //=============================================================================
+// 
+//=============================================================================
+void Mesh::AttachRenderState(void)
+{
+	AttachRenderState_();
+}
+
+void Mesh::DetachRenderState(void)
+{
+	DetachRenderState_();
+}
+
+//=============================================================================
 // get buffer
 //=============================================================================
 const LPDIRECT3DVERTEXBUFFER9 Mesh::GetBuffer(void)const

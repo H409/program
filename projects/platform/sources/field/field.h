@@ -55,6 +55,10 @@ public:
 
 	// get type
 	u32 GetType(const float3& in_position)const;
+
+	// check type
+	bool CheckType(const u32& in_x,const u32& in_y,const u32& in_type);
+
 private:
 	static const float4 DEFAULT_COLOR;
 	static const float4 SELECT_COLOR;

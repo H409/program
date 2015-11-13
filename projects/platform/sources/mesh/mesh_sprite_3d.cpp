@@ -122,6 +122,22 @@ void MeshSprite3D::SetIndex(u32 x,u32 y,u32 index)
 }
 
 //=============================================================================
+// set index
+//=============================================================================
+void MeshSprite3D::SetIndex(const std::vector<u32>& in_indexs)
+{
+	DEBUG_ASSERT(in_indexs.size() == width_count_ * height_count_);
+
+	auto size = width_count_ * height_count_;
+
+	for(u32 i = 0;i < size;++i)
+	{
+		indexs_[i] = in_indexs[i];
+	}
+	is_dirty_ = true;
+}
+
+//=============================================================================
 // set color
 //=============================================================================
 void MeshSprite3D::SetColor(u32 in_x,u32 in_y,const float4& in_color)
@@ -136,6 +152,35 @@ void MeshSprite3D::SetColor(u32 in_x,u32 in_y,const float4& in_color)
 
 	// unlock
 	direct3dvertexbuffer9_->Unlock();
+}
+
+//=============================================================================
+// set texcoord
+//=============================================================================
+void MeshSprite3D::SetTexcoord(u32 in_division_width,u32 in_division_height)
+{
+	division_width_ = in_division_width;
+	division_height_ = in_division_height;
+	is_dirty_ = true;
+}
+
+void MeshSprite3D::AttachRenderState_(void)
+{
+	auto directx9 = GET_DIRECTX9_DEVICE();
+
+	directx9->SetSamplerState(0,D3DSAMP_MINFILTER,D3DTEXF_NONE);
+	directx9->SetSamplerState(0,D3DSAMP_MAGFILTER,D3DTEXF_NONE);
+	directx9->SetSamplerState(0,D3DSAMP_ADDRESSU,D3DTADDRESS_CLAMP);
+	directx9->SetSamplerState(0,D3DSAMP_ADDRESSV,D3DTADDRESS_CLAMP);
+}
+
+void MeshSprite3D::DetachRenderState_(void)
+{
+	auto directx9 = GET_DIRECTX9_DEVICE();
+	directx9->SetSamplerState(0,D3DSAMP_MINFILTER,D3DTEXF_LINEAR);
+	directx9->SetSamplerState(0,D3DSAMP_MAGFILTER,D3DTEXF_LINEAR);
+	directx9->SetSamplerState(0,D3DSAMP_ADDRESSU,D3DTADDRESS_WRAP);
+	directx9->SetSamplerState(0,D3DSAMP_ADDRESSV,D3DTADDRESS_WRAP);
 }
 
 //=============================================================================

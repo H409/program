@@ -29,6 +29,7 @@ FieldIcon::FieldIcon(void)
 	,front_vector_(0.0f,0.0f,1.0f)
 	,basic_position_(0.0f,0.0f,0.0f)
 	,range_(5.0f)
+	,speed_(0.1f)
 {
 	sprite_3d_ = std::make_shared<mesh::Sprite3D>(float2(1.0f,2.0f));
 	mesh_object_ = std::make_shared<MeshObject>(sprite_3d_);
@@ -49,36 +50,11 @@ FieldIcon::~FieldIcon(void)
 //=============================================================================
 void FieldIcon::Update(void)
 {
-	auto keyboard = GET_INPUT_KEYBOARD();
+	auto vector = GetVector_();
+	position_ += vector * speed_;
 
-	auto right_vector = utility::math::CrossProduct(float3(0.0f,1.0f,0.0f),front_vector_);
-
-	if(keyboard->GetPress(DIK_I))
+	if(IsOverRange_())
 	{
-		position_ += front_vector_;
-	}
-
-	if(keyboard->GetPress(DIK_K))
-	{
-		position_ -= front_vector_;
-	}
-
-	if(keyboard->GetPress(DIK_J))
-	{
-		position_ -= right_vector;
-	}
-
-	if(keyboard->GetPress(DIK_L))
-	{
-		position_ += right_vector;
-	}
-
-	auto vector = position_ - basic_position_;
-	auto length = utility::math::Length(vector);
-
-	if(range_ < length)
-	{
-		vector = utility::math::Normalize(vector);
 		position_ = basic_position_ + vector * range_;
 	}
 
@@ -108,6 +84,48 @@ void FieldIcon::SetFrontVector(const float3& in_front_vector)
 const float3 FieldIcon::GetPosition(void) const
 {
 	return position_;
+}
+
+//=============================================================================
+// get vector
+//=============================================================================
+float3 FieldIcon::GetVector_(void) const
+{
+	auto keyboard = GET_INPUT_KEYBOARD();
+
+	auto right_vector = utility::math::CrossProduct(float3(0.0f,1.0f,0.0f),front_vector_);
+	auto vector = float3(0.0f,0.0f,0.0f);
+
+	if(keyboard->GetPress(DIK_I))
+	{
+		vector += front_vector_;
+	}
+
+	if(keyboard->GetPress(DIK_K))
+	{
+		vector -= front_vector_;
+	}
+
+	if(keyboard->GetPress(DIK_J))
+	{
+		vector -= right_vector;
+	}
+
+	if(keyboard->GetPress(DIK_L))
+	{
+		vector += right_vector;
+	}
+
+	vector = utility::math::Normalize(vector);
+
+	return vector;
+}
+
+bool FieldIcon::IsOverRange_(void) const
+{
+	auto vector = position_ - basic_position_;
+	auto length = utility::math::Length(vector);
+	return range_ < length;
 }
 
 //---------------------------------- EOF --------------------------------------

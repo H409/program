@@ -94,7 +94,7 @@ float4x4 LookAtRH(const float3& in_eye,const float3& in_look_at,const float3& in
 float4x4 Transpose(const float4x4& in_matrix);
 
 // inverse transpose
-float4x4 InverseT(const float4x4& in_matrix);
+float4x4 InverseB(const float4x4& in_matrix);
 
 // to radian
 // Šp“x‚©‚çŒÊ“x–@‚É•ÏŠ·

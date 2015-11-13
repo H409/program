@@ -50,7 +50,8 @@ int main(int argc,char* argv)
 	auto pixel_shader = graphic_device->LoadPixelShader("resources/shader/basic.psc");
 
 	auto observer = std::make_shared<FollowerObserver>(utility::math::ToRadian(60.0f),800.0f,600.0f);
-	observer->SetPosition(float3(0.0f,0.0f,0.0f));
+	auto position = float3(0.0f,0.0f,0.0f);
+	observer->SetPosition(position);
 	observer->SetVector(float3(0.0f,0.0f,-1.0f));
 	observer->SetLength(10.0f);
 	observer->SetHeight(5.0f);
@@ -92,8 +93,12 @@ int main(int argc,char* argv)
 		field_icon->SetFrontVector(float3(0.0f,0.0f,-1.0f));
 		field_icon->Update();
 
+		if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_SPACE))
+		{
+			field->SetType(field_icon->GetPosition(),2);
+		}
+
 		field->SelectBlock(field_icon->GetPosition());
-		field->GetType(field_icon->GetPosition());
 
 		graphic_device->BeginRendering();
 
@@ -116,7 +121,7 @@ int main(int argc,char* argv)
 		auto object = field->GetObject();
 
 		auto view_matrix = observer->GetViewMatrix();
-		auto i_view_matrix = utility::math::InverseT(view_matrix);
+		auto i_view_matrix = utility::math::InverseB(view_matrix);
 		auto world_matrix = object->GetMatrix();
 
 		gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,sizeof(float4x4));

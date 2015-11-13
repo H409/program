@@ -535,9 +535,13 @@ float4x4 Transpose(const float4x4 & in_matrix)
 //=============================================================================
 // inverse transpose
 //=============================================================================
-float4x4 InverseT(const float4x4& in_matrix)
+float4x4 InverseB(const float4x4& in_matrix)
 {
 	auto matrix = Transpose(in_matrix);
+
+	matrix._14 = 0.0f;
+	matrix._24 = 0.0f;
+	matrix._34 = 0.0f;
 
 	matrix._41 = 0.0f;
 	matrix._42 = 0.0f;

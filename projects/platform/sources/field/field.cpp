@@ -35,7 +35,16 @@ Field::Field(void)
 	width_count_ = 30;
 	height_count_ = 30;
 	mesh_sprite_3d_ = std::make_shared<mesh::MeshSprite3D>(block_width_,block_height_,width_count_,height_count_);
+	mesh_sprite_3d_->SetTexcoord(4,4);
 	types_.resize(width_count_ * height_count_);
+	for(auto& type : types_)
+	{
+		type = 1;
+	}
+
+	mesh_sprite_3d_->SetIndex(types_);
+	mesh_sprite_3d_->Apply();
+
 	mesh_object_ = std::make_shared<MeshObject>(mesh_sprite_3d_);
 	mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/field.png"));
 }
@@ -127,6 +136,8 @@ void Field::SetType(const float3& in_position,const u32& in_type)
 	types_[index] = in_type;
 
 	mesh_sprite_3d_->SetIndex(x_index,y_index,in_type);
+
+	mesh_sprite_3d_->Apply();
 }
 
 //=============================================================================
@@ -149,6 +160,46 @@ u32 Field::GetType(const float3& in_position)const
 	DEBUG_ASSERT(types_.size() > index);
 
 	return types_[index];
+}
+
+//=============================================================================
+// check type
+//=============================================================================
+bool Field::CheckType(const u32& in_x,const u32& in_y,const u32& in_type)
+{
+	if(in_x >= width_count_)
+	{
+		return false;
+	}
+
+	if(in_y >= height_count_)
+	{
+		return false;
+	}
+
+	auto index = in_y * width_count_ + in_x;
+
+	if(types_[index] != in_type)
+	{
+		return false;
+	}
+
+	if(types_[index + 1] != in_type)
+	{
+		return false;
+	}
+
+	if(types_[index + width_count_] != in_type)
+	{
+		return false;
+	}
+
+	if(types_[index + width_count_ + 1] != in_type)
+	{
+		return false;
+	}
+
+	return true;
 }
 
 //---------------------------------- EOF --------------------------------------
