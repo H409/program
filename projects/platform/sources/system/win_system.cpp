@@ -19,6 +19,7 @@
 
 #include "input_keyboard.h"
 #include "input_mouse.h"
+#include "input_manager.h"
 
 //*****************************************************************************
 // constant definition
@@ -88,6 +89,13 @@ WinSystem::TInputMouse WinSystem::GetMouse(void)
 }
 
 //=============================================================================
+// get input_manager_
+//=============================================================================
+WinSystem::TInputManager WinSystem::GetInputManager(void)
+{
+	return input_manager_;
+}
+//=============================================================================
 // constructor
 //=============================================================================
 WinSystem::WinSystem(void)
@@ -109,6 +117,8 @@ WinSystem::WinSystem(void)
 	input_mouse_ = std::make_shared<InputMouse>();
 
 	input_mouse_->Init(NULL, hwnd_);
+
+	input_manager_ = std::make_shared<InputManager>();
 }
 
 //=============================================================================

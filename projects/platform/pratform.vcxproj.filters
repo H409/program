@@ -130,6 +130,9 @@
     <ClCompile Include="sources\scene\tutorial\tutorial.cpp">
       <Filter>sources\scene</Filter>
     </ClCompile>
+    <ClCompile Include="sources\system\input_manager.cpp">
+      <Filter>sources\system</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sources\main.h">
@@ -233,6 +236,9 @@
     </ClInclude>
     <ClInclude Include="sources\scene\tutorial\tutorial.h">
       <Filter>sources\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\system\input_manager.h">
+      <Filter>sources\system</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

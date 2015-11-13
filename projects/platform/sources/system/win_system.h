@@ -34,6 +34,7 @@ class WinWindow;
 
 class InputKeyboard;
 class InputMouse;
+class InputManager;
 
 
 //*****************************************************************************
@@ -48,6 +49,7 @@ public:
 	using TCallbacks = std::vector<TCallback>;
 	using TInputKeyboard = std::shared_ptr<InputKeyboard>;
 	using TInputMouse = std::shared_ptr<InputMouse>;
+	using TInputManager = std::shared_ptr<InputManager>;
 	
 	enum class EVENT
 	{
@@ -67,6 +69,7 @@ public:
 	//Inputclass
 	TInputKeyboard GetKeyboard(void);
 	TInputMouse GetMouse(void);
+	TInputManager GetInputManager(void);
 
 protected:
 	// constructor
@@ -83,6 +86,7 @@ private:
 	std::unordered_map<EVENT,TCallbacks> callbacks_;
 	TInputKeyboard input_keyboard_;
 	TInputMouse input_mouse_;
+	TInputManager input_manager_;
 
 	void Stop_(void);
 };

@@ -45,6 +45,7 @@
     <ClCompile Include="sources\scene\tutorial\tutorial.cpp" />
     <ClCompile Include="sources\system\input.cpp" />
     <ClCompile Include="sources\system\input_keyboard.cpp" />
+    <ClCompile Include="sources\system\input_manager.cpp" />
     <ClCompile Include="sources\system\input_mouse.cpp" />
     <ClCompile Include="sources\system\win_system.cpp" />
     <ClCompile Include="sources\windows\win_main.cpp" />
@@ -82,6 +83,7 @@
     <ClInclude Include="sources\scene\tutorial\tutorial.h" />
     <ClInclude Include="sources\system\input.h" />
     <ClInclude Include="sources\system\input_keyboard.h" />
+    <ClInclude Include="sources\system\input_manager.h" />
     <ClInclude Include="sources\system\input_mouse.h" />
     <ClInclude Include="sources\system\win_system.h" />
   </ItemGroup>
