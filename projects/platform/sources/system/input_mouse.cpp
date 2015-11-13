@@ -6,6 +6,18 @@ InputMouse::InputMouse(void)
 
 InputMouse::~InputMouse(void)
 {
+	if (m_pDIDevice != NULL)
+	{
+		m_pDIDevice->Unacquire();
+		m_pDIDevice->Release();
+		m_pDIDevice = NULL;
+	}
+
+	if (m_pDInput != NULL)
+	{
+		m_pDInput->Release();
+		m_pDInput = NULL;
+	}
 }
 
 void InputMouse::Init(HINSTANCE hInstance, HWND hWnd)
@@ -45,18 +57,7 @@ void InputMouse::Init(HINSTANCE hInstance, HWND hWnd)
 
 void InputMouse::Uninit(void)
 {
-	if (m_pDIDevice != NULL)
-	{
-		m_pDIDevice->Release();
-		m_pDIDevice->Unacquire();
-		m_pDIDevice = NULL;
-	}
-
-	if (m_pDInput != NULL)
-	{
-		m_pDInput->Release();
-		m_pDInput = NULL;
-	}
+	
 }
 
 void InputMouse::Update(void)
@@ -65,9 +66,10 @@ void InputMouse::Update(void)
 
 	//1フレーム前のマウスポジション、キーステート保存
 	m_Prev_Mousepos = m_Mousepos;
-	for (int nCntkey = 0; nCntkey < 3; nCntkey++)
+	for (int nCntkey = 0; nCntkey < (u32)MOUSE_KEY::MAX; nCntkey++)
 	{
 		m_aPrevMouseKeyState[nCntkey] = m_aMouseKeyState[nCntkey];
+
 	}
 
 	//マウスのポジション取得
@@ -78,10 +80,19 @@ void InputMouse::Update(void)
 	if (FAILED(m_pDIDevice->GetDeviceState(sizeof(DIMOUSESTATE2), &MouseState)))
 	{
 		m_pDIDevice->Acquire();
+
+		//配列初期化
+		for (int nCnt = 0; nCnt <(u32)MOUSE_KEY::MAX; nCnt++)
+		{
+			m_aMouseKeyTrigger[nCnt] = 0;
+			m_aMouseKeyRelease[nCnt] = 0;
+			m_aMouseKeyState[nCnt] = 0;
+			m_aPrevMouseKeyState[nCnt] = 0;
+		}
 	}
 	else
 	{
-		for (int nCntkey = 0; nCntkey < 3; nCntkey++)
+		for (int nCntkey = 0; nCntkey < (u32)MOUSE_KEY::MAX; nCntkey++)
 		{
 			//トリガー情報の生成
 			m_aMouseKeyTrigger[nCntkey] = (MouseState.rgbButtons[nCntkey]^m_aMouseKeyState[nCntkey])&MouseState.rgbButtons[nCntkey];
@@ -94,14 +105,14 @@ void InputMouse::Update(void)
 	}
 }
 
-D3DXVECTOR2 InputMouse::GetPosition(void)
+const float2& InputMouse::GetPosition(void)const
 {
-	return D3DXVECTOR2((float)m_Mousepos.x, (float)m_Mousepos.y);
+	return float2((float)m_Mousepos.x, (float)m_Mousepos.y);
 }
 
-D3DXVECTOR2 InputMouse::GetPrevPosition(void)
+const float2& InputMouse::GetPrevPosition(void)const
 {
-	return D3DXVECTOR2((float)m_Prev_Mousepos.x, (float)m_Prev_Mousepos.y);
+	return float2((float)m_Prev_Mousepos.x, (float)m_Prev_Mousepos.y);
 }
 
 bool InputMouse::GetPress(MOUSE_KEY nKey)const
@@ -150,17 +161,17 @@ bool InputMouse::GetRelease(MOUSE_KEY nKey)const
 // マウスドラッグアクションの加速度取得
 //ドラッグをしていない場合は D3DXVECTOR2(0.0f,0.0f)を返す
 //*****************************************************************************
-D3DXVECTOR2 InputMouse::GetDrag(MOUSE_KEY nKey)
+const float2& InputMouse::GetDrag(MOUSE_KEY nKey)const
 {
 	//前フレームから引き続きマウスクリックし続けている場合
 	if (m_aPrevMouseKeyState[(int)nKey] && m_aMouseKeyState[(int)nKey])
 	{
 		//前フレームと現在フレームのマウスカーソルポジションの差分を返す
-		return D3DXVECTOR2((float)(m_Mousepos.x - m_Prev_Mousepos.x), (float)(m_Mousepos.y - m_Prev_Mousepos.y));
+		return float2((float)(m_Mousepos.x - m_Prev_Mousepos.x), (float)(m_Mousepos.y - m_Prev_Mousepos.y));
 	}
 	else
 	{
 		//そうでない場合は移動していないので0を返す。
-		return D3DXVECTOR2(0.0f, 0.0f);
+		return float2(0.0f, 0.0f);
 	}
 }

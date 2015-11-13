@@ -116,8 +116,8 @@ int main(int argc,char* argv)
 		float3 up = float3(0.0f,1.0f,0.0f);
 
 		//eyepotionsettings
-		eye_pos_rot.y += p_mouse->GetDrag(MOUSE_KEY::RIGHT).x;
-		eye_pos_rot.x += p_mouse->GetDrag(MOUSE_KEY::RIGHT).y;
+		eye_pos_rot.y += p_mouse->GetDrag(InputMouse::MOUSE_KEY::RIGHT)._x;
+		eye_pos_rot.x += p_mouse->GetDrag(InputMouse::MOUSE_KEY::RIGHT)._y;
 		eye._x = 0.0f - sinf(eye_pos_rot.y) * -5.0f;
 		eye._y = 0.0f - sinf(eye_pos_rot.x) * -5.0f;
 		eye._z = 0.0f - cosf(eye_pos_rot.y) * -5.0f;

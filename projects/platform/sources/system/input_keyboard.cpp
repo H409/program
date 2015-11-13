@@ -25,10 +25,23 @@ InputKeyboard::InputKeyboard(void)
 {
 }
 //=============================================================================
-// キーボードのコンストラクタ
+// キーボードのデストラクタ
 //=============================================================================
 InputKeyboard::~InputKeyboard(void)
 {
+	// DirectInputオブジェクトの開放
+	if (m_pDInput != NULL)
+	{
+		m_pDInput->Release();
+		m_pDInput = NULL;
+	}
+
+	// デバイスオブジェクトの開放
+	if (m_pDIDevice != NULL)
+	{
+		m_pDIDevice->Release();
+		m_pDIDevice = NULL;
+	}
 }
 //=============================================================================
 // キーボードのInit
@@ -52,11 +65,12 @@ void InputKeyboard::Init(HINSTANCE hInstance, HWND hWnd)
 		// キーボードへのアクセス権を獲得(入力制御開始)
 		m_pDIDevice->Acquire(); //キーボードへのアクセス権を取得
 
-		for (int nCntkey = 0; nCntkey < 256; nCntkey++)
+		for (int nCntkey = 0; nCntkey < KEYBOARD_MAX; nCntkey++)
 		{
 			m_aKeyTrigger[nCntkey] = 0;
 			m_aKeyRelease[nCntkey] = 0;
 			m_aKeyState[nCntkey] = 0;
+			m_aKeyRepeat[nCntkey] = 0;
 		}
 	}
 }
@@ -66,14 +80,20 @@ void InputKeyboard::Init(HINSTANCE hInstance, HWND hWnd)
 void InputKeyboard::Update(void)
 {
 	BYTE aKeyState[256];
-	KeyCount[256];
 	if (FAILED(m_pDIDevice->GetDeviceState(sizeof(aKeyState), &aKeyState[0])))
 	{
 		m_pDIDevice->Acquire();
+		//初期化を入れる
+		for (int nCntkey = 0; nCntkey < KEYBOARD_MAX; nCntkey++)
+		{
+			m_aKeyTrigger[nCntkey] = 0;
+			m_aKeyRelease[nCntkey] = 0;
+			m_aKeyState[nCntkey] = 0;
+		}
 	}
 	else
 	{
-		for (int nCntkey = 0; nCntkey < 256; nCntkey++)
+		for (int nCntkey = 0; nCntkey < KEYBOARD_MAX; nCntkey++)
 		{
 			//トリガー情報の作成
 			m_aKeyTrigger[nCntkey] = (aKeyState[nCntkey] ^ m_aKeyState[nCntkey])&aKeyState[nCntkey];
@@ -82,22 +102,15 @@ void InputKeyboard::Update(void)
 			//プレス情報の作成
 			m_aKeyState[nCntkey] = aKeyState[nCntkey];
 
+			//リリース情報作成
 			if (m_aKeyState[nCntkey] != 0)
 			{
-				KeyCount[nCntkey]++;
-				if ((KeyCount[nCntkey] == 1) || (KeyCount[nCntkey]>10))
-				{
-					m_aKeyboardRepeat[nCntkey] = aKeyState[nCntkey];
-				}
-				else
-				{
-					m_aKeyboardRepeat[nCntkey] = 0;
-				}
+				m_KeyCount[nCntkey]++;
 			}
 			else if (m_aKeyState[nCntkey] == 0)
 			{
-				m_aKeyboardRepeat[nCntkey] = 0;
-				KeyCount[nCntkey] = 0;
+				m_aKeyRepeat[nCntkey] = 0;
+				m_KeyCount[nCntkey] = 0;
 			}
 		}
 	}
@@ -107,19 +120,7 @@ void InputKeyboard::Update(void)
 //=============================================================================
 void InputKeyboard::Uninit(void)
 {
-	// DirectInputオブジェクトの開放
-	if (m_pDInput != NULL)
-	{
-		m_pDInput->Release();
-		m_pDInput = NULL;
-	}
 
-	// デバイスオブジェクトの開放
-	if (m_pDIDevice != NULL)
-	{
-		m_pDIDevice->Release();
-		m_pDIDevice = NULL;
-	}
 }
 //=============================================================================
 // キーボードのプレス状態を取得
@@ -127,7 +128,7 @@ void InputKeyboard::Uninit(void)
 bool InputKeyboard::GetPress(int nKey) const
 {
 
-	if (m_aKeyState[nKey] & 0x080)
+	if (m_aKeyState[nKey] & KEY_BIT)
 	{
 		return true;
 	}
@@ -143,7 +144,7 @@ bool InputKeyboard::GetPress(int nKey) const
 //=============================================================================
 bool InputKeyboard::GetTrigger(int nKey)const
 {
-	if (m_aKeyTrigger[nKey] & 0x080)
+	if (m_aKeyTrigger[nKey] & KEY_BIT)
 	{
 		return true;
 	}
@@ -154,11 +155,21 @@ bool InputKeyboard::GetTrigger(int nKey)const
 }
 
 //=============================================================================
-// キーボードのリピート状態を取得
+// //キーボードのリピートを取得する、nKeyにキーコード、
+// //countにリピート判定するための最低フレーム数を入れる
 //=============================================================================
-bool InputKeyboard::GetRepeat(int nKey)const
+bool InputKeyboard::GetRepeat(int nKey, int count)const
 {
-	return m_aKeyboardRepeat[nKey];
+
+	if (m_KeyCount[nKey] >= count)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+	/*return m_aKeyboardRepeat[nKey];*/
 }
 
 //=============================================================================
@@ -166,7 +177,7 @@ bool InputKeyboard::GetRepeat(int nKey)const
 //=============================================================================
 bool InputKeyboard::GetRelease(int nKey)const
 {
-	if (m_aKeyRelease[nKey] & 0x080)
+	if (m_aKeyRelease[nKey] & KEY_BIT)
 	{
 		return true;
 	}

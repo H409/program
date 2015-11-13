@@ -17,21 +17,24 @@
 //=============================================================================
 // グローバル変数
 //=============================================================================
-LPDIRECTINPUT8 Input::m_pDInput;
+LPDIRECTINPUT8 Input::m_pDInput = nullptr;
 //=============================================================================
 // キーボードのコンストラクタ
 //=============================================================================
 Input::Input(void)
 {
-	m_pDInput = NULL;
-	m_pDIDevice = NULL;
+	m_pDIDevice = nullptr;
 }
 //=============================================================================
 // キーボードのデストラクタ
 //=============================================================================
 Input::~Input(void)
 {
-
+	if (m_pDInput != NULL)
+	{
+		m_pDInput->Release();
+		m_pDInput = NULL;
+	}
 }
 //=============================================================================
 // キーボードの初期化
@@ -39,9 +42,9 @@ Input::~Input(void)
 void Input::Init(HINSTANCE hInstance, HWND hWnd)
 {
 	// DirectInputオブジェクトの作成
-	if (m_pDInput == NULL)
+	if (m_pDInput == nullptr)
 	{
-		DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void **)&m_pDInput, NULL);
+		DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void **)&m_pDInput, nullptr);
 	}
 
 }
