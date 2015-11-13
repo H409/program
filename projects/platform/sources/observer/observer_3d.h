@@ -30,6 +30,10 @@ public:
 	// 
 	virtual ~Observer3D(void) = default;
 
+	float3 GetEye( void ){ return eye_ ; }
+	float3 GetLookAt( void ){ return look_at_ ; }
+	float3 GetUp( void ){ return up_ ; }
+
 protected:
 	float3 eye_;
 	float3 look_at_;

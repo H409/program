@@ -34,10 +34,13 @@ public:
 	void Update(void);
 
 	// set position
-	void SetPosition(const float3& in_position);
+	void SetTargetPosition(const float3& in_position);
 
 	// set vector
-	void SetVector(const float3& in_vector);
+	void SetTargetVector(const float3& in_vector);
+
+	//
+	void SetTargetPreviewPosition( const float3& in_preview_position );
 
 	// set length
 	void SetLength(const f32& in_length);
@@ -45,13 +48,20 @@ public:
 	// set height
 	void SetHeight(const f32& in_height);
 
+	//
+	float3 GetPosition( void ){ return target_position_ ; }
+	float3 GetVector( void ){ return target_vector_ ; }
+	f32 GetLength( void ){ return length_ ; }
+	f32 GetHeight( void ){ return height_ ; }
+	float3 GetPreviewPosition( void ){ return target_preview_position_ ; }
+
 private:
-	float3 position_;
-	float3 vector_;
+	float3 target_position_;
+	float3 target_vector_;
+	float3 target_preview_position_;
 	f32 length_;
 	f32 height_;
-	float3 preview_position_;
-
+	float3 rotation_ ;
 };
 #endif // _FOLLOWER_OBSERVER_H_
 

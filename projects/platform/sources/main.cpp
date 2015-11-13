@@ -31,6 +31,8 @@
 #include "system/input_mouse.h"
 #include "system/input_keyboard.h"
 
+#include "player/player.h"
+
 //=============================================================================
 // エントリーポイント
 //=============================================================================
@@ -53,8 +55,8 @@ int main(int argc,char* argv)
 	auto pixel_shader = graphic_device->LoadPixelShader("resources/shader/basic.psc");
 
 	auto observer = std::make_shared<FollowerObserver>(utility::math::ToRadian(60.0f),800.0f,600.0f);
-	observer->SetPosition(float3(0.0f,0.0f,2.0f));
-	observer->SetVector(float3(1.0f,0.0f,1.0f));
+	observer->SetTargetPosition(float3(0.0f,0.0f,2.0f));
+	observer->SetTargetVector(float3(1.0f,0.0f,1.0f));
 	observer->SetLength(5.0f);
 	observer->SetHeight(5.0f);
 	observer->Update();
@@ -81,9 +83,19 @@ int main(int argc,char* argv)
 	auto d_vs = graphic_device->LoadVertexShader("resources/shader/deferred.vsc");
 	auto d_ps = graphic_device->LoadPixelShader("resources/shader/deferred.psc");
 
+
+	auto player = std::make_shared<Player>( graphic_device->GetDevice() ); 
+	player->Init( float3( 0 , 0 , 0 ) );
+
 	while(is_loop)
 	{
 		auto start_time = std::chrono::system_clock::now();
+
+		GET_INPUT_KEYBOARD()->Update();
+
+		observer->SetTargetPosition( player->GetPosition() );
+		observer->SetTargetVector( float3( sinf( player->GetRotation()._y ) , 0 , cosf( player->GetRotation()._y ) ) );
+		observer->Update();
 
 		graphic_device->BeginRendering();
 
@@ -114,6 +126,15 @@ int main(int argc,char* argv)
 
 		object->Draw();
 
+
+		player->SetCameraVector( observer->GetLookAt() -  observer->GetEye() );
+		player->GetKimPointer()->SetView( ( D3DXMATRIX* )&observer->GetViewMatrix() );
+		player->GetKimPointer()->SetProjection( ( D3DXMATRIX* )&observer->GetProjectionMatrix() );
+		player->Update();
+		player->Draw();
+
+
+
 		graphic_device->SetRenderTarget(0,default_texture);
 		graphic_device->SetRenderTarget(1,nullptr);
 		graphic_device->SetRenderTarget(2,nullptr);
@@ -141,6 +162,7 @@ int main(int argc,char* argv)
 		sprite_object->Draw();
 
 		graphic_device->EndRendering();
+
 
 		std::this_thread::sleep_until(start_time + std::chrono::milliseconds(1000 / 60));
 	}

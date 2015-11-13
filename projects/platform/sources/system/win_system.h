@@ -89,6 +89,7 @@ private:
 
 #define GET_GRAPHIC_DEVICE() WinSystem::GetInstance()->GetGraphicDevice()
 #define GET_DIRECTX9_DEVICE() WinSystem::GetInstance()->GetDirectx9Device()
+#define GET_INPUT_KEYBOARD() WinSystem::GetInstance()->GetKeyboard()
 
 #endif // _SYSTEM_H_
 
