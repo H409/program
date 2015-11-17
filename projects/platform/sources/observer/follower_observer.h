@@ -39,8 +39,8 @@ public:
 	// set vector
 	void SetTargetVector(const float3& in_vector);
 
-	//
-	void SetTargetPreviewPosition( const float3& in_preview_position );
+	// set target length
+	void SetTargetLength(const f32& in_length);
 
 	// set length
 	void SetLength(const f32& in_length);
@@ -54,12 +54,11 @@ public:
 	float3 GetFrontVector(void)const { auto vector = look_at_ - eye_; return vector; }
 	f32 GetLength( void ){ return length_ ; }
 	f32 GetHeight( void ){ return height_ ; }
-	float3 GetPreviewPosition( void ){ return target_preview_position_ ; }
 
 private:
 	float3 target_position_;
 	float3 target_vector_;
-	float3 target_preview_position_;
+	f32 target_length_;
 	f32 length_;
 	f32 height_;
 	float3 rotation_ ;
