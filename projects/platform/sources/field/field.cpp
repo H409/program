@@ -57,6 +57,37 @@ Field::~Field(void)
 }
 
 //=============================================================================
+// update
+//=============================================================================
+void Field::Update(void)
+{
+	for(u32 i = 0;i < height_count_;++i)
+	{
+		for(u32 j = 0;j < width_count_;++j)
+		{
+			if(CheckTypeRightBottom(j,i,2))
+			{
+				SetType(j + 0,i + 0,3);
+				SetType(j + 1,i + 0,3);
+				SetType(j + 0,i + 1,3);
+				SetType(j + 1,i + 1,3);
+			}
+		}
+	}
+}
+
+void Field::Reset(void)
+{
+	for(auto& type : types_)
+	{
+		type = 1;
+	}
+
+	mesh_sprite_3d_->SetIndex(types_);
+	mesh_sprite_3d_->Apply();
+}
+
+//=============================================================================
 // get object
 //=============================================================================
 Field::TMeshObject Field::GetObject(void) const
@@ -115,6 +146,52 @@ void Field::SelectBlock(const float3& in_position)
 }
 
 //=============================================================================
+// get positions
+//=============================================================================
+std::vector<float3> Field::GetPositionsF(const u32& in_type)
+{
+	std::vector<float3> positions;
+
+	for(u32 i = 0;i < height_count_;++i)
+	{
+		for(u32 j = 0;j < width_count_;++j)
+		{
+			u32 index = i * width_count_ + j;
+			if(types_[index] == in_type)
+			{
+				float3 position = float3(j * block_width_ + block_width_ * 0.5f,0.0f,i * block_height_ + block_height_ * 0.5f);
+				positions.push_back(position);
+			}
+		}
+	}
+
+	return positions;
+}
+
+//=============================================================================
+// get positions
+//=============================================================================
+std::vector<float3> Field::GetPositionsT(const u32& in_type)
+{
+	std::vector<float3> positions;
+
+	for(u32 i = 0;i < height_count_;++i)
+	{
+		for(u32 j = 0;j < width_count_;++j)
+		{
+			if(CheckTypeRightBottom(j,i,in_type))
+			{
+				float3 position = float3((j + 1) * block_width_,0.0f,(i + 1) * block_height_);
+				positions.push_back(position);
+				++j;
+			}
+		}
+	}
+
+	return positions;
+}
+
+//=============================================================================
 // set type
 //=============================================================================
 void Field::SetType(const float3& in_position,const u32& in_type)
@@ -126,16 +203,21 @@ void Field::SetType(const float3& in_position,const u32& in_type)
 
 	float3 position = float3(in_position._x + size_._x * 0.5f,in_position._y,-(in_position._z - size_._y * 0.5f));
 
-	auto x_index = static_cast<u32>(position._x / block_width_);
-	auto y_index = static_cast<u32>(position._z / block_height_);
+	auto x = static_cast<u32>(position._x / block_width_);
+	auto y = static_cast<u32>(position._z / block_height_);
 
-	u32 index = y_index * width_count_ + x_index;
+	SetType(x,y,in_type);
+}
+
+void Field::SetType(const u32& in_x,const u32& in_y,const u32& in_type)
+{
+	u32 index = in_y * width_count_ + in_x;
 
 	DEBUG_ASSERT(types_.size() > index);
 
 	types_[index] = in_type;
 
-	mesh_sprite_3d_->SetIndex(x_index,y_index,in_type);
+	mesh_sprite_3d_->SetIndex(in_x,in_y,in_type);
 
 	mesh_sprite_3d_->Apply();
 }

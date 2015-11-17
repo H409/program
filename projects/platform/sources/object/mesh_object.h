@@ -36,13 +36,13 @@ public:
 	// destructor
 	virtual ~MeshObject(void) = default;
 
-	// draw
-	void Draw(void);
-
 protected:
 
 private:
 	TMesh mesh_;
+
+	// draw
+	void Draw_(void)override;
 };
 
 #endif // _OBJECT_H_

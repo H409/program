@@ -75,6 +75,8 @@ FieldIcon::TMeshObject FieldIcon::GetObject(void) const
 //=============================================================================
 void FieldIcon::SetBasicPosition(const float3& in_position)
 {
+	auto vector = in_position - basic_position_;
+	position_ += vector;
 	basic_position_ = in_position;
 }
 
@@ -90,7 +92,7 @@ void FieldIcon::SetFrontVector(const float3& in_front_vector)
 //=============================================================================
 // get position
 //=============================================================================
-const float3 FieldIcon::GetPosition(void) const
+const float3& FieldIcon::GetPosition(void)const
 {
 	return position_;
 }

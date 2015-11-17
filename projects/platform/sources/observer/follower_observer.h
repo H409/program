@@ -51,6 +51,7 @@ public:
 	//
 	float3 GetPosition( void ){ return target_position_ ; }
 	float3 GetVector( void ){ return target_vector_ ; }
+	float3 GetFrontVector(void)const { auto vector = look_at_ - eye_; return vector; }
 	f32 GetLength( void ){ return length_ ; }
 	f32 GetHeight( void ){ return height_ ; }
 	float3 GetPreviewPosition( void ){ return target_preview_position_ ; }

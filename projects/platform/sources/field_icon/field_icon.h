@@ -54,7 +54,7 @@ public:
 	void SetFrontVector(const float3& in_front_vector);
 
 	// get position
-	const float3 GetPosition(void)const;
+	const float3& GetPosition(void)const;
 
 private:
 	float3 position_;

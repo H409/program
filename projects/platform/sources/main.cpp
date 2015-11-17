@@ -104,7 +104,12 @@ int main(int argc,char* argv)
 
 		scene_manager.Update();
 
-		field_icon->SetFrontVector(float3(0.0f,0.0f,-1.0f));
+		if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_R))
+		{
+			field->Reset();
+		}
+		auto front_vector = observer->GetFrontVector();
+		field_icon->SetFrontVector(front_vector);
 		field_icon->SetBasicPosition(player->GetPosition());
 		field_icon->Update();
 
@@ -115,9 +120,15 @@ int main(int argc,char* argv)
 
 		field->SelectBlock(field_icon->GetPosition());
 
+		field->Update();
+
+		auto f_positions = field->GetPositionsF(2);
+		auto t_positions = field->GetPositionsT(3);
+
 		observer->SetTargetPosition( player->GetPosition() );
 		observer->SetTargetVector( float3( sinf( player->GetRotation()._y ) , 0 , cosf( player->GetRotation()._y ) ) );
 		observer->Update();
+		player->Update();
 
 		graphic_device->BeginRendering();
 
@@ -163,7 +174,6 @@ int main(int argc,char* argv)
 		player->SetCameraVector( observer->GetLookAt() -  observer->GetEye() );
 		player->GetKimPointer()->SetView( ( D3DXMATRIX* )&observer->GetViewMatrix() );
 		player->GetKimPointer()->SetProjection( ( D3DXMATRIX* )&observer->GetProjectionMatrix() );
-		player->Update();
 		player->Draw();
 
 

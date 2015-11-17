@@ -35,7 +35,6 @@ class Object
 {
 public:
 	using TAction = std::shared_ptr<action::Action>;
-	using TObject = std::shared_ptr<Object>;
 	using TTexture = std::shared_ptr<graphic::directx9::texture::DX9Texture>;
 
 	// constructor
@@ -48,7 +47,7 @@ public:
 	void Update(void);
 
 	// draw
-	virtual void Draw(void) {}
+	void Draw(void);
 
 	// run action
 	void RunAction(TAction in_action);
@@ -129,6 +128,7 @@ protected:
 	u32 priority_;
 	std::vector<TTexture> textures_;
 
+	virtual void Draw_(void) {};
 };
 
 #endif // _OBJECT_H_

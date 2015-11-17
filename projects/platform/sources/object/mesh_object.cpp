@@ -26,7 +26,7 @@ MeshObject::MeshObject(TMesh in_mesh)
 //=============================================================================
 // draw
 //=============================================================================
-void MeshObject::Draw(void)
+void MeshObject::Draw_(void)
 {
 	auto directx9 = GET_DIRECTX9_DEVICE();
 

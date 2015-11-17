@@ -29,7 +29,7 @@ class MeshObject;
 //*****************************************************************************
 // class declaration
 //*****************************************************************************
-class Field// : public MeshObject
+class Field
 {
 public:
 	using TMeshSprite3D = std::shared_ptr<mesh::MeshSprite3D>;
@@ -41,6 +41,12 @@ public:
 	// destructor
 	virtual ~Field(void);
 
+	// update
+	void Update(void);
+
+	// reset
+	void Reset(void);
+
 	// get object
 	TMeshObject GetObject(void)const;
 
@@ -50,8 +56,13 @@ public:
 	// select block
 	void SelectBlock(const float3& in_position);
 
+	// get positions
+	std::vector<float3> GetPositionsF(const u32& in_type);
+	std::vector<float3> GetPositionsT(const u32& in_type);
+
 	// set type
 	void SetType(const float3& in_position,const u32& in_type);
+	void SetType(const u32& in_x,const u32& in_y,const u32& in_type);
 
 	// get type
 	u32 GetType(const float3& in_position)const;
