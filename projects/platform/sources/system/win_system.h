@@ -95,6 +95,7 @@ private:
 #define GET_DIRECTX9_DEVICE() WinSystem::GetInstance()->GetDirectx9Device()
 #define GET_INPUT_KEYBOARD() WinSystem::GetInstance()->GetKeyboard()
 #define GET_INPUT_MOUSE() WinSystem::GetInstance()->GetMouse()
+#define GET_INPUT_MANAGER() WinSystem::GetInstance()->GetInputManager();
 
 #endif // _SYSTEM_H_
 

@@ -31,6 +31,7 @@
 #include "object/object.h"
 #include "system/input_mouse.h"
 #include "system/input_keyboard.h"
+#include "system/input_manager.h"
 
 #include "scene/base/scene_manager.h"
 
@@ -63,7 +64,6 @@ int main(int argc,char* argv)
 
 	directx9->CreateVertexDeclaration(vertex_elements,&vertex_declaration);
 
-
 	auto texture = graphic_device->LoadTexture("resources/texture/test.png");
 	auto vertex_shader = graphic_device->LoadVertexShader("resources/shader/basic.vsc");
 	auto pixel_shader = graphic_device->LoadPixelShader("resources/shader/basic.psc");
@@ -93,9 +93,9 @@ int main(int argc,char* argv)
 
 		//入力クラスの取得と更新
 		auto p_mouse = GET_INPUT_MOUSE();
-		auto p_keyboard = GET_INPUT_KEYBOARD();
 		p_mouse->Update();
-		p_keyboard->Update();
+		auto p_input_manager = GET_INPUT_MANAGER();
+		p_input_manager->Update();
 
 		//シーンの更新
 		SceneManager::Instance().Update();

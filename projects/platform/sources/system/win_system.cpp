@@ -119,6 +119,8 @@ WinSystem::WinSystem(void)
 	input_mouse_->Init(NULL, hwnd_);
 
 	input_manager_ = std::make_shared<InputManager>();
+
+	input_manager_->Initialize(hwnd_);
 }
 
 //=============================================================================
@@ -126,6 +128,7 @@ WinSystem::WinSystem(void)
 //=============================================================================
 WinSystem::~WinSystem(void)
 {
+	input_manager_->Finalize();
 }
 
 //=============================================================================
