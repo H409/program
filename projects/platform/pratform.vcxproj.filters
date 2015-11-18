@@ -56,6 +56,9 @@
     <Filter Include="sources\field">
       <UniqueIdentifier>{2254b91b-abee-42ee-b3f5-dbeeeaae482c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\bullet">
+      <UniqueIdentifier>{eb220bde-4348-4545-88ab-c979161ddb50}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\windows\win_main.cpp">
@@ -165,6 +168,9 @@
     </ClCompile>
     <ClCompile Include="sources\field\field.cpp">
       <Filter>sources\field</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\bullet\bullet.cpp">
+      <Filter>sources\bullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -278,6 +284,9 @@
     </ClInclude>
     <ClInclude Include="sources\field\field.h">
       <Filter>sources\field</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\bullet\bullet.h">
+      <Filter>sources\bullet</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

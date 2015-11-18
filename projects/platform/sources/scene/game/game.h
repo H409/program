@@ -21,7 +21,21 @@
 //*****************************************************************************
 // forward declaration
 //*****************************************************************************
+class Bullet;
+class Field;
+class FieldIcon;
+class Player;
+class Observer2D;
+class FollowerObserver;
+class MeshObject;
 
+namespace graphic {
+namespace directx9 {
+namespace texture {
+class DX9Texture;
+} // namespace texture
+} // namespace directx9
+} // namespace graphic
 
 //*****************************************************************************
 // class definition
@@ -47,7 +61,18 @@ public:
 	// ï`âÊèàóùÇçsÇ§ÅB
 	virtual void Draw(void) override;
 private:
+	static const u32 PLAYER_MAX = 1;
 
+	std::shared_ptr<Player> players_[PLAYER_MAX];
+	std::shared_ptr<FollowerObserver> observers_[PLAYER_MAX];
+	std::shared_ptr<Field> field_;
+	std::shared_ptr<FieldIcon> field_icons_[PLAYER_MAX];
+	std::vector<std::shared_ptr<Bullet>> bullets_;
+	std::shared_ptr<graphic::directx9::texture::DX9Texture> color_textures_[PLAYER_MAX];
+	std::shared_ptr<graphic::directx9::texture::DX9Texture> normal_textures_[PLAYER_MAX];
+	std::shared_ptr<graphic::directx9::texture::DX9Texture> position_textures_[PLAYER_MAX];
+	std::shared_ptr<MeshObject> sprite_objects_[PLAYER_MAX];
+	std::shared_ptr<Observer2D> observer_2d_;
 };
 
 #endif

@@ -39,8 +39,6 @@ public:
 	using TGame = std::shared_ptr<Game>;
 	using TResult = std::shared_ptr<Result>;
 
-	
-
 	//インスタンス
 	static SceneManager& Instance(void)
 	{
@@ -106,8 +104,6 @@ public:
 	~SceneManager();
 
 protected:
-
-	
 
 private:
 

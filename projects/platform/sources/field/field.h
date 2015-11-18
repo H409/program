@@ -56,6 +56,9 @@ public:
 	// select block
 	void SelectBlock(const float3& in_position);
 
+	// get block position
+	float3 GetBlockPosition(const float3& in_position);
+
 	// get positions
 	std::vector<float3> GetPositionsF(const u32& in_type);
 	std::vector<float3> GetPositionsT(const u32& in_type);

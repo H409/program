@@ -25,6 +25,7 @@
     <ClCompile Include="sources\action\rotate_by.cpp" />
     <ClCompile Include="sources\action\sequence.cpp" />
     <ClCompile Include="sources\action\spawn.cpp" />
+    <ClCompile Include="sources\bullet\bullet.cpp" />
     <ClCompile Include="sources\fbx\kim.cpp" />
     <ClCompile Include="sources\field\field.cpp" />
     <ClCompile Include="sources\field_icon\field_icon.cpp" />
@@ -63,6 +64,7 @@
     <ClInclude Include="sources\action\rotate_by.h" />
     <ClInclude Include="sources\action\sequence.h" />
     <ClInclude Include="sources\action\spawn.h" />
+    <ClInclude Include="sources\bullet\bullet.h" />
     <ClInclude Include="sources\fbx\kim.h" />
     <ClInclude Include="sources\field\field.h" />
     <ClInclude Include="sources\field_icon\field_icon.h" />

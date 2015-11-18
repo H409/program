@@ -15,6 +15,8 @@
 #include "system/input_mouse.h"
 #include "../base/scene_manager.h"
 #include "../title/title.h"
+#include "../game/game.h"
+
 //=============================================================================
 // constructor
 //=============================================================================
@@ -54,7 +56,7 @@ void Tutorial::Update()
 	auto p_mouse = GET_INPUT_MOUSE();
 	if (p_mouse->GetTrigger(InputMouse::MOUSE_KEY::LEFT))
 	{
-		SceneManager::Instance().set_p_next_scene(SceneManager::Instance().get_title());
+		SceneManager::Instance().set_p_next_scene(SceneManager::Instance().get_game());
 		SceneManager::Instance().set_scene_change_flag(true);
 	}
 }

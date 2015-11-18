@@ -26,14 +26,14 @@ const float4 Field::SELECT_COLOR = float4(0.0f,0.0f,1.0f,1.0f);
 //=============================================================================
 Field::Field(void)
 {
-	size_._x = 30.0f * 1.0f;
-	size_._y = 30.0f * 1.0f;
 	select_index_x_ = 0;
 	select_index_y_ = 0;
 	block_width_ = 1.0f;
 	block_height_ = 1.0f;
-	width_count_ = 30;
-	height_count_ = 30;
+	width_count_ = 60;
+	height_count_ = 60;
+	size_._x = width_count_ * block_width_;
+	size_._y = height_count_ * block_height_;
 	mesh_sprite_3d_ = std::make_shared<mesh::MeshSprite3D>(block_width_,block_height_,width_count_,height_count_);
 	mesh_sprite_3d_->SetTexcoord(4,4);
 	types_.resize(width_count_ * height_count_);
@@ -145,12 +145,28 @@ void Field::SelectBlock(const float3& in_position)
 	mesh_sprite_3d_->SetColor(select_index_x_,select_index_y_,SELECT_COLOR);
 }
 
+float3 Field::GetBlockPosition(const float3& in_position)
+{
+	float3 position = float3(0.0f,0.0f,0.0f);
+	float3 offset = float3(-block_width_ * width_count_ * 0.5f,0.0f,-block_height_ * height_count_ * 0.5f);
+
+	auto x = (u32)((in_position._x - offset._x) / block_width_);
+	auto y = (u32)((in_position._z - offset._z) / block_height_);
+
+	position._x = x * block_width_ + block_width_ * 0.5f + offset._x;
+	position._y = 0.0f;
+	position._z = y * block_height_ + block_height_ * 0.5f + offset._z;
+
+	return position;
+}
+
 //=============================================================================
 // get positions
 //=============================================================================
 std::vector<float3> Field::GetPositionsF(const u32& in_type)
 {
 	std::vector<float3> positions;
+	float3 offset = float3(-block_width_ * width_count_ * 0.5f,0.0f,-block_height_ * height_count_ * 0.5f);
 
 	for(u32 i = 0;i < height_count_;++i)
 	{
@@ -159,7 +175,7 @@ std::vector<float3> Field::GetPositionsF(const u32& in_type)
 			u32 index = i * width_count_ + j;
 			if(types_[index] == in_type)
 			{
-				float3 position = float3(j * block_width_ + block_width_ * 0.5f,0.0f,i * block_height_ + block_height_ * 0.5f);
+				float3 position = float3(offset._x + j * block_width_ + block_width_ * 0.5f,0.0f,offset._z + i * block_height_ + block_height_ * 0.5f);
 				positions.push_back(position);
 			}
 		}
