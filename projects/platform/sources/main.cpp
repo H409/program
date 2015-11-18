@@ -13,8 +13,7 @@
 #include "system/win_system.h"
 #include "dx9_device.h"
 #include "math/math.h"
-#include "system/input_keyboard.h"
-#include "system/input_mouse.h"
+#include "system/input_manager.h"
 #include "scene/base/scene_manager.h"
 
 //=============================================================================
@@ -37,8 +36,7 @@ int main(int argc,char* argv)
 	{
 		auto start_time = std::chrono::system_clock::now();
 
-		GET_INPUT_KEYBOARD()->Update();
-		GET_INPUT_MOUSE()->Update();
+		GET_INPUT_MANAGER()->Update();
 
 		scene_manager.Update();
 

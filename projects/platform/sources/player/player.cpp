@@ -41,7 +41,7 @@
 Player::Player( LPDIRECT3DDEVICE9 pDevice ) : Object()
 {
 	pDevice_ = pDevice ;
-
+	pKim_ = nullptr;
 	camera_vector_ = float3();
 	move_ = float3();
 	speed_ = float3( 0.05f , 0.05f , 0.05f );
@@ -56,7 +56,7 @@ Player::Player( LPDIRECT3DDEVICE9 pDevice ) : Object()
 //-------------------------------------------------------------------
 Player::~Player( void )
 {
-	pKim_->Release();
+	SafeRelease(pKim_);
 }
 
 //-------------------------------------------------------------------

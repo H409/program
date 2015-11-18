@@ -172,6 +172,12 @@
     <ClCompile Include="sources\bullet\bullet.cpp">
       <Filter>sources\bullet</Filter>
     </ClCompile>
+    <ClCompile Include="sources\system\input_manager.cpp">
+      <Filter>sources\system</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\system\input_joypad.cpp">
+      <Filter>sources\system</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sources\main.h">
@@ -287,6 +293,12 @@
     </ClInclude>
     <ClInclude Include="sources\bullet\bullet.h">
       <Filter>sources\bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\system\input_manager.h">
+      <Filter>sources\system</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\system\input_joypad.h">
+      <Filter>sources\system</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

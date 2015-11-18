@@ -13,6 +13,7 @@
 #include "system/win_system.h"
 #include "dx9_device.h"
 #include "system/input_mouse.h"
+#include "system/input_manager.h"
 #include "../base/scene_manager.h"
 #include "../tutorial/tutorial.h"
 //=============================================================================
@@ -36,7 +37,6 @@ Title::~Title()
 //=============================================================================
 bool Title::Initialize(SceneManager* p_scene_manager)
 {
-
 	return 0;
 }
 //=============================================================================
@@ -52,10 +52,9 @@ void Title::Finalize()
 //=============================================================================
 void Title::Update()
 {
-	auto p_mouse = GET_INPUT_MOUSE();
-	if (p_mouse->GetTrigger(InputMouse::MOUSE_KEY::LEFT))
+	auto p_input_manager = GET_INPUT_MANAGER();
+	if (p_input_manager->GetTrigger(InputManager::Command::A, 0))
 	{
-		
 		SceneManager::Instance().set_p_next_scene(SceneManager::Instance().get_tutorial());
 		SceneManager::Instance().set_scene_change_flag(true);
 	}
