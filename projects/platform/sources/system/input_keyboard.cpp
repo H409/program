@@ -127,7 +127,6 @@ void InputKeyboard::Uninit(void)
 //=============================================================================
 bool InputKeyboard::GetPress(int nKey) const
 {
-
 	if (m_aKeyState[nKey] & KEY_BIT)
 	{
 		return true;
@@ -136,7 +135,6 @@ bool InputKeyboard::GetPress(int nKey) const
 	{
 		return false;
 	}
-	
 }
 
 //=============================================================================
@@ -160,7 +158,6 @@ bool InputKeyboard::GetTrigger(int nKey)const
 //=============================================================================
 bool InputKeyboard::GetRepeat(int nKey, int count)const
 {
-
 	if (m_KeyCount[nKey] >= count)
 	{
 		return true;
