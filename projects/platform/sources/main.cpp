@@ -14,6 +14,8 @@
 #include "dx9_device.h"
 #include "math/math.h"
 #include "system/input_manager.h"
+#include "system/input_keyboard.h"
+#include "system/input_mouse.h"
 #include "scene/base/scene_manager.h"
 
 //=============================================================================
@@ -37,6 +39,8 @@ int main(int argc,char* argv)
 		auto start_time = std::chrono::system_clock::now();
 
 		GET_INPUT_MANAGER()->Update();
+		GET_INPUT_MOUSE()->Update();
+		GET_INPUT_KEYBOARD()->Update();
 
 		scene_manager.Update();
 
@@ -45,7 +49,6 @@ int main(int argc,char* argv)
 		scene_manager.Draw();
 
 		graphic_device->EndRendering();
-
 
 		std::this_thread::sleep_until(start_time + std::chrono::milliseconds(1000 / 60));
 	}

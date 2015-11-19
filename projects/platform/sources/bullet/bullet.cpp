@@ -20,6 +20,7 @@
 //*****************************************************************************
 // constant definition
 //*****************************************************************************
+const f32 Bullet::GRAVITY = 0.05f;
 
 //=============================================================================
 // constructor
@@ -28,7 +29,6 @@ Bullet::Bullet(const float3& in_start_position,const float3& in_end_position,con
 	:position_(in_start_position)
 	,start_position_(in_start_position)
 	,end_position_(in_end_position)
-	,speed_(0.2f)
 	,type_(in_type)
 	,tag_(0)
 	,is_death_(false)
@@ -39,6 +39,15 @@ Bullet::Bullet(const float3& in_start_position,const float3& in_end_position,con
 	mesh_object_->SetPosition(position_);
 	sprite_3d_->SetAnchorPoint(float2(0.5f,0.5f));
 	sprite_3d_->Apply();
+
+	auto vector = end_position_ - start_position_;
+	auto height = vector._y;
+	vector._y = 0.0f;
+	auto length = utility::math::Length(vector);
+	auto t = sqrtf(2 * height / -GRAVITY);
+	auto speed = length / t;
+	vector = utility::math::Normalize(vector);
+	move_ = vector * speed;
 }
 
 //=============================================================================
@@ -55,9 +64,9 @@ void Bullet::Update(void)
 {
 	if(!is_death_)
 	{
-		auto vector = utility::math::Normalize(end_position_ - start_position_);
+		move_._y -= GRAVITY;
+		position_ += move_;
 
-		position_ += vector * speed_;
 		mesh_object_->SetPosition(position_);
 	}
 }

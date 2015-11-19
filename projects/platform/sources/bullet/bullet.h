@@ -72,10 +72,12 @@ public:
 	// get tag
 	const u32& GetTag(void)const;
 private:
+	static const f32 GRAVITY;
+
 	float3 position_;
 	float3 start_position_;
 	float3 end_position_;
-	f32 speed_;
+	float3 move_;
 	TSprite3D sprite_3d_;
 	TMeshObject mesh_object_;
 	TYPE type_;

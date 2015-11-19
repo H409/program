@@ -222,7 +222,7 @@ DX9Device::TTexture DX9Device::LoadTexture(const std::string & in_path)
 //=============================================================================
 // create texture
 //=============================================================================
-DX9Device::TTexture DX9Device::CreateTexture(const u16 & in_width,const u16 & in_height,const D3DFORMAT & in_format)
+DX9Device::TTexture DX9Device::CreateTexture(const u16& in_width,const u16& in_height,const D3DFORMAT& in_format)
 {
 	return std::make_shared<texture::DX9Texture>(in_width,in_height,in_format,direct3ddevice9_);
 }
@@ -239,13 +239,12 @@ void DX9Device::SetRenderTarget(const u32& in_index,TTexture in_texture)
 	}
 
 	direct3ddevice9_->SetRenderTarget(in_index,nullptr);
-
 }
 
 //=============================================================================
 // get render target
 //=============================================================================
-DX9Device::TTexture DX9Device::GetRenderTarget(const u32 & in_index)
+DX9Device::TTexture DX9Device::GetRenderTarget(const u32& in_index)
 {
 	LPDIRECT3DSURFACE9 direct3dsurface9 = nullptr;
 
@@ -257,7 +256,7 @@ DX9Device::TTexture DX9Device::GetRenderTarget(const u32 & in_index)
 //=============================================================================
 // load vertex shader
 //=============================================================================
-DX9Device::TVertexShader DX9Device::LoadVertexShader(const std::string & in_path)
+DX9Device::TVertexShader DX9Device::LoadVertexShader(const std::string& in_path)
 {
 	return vertex_shader_loader_->Load(in_path);
 }
@@ -265,9 +264,9 @@ DX9Device::TVertexShader DX9Device::LoadVertexShader(const std::string & in_path
 //=============================================================================
 // load vertex shader
 //=============================================================================
-DX9Device::TVertexShader DX9Device::LoadVertexShader(const std::string & in_path,const std::string & in_function,const std::string & in_version)
+DX9Device::TVertexShader DX9Device::LoadVertexShader(const std::string& in_path,const std::string& in_function,const std::string& in_version)
 {
-	return vertex_shader_loader_->Load(in_path , in_function , in_version );
+	return vertex_shader_loader_->Load(in_path,in_function,in_version);
 }
 
 //=============================================================================
@@ -281,10 +280,9 @@ DX9Device::TPixelShader DX9Device::LoadPixelShader(const std::string & in_path)
 //=============================================================================
 // load pixel shader
 //=============================================================================
-DX9Device::TPixelShader DX9Device::LoadPixelShader(const std::string & in_path,const std::string & in_function,const std::string & in_version)
+DX9Device::TPixelShader DX9Device::LoadPixelShader(const std::string& in_path,const std::string& in_function,const std::string& in_version)
 {
-	pixel_shader_loader_->Load(in_path , in_function , in_version );
-	return nullptr;
+	return pixel_shader_loader_->Load(in_path,in_function,in_version);
 }
 
 //=============================================================================

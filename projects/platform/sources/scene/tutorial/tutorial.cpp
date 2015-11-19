@@ -55,7 +55,8 @@ void Tutorial::Finalize()
 void Tutorial::Update()
 {
 	auto p_input_manager = GET_INPUT_MANAGER();
-	if (p_input_manager->GetTrigger(InputManager::Command::A, 0))
+	//if (p_input_manager->GetTrigger(InputManager::Command::A, 0))
+	if(GET_INPUT_MOUSE()->GetPress(InputMouse::MOUSE_KEY::LEFT))
 	{
 		SceneManager::Instance().set_p_next_scene(SceneManager::Instance().get_game());
 		SceneManager::Instance().set_scene_change_flag(true);
