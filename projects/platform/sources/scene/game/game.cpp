@@ -39,8 +39,9 @@ Game::Game()
 		observers_[i] = std::make_shared<FollowerObserver>(utility::math::ToRadian(60.0f),800.0f,600.0f);
 		observers_[i]->SetTargetPosition(float3(0.0f,0.0f,0.0f));
 		observers_[i]->SetTargetVector(float3(0.0f,0.0f,1.0f));
-		observers_[i]->SetLength(5.0f);
-		observers_[i]->SetHeight(5.0f);
+		observers_[i]->SetLength(4.0f);
+		observers_[i]->SetHeight(3.3f);
+		observers_[i]->SetState(FollowerObserver::STATE::STATE_FOLLWER);
 		observers_[i]->Update();
 	}
 
@@ -175,12 +176,6 @@ void Game::Update()
 			}
 		}
 
-		auto icon_position = field_icons_[i]->GetPosition();
-		auto player_position = players_[i]->GetPosition();
-
-		if(field_->GetBlockIndex(icon_position) == field_->GetBlockIndex(player_position))
-		{
-		}
 		observers_[i]->SetTargetPosition(players_[i]->GetPosition());
 		observers_[i]->SetTargetVector(float3(sinf(players_[i]->GetRotation()._y),0,cosf(players_[i]->GetRotation()._y)));
 		observers_[i]->Update();
@@ -281,11 +276,13 @@ void Game::Draw()
 			}
 		}
 
-		players_[i]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[i]->GetViewMatrix());
-		players_[i]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[i]->GetProjectionMatrix());
-		players_[i]->Draw();
+		for(u32 j = 0;j < PLAYER_MAX;++j)
+		{
+			players_[j]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[i]->GetViewMatrix());
+			players_[j]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[i]->GetProjectionMatrix());
+			players_[j]->Draw();
+		}
 	}
-
 	graphic_device->SetRenderTarget(0,default_texture);
 	graphic_device->SetRenderTarget(1,nullptr);
 	graphic_device->SetRenderTarget(2,nullptr);
