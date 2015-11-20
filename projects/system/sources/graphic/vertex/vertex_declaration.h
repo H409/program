@@ -46,7 +46,7 @@ public:
 	const TVertexElements& GetElements(void)const;
 
 protected:
-	VertexDeclaration(const TVertexElements& in_vertex_elements);
+	explicit VertexDeclaration(const TVertexElements& in_vertex_elements);
 	std::vector<VERTEX_ELEMENT> vertex_elements_;
 
 private:

@@ -11,10 +11,8 @@
 //*****************************************************************************
 #include "win_window.h"
 
-namespace windows
-{
-namespace window
-{
+namespace windows {
+namespace window {
 //=============================================================================
 // constant definition
 //=============================================================================
@@ -69,7 +67,7 @@ WinWindow::WinWindow(const std::string& in_caption_name,const std::string& in_cl
 			WindowProcedure_,				// プロシージャの関数ポインタ
 			0,								// 
 			0,								// 
-			NULL,							// インスタンス
+			GetModuleHandle(NULL),			// インスタンス
 			NULL,							// アイコン
 			LoadCursor(NULL,IDC_ARROW),		// マウスカーソル
 			(HBRUSH)(COLOR_WINDOW + 1),		// 背景色

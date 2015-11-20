@@ -90,6 +90,12 @@ float4x4 LookAtLH(const float3& in_eye,const float3& in_look_at,const float3& in
 // look at right hand
 float4x4 LookAtRH(const float3& in_eye,const float3& in_look_at,const float3& in_up);
 
+// transpose
+float4x4 Transpose(const float4x4& in_matrix);
+
+// inverse transpose
+float4x4 InverseB(const float4x4& in_matrix);
+
 // to radian
 // Šp“x‚©‚çŒÊ“x–@‚É•ÏŠ·
 f32 ToRadian(const f32& in_degree);
@@ -103,9 +109,9 @@ f32 ToDegree(const f32& in_radian);
 float3 CreateNormal(const float3& in_point_a,const float3& in_point_b,const float3& in_point_c);
 
 // minimum
-template<class T> T Minimum(const T& in_value1,const T& in_value2)
+inline f32 Minimum(const f32& in_value1,const f32& in_value2)
 {
-	T minimum = in_value2;
+	auto minimum = in_value2;
 
 	if(in_value1 < in_value2)
 	{
@@ -116,9 +122,9 @@ template<class T> T Minimum(const T& in_value1,const T& in_value2)
 }
 
 // maximum
-template<class T> T Maximum(const T& in_value1,const T& in_value2)
+inline f32 Maximum(const f32& in_value1,const f32& in_value2)
 {
-	T maximum = in_value2;
+	auto maximum = in_value2;
 
 	if(in_value1 > in_value2)
 	{
@@ -129,7 +135,7 @@ template<class T> T Maximum(const T& in_value1,const T& in_value2)
 }
 
 // clamp
-template<class T> T Clamp(const T& in_value,const T& in_minimum,const T& in_maximum)
+inline f32 Clamp(const f32& in_value,const f32& in_minimum,const f32& in_maximum)
 {
 	DEBUG_ASSERT(in_minimum < in_maximum);
 
@@ -142,9 +148,9 @@ template<class T> T Clamp(const T& in_value,const T& in_minimum,const T& in_maxi
 }
 
 // wrap
-template<class T> T Wrap(const T& in_value,const T& in_minimum,const T& in_maximum)
+inline f32 Wrap(const f32& in_value,const f32& in_minimum,const f32& in_maximum)
 {
-	T wrap = in_value;
+	auto wrap = in_value;
 
 	DEBUG_ASSERT(in_minimum < in_maximum);
 

@@ -73,8 +73,11 @@ void InputMouse::Update(void)
 	}
 
 	//マウスのポジション取得
-	GetCursorPos(&m_Mousepos);
-	ScreenToClient(m_hWnd, &m_Mousepos);
+	POINT Mousepos;
+
+	GetCursorPos(&Mousepos);
+	ScreenToClient(m_hWnd, &Mousepos);
+	m_Mousepos = float2((f32)Mousepos.x,(f32)Mousepos.y);
 
 	//値の更新
 	if (FAILED(m_pDIDevice->GetDeviceState(sizeof(DIMOUSESTATE2), &MouseState)))
@@ -92,6 +95,8 @@ void InputMouse::Update(void)
 	}
 	else
 	{
+		m_MouseDiff = float3((f32)MouseState.lX,(f32)MouseState.lY,(f32)MouseState.lZ);
+
 		for (int nCntkey = 0; nCntkey < (u32)MOUSE_KEY::MAX; nCntkey++)
 		{
 			//トリガー情報の生成
@@ -107,36 +112,22 @@ void InputMouse::Update(void)
 
 const float2& InputMouse::GetPosition(void)const
 {
-	return float2((float)m_Mousepos.x, (float)m_Mousepos.y);
+	return m_Mousepos;
 }
 
 const float2& InputMouse::GetPrevPosition(void)const
 {
-	return float2((float)m_Prev_Mousepos.x, (float)m_Prev_Mousepos.y);
+	return m_Prev_Mousepos;
 }
 
 bool InputMouse::GetPress(MOUSE_KEY nKey)const
 {
-	if (m_aMouseKeyState[(int)nKey] & 0x080)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	return (m_aMouseKeyState[(int)nKey] & 0x080);
 }
 
 bool InputMouse::GetTrigger(MOUSE_KEY nKey)const
 {
-	if (m_aMouseKeyTrigger[(int)nKey] & 0x080)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	return (m_aMouseKeyTrigger[(int)nKey] & 0x080);
 }
 
 bool InputMouse::GetRepeat(MOUSE_KEY nKey)const
@@ -161,17 +152,7 @@ bool InputMouse::GetRelease(MOUSE_KEY nKey)const
 // マウスドラッグアクションの加速度取得
 //ドラッグをしていない場合は D3DXVECTOR2(0.0f,0.0f)を返す
 //*****************************************************************************
-const float2& InputMouse::GetDrag(MOUSE_KEY nKey)const
+const float3& InputMouse::GetDiff(void)const
 {
-	//前フレームから引き続きマウスクリックし続けている場合
-	if (m_aPrevMouseKeyState[(int)nKey] && m_aMouseKeyState[(int)nKey])
-	{
-		//前フレームと現在フレームのマウスカーソルポジションの差分を返す
-		return float2((float)(m_Mousepos.x - m_Prev_Mousepos.x), (float)(m_Mousepos.y - m_Prev_Mousepos.y));
-	}
-	else
-	{
-		//そうでない場合は移動していないので0を返す。
-		return float2(0.0f, 0.0f);
-	}
+	return m_MouseDiff;
 }

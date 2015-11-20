@@ -27,7 +27,7 @@ BASIC_OUT_PIXEL Basic(BASIC_IN_PIXEL in_basic_in_pixel,sampler texture_sampler)
 {
 	BASIC_OUT_PIXEL basic_out_pixel;
 
-	basic_out_pixel.color0 = tex2D(texture_sampler,in_basic_in_pixel.texcoord) *in_basic_in_pixel.color;
+	basic_out_pixel.color0 = tex2D(texture_sampler,in_basic_in_pixel.texcoord) * in_basic_in_pixel.color;
 
 	return basic_out_pixel;
 }

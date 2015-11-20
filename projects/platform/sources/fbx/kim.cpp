@@ -38,6 +38,7 @@ Kim::Kim(LPDIRECT3DDEVICE9 d3d_device)
 {
 	d3d_device_ = d3d_device;
 
+	toon_map = NULL ;
 	mesh_ = NULL;
 	bone_ = NULL;
 	decl_ = NULL;
@@ -272,9 +273,9 @@ HRESULT Kim::Load(const char* file_name)
 		return E_FAIL;
 	}
 
-	//// ¼ª°ÀÞ°‚ÌºÝÊß²Ù
-	//if (draw_type_ == TYPE_ONE_MY || draw_type_ == TYPE_MULTI_MY)
-	//	return CompileShader();
+	// ¼ª°ÀÞ°‚ÌºÝÊß²Ù
+	if (draw_type_ == TYPE_ONE_MY || draw_type_ == TYPE_MULTI_MY)
+		return CompileShader();
 
 	return S_OK ;
 }
@@ -765,37 +766,6 @@ void Kim::SetMaterial(D3DMATERIAL9 *material)
 
 
 //=============================================================================
-// ˆ—:ÎÞ°Ý‚Ì•`‰æ
-//=============================================================================
-void Kim::DrawBone(void)
-{
-	// ŒÅ’è¼ª°ÀÞ‚Ì’¸“_ÌÞÚÝÄÞ‚ðØ‚é
-	d3d_device_->SetRenderState(D3DRS_INDEXEDVERTEXBLENDENABLE, FALSE);
-
-	for (int i = 0; i < bone_num_; i++)
-	{
-		ID3DXMesh *boneObj;
-		D3DXCreateCylinder(d3d_device_, 0.2f, 0.5f, 5.0f, 16, 1, &boneObj, 0);
-
-		D3DMATERIAL9 material = { { 1.0f, 1.0f, 1.0f, 1.0f } }; material.Power = 10.0f;
-		D3DLIGHT9 light = { D3DLIGHT_DIRECTIONAL, { 1.0f, 0.7f, 0.5f, 1.0f } };
-		light.Direction = (D3DVECTOR)D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-
-		d3d_device_->SetLight(0, &light);
-		d3d_device_->LightEnable(0, TRUE);
-		d3d_device_->SetRenderState(D3DRS_LIGHTING, TRUE);
-		d3d_device_->SetMaterial(&material);
-		d3d_device_->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-		d3d_device_->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-		D3DXMATRIX boneObjRot;
-		D3DXMatrixRotationY(&boneObjRot, D3DXToRadian(-90.0f));
-		d3d_device_->SetTransform(D3DTS_WORLD, &(boneObjRot * bone_[i].bone_matrix));
-		boneObj->DrawSubset(0);
-		boneObj->Release();
-	}
-}
-
-//=============================================================================
 // 1Ò¯¼­	Ž©ì¼ª°ÀÞ°—p•`‰æ
 //=============================================================================
 void Kim::OneMeshMyShader(void)
@@ -820,18 +790,21 @@ void Kim::MultiMeshMyShader(void)
 	// ‘—M‚·‚é’¸“_î•ñ‚ÌÝ’è
 	d3d_device_->SetVertexDeclaration(decl_);
 
-	// ËÞ­°,ÌßÛ¼Þª¸¼®Ý‚ÌŽæ“¾
-	D3DXMATRIX view, proj;
-	d3d_device_->GetTransform(D3DTS_VIEW, &view);
-	d3d_device_->GetTransform(D3DTS_PROJECTION, &proj);
+	//// ËÞ­°,ÌßÛ¼Þª¸¼®Ý‚ÌŽæ“¾
+	//D3DXMATRIX view, proj;
+	//d3d_device_->GetTransform(D3DTS_VIEW, &view);
+	//d3d_device_->GetTransform(D3DTS_PROJECTION, &proj);
 
-	D3DXMatrixTranspose(&view, &view);
-	D3DXMatrixTranspose(&proj, &proj);
+	//D3DXMatrixTranspose(&view, &view);
+	//D3DXMatrixTranspose(&proj, &proj);
+
+	D3DXMatrixTranspose( &view_, &view_ );
+	D3DXMatrixTranspose( &projection_ , &projection_ );
 
 	// Ü°ÙÄÞ,ËÞ­°,ÌßÛ¼Þª¸¼®Ý,ŽwŒü«×²Äî•ñ‚Ì“]‘—
 	d3d_device_->SetVertexShaderConstantF(0, static_cast<const float*>(world_), 4);
-	d3d_device_->SetVertexShaderConstantF(4, static_cast<const float*>(view), 4);
-	d3d_device_->SetVertexShaderConstantF(8, static_cast<const float*>(proj), 4);
+	d3d_device_->SetVertexShaderConstantF(4, static_cast<const float*>(view_), 4);
+	d3d_device_->SetVertexShaderConstantF(8, static_cast<const float*>(projection_), 4);
 	d3d_device_->SetVertexShaderConstantF(16, static_cast<const float*>(light_directional), 4);
 
 	//// Ä©°ÝÏ¯Ìß‚ÌÝ’è
@@ -937,6 +910,36 @@ void Kim::StaticMesh(void)
 
 }
 
+//=============================================================================
+// ˆ—:ÎÞ°Ý‚Ì•`‰æ
+//=============================================================================
+void Kim::DrawBone(void)
+{
+	// ŒÅ’è¼ª°ÀÞ‚Ì’¸“_ÌÞÚÝÄÞ‚ðØ‚é
+	d3d_device_->SetRenderState(D3DRS_INDEXEDVERTEXBLENDENABLE, FALSE);
+
+	for (int i = 0; i < bone_num_; i++)
+	{
+		ID3DXMesh *boneObj;
+		D3DXCreateCylinder(d3d_device_, 0.2f, 0.5f, 5.0f, 16, 1, &boneObj, 0);
+
+		D3DMATERIAL9 material = { { 1.0f, 1.0f, 1.0f, 1.0f } }; material.Power = 10.0f;
+		D3DLIGHT9 light = { D3DLIGHT_DIRECTIONAL, { 1.0f, 0.7f, 0.5f, 1.0f } };
+		light.Direction = (D3DVECTOR)D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+
+		d3d_device_->SetLight(0, &light);
+		d3d_device_->LightEnable(0, TRUE);
+		d3d_device_->SetRenderState(D3DRS_LIGHTING, TRUE);
+		d3d_device_->SetMaterial(&material);
+		d3d_device_->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+		d3d_device_->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+		D3DXMATRIX boneObjRot;
+		D3DXMatrixRotationY(&boneObjRot, D3DXToRadian(-90.0f));
+		d3d_device_->SetTransform(D3DTS_WORLD, &(boneObjRot * bone_[i].bone_matrix));
+		boneObj->DrawSubset(0);
+		boneObj->Release();
+	}
+}
 
 //=============================================================================
 // ÃÞÊÞ¯¸Þ—pŠÖ”
@@ -1119,12 +1122,12 @@ HRESULT Kim::CompileShader(void)
 
 	if (bone_num_ != 0)
 	{
-		res = D3DXCompileShaderFromFile("resources/shader/SkiningShader.hlsl", NULL, 0, "vs_main", "vs_3_0", 0, &shader, &error, 0);
+		res = D3DXCompileShaderFromFile("resources/shader/skining_shader.hlsl", NULL, 0, "vs_main", "vs_3_0", 0, &shader, &error, 0);
 	}
 	else
 	{
 		draw_type_ = TYPE_STATIC_MESH;
-		res = D3DXCompileShaderFromFile("resources/shader/StaticFBX.hlsl", NULL, 0, "vs_main", "vs_3_0", 0, &shader, &error, 0);
+		res = D3DXCompileShaderFromFile("resources/shader/static_fbx.hlsl", NULL, 0, "vs_main", "vs_3_0", 0, &shader, &error, 0);
 	}
 
 	if (FAILED(res)) {
@@ -1135,7 +1138,7 @@ HRESULT Kim::CompileShader(void)
 	d3d_device_->CreateVertexShader((const DWORD*)shader->GetBufferPointer(), &vertex_shader_);
 	shader->Release();
 
-	res = D3DXCompileShaderFromFile("resources/shader/SkiningShader.hlsl", NULL, 0, "ps_main", "ps_3_0", 0, &shader, &error, 0);
+	res = D3DXCompileShaderFromFile("resources/shader/skining_shader.hlsl", NULL, 0, "ps_main", "ps_3_0", 0, &shader, &error, 0);
 	if (FAILED(res)) {
 		MessageBox(NULL, (LPSTR)error->GetBufferPointer(), NULL, 0);
 		return E_FAIL;
@@ -1144,8 +1147,10 @@ HRESULT Kim::CompileShader(void)
 	d3d_device_->CreatePixelShader((const DWORD*)shader->GetBufferPointer(), &pixel_shader_);
 	shader->Release();
 
-	//D3DXCreateTextureFromFile(d3d_device_, "data/texture/mapping_textrue/toon_map.png", &toon_map);
+	D3DXCreateTextureFromFile(d3d_device_, "data/texture/mapping_textrue/toon_map.png", &toon_map);
+	//toon_map = NULL ;
 
+	return S_OK ;
 }
 
 //=============================================================================

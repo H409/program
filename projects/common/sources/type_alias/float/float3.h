@@ -39,7 +39,7 @@ public:
 	};
 
 	// constructor
-	float3(f32 xyz = 0.0f);
+	explicit float3(f32 xyz = 0.0f);
 	float3(f32 x,f32 y,f32 z = 0.0f);
 	float3(const float2& xy,f32 z = 0.0f);
 	float3(const float3& xyz);

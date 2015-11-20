@@ -20,6 +20,14 @@ namespace action {
 class Action;
 }
 
+namespace graphic {
+namespace directx9 {
+namespace texture {
+class DX9Texture;
+} // namespace texture
+} // namespace directx9
+} // namespace graphic
+
 //*****************************************************************************
 // class declaration
 //*****************************************************************************
@@ -27,7 +35,7 @@ class Object
 {
 public:
 	using TAction = std::shared_ptr<action::Action>;
-	using TObject = std::shared_ptr<Object>;
+	using TTexture = std::shared_ptr<graphic::directx9::texture::DX9Texture>;
 
 	// constructor
 	Object(void);
@@ -39,7 +47,7 @@ public:
 	void Update(void);
 
 	// draw
-	virtual void Draw(void) {}
+	void Draw(void);
 
 	// run action
 	void RunAction(TAction in_action);
@@ -71,6 +79,9 @@ public:
 	void SetColor(const float4& in_color);
 	void SetColor(const f32& in_red,const f32& in_green,const f32& in_blue,const f32& in_alpha);
 
+	// set texture
+	void SetTexture(const u32& in_number,TTexture in_texture);
+
 	// get position
 	const float3& GetPosition(void)const;
 	const f32& GetPositionX(void)const;
@@ -101,7 +112,12 @@ public:
 	const float4x4& GetMatrix(void);
 	const float4x4& GetMatrix(void)const;
 
+	// get texture
+	TTexture GetTexture(const u32& in_number);
+
 protected:
+	static const u32 TEXTURE_MAX;
+
 	float3 position_;
 	float3 rotation_;
 	float3 scale_;
@@ -110,6 +126,9 @@ protected:
 	bool is_dirty_;
 	TAction action_;
 	u32 priority_;
+	std::vector<TTexture> textures_;
+
+	virtual void Draw_(void) {};
 };
 
 #endif // _OBJECT_H_

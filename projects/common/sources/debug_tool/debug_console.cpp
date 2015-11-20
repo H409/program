@@ -177,7 +177,6 @@ void DebugConsole::Print(const char* pFormat,...)
 #ifndef _RELEASE
 	char work[STRING_MAX] = {NULL};
 	va_list args;
-	DWORD op;
 	int nLogLen = 0;
 	int nFormatLen = 0;
 

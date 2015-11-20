@@ -31,18 +31,18 @@ public:
 	using TMesh = std::shared_ptr<mesh::Mesh>;
 
 	// constructor
-	MeshObject(TMesh in_mesh);
+	explicit MeshObject(TMesh in_mesh);
 
 	// destructor
 	virtual ~MeshObject(void) = default;
-
-	// draw
-	void Draw(void);
 
 protected:
 
 private:
 	TMesh mesh_;
+
+	// draw
+	void Draw_(void)override;
 };
 
 #endif // _OBJECT_H_

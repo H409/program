@@ -22,6 +22,15 @@ class Mesh
 public:
 	virtual ~Mesh(void) = default;
 
+	// apply
+	void Apply(void);
+
+	// attach render state
+	void AttachRenderState(void);
+
+	// detach render state
+	void DetachRenderState(void);
+
 	// get buffer
 	const LPDIRECT3DVERTEXBUFFER9 GetBuffer(void)const;
 
@@ -60,12 +69,15 @@ protected:
 	LPDIRECT3DINDEXBUFFER9 direct3dindexbuffer9_;
 	bool is_used_index_buffer_;
 	bool is_3d_;
-
+	bool is_dirty_;
 	static const D3DVERTEXELEMENT9 VERTEXELEMENTS[];
 	static std::unordered_map<const D3DVERTEXELEMENT9*,std::shared_ptr<IDirect3DVertexDeclaration9>> vertex_declarations_;
 
 private:
 	virtual const D3DVERTEXELEMENT9* GetVertexElements_(void)const;
+	virtual void UpdateVertexBuffer_(void) = 0;
+	virtual void AttachRenderState_(void){};
+	virtual void DetachRenderState_(void){};
 };
 } // namespace mesh
 

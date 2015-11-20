@@ -26,12 +26,14 @@ MeshObject::MeshObject(TMesh in_mesh)
 //=============================================================================
 // draw
 //=============================================================================
-void MeshObject::Draw(void)
+void MeshObject::Draw_(void)
 {
 	auto directx9 = GET_DIRECTX9_DEVICE();
 
 	directx9->SetVertexDeclaration(mesh_->GetVertexDeclaration());
 	directx9->SetStreamSource(0,mesh_->GetBuffer(),0,mesh_->GetStride());
+
+	mesh_->AttachRenderState();
 
 	if(mesh_->IsUsedIndexBuffer())
 	{
@@ -42,6 +44,8 @@ void MeshObject::Draw(void)
 	{
 		directx9->DrawPrimitive(mesh_->GetPrimitiveType(),0,mesh_->GetPrimitiveCount());
 	}
+
+	mesh_->DetachRenderState();
 }
 
 //---------------------------------- EOF --------------------------------------

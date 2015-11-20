@@ -15,7 +15,7 @@
 //=============================================================================
 // constructor
 //=============================================================================
-Observer2D::Observer2D(const f32 & in_width,const f32 & in_height)
+Observer2D::Observer2D(const f32& in_width,const f32& in_height)
 {
 	view_matrix_ = utility::math::Identity();
 	projection_matrix_ = utility::math::OrthoLH(in_width,in_height,1.0f,1000.0f);

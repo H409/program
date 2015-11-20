@@ -10,16 +10,13 @@
 // include
 //*****************************************************************************
 #include "dx9_device.h"
-#include "vertex/dx9_vertex_buffer.h"
-#include "vertex/dx9_vertex_declaration.h"
 #include "texture/dx9_texture_loader.h"
+#include "shader/dx9_vertex_shader.h"
+#include "shader/dx9_pixel_shader.h"
 #include "shader/dx9_vertex_shader_loader.h"
-
 #include "shader/dx9_pixel_shader_loader.h"
 #include "texture/dx9_texture.h"
 #include "texture/dx9_render_texture_factory.h"
-#include "depth_buffer/dx9_depth_buffer.h"
-#include "depth_buffer/dx9_depth_buffer_factory.h"
 #include "math/math.h"
 
 namespace graphic {
@@ -83,6 +80,11 @@ DX9Device::DX9Device(const HWND& in_hwnd,const u16& in_width,const u16& in_heigh
 
 	// デプスバッファとして16bitを使う
 	d3dpresent_parameters_.AutoDepthStencilFormat = D3DFMT_D16;
+
+	// マルチサンプルを使用
+	d3dpresent_parameters_.MultiSampleType = D3DMULTISAMPLE_4_SAMPLES;
+	direct3d9_->CheckDeviceMultiSampleType(D3DADAPTER_DEFAULT,D3DDEVTYPE_HAL,D3DFMT_R5G6B5,true,D3DMULTISAMPLE_4_SAMPLES,&d3dpresent_parameters_.MultiSampleQuality);
+	d3dpresent_parameters_.MultiSampleQuality -= 1;
 
 	// ウィンドウモード
 	if(d3dpresent_parameters_.Windowed)
@@ -218,9 +220,43 @@ DX9Device::TTexture DX9Device::LoadTexture(const std::string & in_path)
 }
 
 //=============================================================================
+// create texture
+//=============================================================================
+DX9Device::TTexture DX9Device::CreateTexture(const u16& in_width,const u16& in_height,const D3DFORMAT& in_format)
+{
+	return std::make_shared<texture::DX9Texture>(in_width,in_height,in_format,direct3ddevice9_);
+}
+
+//=============================================================================
+// set render target
+//=============================================================================
+void DX9Device::SetRenderTarget(const u32& in_index,TTexture in_texture)
+{
+	if(in_texture != nullptr)
+	{
+		direct3ddevice9_->SetRenderTarget(in_index,in_texture->GetSurface());
+		return;
+	}
+
+	direct3ddevice9_->SetRenderTarget(in_index,nullptr);
+}
+
+//=============================================================================
+// get render target
+//=============================================================================
+DX9Device::TTexture DX9Device::GetRenderTarget(const u32& in_index)
+{
+	LPDIRECT3DSURFACE9 direct3dsurface9 = nullptr;
+
+	direct3ddevice9_->GetRenderTarget(in_index,&direct3dsurface9);
+
+	return std::make_shared<texture::DX9Texture>(direct3dsurface9);
+}
+
+//=============================================================================
 // load vertex shader
 //=============================================================================
-DX9Device::TVertexShader DX9Device::LoadVertexShader(const std::string & in_path)
+DX9Device::TVertexShader DX9Device::LoadVertexShader(const std::string& in_path)
 {
 	return vertex_shader_loader_->Load(in_path);
 }
@@ -228,9 +264,9 @@ DX9Device::TVertexShader DX9Device::LoadVertexShader(const std::string & in_path
 //=============================================================================
 // load vertex shader
 //=============================================================================
-DX9Device::TVertexShader DX9Device::LoadVertexShader(const std::string & in_path,const std::string & in_function,const std::string & in_version)
+DX9Device::TVertexShader DX9Device::LoadVertexShader(const std::string& in_path,const std::string& in_function,const std::string& in_version)
 {
-	return vertex_shader_loader_->Load(in_path , in_function , in_version );
+	return vertex_shader_loader_->Load(in_path,in_function,in_version);
 }
 
 //=============================================================================
@@ -244,10 +280,25 @@ DX9Device::TPixelShader DX9Device::LoadPixelShader(const std::string & in_path)
 //=============================================================================
 // load pixel shader
 //=============================================================================
-DX9Device::TPixelShader DX9Device::LoadPixelShader(const std::string & in_path,const std::string & in_function,const std::string & in_version)
+DX9Device::TPixelShader DX9Device::LoadPixelShader(const std::string& in_path,const std::string& in_function,const std::string& in_version)
 {
-	DEBUG_TRACE("HACK : load vertex shader");
-	return nullptr;
+	return pixel_shader_loader_->Load(in_path,in_function,in_version);
+}
+
+//=============================================================================
+// set vertex shader
+//=============================================================================
+void DX9Device::SetVertexShader(TVertexShader in_vertex_shader)
+{
+	direct3ddevice9_->SetVertexShader(in_vertex_shader->GetShader());
+}
+
+//=============================================================================
+// set pixel shader
+//=============================================================================
+void DX9Device::SetPixelShader(TPixelShader in_pixel_shader)
+{
+	direct3ddevice9_->SetPixelShader(in_pixel_shader->GetShader());
 }
 
 //=============================================================================
@@ -262,6 +313,9 @@ void DX9Device::SetDefaultRenderState_(void)
 	direct3ddevice9_->SetRenderState(D3DRS_ALPHABLENDENABLE,TRUE);				// αブレンドを行う
 	direct3ddevice9_->SetRenderState(D3DRS_SRCBLEND,D3DBLEND_SRCALPHA);			// αソースカラーの指定
 	direct3ddevice9_->SetRenderState(D3DRS_DESTBLEND,D3DBLEND_INVSRCALPHA);		// αデスティネーションカラーの指定
+	direct3ddevice9_->SetRenderState(D3DRS_ALPHAREF,1);
+	direct3ddevice9_->SetRenderState(D3DRS_ALPHATESTENABLE,TRUE);
+	direct3ddevice9_->SetRenderState(D3DRS_ALPHAFUNC,D3DCMP_GREATEREQUAL);
 }
 
 //=============================================================================

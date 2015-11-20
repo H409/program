@@ -31,7 +31,7 @@ class DX9CuebTextureLoader : public graphic::texture::CubeTextureLoader
 {
 public:
 	// constructor
-	DX9CuebTextureLoader(LPDIRECT3DDEVICE9 direct3ddevice9);
+	explicit DX9CuebTextureLoader(LPDIRECT3DDEVICE9 direct3ddevice9);
 
 	// destructor
 	virtual ~DX9CuebTextureLoader(void);

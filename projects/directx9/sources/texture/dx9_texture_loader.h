@@ -38,7 +38,7 @@ public:
 	using TTexture = std::shared_ptr<DX9Texture>;
 
 	// constructor
-	DX9TextureLoader(LPDIRECT3DDEVICE9 direct3ddevice9);
+	explicit DX9TextureLoader(LPDIRECT3DDEVICE9 direct3ddevice9);
 
 	// destructor
 	virtual ~DX9TextureLoader(void);

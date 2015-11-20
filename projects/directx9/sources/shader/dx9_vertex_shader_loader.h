@@ -16,7 +16,6 @@
 //*****************************************************************************
 // include
 //*****************************************************************************
-#include "base/flyweight.h"
 
 //*****************************************************************************
 // forward declaration
@@ -35,13 +34,13 @@ class DX9VertexShader;
 namespace graphic {
 namespace directx9 {
 namespace shader {
-class DX9VertexShaderLoader// : public utility::base::Flyweight<std::string,DX9VertexShader>
+class DX9VertexShaderLoader
 {
 public:
 	using TVertexShader = std::shared_ptr<shader::DX9VertexShader>;
 
 	// constructor
-	DX9VertexShaderLoader(LPDIRECT3DDEVICE9 direct3ddevice9);
+	explicit DX9VertexShaderLoader(LPDIRECT3DDEVICE9 direct3ddevice9);
 
 	// destructor
 	virtual ~DX9VertexShaderLoader(void);

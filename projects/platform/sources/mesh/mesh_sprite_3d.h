@@ -32,42 +32,44 @@ public:
 	// destructor
 	virtual ~MeshSprite3D(void);
 
-	// set parameter
-	void SetParameter(void);
-
 	// set index
-	void SetIndex(u32 x,u32 y,u32 index);
+	void SetIndex(u32 in_x,u32 in_y,u32 in_index);
+	void SetIndex(const std::vector<u32>& in_indexs);
 
-	// accessor
-	void __index(const s32& index) { index_ = index; }
-	void __division_width(const u32& division_width) { division_width_ = division_width; }
-	void __division_height(const u32& division_height) { division_height_ = division_height; }
-	bool __is_flip(void)const { return is_flip_; }
-	void __is_flip(bool is_flip) { is_flip_ = is_flip; }
-	void __width(f32 width) { width_ = width; }
-	void __height(f32 height) { height_ = height; }
+	// set color
+	void SetColor(u32 in_x,u32 in_y,const float4& in_color);
+
+	// set texcoord
+	void SetTexcoord(u32 in_division_width,u32 in_division_height);
+
 private:
 	struct VERTEX
 	{
 		float3 _position;
 		float2 _texcoord;
+		float3 _normal;
+		D3DCOLOR _color;
 	};
+
 	static const D3DXVECTOR2 DEFAULT_SIZE;
 	static const D3DCOLOR DEFAULT_COLOR;
 	static const D3DXVECTOR2 DEFAULT_POSITION;
 
-	D3DCOLOR color_;
 	s32 index_;
-	bool is_flip_;
 
-	f32 width_;
-	f32 height_;
+	float2 size_;
+	float2 block_size_;
 	u32 width_count_;
 	u32 height_count_;
 	u32 division_width_;
 	u32 division_height_;
 	u32 index_count_;
 	u32* indexs_;
+	float2 anchor_point_;
+
+	void AttachRenderState_(void)override;
+	void DetachRenderState_(void)override;
+	void UpdateVertexBuffer_(void)override;
 };
 
 } // namespace mesh

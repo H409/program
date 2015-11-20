@@ -32,7 +32,7 @@ public:
 	bool GetTrigger(MOUSE_KEY nKey)const;
 	bool GetRepeat(MOUSE_KEY nKey)const;
 	bool GetRelease(MOUSE_KEY nKey)const;
-	const float2& GetDrag(MOUSE_KEY nKey)const;
+	const float3& GetDiff(void)const;
 
 private:
 	BYTE m_aMouseKeyState[3];
@@ -42,8 +42,9 @@ private:
 	BYTE m_aMouseKeyRepeat[3];
 	int m_KeyCount[3];
 	DIMOUSESTATE2 m_MouseState;	//マウスのステータス
-	POINT m_Mousepos;			//マウスのポジション
-	POINT m_Prev_Mousepos;		//1フレーム前のマウスのポジション
+	float2 m_Mousepos;			//マウスのポジション
+	float2 m_Prev_Mousepos;		//1フレーム前のマウスのポジション
+	float3 m_MouseDiff;
 	HWND m_hWnd;				//ウィンドウハンドル
 
 

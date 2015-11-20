@@ -12,7 +12,7 @@
 #include "dx9_shader.h"
 #include "dx9_vertex_shader.h"
 #include "dx9_pixel_shader.h"
-#include "graphic/texture/texture.h"
+#include "../texture/dx9_texture.h"
 
 namespace graphic {
 namespace directx9 {
@@ -95,7 +95,7 @@ void DX9Shader::SetValue(const std::string & in_handle_name,const f32& in_value)
 //=============================================================================
 void DX9Shader::SetValue(const std::string& in_handle_name,const f32* in_value,const u32& in_count)
 {
-	d3dxconstanttable_->SetFloatArray(direct3ddevice9_,in_handle_name.c_str(),in_value,in_count);
+	DEBUG_ASSERT(d3dxconstanttable_->SetFloatArray(direct3ddevice9_,in_handle_name.c_str(),in_value,in_count) == S_OK);
 }
 
 //=============================================================================
@@ -109,7 +109,7 @@ void DX9Shader::SetValue(const std::string& in_handle_name,const f32* in_value,c
 //=============================================================================
 // set texture
 //=============================================================================
-void DX9Shader::SetTexture(const std::string & in_handle_name,LPDIRECT3DTEXTURE9 in_direct3dtexture9)
+void DX9Shader::SetTexture(const std::string& in_handle_name,LPDIRECT3DTEXTURE9 in_direct3dtexture9)
 {
 	auto index = d3dxconstanttable_->GetSamplerIndex(in_handle_name.c_str());
 	SetTexture(index,in_direct3dtexture9);
@@ -118,9 +118,17 @@ void DX9Shader::SetTexture(const std::string & in_handle_name,LPDIRECT3DTEXTURE9
 //=============================================================================
 // set texture
 //=============================================================================
-void DX9Shader::SetTexture(const u32 & in_handle,LPDIRECT3DTEXTURE9 in_direct3dtexture9)
+void DX9Shader::SetTexture(const u32& in_handle,LPDIRECT3DTEXTURE9 in_direct3dtexture9)
 {
 	DEBUG_ASSERT(direct3ddevice9_->SetTexture(in_handle,in_direct3dtexture9) == S_OK);
+}
+
+//=============================================================================
+// set texture
+//=============================================================================
+void DX9Shader::SetTexture(const std::string& in_handle_name,TTexture in_texture)
+{
+	SetTexture(in_handle_name,in_texture->GetTexture());
 }
 
 //=============================================================================

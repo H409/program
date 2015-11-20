@@ -12,6 +12,13 @@
 #include "object.h"
 #include "action/action.h"
 #include "math/math.h"
+#include "system/win_system.h"
+#include "dx9_device.h"
+
+//*****************************************************************************
+// constant definition
+//*****************************************************************************
+const u32 Object::TEXTURE_MAX = 4;
 
 //=============================================================================
 // constructor
@@ -22,7 +29,16 @@ Object::Object(void)
 	,scale_(1.0f,1.0f,1.0f)
 	,color_(1.0f,1.0f,1.0f,1.0f)
 	,priority_(0)
+	,is_dirty_(true)
 {
+	textures_.resize(TEXTURE_MAX);
+
+	auto graphic_device = GET_GRAPHIC_DEVICE();
+
+	for(auto& texture : textures_)
+	{
+		texture = graphic_device->LoadTexture("resources/texture/default.png");
+	}
 }
 
 //=============================================================================
@@ -38,6 +54,11 @@ void Object::Update(void)
 		SetRotation(param._rotation);
 		SetScale(param._scale);
 	}
+}
+
+void Object::Draw(void)
+{
+	Draw_();
 }
 
 //=============================================================================
@@ -223,6 +244,15 @@ void Object::SetColor(const f32 & in_red,const f32 & in_green,const f32 & in_blu
 }
 
 //=============================================================================
+// set texture
+//=============================================================================
+void Object::SetTexture(const u32& in_number,TTexture in_texture)
+{
+	DEBUG_ASSERT(in_number < TEXTURE_MAX);
+	textures_[in_number] = in_texture;
+}
+
+//=============================================================================
 // get position
 //=============================================================================
 const float3& Object::GetPosition(void)const
@@ -391,6 +421,16 @@ const float4x4& Object::GetMatrix(void)
 const float4x4& Object::GetMatrix(void)const
 {
 	return matrix_;
+}
+
+//=============================================================================
+// get texture
+//=============================================================================
+Object::TTexture Object::GetTexture(const u32 & in_number)
+{
+	DEBUG_ASSERT(in_number < TEXTURE_MAX);
+
+	return textures_[in_number];
 }
 
 //---------------------------------- EOF --------------------------------------

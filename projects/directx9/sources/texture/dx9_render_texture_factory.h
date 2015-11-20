@@ -31,7 +31,7 @@ class DX9RenderTextureFactory : public graphic::texture::RenderTextureFactory
 {
 public:
 	// constructor
-	DX9RenderTextureFactory(LPDIRECT3DDEVICE9 in_direct3ddevice9);
+	explicit DX9RenderTextureFactory(LPDIRECT3DDEVICE9 in_direct3ddevice9);
 
 	// destructor
 	virtual ~DX9RenderTextureFactory(void);
