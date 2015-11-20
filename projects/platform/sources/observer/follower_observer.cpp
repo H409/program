@@ -20,7 +20,7 @@
 //=============================================================================
 FollowerObserver::FollowerObserver(const f32& in_radian,const f32& in_width,const f32& in_height)
 	:Observer3D(in_radian,in_width,in_height)
-	,target_length_(4.0f)
+	,target_length_(2.0f)
 {
 	rotation_ = float3();
 	eye_ = float3();
@@ -69,7 +69,7 @@ void FollowerObserver::Update(void)
 
 	if( state_ == STATE::AIM )
 	{
-		const float length = 2.0f ;
+		float length = length_ * 0.5f ;
 		float rot = -0.4f ;
 		auto eye = float3( eye_._x , 0.0f , eye_._z );
 		auto vector = look_at_ - eye ;

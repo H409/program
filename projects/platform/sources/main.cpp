@@ -54,8 +54,8 @@ int main(int argc,char* argv)
 	auto observer = std::make_shared<FollowerObserver>(utility::math::ToRadian(60.0f),800.0f,600.0f);
 	observer->SetTargetPosition(float3(0.0f,0.0f,0.0f));
 	observer->SetTargetVector(float3(0.0f,0.0f,1.0f));
-	observer->SetLength(4.0f);
-	observer->SetHeight(3.3f);
+	observer->SetLength(2.0f);
+	observer->SetHeight(1.5f);
 	observer->SetState( FollowerObserver::STATE::FOLLWER );
 	observer->Update();
 

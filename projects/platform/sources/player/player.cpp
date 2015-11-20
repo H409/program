@@ -56,6 +56,10 @@ Player::Player( LPDIRECT3DDEVICE9 pDevice ) : Object()
 	state_ = STATE::NONE ;
 	anime_ = STATE::NONE ;
 
+	//anime_data_[][ 2 ] = { { 0 , 0 } ,
+	//					   { 0 , 0 } ,
+	//					    };
+
 }
 
 //-------------------------------------------------------------------

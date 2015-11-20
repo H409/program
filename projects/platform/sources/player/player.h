@@ -81,6 +81,7 @@ private :
 	float3 rotDest_ ;			// –Ú“I‚ÌŒü‚«
 	
 	int ID_ ;
+	int anime_data_[ STATE::MAX ][ 2 ];
 
 	STATE state_ ;
 	STATE anime_ ;
