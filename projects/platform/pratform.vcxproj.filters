@@ -178,15 +178,6 @@
     <ClCompile Include="sources\system\input_joypad.cpp">
       <Filter>sources\system</Filter>
     </ClCompile>
-    <ClCompile Include="sources\mesh\mesh_cylinder.cpp">
-      <Filter>sources\mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\mesh\mesh_wall.cpp">
-      <Filter>sources\mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\mesh\mesh_skydome.cpp">
-      <Filter>sources\mesh</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sources\main.h">
@@ -308,15 +299,6 @@
     </ClInclude>
     <ClInclude Include="sources\system\input_joypad.h">
       <Filter>sources\system</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\mesh\mesh_cylinder.h">
-      <Filter>sources\mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\mesh\mesh_skydome.h">
-      <Filter>sources\mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\mesh\mesh_wall.h">
-      <Filter>sources\mesh</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

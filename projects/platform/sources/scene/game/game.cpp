@@ -12,6 +12,7 @@
 #include "game.h"
 #include "system/win_system.h"
 #include "system/input_keyboard.h"
+#include "system/input_manager.h"
 #include "shader/dx9_vertex_shader.h"
 #include "shader/dx9_pixel_shader.h"
 #include "texture/dx9_texture.h"

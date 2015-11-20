@@ -77,6 +77,9 @@ public:
 	bool GetRelease(Command command, int id)const;
 	bool GetRepeat(Command command, int id)const;
 
+	InputKeyboard* GetKeyboard(void) { return input_keyboard_; };
+	InputMouse* GetMouse(void) { return input_mouse_; };
+
 private:
 	InputKeyboard* input_keyboard_;					//キーボードクラス
 	InputMouse* input_mouse_;						//マウスクラス

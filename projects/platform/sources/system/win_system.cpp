@@ -71,23 +71,6 @@ void WinSystem::SetCallbacks(EVENT in_event,const TCallbacks& in_callbacks)
 		}
 	}
 }
-
-//=============================================================================
-// get input_keyboard_
-//=============================================================================
-WinSystem::TInputKeyboard WinSystem::GetKeyboard(void)
-{
-	return input_keyboard_;
-}
-
-//=============================================================================
-// get input_mouse_
-//=============================================================================
-WinSystem::TInputMouse WinSystem::GetMouse(void)
-{
-	return input_mouse_;
-}
-
 //=============================================================================
 // get input_manager_
 //=============================================================================
@@ -109,14 +92,6 @@ WinSystem::WinSystem(void)
 	window->SetCallback([&](){Stop_();});
 
 	graphic_device_ = std::make_shared<graphic::directx9::DX9Device>(hwnd_,(u16)DEFAULT_DISPLAY_SIZE._x,(u16)DEFAULT_DISPLAY_SIZE._y);
-
-	input_keyboard_ = std::make_shared<InputKeyboard>();
-
-	input_keyboard_->Init(NULL, hwnd_);
-
-	input_mouse_ = std::make_shared<InputMouse>();
-
-	input_mouse_->Init(NULL, hwnd_);
 
 	input_manager_ = std::make_shared<InputManager>();
 

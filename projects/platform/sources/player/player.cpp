@@ -10,6 +10,7 @@
 //------------------------------------------------------------------------
 #include "../system/win_system.h"
 #include "../system/input_keyboard.h"
+#include "../system/input_manager.h"
 #include "math/math.h"
 #include "player.h"
 
