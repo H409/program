@@ -58,12 +58,19 @@ Game::Game()
 		field_icons_[i] = std::make_shared<FieldIcon>();
 	}
 
+	float2 positions[]
+	{
+		float2(  0.0f,  0.0f),
+		float2(400.0f,  0.0f),
+		float2(  0.0f,300.0f),
+		float2(400.0f,300.0f),
+	};
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
-		auto sprite = std::make_shared<mesh::Sprite>(float2(800,600));
+		auto sprite = std::make_shared<mesh::Sprite>(float2(400,300));
 		sprite_objects_[i] = std::make_shared<MeshObject>(sprite);
 		sprite->SetAnchorPoint(float2(0.0f,0.0f));
-		sprite_objects_[i]->SetPosition(-0.5f,-0.5f,0.0f);
+		sprite_objects_[i]->SetPosition(positions[i]._x  - 0.5f,positions[i]._y - 0.5f,0.0f);
 	}
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
@@ -73,9 +80,15 @@ Game::Game()
 
 	field_ = std::make_shared<Field>();
 
+#ifdef _DEBUG
+	debug_player_number_ = 0;
 	auto sprite = std::make_shared<mesh::Sprite>(float2(200,150));
 	debug_sprite_object_ = std::make_shared<MeshObject>(sprite);
 	debug_sprite_object_->SetPosition(-0.5f,-0.5f,0.0f);
+	sprite = std::make_shared<mesh::Sprite>(float2(800,600));
+	debug_object_ = std::make_shared<MeshObject>(sprite);
+	debug_object_->SetPosition(-0.5f,-0.5f,0.0f);
+#endif
 }
 
 //=============================================================================
@@ -303,10 +316,9 @@ void Game::Draw()
 	static int _debugRenderTargetIndex = 0;
 
 	LPDIRECT3DTEXTURE9 tex[3];
-	tex[0] = color_textures_[0]->GetTexture();
-	tex[1] = normal_textures_[0]->GetTexture();
-	tex[2] = position_textures_[0]->GetTexture();
-
+	tex[0] = color_textures_[debug_player_number_]->GetTexture();
+	tex[1] = normal_textures_[debug_player_number_]->GetTexture();
+	tex[2] = position_textures_[debug_player_number_]->GetTexture();
 
 	if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_0) == true)
 	{
@@ -333,6 +345,41 @@ void Game::Draw()
 				_debugRenderTargetIndex = 2;
 			}
 		}
+
+		if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_1))
+		{
+			debug_player_number_ = 0;
+		}
+
+		if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_2))
+		{
+			debug_player_number_ = 1;
+		}
+
+		if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_3))
+		{
+			debug_player_number_ = 2;
+		}
+
+		if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_4))
+		{
+			debug_player_number_ = 3;
+		}
+
+		graphic_device->SetVertexShader(d_vs);
+		graphic_device->SetPixelShader(d_ps);
+
+		d_vs->SetValue("_view_matrix",(f32*)&observer_2d_->GetViewMatrix(),sizeof(float4x4));
+		d_vs->SetValue("_projection_matrix",(f32*)&observer_2d_->GetProjectionMatrix(),sizeof(float4x4));
+		d_vs->SetValue("_world_matrix",(f32*)&debug_object_->GetMatrix(),sizeof(float4x4));
+
+		d_ps->SetValue("_light_vector",(f32*)&float3(0.0f,-1.0f,0.0f),sizeof(float3));
+		d_ps->SetValue("_light_deffuse",(f32*)&float3(1.0f,1.0f,1.0f),sizeof(float3));
+		d_ps->SetTexture("_color_sampler",color_textures_[debug_player_number_]->GetTexture());
+		d_ps->SetTexture("_normal_sampler",normal_textures_[debug_player_number_]->GetTexture());
+		d_ps->SetTexture("_position_sampler",position_textures_[debug_player_number_]->GetTexture());
+
+		debug_object_->Draw();
 
 		graphic_device->SetVertexShader(basic_vs);
 		graphic_device->SetPixelShader(basic_ps);

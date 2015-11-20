@@ -61,7 +61,7 @@ public:
 	// •`‰æˆ—‚ğs‚¤B
 	virtual void Draw(void) override;
 private:
-	static const u32 PLAYER_MAX = 1;
+	static const u32 PLAYER_MAX = 4;
 
 	std::shared_ptr<Player> players_[PLAYER_MAX];
 	std::shared_ptr<FollowerObserver> observers_[PLAYER_MAX];
@@ -76,6 +76,8 @@ private:
 
 #ifdef _DEBUG
 	std::shared_ptr<MeshObject> debug_sprite_object_;
+	std::shared_ptr<MeshObject> debug_object_;
+	u32 debug_player_number_;
 #endif
 };
 
