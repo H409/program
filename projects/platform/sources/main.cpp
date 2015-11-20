@@ -56,7 +56,7 @@ int main(int argc,char* argv)
 	observer->SetTargetVector(float3(0.0f,0.0f,1.0f));
 	observer->SetLength(4.0f);
 	observer->SetHeight(3.3f);
-	observer->SetState( FollowerObserver::STATE::STATE_FOLLWER );
+	observer->SetState( FollowerObserver::STATE::FOLLWER );
 	observer->Update();
 
 	auto sprite = std::make_shared<mesh::Sprite>(float2(800,600));

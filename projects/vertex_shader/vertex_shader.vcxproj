@@ -18,6 +18,7 @@
     <FxCompile Include="shader\basic.hlsl" />
     <FxCompile Include="shader\deferred.hlsl" />
     <FxCompile Include="shader\graphics_buffer.hlsl" />
+    <FxCompile Include="shader\graphics_buffer_fbx.hlsl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3BD86F90-CAEE-473B-B901-0A544F2A1AF5}</ProjectGuid>

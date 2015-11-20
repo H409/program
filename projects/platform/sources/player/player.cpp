@@ -10,6 +10,9 @@
 //------------------------------------------------------------------------
 #include "../system/win_system.h"
 #include "../system/input_keyboard.h"
+
+#include "../system/input_mouse.h"
+
 #include "math/math.h"
 #include "player.h"
 
@@ -49,6 +52,10 @@ Player::Player( LPDIRECT3DDEVICE9 pDevice ) : Object()
 	position_ = float3( 0 , 0 , 0 );
 
 	ID_ = 0 ;		// 1P
+	
+	state_ = STATE::NONE ;
+	anime_ = STATE::NONE ;
+
 }
 
 //-------------------------------------------------------------------
@@ -72,10 +79,9 @@ void Player::Init( float3 pos )
 {
 	position_ = pos ;
 	pKim_ = new Kim( pDevice_ );
-	pKim_->Load( "resources/model/ZZI_taiki4.kim" );
+	pKim_->Load( "resources/model/ZZI_MO.kim" );
 
 	rotDest_ = float3();
-	scale_ = float3( 0.02f , 0.02f , 0.02f );
 }
 
 //-------------------------------------------------------------------
@@ -179,6 +185,18 @@ void Player::Control( void )
 		rotDest_._y = atan2f( vec.x , vec.z );
 
 		//rotDest_._y = D3DX_PI * 0.5f ;
+	}
+
+	if( GET_INPUT_MOUSE()->GetTrigger( InputMouse::MOUSE_KEY::RIGHT ) == true )
+	{
+		if( state_ != STATE::AIM )
+		{
+			state_ = STATE::AIM ;
+		}
+		else
+		{
+			state_ = STATE::WAIT ;
+		}
 	}
 
 	//--  ˆÚ“®  --//

@@ -192,7 +192,9 @@ HRESULT Kim::Load(const char* file_name)
 
 		// Ã¸½Á¬‚Ì¶¬
 		D3DXCreateTextureFromFile(d3d_device_, mesh_[i].texture_filename_, &mesh_[i].texture_);
+		//D3DXCreateTextureFromFile(d3d_device_, "resources/texture/ZZI_S_texture.jpg", &mesh_[i].texture_);
 
+		
 	}
 
 	// ÎŞ°İî•ñ‚Ì“ü‚Á‚Ä‚È‚¢ÓÃŞÙ‚Ìê‡‚Í“Ç‚İ‚Ü‚È‚¢

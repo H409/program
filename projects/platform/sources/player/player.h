@@ -35,6 +35,19 @@
 class Player : public Object
 {
 public : 
+	enum STATE
+	{
+		NONE = -1 ,		// なし
+		WAIT ,			// 待機
+		WALK ,			// 歩く
+		DASH ,			// 走る
+		DIG ,			// 掘る
+		SHOOT ,			// 撃つ
+		AIM ,			// エイム
+		DOWN ,			// ダウン
+		MAX
+	};
+
 	Player( LPDIRECT3DDEVICE9 pDevice );		// コンストラクタ
 	~Player();									// デストラクタ
 
@@ -45,10 +58,15 @@ public :
 
 	//--  kimのポインタ  --//
 	Kim* GetKimPointer( void ){ return pKim_ ; }
-
-	void SetCameraVector( float3 vec ){ camera_vector_ = vec ; }
+	
+	STATE GetState( void ){ return state_ ; }
+	STATE GetAnime( void ){ return anime_ ; }
 
 	void SetID( int id ){ ID_ = id ; }
+	int GetID( void ){ return ID_ ; }
+
+	//--  設定  --//
+	void SetCameraVector( float3 vec ){ camera_vector_ = vec ; }
 
 	//--  インスタンス生成  --//
 	//static Player* Create( LPDIRECT3DDEVICE9 pDevice , float3 pos );
@@ -63,6 +81,9 @@ private :
 	float3 rotDest_ ;			// 目的の向き
 	
 	int ID_ ;
+
+	STATE state_ ;
+	STATE anime_ ;
 
 	void Control( void );
 	void UpdateKimMatrix( void );

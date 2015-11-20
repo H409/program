@@ -73,6 +73,6 @@ sampler toon_sumpler:register(s1);
 // Ëß¸¾Ù¼ª°ÀÞ°
 float4 ps_main(VS_OUT In) : SV_TARGET
 {
-	return float4( 0 , 1 , 0 , 1 );
-	return In.col * tex2D(tex_sumpler, In.tex_uv) * tex2D(toon_sumpler,In.toon_uv);
+	//return float4( 0 , 1 , 0 , 1 );
+	return tex2D(tex_sumpler, In.tex_uv) ;
 }
