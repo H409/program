@@ -54,8 +54,9 @@ int main(int argc,char* argv)
 	auto observer = std::make_shared<FollowerObserver>(utility::math::ToRadian(60.0f),800.0f,600.0f);
 	observer->SetTargetPosition(float3(0.0f,0.0f,0.0f));
 	observer->SetTargetVector(float3(0.0f,0.0f,1.0f));
-	observer->SetLength(5.0f);
-	observer->SetHeight(5.0f);
+	observer->SetLength(4.0f);
+	observer->SetHeight(3.3f);
+	observer->SetState( FollowerObserver::STATE::STATE_FOLLWER );
 	observer->Update();
 
 	auto sprite = std::make_shared<mesh::Sprite>(float2(800,600));

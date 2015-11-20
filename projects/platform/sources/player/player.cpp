@@ -44,9 +44,11 @@ Player::Player( LPDIRECT3DDEVICE9 pDevice ) : Object()
 
 	camera_vector_ = float3();
 	move_ = float3();
-	speed_ = float3( 0.05f , 0.05f , 0.05f );
+	speed_ = float3( 0.025f , 0.025f , 0.025f );
 
 	position_ = float3( 0 , 0 , 0 );
+
+	ID_ = 0 ;		// 1P
 }
 
 //-------------------------------------------------------------------

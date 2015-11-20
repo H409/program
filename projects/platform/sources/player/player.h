@@ -48,6 +48,8 @@ public :
 
 	void SetCameraVector( float3 vec ){ camera_vector_ = vec ; }
 
+	void SetID( int id ){ ID_ = id ; }
+
 	//--  インスタンス生成  --//
 	//static Player* Create( LPDIRECT3DDEVICE9 pDevice , float3 pos );
 
@@ -59,6 +61,8 @@ private :
 	float3 move_ ;				// 移動量
 	float3 speed_ ;				// 速度
 	float3 rotDest_ ;			// 目的の向き
+	
+	int ID_ ;
 
 	void Control( void );
 	void UpdateKimMatrix( void );
