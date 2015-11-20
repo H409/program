@@ -73,9 +73,9 @@ Game::Game()
 
 	field_ = std::make_shared<Field>();
 
-	//auto sprite = std::make_shared<mesh::Sprite>(float2(800,600));
-	//auto debug_sprite_object = std::make_shared<MeshObject>(sprite);
-	//debug_sprite_object->SetPosition(-0.5f,-0.5f,0.0f);
+	auto sprite = std::make_shared<mesh::Sprite>(float2(200,150));
+	debug_sprite_object_ = std::make_shared<MeshObject>(sprite);
+	debug_sprite_object_->SetPosition(-0.5f,-0.5f,0.0f);
 }
 
 //=============================================================================
@@ -110,11 +110,12 @@ void Game::Finalize()
 //=============================================================================
 void Game::Update()
 {
+#ifndef _RELEASE
 	if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_R))
 	{
 		field_->Reset();
 	}
-
+#endif
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
 		players_[i]->SetCameraVector(observers_[i]->GetFrontVector());
@@ -127,13 +128,46 @@ void Game::Update()
 
 		if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_SPACE))
 		{
-			//field->SetType(field_icon->GetPosition(),2);
-			auto start_position = players_[i]->GetPosition();
-			start_position._y += 2.0f;
-			auto end_position = field_->GetBlockPosition(field_icons_[i]->GetPosition());
-			bullets_.push_back(std::make_shared<Bullet>(start_position,end_position));
+			// Ží‚Ü‚«
+			{
+				auto start_position = players_[i]->GetPosition();
+				start_position._y += 2.0f;
+				auto end_position = field_->GetBlockPosition(field_icons_[i]->GetPosition());
+
+				auto is_create = true;
+
+				for(auto bullet : bullets_)
+				{
+					if(bullet->IsDeath())
+					{
+						bullet->Reset(start_position,end_position);
+						is_create = false;
+						break;
+					}
+				}
+
+				if(is_create)
+				{
+					bullets_.push_back(std::make_shared<Bullet>(start_position,end_position));
+				}
+			}
+
+			// Œ@‚è•Ô‚µ
+			{
+				auto position = players_[i]->GetPosition();
+				if(field_->GetType(position) == 2)
+				{
+					field_->SetType(position,1);
+				}
+			}
 		}
 
+		auto icon_position = field_icons_[i]->GetPosition();
+		auto player_position = players_[i]->GetPosition();
+
+		if(field_->GetBlockIndex(icon_position) == field_->GetBlockIndex(player_position))
+		{
+		}
 		observers_[i]->SetTargetPosition(players_[i]->GetPosition());
 		observers_[i]->SetTargetVector(float3(sinf(players_[i]->GetRotation()._y),0,cosf(players_[i]->GetRotation()._y)));
 		observers_[i]->Update();
@@ -265,55 +299,52 @@ void Game::Draw()
 	}
 
 #ifdef _DEBUG 
-	//static bool _debugRenderTarget = false;
-	//static int _debugRenderTargetIndex = 0;
+	static bool _debugRenderTarget = false;
+	static int _debugRenderTargetIndex = 0;
 
-	//LPDIRECT3DTEXTURE9 tex[3];
-	//tex[0] = color_texture->GetTexture();
-	//tex[1] = normal_texture->GetTexture();
-	//tex[2] = position_texture->GetTexture();
+	LPDIRECT3DTEXTURE9 tex[3];
+	tex[0] = color_textures_[0]->GetTexture();
+	tex[1] = normal_textures_[0]->GetTexture();
+	tex[2] = position_textures_[0]->GetTexture();
 
 
-	//if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_0) == true)
-	//{
-	//	_debugRenderTarget = !_debugRenderTarget;
-	//}
+	if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_0) == true)
+	{
+		_debugRenderTarget = !_debugRenderTarget;
+	}
 
-	//if(_debugRenderTarget == true)
-	//{
-	//	if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_LEFT) == true)
-	//	{
-	//		_debugRenderTargetIndex--;
+	if(_debugRenderTarget == true)
+	{
+		if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_LEFT) == true)
+		{
+			_debugRenderTargetIndex--;
 
-	//		if(_debugRenderTargetIndex == -1)
-	//		{
-	//			_debugRenderTargetIndex = 0;
-	//		}
-	//	}
-	//	if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_RIGHT) == true)
-	//	{
-	//		_debugRenderTargetIndex++;
+			if(_debugRenderTargetIndex == -1)
+			{
+				_debugRenderTargetIndex = 0;
+			}
+		}
+		if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_RIGHT) == true)
+		{
+			_debugRenderTargetIndex++;
 
-	//		if(_debugRenderTargetIndex == 3)
-	//		{
-	//			_debugRenderTargetIndex = 2;
-	//		}
-	//	}
+			if(_debugRenderTargetIndex == 3)
+			{
+				_debugRenderTargetIndex = 2;
+			}
+		}
 
-	//	graphic_device->SetVertexShader(basic_vs);
-	//	graphic_device->SetPixelShader(basic_ps);
+		graphic_device->SetVertexShader(basic_vs);
+		graphic_device->SetPixelShader(basic_ps);
 
-	//	basic_vs->SetValue("_view_matrix",(f32*)&observer_2d->GetViewMatrix(),sizeof(float4x4));
-	//	basic_vs->SetValue("_projection_matrix",(f32*)&observer_2d->GetProjectionMatrix(),sizeof(float4x4));
-	//	basic_vs->SetValue("_world_matrix",(f32*)&debug_sprite_object->GetMatrix(),sizeof(float4x4));
+		basic_vs->SetValue("_view_matrix",(f32*)&observer_2d_->GetViewMatrix(),sizeof(float4x4));
+		basic_vs->SetValue("_projection_matrix",(f32*)&observer_2d_->GetProjectionMatrix(),sizeof(float4x4));
+		basic_vs->SetValue("_world_matrix",(f32*)&debug_sprite_object_->GetMatrix(),sizeof(float4x4));
 
-	//	basic_ps->SetTexture("_texture_sampler",tex[_debugRenderTargetIndex]);
+		basic_ps->SetTexture("_texture_sampler",tex[_debugRenderTargetIndex]);
 
-	//	debug_sprite_object->SetScaleX(0.25f);
-	//	debug_sprite_object->SetScaleY(0.25f);
-
-	//	debug_sprite_object->Draw();
-	//}
+		debug_sprite_object_->Draw();
+	}
 #endif
 
 }

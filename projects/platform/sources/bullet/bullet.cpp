@@ -39,15 +39,7 @@ Bullet::Bullet(const float3& in_start_position,const float3& in_end_position,con
 	mesh_object_->SetPosition(position_);
 	sprite_3d_->SetAnchorPoint(float2(0.5f,0.5f));
 	sprite_3d_->Apply();
-
-	auto vector = end_position_ - start_position_;
-	auto height = vector._y;
-	vector._y = 0.0f;
-	auto length = utility::math::Length(vector);
-	auto t = sqrtf(2 * height / -GRAVITY);
-	auto speed = length / t;
-	vector = utility::math::Normalize(vector);
-	move_ = vector * speed;
+	Reset(in_start_position,in_end_position);
 }
 
 //=============================================================================
@@ -69,6 +61,23 @@ void Bullet::Update(void)
 
 		mesh_object_->SetPosition(position_);
 	}
+}
+
+void Bullet::Reset(const float3& in_start_position,const float3& in_end_position)
+{
+	position_ = in_start_position;
+	start_position_ = in_start_position;
+	end_position_ = in_end_position;
+
+	auto vector = end_position_ - start_position_;
+	auto height = vector._y;
+	vector._y = 0.0f;
+	auto length = utility::math::Length(vector);
+	auto t = sqrtf(2 * height / -GRAVITY);
+	auto speed = length / t;
+	vector = utility::math::Normalize(vector);
+	move_ = vector * speed;
+	is_death_ = false;
 }
 
 void Bullet::Remove(void)

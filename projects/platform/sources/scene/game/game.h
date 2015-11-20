@@ -73,6 +73,10 @@ private:
 	std::shared_ptr<graphic::directx9::texture::DX9Texture> position_textures_[PLAYER_MAX];
 	std::shared_ptr<MeshObject> sprite_objects_[PLAYER_MAX];
 	std::shared_ptr<Observer2D> observer_2d_;
+
+#ifdef _DEBUG
+	std::shared_ptr<MeshObject> debug_sprite_object_;
+#endif
 };
 
 #endif

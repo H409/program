@@ -60,6 +60,7 @@ private:
 	float3 position_;
 	float3 basic_position_;
 	f32 range_;
+	f32 min_;
 	f32 speed_;
 	TSprite3D sprite_3d_;
 	TMeshObject mesh_object_;

@@ -51,6 +51,9 @@ public:
 	// update
 	void Update(void);
 
+	// reset
+	void Reset(const float3& in_start_position,const float3& in_end_position);
+
 	// remove
 	void Remove(void);
 

@@ -160,6 +160,15 @@ float3 Field::GetBlockPosition(const float3& in_position)
 	return position;
 }
 
+u32 Field::GetBlockIndex(const float3& in_position)
+{
+	float3 offset = float3(-block_width_ * width_count_ * 0.5f,0.0f,-block_height_ * height_count_ * 0.5f);
+	auto x = (u32)((in_position._x - offset._x) / block_width_);
+	auto y = (u32)((in_position._z - offset._z) / block_height_);
+
+	return y * width_count_ + x;
+}
+
 //=============================================================================
 // get positions
 //=============================================================================
