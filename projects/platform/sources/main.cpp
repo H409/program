@@ -39,8 +39,6 @@ int main(int argc,char* argv)
 		auto start_time = std::chrono::system_clock::now();
 
 		GET_INPUT_MANAGER()->Update();
-		GET_INPUT_MOUSE()->Update();
-		GET_INPUT_KEYBOARD()->Update();
 
 		scene_manager.Update();
 

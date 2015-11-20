@@ -218,6 +218,7 @@ void Game::Update()
 void Game::Draw()
 {
 	auto graphic_device = GET_GRAPHIC_DEVICE();
+	graphic_device->Clear(float4(0.0f, 0.0f, 1.0f, 0.0f), 1.0f);
 	auto gb_vs = graphic_device->LoadVertexShader("resources/shader/graphics_buffer.vsc");
 	auto gb_ps = graphic_device->LoadPixelShader("resources/shader/graphics_buffer.psc");
 	auto d_vs = graphic_device->LoadVertexShader("resources/shader/deferred.vsc");
@@ -292,7 +293,7 @@ void Game::Draw()
 	graphic_device->SetRenderTarget(2,nullptr);
 	graphic_device->SetRenderTarget(3,nullptr);
 
-	graphic_device->Clear(float4(0.0f,0.0f,0.0f,0.0f),1.0f);
+	graphic_device->Clear(float4(0.0f,0.0f,1.0f,0.0f),1.0f);
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
