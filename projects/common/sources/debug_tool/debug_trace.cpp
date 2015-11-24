@@ -31,7 +31,7 @@ void Trace(const s8* in_message,...)
 	// ‰Â•Ïˆø”‚ÌQÆI—¹
 	va_end(args);
 
-	sprintf_s(message,"trace : %s",work);
+	sprintf_s(message,"trace : %s\n",work);
 
 	OutputDebugString(message);
 }

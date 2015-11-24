@@ -112,6 +112,7 @@
     <FxCompile>
       <ShaderModel>3.0</ShaderModel>
       <ObjectFileOutput>$(SolutionDir)resources\shader\%(Filename).vsc</ObjectFileOutput>
+      <DisableOptimizations>true</DisableOptimizations>
     </FxCompile>
     <PreBuildEvent>
       <Command>for %%1 in ($(InputDir)Shaders/*.hlsl) do fxc.exe $(InputDir)Shaders/%%~n1.hlsl /T fx_2_0 /Fo $(InputDir)Shaders/%%~n1.cfx</Command>

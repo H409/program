@@ -26,6 +26,8 @@
     <ClCompile Include="sources\action\sequence.cpp" />
     <ClCompile Include="sources\action\spawn.cpp" />
     <ClCompile Include="sources\bullet\bullet.cpp" />
+    <ClCompile Include="sources\develop_tool\develop_display.cpp" />
+    <ClCompile Include="sources\develop_tool\develop_tool.cpp" />
     <ClCompile Include="sources\fbx\kim.cpp" />
     <ClCompile Include="sources\field\field.cpp" />
     <ClCompile Include="sources\field_icon\field_icon.cpp" />
@@ -67,6 +69,8 @@
     <ClInclude Include="sources\action\sequence.h" />
     <ClInclude Include="sources\action\spawn.h" />
     <ClInclude Include="sources\bullet\bullet.h" />
+    <ClInclude Include="sources\develop_tool\develop_display.h" />
+    <ClInclude Include="sources\develop_tool\develop_tool.h" />
     <ClInclude Include="sources\fbx\kim.h" />
     <ClInclude Include="sources\field\field.h" />
     <ClInclude Include="sources\field_icon\field_icon.h" />

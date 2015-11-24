@@ -56,6 +56,11 @@ public:
 	// get position
 	const float3& GetPosition(void)const;
 
+	// 
+	void Show(bool in_is_show);
+
+	bool IsShow(void)const;
+
 private:
 	float3 position_;
 	float3 basic_position_;
@@ -65,6 +70,7 @@ private:
 	TSprite3D sprite_3d_;
 	TMeshObject mesh_object_;
 	float3 front_vector_;
+	bool is_show_;
 
 	float3 GetVector_(void)const;
 	bool IsOverRange_(void)const;

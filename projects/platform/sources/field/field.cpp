@@ -145,6 +145,11 @@ void Field::SelectBlock(const float3& in_position)
 	mesh_sprite_3d_->SetColor(select_index_x_,select_index_y_,SELECT_COLOR);
 }
 
+void Field::NotSelectBlock(void)
+{
+	mesh_sprite_3d_->SetColor(select_index_x_,select_index_y_,DEFAULT_COLOR);
+}
+
 float3 Field::GetBlockPosition(const float3& in_position)
 {
 	float3 position = float3(0.0f,0.0f,0.0f);

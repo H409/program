@@ -19,6 +19,7 @@ namespace shader {
 //=============================================================================
 DX9VertexShader::DX9VertexShader(LPDIRECT3DDEVICE9 in_direct3ddevice9,const std::string& in_path)
 	:DX9Shader(in_direct3ddevice9,in_path)
+	,direct3dvertexshader9_(nullptr)
 {
 	if(FAILED(in_direct3ddevice9->CreateVertexShader(program_,&direct3dvertexshader9_)))
 	{
@@ -36,6 +37,7 @@ DX9VertexShader::DX9VertexShader(LPDIRECT3DDEVICE9 in_direct3ddevice9,const std:
 //=============================================================================
 DX9VertexShader::DX9VertexShader(LPDIRECT3DDEVICE9 in_direct3ddevice9,const std::string & in_path,const std::string & in_function_name,const std::string& in_version)
 	:DX9Shader(in_direct3ddevice9,in_path,in_function_name,in_version)
+	,direct3dvertexshader9_(nullptr)
 {
 	if(FAILED(in_direct3ddevice9->CreateVertexShader(program_,&direct3dvertexshader9_)))
 	{

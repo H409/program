@@ -107,6 +107,11 @@ void FollowerObserver::Update(void)
 	view_matrix_ = utility::math::LookAtLH(eye_,look_at_,up_);
 }
 
+FollowerObserver::STATE FollowerObserver::GetState(void) const
+{
+	return state_;
+}
+
 //=============================================================================
 // 
 //=============================================================================

@@ -69,6 +69,7 @@ public:
 
 	void SetState( STATE state ){ state_ = state ; }
 
+	STATE GetState(void)const;
 private:
 	float3 target_position_;
 	float3 target_vector_;

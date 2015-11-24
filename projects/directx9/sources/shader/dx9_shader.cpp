@@ -67,7 +67,7 @@ DX9Shader::DX9Shader(LPDIRECT3DDEVICE9 in_direct3ddevice9,const std::string & in
 		fseek(file,0,SEEK_END);
 		auto size = ftell(file);
 		fseek(file,0,SEEK_SET);
-		program_ = (DWORD*)new u8[size];
+		program_ = new DWORD[size];
 		fread(program_,1,size,file);
 		fclose(file);
 	}

@@ -17,6 +17,10 @@
 #include "system/input_keyboard.h"
 #include "system/input_mouse.h"
 #include "scene/base/scene_manager.h"
+#include "develop_tool/develop_tool.h"
+
+#include "shader/dx9_vertex_shader.h"
+#include "shader/dx9_pixel_shader.h"
 
 //=============================================================================
 // エントリーポイント
@@ -31,16 +35,19 @@ int main(int argc,char* argv)
 	auto graphic_device = GET_GRAPHIC_DEVICE();
 	bool is_loop = true;
 	auto& scene_manager = SceneManager::Instance();
-
+	auto fps = 0;
 	win_system->SetCallbacks(WinSystem::EVENT::STOP,{ [&is_loop] {is_loop = false;} });
 
+	auto sum_time = 0;
+	u32 frame_count = 0;
+	auto st = timeGetTime();
 	while(is_loop)
 	{
 		auto start_time = std::chrono::system_clock::now();
-
 		GET_INPUT_MANAGER()->Update();
 		GET_INPUT_MOUSE()->Update();
 		GET_INPUT_KEYBOARD()->Update();
+		DEVELOP_TOOL_UPDATE();
 
 		scene_manager.Update();
 
@@ -48,9 +55,22 @@ int main(int argc,char* argv)
 
 		scene_manager.Draw();
 
+		frame_count++;
+		sum_time = timeGetTime() - st;
+
+		if(sum_time >= 500)
+		{
+			auto now = timeGetTime();
+			fps = frame_count * 1000 / sum_time;
+			sum_time = 0;
+			frame_count = 0;
+			st = now;
+		}
+		DEVELOP_DISPLAY("%d\n",fps);
+		DEVELOP_TOOL_DRAW();
 		graphic_device->EndRendering();
 
-		std::this_thread::sleep_until(start_time + std::chrono::milliseconds(1000 / 60));
+		std::this_thread::sleep_until(start_time + std::chrono::milliseconds(8));
 	}
 
 	return 0;

@@ -56,6 +56,9 @@ public:
 	// select block
 	void SelectBlock(const float3& in_position);
 
+	//
+	void NotSelectBlock(void);
+
 	// get block position
 	float3 GetBlockPosition(const float3& in_position);
 
