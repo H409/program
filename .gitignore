@@ -22,3 +22,5 @@ project/Develop/
 Debug/
 *.vsc
 *.psc
+Develop/
+Release/

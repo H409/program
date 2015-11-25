@@ -35,6 +35,7 @@ class WinWindow;
 class InputKeyboard;
 class InputMouse;
 class InputManager;
+class InputXPad;
 
 
 //*****************************************************************************
@@ -47,6 +48,8 @@ public:
 	using TGraphicDevice = std::shared_ptr<graphic::directx9::DX9Device>;
 	using TCallback = std::function<void(void)>;
 	using TCallbacks = std::vector<TCallback>;
+	using TInputKeyboard = std::shared_ptr<InputKeyboard>;
+	using TInputMouse = std::shared_ptr<InputMouse>;
 	using TInputManager = std::shared_ptr<InputManager>;
 	
 	enum class EVENT
@@ -65,6 +68,8 @@ public:
 	void SetCallbacks(EVENT in_event,const TCallbacks& in_callbacks);
 
 	//Inputclass
+	TInputKeyboard GetKeyboard(void);
+	TInputMouse GetMouse(void);
 	TInputManager GetInputManager(void);
 
 protected:
@@ -80,6 +85,8 @@ private:
 	TWindow window_;
 	TGraphicDevice graphic_device_;
 	std::unordered_map<EVENT,TCallbacks> callbacks_;
+	TInputKeyboard input_keyboard_;
+	TInputMouse input_mouse_;
 	TInputManager input_manager_;
 
 	void Stop_(void);
@@ -89,6 +96,8 @@ private:
 #define GET_DIRECTX9_DEVICE() WinSystem::GetInstance()->GetDirectx9Device()
 #define GET_INPUT_KEYBOARD() WinSystem::GetInstance()->GetInputManager()->GetKeyboard()
 #define GET_INPUT_MOUSE() WinSystem::GetInstance()->GetInputManager()->GetMouse()
+#define GET_INPUT_JOYPAD(player_number) WinSystem::GetInstance()->GetInputManager()->GetJoypad(player_number)
+#define GET_INPUT_XPAD(player_number) WinSystem::GetInstance()->GetInputManager()->GetXIPad(player_number)
 #define GET_INPUT_MANAGER() WinSystem::GetInstance()->GetInputManager()
 
 #endif // _SYSTEM_H_

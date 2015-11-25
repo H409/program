@@ -19,6 +19,7 @@ namespace shader {
 //=============================================================================
 DX9PixelShader::DX9PixelShader(LPDIRECT3DDEVICE9 in_direct3ddevice9,const std::string& in_path)
 	:DX9Shader(in_direct3ddevice9,in_path)
+	,direct3dpixelshader9_(nullptr)
 {
 	DEBUG_ASSERT(in_direct3ddevice9->CreatePixelShader(program_,&direct3dpixelshader9_) == S_OK);
 
@@ -27,6 +28,7 @@ DX9PixelShader::DX9PixelShader(LPDIRECT3DDEVICE9 in_direct3ddevice9,const std::s
 
 DX9PixelShader::DX9PixelShader(LPDIRECT3DDEVICE9 in_direct3ddevice9,const std::string& in_path,const std::string& in_function_name,const std::string& in_version)
 	:DX9Shader(in_direct3ddevice9,in_path,in_function_name,in_version)
+	,direct3dpixelshader9_(nullptr)
 {
 	DEBUG_ASSERT(in_direct3ddevice9->CreatePixelShader(program_,&direct3dpixelshader9_) == S_OK);
 }

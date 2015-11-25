@@ -82,6 +82,7 @@ void InputMouse::Update(void)
 	//値の更新
 	if (FAILED(m_pDIDevice->GetDeviceState(sizeof(DIMOUSESTATE2), &MouseState)))
 	{
+
 		m_pDIDevice->Acquire();
 
 		//配列初期化

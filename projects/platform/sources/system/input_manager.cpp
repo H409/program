@@ -9,6 +9,7 @@
 #include "input_keyboard.h"
 #include "input_mouse.h"
 #include "input_joypad.h"
+#include "xi_pad.h"
 
 const u32 InputManager::keyboard_button_name_[(int)Command::MAX] = {
 	DIK_UP,		//UP
@@ -40,6 +41,21 @@ const u32 InputManager::joypad_button_name_[(int)Command::MAX] = {
 	(int)InputJoypad::KEY_CODE::KEY_R2,				//R2
 };
 
+const u32 InputManager::xipad_button_name_[(int)Command::MAX] = {
+	(int)XIPad::KEY::UP,	//UP
+	(int)XIPad::KEY::DOWN,	//DOWN
+	(int)XIPad::KEY::LEFT,	//LEFT
+	(int)XIPad::KEY::RIGHT,	//RIGHT
+	(int)XIPad::KEY::A,		//A
+	(int)XIPad::KEY::B,		//B
+	(int)XIPad::KEY::X,		//X
+	(int)XIPad::KEY::Y,		//Y
+	(int)XIPad::KEY::L1,	//L1
+	(int)XIPad::KEY::L2,	//L2
+	(int)XIPad::KEY::R1,	//R1
+	(int)XIPad::KEY::R2,	//R2
+};
+
 InputManager::InputManager(void)
 {
 	
@@ -57,6 +73,8 @@ InputManager::~InputManager()
 	{
 		input_joypad_[i]->Uninit();
 		delete input_joypad_[i];
+		input_x_ipad_[i]->Clear();
+		delete input_x_ipad_[i];
 	}
 }
 
@@ -73,6 +91,11 @@ bool InputManager::Initialize(HWND _hWnd)
 	{
 		input_joypad_[i] = new InputJoypad();
 		input_joypad_[i]->Init();
+	}
+	//XパッドオブジェをXパッドの個数分作成
+	for (int i = 0; i < PLAYER_SUM; i++)
+	{
+		input_x_ipad_[i] = new XIPad(i);
 	}
 	return true;
 }
@@ -92,6 +115,7 @@ void InputManager::Update(void)
 	for (int i = 0; i < PLAYER_SUM; i++)
 	{
 		input_joypad_[i]->Update();
+		input_x_ipad_[i]->Update();
 	}
 
 	//コマンドの状態更新
@@ -101,10 +125,10 @@ void InputManager::Update(void)
 		for (int i = 0; i < PLAYER_SUM; i++)
 		{
 			//更新
-			Trigger[key][i] = input_keyboard_->GetTrigger(keyboard_button_name_[key]) | input_joypad_[i]->GetTrigger(joypad_button_name_[key]);
-			Press[key][i] = input_keyboard_->GetPress(keyboard_button_name_[key]) | input_joypad_[i]->GetPress(joypad_button_name_[key]);
-			Release[key][i] = input_keyboard_->GetRelease(keyboard_button_name_[key]) | input_joypad_[i]->GetRelease(joypad_button_name_[key]);
-			Repeat[key][i] = input_keyboard_->GetRepeat(keyboard_button_name_[key],60) | input_joypad_[i]->GetRepeat(joypad_button_name_[key]);
+			Trigger[key][i] = input_keyboard_->GetTrigger(keyboard_button_name_[key]) | input_joypad_[i]->GetTrigger(joypad_button_name_[key])|input_x_ipad_[i]->IsTrigger((XIPad::KEY)xipad_button_name_[key]);
+			Press[key][i] = input_keyboard_->GetPress(keyboard_button_name_[key]) | input_joypad_[i]->GetPress(joypad_button_name_[key]) | input_x_ipad_[i]->IsPress((XIPad::KEY)xipad_button_name_[key]);
+			Release[key][i] = input_keyboard_->GetRelease(keyboard_button_name_[key]) | input_joypad_[i]->GetRelease(joypad_button_name_[key]) | input_x_ipad_[i]->IsRelease((XIPad::KEY)xipad_button_name_[key]);
+			Repeat[key][i] = input_keyboard_->GetRepeat(keyboard_button_name_[key],60) | input_joypad_[i]->GetRepeat(joypad_button_name_[key]) | input_x_ipad_[i]->IsPress((XIPad::KEY)xipad_button_name_[key]);
 		}
 	}
 }

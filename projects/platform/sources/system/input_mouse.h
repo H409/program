@@ -9,6 +9,8 @@
 
 #include "Input.h"
 
+
+
 class InputMouse :public Input
 {
 public:
@@ -21,6 +23,7 @@ public:
 		RIGHT,
 		MAX,
 	};
+
 
 	void Init(HINSTANCE hInstance, HWND hWnd);
 	void Uninit(void);

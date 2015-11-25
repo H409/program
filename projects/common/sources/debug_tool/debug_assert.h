@@ -37,8 +37,8 @@ void Assert(bool in_expression,const s8* in_filename,u32 in_line,const s8* in_me
 #define DEBUG_ASSERT(expression) DEBUG_ASSERT_MESSAGE (expression,#expression)
 
 #else
-#define DEBUG_ASSERT(expression)
-#define DEBUG_ASSERT_MESSAGE(expression,format,...)
+#define DEBUG_ASSERT(expression) (expression)
+#define DEBUG_ASSERT_MESSAGE(expression,format,...) (expression)
 #endif // _DEBUG
 
 #endif // _DEBUG_ASSERT_H_

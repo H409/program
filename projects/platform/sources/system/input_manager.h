@@ -22,6 +22,7 @@
 class InputMouse;
 class InputKeyboard;
 class InputJoypad;
+class XIPad;
 
 #define PLAYER_SUM (4)
 #define PLAYER1 (0x01)
@@ -55,6 +56,7 @@ public:
 
 	static const u32 keyboard_button_name_[(int)Command::MAX];
 	static const u32 joypad_button_name_[(int)Command::MAX];
+	static const u32 xipad_button_name_[(int)Command::MAX];
 	
 	//コンストラクタ
 	InputManager();
@@ -77,13 +79,17 @@ public:
 	bool GetRelease(Command command, int id)const;
 	bool GetRepeat(Command command, int id)const;
 
-	InputKeyboard* GetKeyboard(void) { return input_keyboard_; };
-	InputMouse* GetMouse(void) { return input_mouse_; };
+	//それぞれの入力クラスを取得
+	InputKeyboard* GetKeyboard() { return input_keyboard_; }
+	InputMouse* GetMouse() { return input_mouse_; }
+	InputJoypad* GetJoypad(int num) { return input_joypad_[num]; }
+	XIPad* GetXIPad(int num) { return input_x_ipad_[num]; }
 
 private:
 	InputKeyboard* input_keyboard_;					//キーボードクラス
 	InputMouse* input_mouse_;						//マウスクラス
 	InputJoypad* input_joypad_[PLAYER_SUM];			//ジョイパッドクラス
+	XIPad* input_x_ipad_[PLAYER_SUM];				//Xパッドクラス
 
 	BYTE Trigger[(int)Command::MAX][PLAYER_SUM];	//トリガー情報保存
 	BYTE Press[(int)Command::MAX][PLAYER_SUM];		//プレス情報保存

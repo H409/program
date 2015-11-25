@@ -32,6 +32,7 @@ FieldIcon::FieldIcon(void)
 	,range_(5.0f)
 	,speed_(0.1f)
 	,min_(1.5f)
+	,is_show_(false)
 {
 	sprite_3d_ = std::make_shared<mesh::Sprite3D>(float2(1.0f,2.0f));
 	mesh_object_ = std::make_shared<MeshObject>(sprite_3d_);
@@ -103,6 +104,21 @@ void FieldIcon::SetFrontVector(const float3& in_front_vector)
 const float3& FieldIcon::GetPosition(void)const
 {
 	return position_;
+}
+
+void FieldIcon::Show(bool in_is_show)
+{
+	if(!is_show_)
+	{
+		position_ = basic_position_ + front_vector_ * min_;
+	}
+
+	is_show_ = in_is_show;
+}
+
+bool FieldIcon::IsShow(void) const
+{
+	return is_show_;
 }
 
 //=============================================================================

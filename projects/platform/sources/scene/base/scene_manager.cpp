@@ -40,7 +40,8 @@ SceneManager::SceneManager()
 	p_result_ = std::make_shared<Result>();
 
 	//カレントシーンに設定する
-	p_current_scene_ = p_title_;
+	p_current_scene_ = p_game_;
+	p_current_scene_->Initialize(this);
 }
 
 //=============================================================================

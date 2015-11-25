@@ -13,6 +13,7 @@
 #include "system/win_system.h"
 #include "system/input_keyboard.h"
 #include "system/input_manager.h"
+#include "system/xi_pad.h"
 #include "shader/dx9_vertex_shader.h"
 #include "shader/dx9_pixel_shader.h"
 #include "texture/dx9_texture.h"
@@ -27,6 +28,7 @@
 #include "player/player.h"
 #include "bullet/bullet.h"
 #include "math/math.h"
+#include "x_model/x_model.h"
 
 //=============================================================================
 // constructor
@@ -40,8 +42,9 @@ Game::Game()
 		observers_[i] = std::make_shared<FollowerObserver>(utility::math::ToRadian(60.0f),800.0f,600.0f);
 		observers_[i]->SetTargetPosition(float3(0.0f,0.0f,0.0f));
 		observers_[i]->SetTargetVector(float3(0.0f,0.0f,1.0f));
-		observers_[i]->SetLength(5.0f);
-		observers_[i]->SetHeight(5.0f);
+		observers_[i]->SetLength(4.0f);
+		observers_[i]->SetHeight(3.3f);
+		observers_[i]->SetState(FollowerObserver::STATE::STATE_FOLLWER);
 		observers_[i]->Update();
 	}
 
@@ -130,6 +133,18 @@ void Game::Update()
 		field_->Reset();
 	}
 #endif
+	//xinputƒeƒXƒg
+	if (GET_INPUT_XPAD(1)->IsTrigger(XIPad::KEY::A))
+	{
+		int i;
+		i = 0;
+	}
+	if (GET_INPUT_MANAGER()->GetTrigger(InputManager::Command::A,0))
+	{
+		int i;
+		i = 0;
+	}
+
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
 		players_[i]->SetCameraVector(observers_[i]->GetFrontVector());
@@ -143,6 +158,7 @@ void Game::Update()
 		if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_SPACE))
 		{
 			// Ží‚Ü‚«
+			if(field_icons_[i]->IsShow())
 			{
 				auto start_position = players_[i]->GetPosition();
 				start_position._y += 2.0f;
@@ -165,8 +181,8 @@ void Game::Update()
 					bullets_.push_back(std::make_shared<Bullet>(start_position,end_position));
 				}
 			}
-
 			// Œ@‚è•Ô‚µ
+			else
 			{
 				auto position = players_[i]->GetPosition();
 				if(field_->GetType(position) == 2)
@@ -176,15 +192,18 @@ void Game::Update()
 			}
 		}
 
-		auto icon_position = field_icons_[i]->GetPosition();
-		auto player_position = players_[i]->GetPosition();
-
-		if(field_->GetBlockIndex(icon_position) == field_->GetBlockIndex(player_position))
-		{
-		}
 		observers_[i]->SetTargetPosition(players_[i]->GetPosition());
 		observers_[i]->SetTargetVector(float3(sinf(players_[i]->GetRotation()._y),0,cosf(players_[i]->GetRotation()._y)));
 		observers_[i]->Update();
+
+		if(observers_[i]->GetState() == FollowerObserver::STATE::STATE_AIM)
+		{
+			field_icons_[i]->Show(true);
+		}
+		else
+		{
+			field_icons_[i]->Show(false);
+		}
 	}
 
 	field_->Update();
@@ -218,7 +237,6 @@ void Game::Update()
 void Game::Draw()
 {
 	auto graphic_device = GET_GRAPHIC_DEVICE();
-	graphic_device->Clear(float4(0.0f, 0.0f, 1.0f, 0.0f), 1.0f);
 	auto gb_vs = graphic_device->LoadVertexShader("resources/shader/graphics_buffer.vsc");
 	auto gb_ps = graphic_device->LoadPixelShader("resources/shader/graphics_buffer.psc");
 	auto d_vs = graphic_device->LoadVertexShader("resources/shader/deferred.vsc");
@@ -236,37 +254,47 @@ void Game::Draw()
 
 		graphic_device->Clear(float4(1.0f,0.0f,0.0f,0.0f),1.0f);
 
-		field_->SelectBlock(field_icons_[i]->GetPosition());
+		if(field_icons_[i]->IsShow())
+		{
+			field_->SelectBlock(field_icons_[i]->GetPosition());
+		}
+		else
+		{
+			field_->NotSelectBlock();
+		}
 
-		// set shader
 		graphic_device->SetVertexShader(gb_vs);
 		graphic_device->SetPixelShader(gb_ps);
 
 		// observer
-		gb_vs->SetValue("_view_matrix",(f32*)&observers_[i]->GetViewMatrix(),sizeof(float4x4));
-		gb_vs->SetValue("_projection_matrix",(f32*)&observers_[i]->GetProjectionMatrix(),sizeof(float4x4));
+		gb_vs->SetValue("_view_matrix",(f32*)&observers_[i]->GetViewMatrix(),16);
+		gb_vs->SetValue("_projection_matrix",(f32*)&observers_[i]->GetProjectionMatrix(),16);
 
 		auto object = field_->GetObject();
 
 		auto view_matrix = observers_[i]->GetViewMatrix();
 		auto i_view_matrix = utility::math::InverseB(view_matrix);
+
 		auto world_matrix = object->GetMatrix();
 
-		gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,sizeof(float4x4));
+		gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
 		gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
 
 		object->Draw();
 
-		object = field_icons_[i]->GetObject();
+		if(field_icons_[i]->IsShow())
+		{
+			object = field_icons_[i]->GetObject();
 
-		world_matrix = object->GetMatrix();
-		world_matrix = utility::math::Multiply(i_view_matrix,world_matrix);
+			world_matrix = object->GetMatrix();
+			world_matrix = utility::math::Multiply(i_view_matrix,world_matrix);
 
-		// object
-		gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,sizeof(float4x4));
-		gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
+			// object
+			gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
+			gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
 
-		object->Draw();
+			object->Draw();
+		}
 
 		for(auto bullet : bullets_)
 		{
@@ -276,16 +304,19 @@ void Game::Draw()
 				world_matrix = object->GetMatrix();
 				world_matrix = utility::math::Multiply(i_view_matrix,world_matrix);
 
-				gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,sizeof(float4x4));
+				gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
 				gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
 
 				object->Draw();
 			}
 		}
 
-		players_[i]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[i]->GetViewMatrix());
-		players_[i]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[i]->GetProjectionMatrix());
-		players_[i]->Draw();
+		for(u32 j = 0;j < PLAYER_MAX;++j)
+		{
+			players_[j]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[i]->GetViewMatrix());
+			players_[j]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[i]->GetProjectionMatrix());
+			players_[j]->Draw();
+		}
 	}
 
 	graphic_device->SetRenderTarget(0,default_texture);
@@ -293,23 +324,22 @@ void Game::Draw()
 	graphic_device->SetRenderTarget(2,nullptr);
 	graphic_device->SetRenderTarget(3,nullptr);
 
-	graphic_device->Clear(float4(0.0f,0.0f,1.0f,0.0f),1.0f);
+	graphic_device->Clear(float4(1.0f,0.0f,0.0f,0.0f),1.0f);
+
+	graphic_device->SetVertexShader(d_vs);
+	graphic_device->SetPixelShader(d_ps);
+
+	d_vs->SetValue("_view_matrix",(f32*)&observer_2d_->GetViewMatrix(),16);
+	d_vs->SetValue("_projection_matrix",(f32*)&observer_2d_->GetProjectionMatrix(),16);
+	d_ps->SetValue("_light_vector",(f32*)&float3(0.0f,-1.0f,0.0f),3);
+	d_ps->SetValue("_light_deffuse",(f32*)&float3(1.0f,1.0f,1.0f),3);
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
-		graphic_device->SetVertexShader(d_vs);
-		graphic_device->SetPixelShader(d_ps);
-
-		d_vs->SetValue("_view_matrix",(f32*)&observer_2d_->GetViewMatrix(),sizeof(float4x4));
-		d_vs->SetValue("_projection_matrix",(f32*)&observer_2d_->GetProjectionMatrix(),sizeof(float4x4));
-		d_vs->SetValue("_world_matrix",(f32*)&sprite_objects_[i]->GetMatrix(),sizeof(float4x4));
-
-		d_ps->SetValue("_light_vector",(f32*)&float3(0.0f,-1.0f,0.0f),sizeof(float3));
-		d_ps->SetValue("_light_deffuse",(f32*)&float3(1.0f,1.0f,1.0f),sizeof(float3));
+		d_vs->SetValue("_world_matrix",(f32*)&sprite_objects_[i]->GetMatrix(),16);
 		d_ps->SetTexture("_color_sampler",color_textures_[i]->GetTexture());
 		d_ps->SetTexture("_normal_sampler",normal_textures_[i]->GetTexture());
 		d_ps->SetTexture("_position_sampler",position_textures_[i]->GetTexture());
-
 		sprite_objects_[i]->Draw();
 	}
 

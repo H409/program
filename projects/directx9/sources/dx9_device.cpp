@@ -82,9 +82,9 @@ DX9Device::DX9Device(const HWND& in_hwnd,const u16& in_width,const u16& in_heigh
 	d3dpresent_parameters_.AutoDepthStencilFormat = D3DFMT_D16;
 
 	// マルチサンプルを使用
-	d3dpresent_parameters_.MultiSampleType = D3DMULTISAMPLE_4_SAMPLES;
-	direct3d9_->CheckDeviceMultiSampleType(D3DADAPTER_DEFAULT,D3DDEVTYPE_HAL,D3DFMT_R5G6B5,true,D3DMULTISAMPLE_4_SAMPLES,&d3dpresent_parameters_.MultiSampleQuality);
-	d3dpresent_parameters_.MultiSampleQuality -= 1;
+	//d3dpresent_parameters_.MultiSampleType = D3DMULTISAMPLE_4_SAMPLES;
+	//direct3d9_->CheckDeviceMultiSampleType(D3DADAPTER_DEFAULT,D3DDEVTYPE_HAL,D3DFMT_R5G6B5,true,D3DMULTISAMPLE_4_SAMPLES,&d3dpresent_parameters_.MultiSampleQuality);
+	//d3dpresent_parameters_.MultiSampleQuality -= 1;
 
 	// ウィンドウモード
 	if(d3dpresent_parameters_.Windowed)

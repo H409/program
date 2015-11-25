@@ -31,6 +31,7 @@ Object::Object(void)
 	,priority_(0)
 	,is_dirty_(true)
 {
+	matrix_ = utility::math::Identity();
 	textures_.resize(TEXTURE_MAX);
 
 	auto graphic_device = GET_GRAPHIC_DEVICE();

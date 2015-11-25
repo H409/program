@@ -1,63 +1,78 @@
-#ifndef MESHWALL
-#define MESHWALL
+//*****************************************************************************
+//
+// mesh wall
+//
+// Author		: Eyuu Yuminaga
+//
+//*****************************************************************************
 
-#define WALL_MAX (4)
-#define SUM_INDEX(X,Z) ((X+1)*(Z-1)+((X+1)*(Z+1))+(Z-1)*2)	//インデックス数計算用
+//*****************************************************************************
+// include guard
+//*****************************************************************************
+#pragma once
+#ifndef _MESH_WALL_H_
+#define _MESH_WALL_H_
 
-class MeshWall:public CScene3D
+//*****************************************************************************
+// include
+//*****************************************************************************
+#include "mesh.h"
+
+//*****************************************************************************
+// class definition
+//*****************************************************************************
+namespace mesh {
+class MeshWall :public Mesh
 {
-	public:
-	MeshWall(LPDIRECT3DDEVICE9 device):CScene3D(device){pDevice=device;m_pIndexBuff=NULL;};
-	MeshWall(int nPriority):CScene3D(nPriority){}
-	virtual ~MeshWall();
+public:
+	// constructor
+	MeshWall(const u32& in_width_count, const u32& in_height_count);
+	MeshWall(const f32& in_block_width, const f32& in_block_height, const u32& in_width_count, const u32& in_height_count);
+	//destructor
+	virtual ~MeshWall(void);
 
-	HRESULT Init(	float posX,float posY,float posZ,float rotY,
-					int nNumBlockX,int nNumBlockZ,float fSizeBlockX,
-					float fSizeBlockZ);			//メッシュフィールド初期化
+	// set index
+	void SetIndex(u32 in_x, u32 in_y, u32 in_index);
+	//void SetIndex(const std::vector<u32>& in_indexs);
 
-	void Uninit(void);							//解放
-	void Update(void);							//モデル更新
-	void Draw(void);							//モデル描画
-	static MeshWall* Create(LPDIRECT3DDEVICE9 device,float posX,float posY,float posZ,float rotY,
-							int nNumBlockX,int nNumBlockY,float fSizeBlockX,float fSizeBlockY);
+	//// set color
+	//void SetColor(u32 in_x, u32 in_y, const float4& in_color);
 
-
-	void SetLength(void);						//壁から見た中心までの距離を設定
-	void SetEdge(void);							//壁の角の座標の設定
-
-	void SetPosition(D3DXVECTOR3 pos);			//座標アクセサー
-	void SetPosition(float x,float y,float z);
-	D3DXVECTOR3 GetPosition(void){return m_pos;};
-
-	void SetRotation(D3DXVECTOR3 rot);			//角度アクセサー
-	void SetRotation(float x,float y,float z);
-	void SetRotationFromCenter(float x,float y,float z){m_rot_from_center = D3DXVECTOR3(x,y,z);};
-	D3DXVECTOR3 GetRotation(void){return m_rot;};
-
-	static D3DXVECTOR3 GetEdge(int id){return m_edges[id];};
+	//// set texcoord
+	//void SetTexcoord(u32 in_division_width, u32 in_division_height);
 
 private:
+	struct VERTEX
+	{
+		float3 _position;
+		float2 _texcoord;
+		float3 _normal;
+		D3DCOLOR _color;
+	};
 
+	static const D3DXVECTOR2 DEFAULT_SIZE;
+	static const D3DCOLOR DEFAULT_COLOR;
+	static const D3DXVECTOR2 DEFAULT_POSITION;
 
-	int m_NumBlockX,m_NumBlockZ;				//ブロック数
-	int m_NumVtx;								//総頂点数
-	int m_NumPolygon;							//総ポリゴン数
-	float m_SizeBlockX,m_SizeBlockZ;			//ブロックサイズ
-	float m_wallsizeX;							//壁の大きさX
-	float m_wallsizeY;							//壁の大きさY
+	s32 index_;
 
-	D3DXVECTOR3			m_rot_from_center;		//中心点からの回転
-	D3DXVECTOR3			m_edge;					//壁の角座標(左側)
+	float2 size_;
+	float2 block_size_;
+	u32 width_count_;
+	u32 height_count_;
+	u32 division_width_;
+	u32 division_height_;
+	u32 index_count_;
+	u32* indexs_;
+	float2 anchor_point_;
 
-	float				m_Length_Edge_From_CenterXZ;		//壁の角から部屋の中心までの距離
-	float				m_Length_From_CenterXZ;				//壁の中心から部屋の中心までの距離
-	D3DXVECTOR3			m_center;							//壁から見た中心の座標
+	void AttachRenderState_(void)override;
+	void DetachRenderState_(void)override;
+	void UpdateVertexBuffer_(void)override;
 
-	int m_id;												//壁の個人番号
-	static int m_WallSum;									//現在作成された壁の数
-	static D3DXVECTOR3 m_edges[WALL_MAX];					//壁の角を保存するstatic変数
-
-	LPDIRECT3DINDEXBUFFER9 m_pIndexBuff;		// インデックスバッファ
 };
+} // namespace mesh
 
-#endif
+#endif//_MESH_WALL_H_
+
+//---------------------------------- EOF --------------------------------------
