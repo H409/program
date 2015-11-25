@@ -107,9 +107,17 @@ Game::~Game()
 //=============================================================================
 bool Game::Initialize(SceneManager* p_scene_manager)
 {
+	float3 positions[] =
+	{
+		float3(-15.0f,0.0f,-15.0f),
+		float3( 15.0f,0.0f,-15.0f),
+		float3(-15.0f,0.0f, 15.0f),
+		float3( 15.0f,0.0f, 15.0f),
+	};
+
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
-		players_[i]->Init(float3(0.0f,0.0f,0.0f));
+		players_[i]->Init(positions[i]);
 	}
 	return true;
 }
@@ -198,6 +206,16 @@ void Game::Update()
 	for(auto bullet : bullets_)
 	{
 		bullet->Update();
+	}
+
+	for(u32 i = 0;i < PLAYER_MAX;++i)
+	{
+		auto player_position = players_[i]->GetPosition();
+
+		if(field_->GetType(player_position) == 3)
+		{
+
+		}
 	}
 
 	// 
