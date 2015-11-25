@@ -70,6 +70,9 @@ public:
 	void SetState( STATE state ){ state_ = state ; }
 
 	STATE GetState(void)const;
+
+	void SetFieldIconPosition( const float3& pos ){ feild_icon_ = pos ; }
+
 private:
 	float3 target_position_;
 	float3 target_vector_;
@@ -77,6 +80,8 @@ private:
 	f32 length_;
 	f32 height_;
 	float3 rotation_ ;
+
+	float3 feild_icon_ ;
 
 	STATE state_ ;
 

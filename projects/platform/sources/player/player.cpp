@@ -83,7 +83,7 @@ void Player::Init( float3 pos )
 {
 	position_ = pos ;
 	pKim_ = new Kim( pDevice_ );
-	pKim_->Load( "resources/model/ZZI_MO.kim" );
+	pKim_->Load( "resources/model/ZZI_1_MO.kim" );
 
 	rotDest_ = float3();
 }

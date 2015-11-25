@@ -69,14 +69,18 @@ void FollowerObserver::Update(void)
 
 	if( state_ == STATE::AIM )
 	{
-		float length = length_ * 0.5f ;
-		float rot = -0.4f ;
+		float length = length_ * 0.7f ;
+		float rot = -0.2f ;
 		auto eye = float3( eye_._x , 0.0f , eye_._z );
 		auto vector = look_at_ - eye ;
 		vector = utility::math::Normalize( vector );
 
-		D3DXVECTOR3 vec ;
-		D3DXVec3Cross( &vec , &D3DXVECTOR3( 0 , 1 , 0 ) , ( D3DXVECTOR3* )&vector );
+		//D3DXVECTOR3 vec ;
+		//D3DXVec3Cross( &vec , &D3DXVECTOR3( 0 , 1 , 0 ) , ( D3DXVECTOR3* )&vector );
+		auto vec = feild_icon_ - target_position_ ;
+		D3DXVec3Normalize( ( D3DXVECTOR3* )&vec , ( D3DXVECTOR3* )&vec );
+
+		rotation_._y = atan2f( vec._x , vec._z );
 
 		//--  基本座標移動  --//
 		eye_._x = target_position_._x - sinf( rotation_._y + rot ) * length ;
@@ -85,16 +89,15 @@ void FollowerObserver::Update(void)
 
 		//auto look_at = float3(look_at_._x,0.0f,look_at_._z);
 
-
 		look_at_ = float3( vector._x * target_length_ , 0 , vector._z * target_length_ );
-		look_at_ = look_at_ * 1.5f + target_position_ ;
+		look_at_ = look_at_ + target_position_ ;
 	}
 	else
 	{
-		//--  基本座標移動  --//
-		eye_._x = target_position_._x - sinf( rotation_._y ) * length_ ;
-		eye_._y = height_ ;
-		eye_._z = target_position_._z - cosf( rotation_._y ) * length_ ;
+		////--  基本座標移動  --//
+		//eye_._x = target_position_._x - sinf( rotation_._y ) * length_ ;
+		//eye_._y = height_ ;
+		//eye_._z = target_position_._z - cosf( rotation_._y ) * length_ ;
 	}
 
 	view_matrix_ = utility::math::LookAtLH(eye_,look_at_,up_);

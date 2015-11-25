@@ -62,7 +62,7 @@ public :
 	STATE GetState( void ){ return state_ ; }
 	STATE GetAnime( void ){ return anime_ ; }
 
-	void SetID( int id ){ ID_ = id ; }
+	void SetID( const int& id ){ ID_ = id ; }
 	int GetID( void ){ return ID_ ; }
 
 	const float3& GetOldPosition( void ){ return old_position_ ; }
