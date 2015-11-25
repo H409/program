@@ -26,6 +26,7 @@
 #include "player/player.h"
 #include "bullet/bullet.h"
 #include "math/math.h"
+#include "x_model/x_model.h"
 
 //=============================================================================
 // constructor

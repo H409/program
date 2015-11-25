@@ -62,6 +62,9 @@
     <Filter Include="sources\develop_tool">
       <UniqueIdentifier>{671b6e7c-78b2-4581-bd38-3159d0d46ea3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\x_model">
+      <UniqueIdentifier>{e53aa46a-690b-44b6-8425-ef125621fb33}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\windows\win_main.cpp">
@@ -186,6 +189,12 @@
     </ClCompile>
     <ClCompile Include="sources\develop_tool\develop_tool.cpp">
       <Filter>sources\develop_tool</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\x_model\x_model.cpp">
+      <Filter>sources\x_model</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\system\xi_pad.cpp">
+      <Filter>sources\system</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -314,6 +323,12 @@
     </ClInclude>
     <ClInclude Include="sources\develop_tool\develop_tool.h">
       <Filter>sources\develop_tool</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\x_model\x_model.h">
+      <Filter>sources\x_model</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\system\xi_pad.h">
+      <Filter>sources\system</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
