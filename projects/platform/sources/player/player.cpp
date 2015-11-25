@@ -96,6 +96,8 @@ void Player::Init( float3 pos )
 //-------------------------------------------------------------------
 void Player::Update( void )
 {
+	old_position_ = position_ ;
+
 	//--  ‘€ì  --//
 	Control();
 
@@ -133,6 +135,25 @@ void Player::Uninit( void )
 void Player::Control( void )
 {
 	D3DXVec3Normalize( ( D3DXVECTOR3* )&camera_vector_ , ( D3DXVECTOR3* )&camera_vector_ );
+
+	
+	if( GET_INPUT_MOUSE()->GetTrigger( InputMouse::MOUSE_KEY::RIGHT ) == true )
+	{
+		if( state_ != STATE::AIM )
+		{
+			state_ = STATE::AIM ;
+		}
+		else
+		{
+			state_ = STATE::WAIT ;
+		}
+	}
+
+	if( state_ == AIM )
+	{
+		rotDest_._y = atan2f( camera_vector_._x , camera_vector_._z );
+		rotDest_._y += 0.4f ;
+	}
 
 	//--  ˆÚ“®@‘O  --//	
 	if( GET_INPUT_KEYBOARD()->GetPress( DIK_W ) == true )
@@ -191,18 +212,6 @@ void Player::Control( void )
 		//rotDest_._y = D3DX_PI * 0.5f ;
 	}
 
-	if( GET_INPUT_MOUSE()->GetTrigger( InputMouse::MOUSE_KEY::RIGHT ) == true )
-	{
-		if( state_ != STATE::AIM )
-		{
-			state_ = STATE::AIM ;
-		}
-		else
-		{
-			state_ = STATE::WAIT ;
-		}
-	}
-
 	//--  ˆÚ“®  --//
 	position_._x += move_._x ;
 	position_._y += move_._y ;
@@ -218,6 +227,7 @@ void Player::Control( void )
 	diff = utility::math::Wrap( diff , ( f32 )-utility::math::PI , ( f32 )utility::math::PI );
 
 	rotation_._y += diff * 0.09f ;
+
 }
 
 
