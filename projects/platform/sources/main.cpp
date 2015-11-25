@@ -19,9 +19,6 @@
 #include "scene/base/scene_manager.h"
 #include "develop_tool/develop_tool.h"
 
-#include "shader/dx9_vertex_shader.h"
-#include "shader/dx9_pixel_shader.h"
-
 //=============================================================================
 // エントリーポイント
 //=============================================================================
@@ -45,17 +42,6 @@ int main(int argc,char* argv)
 	while(is_loop)
 	{
 		auto start_time = std::chrono::system_clock::now();
-		GET_INPUT_MANAGER()->Update();
-		GET_INPUT_MOUSE()->Update();
-		GET_INPUT_KEYBOARD()->Update();
-		DEVELOP_TOOL_UPDATE();
-
-		scene_manager.Update();
-
-		graphic_device->BeginRendering();
-
-		scene_manager.Draw();
-
 		frame_count++;
 		sum_time = timeGetTime() - st;
 
@@ -67,11 +53,24 @@ int main(int argc,char* argv)
 			frame_count = 0;
 			st = now;
 		}
-		DEVELOP_DISPLAY("%d\n",fps);
+
+		DEVELOP_DISPLAY("FPS : %d\n",fps);
+
+		GET_INPUT_MANAGER()->Update();
+		GET_INPUT_MOUSE()->Update();
+		GET_INPUT_KEYBOARD()->Update();
+		DEVELOP_TOOL_UPDATE();
+
+		scene_manager.Update();
+
+		graphic_device->BeginRendering();
+
+		scene_manager.Draw();
+
 		DEVELOP_TOOL_DRAW();
 		graphic_device->EndRendering();
 
-		std::this_thread::sleep_until(start_time + std::chrono::milliseconds(8));
+		std::this_thread::sleep_until(start_time + std::chrono::milliseconds(16));
 	}
 
 	return 0;

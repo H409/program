@@ -27,6 +27,7 @@
 #include "bullet/bullet.h"
 #include "math/math.h"
 #include "x_model/x_model.h"
+#include "develop_tool/develop_tool.h"
 
 //=============================================================================
 // constructor
@@ -147,7 +148,7 @@ void Game::Update()
 			if(field_icons_[i]->IsShow())
 			{
 				auto start_position = players_[i]->GetPosition();
-				start_position._y += 2.0f;
+				start_position._y += 0.7f;
 				auto end_position = field_->GetBlockPosition(field_icons_[i]->GetPosition());
 
 				auto is_create = true;
@@ -171,7 +172,7 @@ void Game::Update()
 			else
 			{
 				auto position = players_[i]->GetPosition();
-				if(field_->GetType(position) == 2)
+				if(field_->GetType(position) == 3)
 				{
 					field_->SetType(position,1);
 				}
@@ -205,13 +206,20 @@ void Game::Update()
 		if(!bullet->IsDeath())
 		{
 			auto position = bullet->GetPosition();
-			if(position._y <= 0.0f)
+			if(field_->GetType(position) == 3)
 			{
-				if(field_->GetType(position) == 1)
-				{
-					field_->SetType(position,2);
-				}
 				bullet->Remove();
+			}
+			else
+			{
+				if(position._y <= 0.0f)
+				{
+					if(field_->GetType(position) == 1)
+					{
+						field_->SetType(position,2);
+					}
+					bullet->Remove();
+				}
 			}
 		}
 	}

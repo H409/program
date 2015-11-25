@@ -274,6 +274,19 @@ u32 Field::GetType(const float3& in_position)const
 	return types_[index];
 }
 
+u32 Field::CountType(u32 in_type)
+{
+	u32 count = 0;
+	for(auto type : types_)
+	{
+		if(type == in_type)
+		{
+			count++;
+		}
+	}
+	return count;
+}
+
 //=============================================================================
 // check type
 //=============================================================================

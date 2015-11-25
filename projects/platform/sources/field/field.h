@@ -75,6 +75,9 @@ public:
 	// get type
 	u32 GetType(const float3& in_position)const;
 
+	// 
+	u32 CountType(u32 in_type);
+
 	// check type
 	bool CheckType(const u32& in_x,const u32& in_y,const u32& in_type);
 	bool CheckTypeLeftTop(const u32& in_x,const u32& in_y,const u32& in_type);
