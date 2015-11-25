@@ -77,7 +77,10 @@ void FollowerObserver::Update(void)
 
 		//D3DXVECTOR3 vec ;
 		//D3DXVec3Cross( &vec , &D3DXVECTOR3( 0 , 1 , 0 ) , ( D3DXVECTOR3* )&vector );
-		rotation_._y = atan2f( feild_icon_._x , feild_icon_._z );
+		auto vec = feild_icon_ - target_position_ ;
+		D3DXVec3Normalize( ( D3DXVECTOR3* )&vec , ( D3DXVECTOR3* )&vec );
+
+		rotation_._y = atan2f( vec._x , vec._z );
 
 		//--  äÓñ{ç¿ïWà⁄ìÆ  --//
 		eye_._x = target_position_._x - sinf( rotation_._y + rot ) * length ;

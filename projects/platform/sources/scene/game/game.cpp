@@ -147,7 +147,7 @@ void Game::Update()
 			if(field_icons_[i]->IsShow())
 			{
 				auto start_position = players_[i]->GetPosition();
-				start_position._y += 2.0f;
+				start_position._y += 0.7f;
 				auto end_position = field_->GetBlockPosition(field_icons_[i]->GetPosition());
 
 				auto is_create = true;
