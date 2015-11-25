@@ -497,7 +497,7 @@ void Kim::Update(void)
 			//}
 
 			//dest_bone->anime[ 0 ].current_key = 1 ;
-			dest_bone->anime[ 0 ].num_key = 60 ;
+			//dest_bone->anime[ 0 ].num_key = 60 ;
 
 			// ‰Â“Ç«‚ªƒ„ƒoƒC‚Ì‚ÅÃÝÎß×Ø‚ð—pˆÓ
 			int current_key = dest_bone->anime[ 0 ].current_key ;
@@ -537,7 +537,7 @@ void Kim::Update(void)
 
 					if( dest_bone->anime[ 0 ].current_key >= dest_bone->anime[ 0 ].num_key )
 					{
-						dest_bone->anime[ 0 ].current_key = 30 ;		// 
+						dest_bone->anime[ 0 ].current_key = 0 ;		// 
 						//dest_bone->anime[ 0 ].current_key %= dest_bone->anime[ 0 ].num_key;
 					}
 				}
@@ -572,8 +572,9 @@ void Kim::Draw(void)
 	{
 		_bone = !_bone ;
 	}
-#endif
 	if( !GetAsyncKeyState('N') )
+#endif
+
 	{
 		switch (draw_type_)
 		{

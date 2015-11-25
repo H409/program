@@ -62,14 +62,17 @@ public :
 	STATE GetState( void ){ return state_ ; }
 	STATE GetAnime( void ){ return anime_ ; }
 
-	void SetID( int id ){ ID_ = id ; }
+	void SetID( const int& id ){ ID_ = id ; }
 	int GetID( void ){ return ID_ ; }
 
 	float3 GetOldPosition( void ){ return old_position_ ; }
-	void SetOldPosition( float3 pos ){ old_position_ = pos ; }
+	void SetOldPosition( const float3& pos ){ old_position_ = pos ; }
+
+	float3 GetMove( void ){ return move_ ; }
+	void SetMove( const float3& move ){ move_ = move ; }
 
 	//--  設定  --//
-	void SetCameraVector( float3 vec ){ camera_vector_ = vec ; }
+	void SetCameraVector( const float3& vec ){ camera_vector_ = vec ; }
 
 	//--  インスタンス生成  --//
 	//static Player* Create( LPDIRECT3DDEVICE9 pDevice , float3 pos );

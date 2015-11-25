@@ -178,6 +178,7 @@ void Game::Update()
 			}
 		}
 
+		//--  ƒGƒCƒ€”»’è  --//
 		if( Player::STATE::AIM == players_[ i ]->GetState() )
 		{
 			observers_[i]->SetState( FollowerObserver::STATE::AIM );
@@ -188,7 +189,9 @@ void Game::Update()
 			field_icons_[i]->Show(false);
 			observers_[i]->SetState( FollowerObserver::STATE::FOLLWER );
 		}
+		
 
+		observers_[i]->SetFieldIconPosition( field_icons_[i]->GetPosition() );
 		observers_[i]->SetTargetPosition(players_[i]->GetPosition());
 		observers_[i]->SetTargetVector(float3(sinf(players_[i]->GetRotation()._y),0,cosf(players_[i]->GetRotation()._y)));
 		observers_[i]->Update();
