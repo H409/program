@@ -53,7 +53,7 @@ Game::Game()
 	{
 		color_textures_[i] = graphic_device->CreateTexture(800,600,D3DFMT_A8R8G8B8);
 		normal_textures_[i] = graphic_device->CreateTexture(800,600,D3DFMT_A16B16G16R16F);
-		position_textures_[i] = graphic_device->CreateTexture(800,600,D3DFMT_A32B32G32R32F);
+		position_textures_[i] = graphic_device->CreateTexture(800,600,D3DFMT_A16B16G16R16F);
 	}
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
@@ -187,18 +187,21 @@ void Game::Update()
 			}
 		}
 
-		observers_[i]->SetTargetPosition(players_[i]->GetPosition());
-		observers_[i]->SetTargetVector(float3(sinf(players_[i]->GetRotation()._y),0,cosf(players_[i]->GetRotation()._y)));
-		observers_[i]->Update();
-
-		if(observers_[i]->GetState() == FollowerObserver::STATE::AIM)
+		if( Player::STATE::AIM == players_[ i ]->GetState() )
 		{
+			observers_[i]->SetState( FollowerObserver::STATE::AIM );
 			field_icons_[i]->Show(true);
 		}
 		else
 		{
 			field_icons_[i]->Show(false);
+			observers_[i]->SetState( FollowerObserver::STATE::FOLLWER );
 		}
+
+		observers_[i]->SetTargetPosition(players_[i]->GetPosition());
+		observers_[i]->SetTargetVector(float3(sinf(players_[i]->GetRotation()._y),0,cosf(players_[i]->GetRotation()._y)));
+		observers_[i]->Update();
+
 	}
 
 	field_->Update();
@@ -210,11 +213,30 @@ void Game::Update()
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
-		auto player_position = players_[i]->GetPosition();
+		auto player = players_[i];
+		auto player_old_position = player->GetOldPosition();
+		auto player_move = player->GetMove();
+		auto player_position = player->GetPosition();
 
 		if(field_->GetType(player_position) == 3)
 		{
+			player->SetPosition(player->GetOldPosition());
+			player->SetMove(float3(0.0f,0.0f,0.0f));
+		}
 
+		player_position = float3(player_old_position._x + player_move._x,0.0f,player_old_position._z);
+		if(field_->GetType(player_position) == 3)
+		{
+			player->SetPosition(player->GetOldPosition());
+			player->SetMove(float3(0.0f,0.0f,0.0f));
+		}
+
+		player_position = float3(player_old_position._x,0.0f,player_old_position._z + player_move._z);
+
+		if(field_->GetType(player_position) == 3)
+		{
+			player->SetPosition(player->GetOldPosition());
+			player->SetMove(float3(0.0f,0.0f,0.0f));
 		}
 	}
 

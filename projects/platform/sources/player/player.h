@@ -65,8 +65,13 @@ public :
 	void SetID( int id ){ ID_ = id ; }
 	int GetID( void ){ return ID_ ; }
 
+	const float3& GetOldPosition( void ){ return old_position_ ; }
+	void SetOldPosition( const float3& pos ){ old_position_ = pos ; }
+
+	void SetMove(const float3& in_move) { move_ = in_move; }
+	const float3& GetMove(void) { return move_; }
 	//--  設定  --//
-	void SetCameraVector( float3 vec ){ camera_vector_ = vec ; }
+	void SetCameraVector( const float3& vec ){ camera_vector_ = vec ; }
 
 	//--  インスタンス生成  --//
 	//static Player* Create( LPDIRECT3DDEVICE9 pDevice , float3 pos );
@@ -79,7 +84,8 @@ private :
 	float3 move_ ;				// 移動量
 	float3 speed_ ;				// 速度
 	float3 rotDest_ ;			// 目的の向き
-	
+	float3 old_position_ ;		// 前の位置
+
 	int ID_ ;
 	int anime_data_[ STATE::MAX ][ 2 ];
 

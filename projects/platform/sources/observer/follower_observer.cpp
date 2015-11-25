@@ -87,7 +87,7 @@ void FollowerObserver::Update(void)
 
 
 		look_at_ = float3( vector._x * target_length_ , 0 , vector._z * target_length_ );
-		look_at_ = look_at_ + target_position_ ;
+		look_at_ = look_at_ * 1.5f + target_position_ ;
 	}
 	else
 	{
