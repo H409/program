@@ -41,6 +41,7 @@ int main(int argc,char* argv)
 	auto sum_time = 0;
 	u32 frame_count = 0;
 	auto st = timeGetTime();
+
 	while(is_loop)
 	{
 		auto start_time = std::chrono::system_clock::now();

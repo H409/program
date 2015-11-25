@@ -26,10 +26,10 @@ class FollowerObserver : public Observer3D
 public:
 	enum STATE
 	{
-		STATE_NONE = -1 ,
-		STATE_FOLLWER ,
-		STATE_AIM , 
-		STATE_MAX
+		NONE = -1 ,
+		FOLLWER ,
+		AIM , 
+		MAX
 	};
 
 	// constructor

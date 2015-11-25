@@ -40,9 +40,9 @@ Game::Game()
 		observers_[i] = std::make_shared<FollowerObserver>(utility::math::ToRadian(60.0f),800.0f,600.0f);
 		observers_[i]->SetTargetPosition(float3(0.0f,0.0f,0.0f));
 		observers_[i]->SetTargetVector(float3(0.0f,0.0f,1.0f));
-		observers_[i]->SetLength(4.0f);
-		observers_[i]->SetHeight(3.3f);
-		observers_[i]->SetState(FollowerObserver::STATE::STATE_FOLLWER);
+		observers_[i]->SetLength(2.0f);
+		observers_[i]->SetHeight(1.5f);
+		observers_[i]->SetState(FollowerObserver::STATE::FOLLWER);
 		observers_[i]->Update();
 	}
 
@@ -182,7 +182,7 @@ void Game::Update()
 		observers_[i]->SetTargetVector(float3(sinf(players_[i]->GetRotation()._y),0,cosf(players_[i]->GetRotation()._y)));
 		observers_[i]->Update();
 
-		if(observers_[i]->GetState() == FollowerObserver::STATE::STATE_AIM)
+		if(observers_[i]->GetState() == FollowerObserver::STATE::AIM)
 		{
 			field_icons_[i]->Show(true);
 		}

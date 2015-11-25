@@ -20,11 +20,11 @@
 //=============================================================================
 FollowerObserver::FollowerObserver(const f32& in_radian,const f32& in_width,const f32& in_height)
 	:Observer3D(in_radian,in_width,in_height)
-	,target_length_(4.0f)
+	,target_length_(2.0f)
 {
 	rotation_ = float3();
 	eye_ = float3();
-	state_ = STATE::STATE_NONE ;
+	state_ = STATE::NONE ;
 }
 
 //=============================================================================
@@ -51,7 +51,7 @@ void FollowerObserver::Update(void)
 	MouseMove_();
 #endif // _DEBUG
 
-	if( state_ == STATE::STATE_FOLLWER )
+	if( state_ == STATE::FOLLWER )
 	{
 		//--  基本座標移動  --//
 		eye_._x = target_position_._x - sinf( rotation_._y ) * length_ ;
@@ -66,25 +66,11 @@ void FollowerObserver::Update(void)
 		look_at_ = float3( vector._x * target_length_ , 0 , vector._z * target_length_ );
 		look_at_ = look_at_ + target_position_ ;
 	}
-	
-	if( GET_INPUT_MOUSE()->GetTrigger( InputMouse::MOUSE_KEY::RIGHT ) == true )
-	{
-		if( state_ != STATE::STATE_AIM )
-		{
-			state_ = STATE::STATE_AIM ;
-		}
-		else
-		{
-			state_ = STATE::STATE_FOLLWER ;
-			length_ = 4.0f ;
 
-		}
-	}
-
-	if( state_ == STATE::STATE_AIM )
+	if( state_ == STATE::AIM )
 	{
-		const float length = 2.0f ;
-		float rot = 0.2f ;
+		float length = length_ * 0.5f ;
+		float rot = -0.4f ;
 		auto eye = float3( eye_._x , 0.0f , eye_._z );
 		auto vector = look_at_ - eye ;
 		vector = utility::math::Normalize( vector );
@@ -102,6 +88,13 @@ void FollowerObserver::Update(void)
 
 		look_at_ = float3( vector._x * target_length_ , 0 , vector._z * target_length_ );
 		look_at_ = look_at_ + target_position_ ;
+	}
+	else
+	{
+		//--  基本座標移動  --//
+		eye_._x = target_position_._x - sinf( rotation_._y ) * length_ ;
+		eye_._y = height_ ;
+		eye_._z = target_position_._z - cosf( rotation_._y ) * length_ ;
 	}
 
 	view_matrix_ = utility::math::LookAtLH(eye_,look_at_,up_);

@@ -50,7 +50,7 @@ Kim::Kim(LPDIRECT3DDEVICE9 d3d_device)
 	bone_num_ = 0;
 
 	current_anime_ = 0;
-	next_anime_ = 0;
+	next_anime_  = 0;
 	set_anime_ = 0;
 
 	draw_type_ = TYPE_MULTI_MY;
@@ -59,6 +59,7 @@ Kim::Kim(LPDIRECT3DDEVICE9 d3d_device)
 	D3DXVec3Normalize(&light_directional, &light_directional);
 
 	D3DXMatrixIdentity(&world_);
+
 
 	//--  このﾌﾚｰﾑﾜｰｸ用  --//
 	all_vertex_num_ = 0;
@@ -192,7 +193,9 @@ HRESULT Kim::Load(const char* file_name)
 
 		// ﾃｸｽﾁｬの生成
 		D3DXCreateTextureFromFile(d3d_device_, mesh_[i].texture_filename_, &mesh_[i].texture_);
+		//D3DXCreateTextureFromFile(d3d_device_, "resources/texture/ZZI_S_texture.jpg", &mesh_[i].texture_);
 
+		
 	}
 
 	// ﾎﾞｰﾝ情報の入ってないﾓﾃﾞﾙの場合は読み込まない
@@ -358,24 +361,24 @@ void Kim::Update(void)
 
 	if (!GetAsyncKeyState('Y') & 0x0001)
 	{
-		// ﾎﾞｰﾝがなければそもそもｽｷﾆﾝｸﾞされてない
-		if (bone_ == NULL)
-			return;
+		//// ﾎﾞｰﾝがなければそもそもｽｷﾆﾝｸﾞされてない
+		//if (bone_ == NULL)
+		//	return;
 
-		// ｱﾆﾒｰｼｮﾝが無いときは全てのﾎﾞｰﾝを単位行列にしとく
-		if (bone_[cursor_bone_].anime_num == 0)
-		{
-			for (int i = 0; i < bone_num_; i++)
-			{
-				D3DXMatrixIdentity(&bone_[i].bone_matrix);
-				bone_[i].bone_matrix *= bone_[i].init_matrix;
-			}
-			UpdateBone(bone_, &world_);
-			return;
-		}
+		//// ｱﾆﾒｰｼｮﾝが無いときは全てのﾎﾞｰﾝを単位行列にしとく
+		//if (bone_[cursor_bone_].anime_num == 0)
+		//{
+		//	for (int i = 0; i < bone_num_; i++)
+		//	{
+		//		D3DXMatrixIdentity(&bone_[i].bone_matrix);
+		//		bone_[i].bone_matrix *= bone_[i].init_matrix;
+		//	}
+		//	UpdateBone(bone_, &world_);
+		//	return;
+		//}
 
-		if (bone_->current_time == 1)
-			next_anime_ = set_anime_;
+		//if (bone_->current_time == 1)
+		//	 0  = set_anime_;
 
 	//	// 普通のｱﾆﾒｰｼｮﾝ
 	//	for (int i = 0; i < bone_num_; i++)
@@ -387,26 +390,26 @@ void Kim::Update(void)
 	//		KIM_BONE_DATA *dest_bone = &bone_[i];
 	//			
 	//		// ｷｰ数がない場合はおそらくｱﾆﾒｰｼｮﾝ無いので初期姿勢だけかけて次
-	//		if (dest_bone->anime[current_anime_].num_key == 0)
+	//		if (dest_bone->anime[ 0 ].num_key == 0)
 	//		{
 	//			bone_[i].bone_matrix *= bone_[i].init_matrix;
 	//			continue;
 	//		}
 
 	//		// 可読性がヤバイのでﾃﾝﾎﾟﾗﾘを用意
-	//		int current_key = dest_bone->anime[current_anime_].current_key;
-	//		int next_key = (dest_bone->anime[next_anime_].current_key + 1) % (dest_bone->anime[next_anime_].num_key);
+	//		int current_key = dest_bone->anime[ 0 ].current_key;
+	//		int next_key = (dest_bone->anime[ 0 ].current_key + 1) % (dest_bone->anime[ 0 ].num_key);
 
-	//		KIM_KEY_FRAME *cur_flame = &dest_bone->anime[current_anime_].keyframe[current_key];
+	//		KIM_KEY_FRAME *cur_flame = &dest_bone->anime[ 0 ].keyframe[current_key];
 	//		KIM_KEY_FRAME *next_flame;
 
-	//		if (next_anime_ == current_anime_)
+	//		if ( 0  ==  0 )
 	//		{
-	//			next_flame = &dest_bone->anime[next_anime_].keyframe[next_key];
+	//			next_flame = &dest_bone->anime[ 0 ].keyframe[next_key];
 	//		}
 	//		else
 	//		{
-	//			next_flame = &dest_bone->anime[next_anime_].keyframe[0];
+	//			next_flame = &dest_bone->anime[ 0 ].keyframe[0];
 	//		}
 
 	//		// 線形補間に使う時間の計算
@@ -431,24 +434,24 @@ void Kim::Update(void)
 	//		{
 	//			dest_bone->current_time = 0;
 
-	//			if (current_anime_ == next_anime_)
+	//			if ( 0  ==  0 )
 	//			{
-	//				dest_bone->anime[current_anime_].current_key++;
+	//				dest_bone->anime[ 0 ].current_key++;
 
-	//				if (dest_bone->anime[current_anime_].current_key >= dest_bone->anime[next_anime_].num_key)
+	//				if (dest_bone->anime[ 0 ].current_key >= dest_bone->anime[ 0 ].num_key)
 	//				{
-	//					dest_bone->anime[current_anime_].current_key = next_key;
-	//					dest_bone->anime[current_anime_].current_key %= dest_bone->anime[next_anime_].num_key;
+	//					dest_bone->anime[ 0 ].current_key = next_key;
+	//					dest_bone->anime[ 0 ].current_key %= dest_bone->anime[ 0 ].num_key;
 	//				}
 	//			}
 	//			else
 	//			{
-	//				dest_bone->anime[current_anime_].current_key = 0;
-	//				dest_bone->anime[next_anime_].current_key = 0;
+	//				dest_bone->anime[ 0 ].current_key = 0;
+	//				dest_bone->anime[ 0 ].current_key = 0;
 
 	//				if (i == bone_num_-1)
 	//				{
-	//					current_anime_ = next_anime_;
+	//					 0  =  0 ;
 	//				}
 	//			}
 	//		}
@@ -460,7 +463,7 @@ void Kim::Update(void)
 
 		//for (int i = 0; i < bone_num_; i++)
 		//{
-		//	auto next_flame = bone_[i].anime[next_anime_].keyframe[1];
+		//	auto next_flame = bone_[i].anime[ 0 ].keyframe[1];
 
 		//	// それぞれの変換情報線形補間
 		//	D3DXVECTOR3 scaling = next_flame.scaling;
@@ -478,31 +481,35 @@ void Kim::Update(void)
 		//}
 
 		// 普通のｱﾆﾒｰｼｮﾝ
-		for (int i = 0; i < bone_num_; i++)
+		for( int i = 0 ; i < bone_num_ ; i++ )
 		{
 			// 初期化
-			D3DXMatrixIdentity(&bone_[i].bone_matrix);
+			D3DXMatrixIdentity( &bone_[ i ].bone_matrix );
 
 			// 可読性がヤバイのでﾃﾝﾎﾟﾗﾘを用意
-			KIM_BONE_DATA *dest_bone = &bone_[i];
+			KIM_BONE_DATA *dest_bone = &bone_[ i ];
 				
 			//// ｷｰ数がない場合はおそらくｱﾆﾒｰｼｮﾝ無いので初期姿勢だけかけて次
-			//if (dest_bone->anime[current_anime_].num_key == 0)
+			//if (dest_bone->anime[ 0 ].num_key == 0)
 			//{
 			//	bone_[i].bone_matrix *= bone_[i].init_matrix;
 			//	continue;
 			//}
 
+			//dest_bone->anime[ 0 ].current_key = 1 ;
+			dest_bone->anime[ 0 ].num_key = 60 ;
+
 			// 可読性がヤバイのでﾃﾝﾎﾟﾗﾘを用意
-			int current_key = dest_bone->anime[current_anime_].current_key;
-			int next_key = (dest_bone->anime[next_anime_].current_key + 1) % (dest_bone->anime[next_anime_].num_key);
+			int current_key = dest_bone->anime[ 0 ].current_key ;
+			int next_key = ( dest_bone->anime[ 0 ].current_key + 1 ) % ( dest_bone->anime[ 0 ].num_key );
 
-			KIM_KEY_FRAME *cur_flame = &dest_bone->anime[current_anime_].keyframe[current_key];
-			KIM_KEY_FRAME *next_flame;
 
-			//if (next_anime_ == current_anime_)
+			KIM_KEY_FRAME *cur_flame = &dest_bone->anime[ 0 ].keyframe[ current_key ];
+			KIM_KEY_FRAME *next_flame ;
+
+			//if ( 0  ==  0 )
 			{
-				next_flame = &dest_bone->anime[next_anime_].keyframe[next_key];
+				next_flame = &dest_bone->anime[ 0 ].keyframe[ next_key ];
 			}
 
 			// それぞれの変換情報線形補間
@@ -511,37 +518,37 @@ void Kim::Update(void)
 			D3DXQUATERNION rotation = cur_flame->rotation ;
 
 			// それぞれの行列変換
-			D3DXMATRIX scl, rot, trans;
-			D3DXMatrixScaling(&scl, scaling.x, scaling.y, scaling.z);
-			D3DXMatrixRotationQuaternion(&rot, &rotation);
-			D3DXMatrixTranslation(&trans, translation.x, translation.y, translation.z);
+			D3DXMATRIX scl , rot , trans ;
+			D3DXMatrixScaling( &scl , scaling.x , scaling.y , scaling.z );
+			D3DXMatrixRotationQuaternion( &rot , &rotation );
+			D3DXMatrixTranslation( &trans , translation.x , translation.y , translation.z );
 
 			// 行列合成
-			bone_[i].bone_matrix = scl * rot * trans * bone_[i].init_matrix;
+			bone_[ i ].bone_matrix = scl * rot * trans * bone_[ i ].init_matrix ;
 
 			// 次のﾌﾚｰﾑに移動
-			if (dest_bone->current_time >= next_flame->frame_chenge)
+			if( dest_bone->current_time >= next_flame->frame_chenge )
 			{
 				dest_bone->current_time = 0;
 
-			//	if (current_anime_ == next_anime_)
+			//	if ( 0  ==  0 )
 				{
-					dest_bone->anime[current_anime_].current_key++;
+					dest_bone->anime[ 0 ].current_key++;
 
-					if (dest_bone->anime[current_anime_].current_key >= dest_bone->anime[next_anime_].num_key)
+					if( dest_bone->anime[ 0 ].current_key >= dest_bone->anime[ 0 ].num_key )
 					{
-						dest_bone->anime[current_anime_].current_key = 31;		// 
-						//dest_bone->anime[current_anime_].current_key %= dest_bone->anime[next_anime_].num_key;
+						dest_bone->anime[ 0 ].current_key = 30 ;		// 
+						//dest_bone->anime[ 0 ].current_key %= dest_bone->anime[ 0 ].num_key;
 					}
 				}
 			}
 
 			// 時を進める
-			dest_bone->current_time += anime_speed;
+			dest_bone->current_time += anime_speed ;
 		}
 
 		// 座標の更新:掛ける順番は 子 × 親 
-		UpdateBone(bone_, &world_);
+		UpdateBone( bone_ , &world_ );
 
 	}
 }
@@ -983,9 +990,9 @@ bool Kim::DebugUpdate(void)
 	//if (bone_ != NULL)
 	//{
 	//	CDebugProc::Print("ｱﾆﾒｰｼｮﾝ変更:数字キー\n");
-	//	CDebugProc::Print("現在のｱﾆﾒ:%d 速度:%d\n", current_anime_, anime_speed);
+	//	CDebugProc::Print("現在のｱﾆﾒ:%d 速度:%d\n",  0 , anime_speed);
 	//	CDebugProc::Print("現在の動かし方:%s\n", debug_string[anim_type_]);
-	//	CDebugProc::Print("ｷｰﾌﾚｰﾑ数:%d 時間:%d\n", bone_[cursor_bone_].anime[current_anime_].current_key, bone_[cursor_bone_].current_time);
+	//	CDebugProc::Print("ｷｰﾌﾚｰﾑ数:%d 時間:%d\n", bone_[cursor_bone_].anime[ 0 ].current_key, bone_[cursor_bone_].current_time);
 	//	CDebugProc::Print("ﾎﾞｰﾝ数:%d ﾒｯｼｭ数:%d\n", bone_num_, mesh_num_);
 	//	CDebugProc::Print("左右:選択ﾎﾞｰﾝの変更\n");
 	//	CDebugProc::Print("現在のﾎﾞｰﾝ番号:%d\n", cursor_bone_);
@@ -993,13 +1000,13 @@ bool Kim::DebugUpdate(void)
 	//	if (bone_[cursor_bone_].anime_num != 0)
 	//	{
 	//		CDebugProc::Print("現在のﾎﾞｰﾝの移動: x:%f y:%f z:%f\n",
-	//			bone_[cursor_bone_].anime[current_anime_].keyframe[bone_[cursor_bone_].anime[current_anime_].current_key].translation.x,
-	//			bone_[cursor_bone_].anime[current_anime_].keyframe[bone_[cursor_bone_].anime[current_anime_].current_key].translation.y,
-	//			bone_[cursor_bone_].anime[current_anime_].keyframe[bone_[cursor_bone_].anime[current_anime_].current_key].translation.z);
+	//			bone_[cursor_bone_].anime[ 0 ].keyframe[bone_[cursor_bone_].anime[ 0 ].current_key].translation.x,
+	//			bone_[cursor_bone_].anime[ 0 ].keyframe[bone_[cursor_bone_].anime[ 0 ].current_key].translation.y,
+	//			bone_[cursor_bone_].anime[ 0 ].keyframe[bone_[cursor_bone_].anime[ 0 ].current_key].translation.z);
 	//		CDebugProc::Print("現在のﾎﾞｰﾝの回転: x:%e y:%e z:%e\n",
-	//			bone_[cursor_bone_].anime[current_anime_].keyframe[bone_[cursor_bone_].anime[current_anime_].current_key].rotation.x,
-	//			bone_[cursor_bone_].anime[current_anime_].keyframe[bone_[cursor_bone_].anime[current_anime_].current_key].rotation.y,
-	//			bone_[cursor_bone_].anime[current_anime_].keyframe[bone_[cursor_bone_].anime[current_anime_].current_key].rotation.z);
+	//			bone_[cursor_bone_].anime[ 0 ].keyframe[bone_[cursor_bone_].anime[ 0 ].current_key].rotation.x,
+	//			bone_[cursor_bone_].anime[ 0 ].keyframe[bone_[cursor_bone_].anime[ 0 ].current_key].rotation.y,
+	//			bone_[cursor_bone_].anime[ 0 ].keyframe[bone_[cursor_bone_].anime[ 0 ].current_key].rotation.z);
 	//	}
 
 	//	if (GetAsyncKeyState('M'))
