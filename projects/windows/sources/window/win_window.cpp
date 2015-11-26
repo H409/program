@@ -17,7 +17,7 @@ namespace window {
 // constant definition
 //=============================================================================
 const s8* WinWindow::DEFAULT_CLASS_NAME = "default class name";
-const s8* WinWindow::DEFAULT_CAPTION_NAME = "Hello world";
+const s8* WinWindow::DEFAULT_CAPTION_NAME = "Hello World";
 
 //=============================================================================
 // static variable definition
@@ -99,7 +99,7 @@ WinWindow::WinWindow(const std::string& in_caption_name,const std::string& in_cl
 		instances_.insert(std::make_pair(hwnd_,this));
 
 		// ウインドウの表示
-		ShowWindow(hwnd_,SW_SHOW);
+		ShowWindow(hwnd_,SW_SHOWDEFAULT);
 
 		// ウィンドウの更新開始
 		UpdateWindow(hwnd_);
