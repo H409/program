@@ -29,6 +29,7 @@
 #include "x_model/x_model.h"
 #include "develop_tool/develop_tool.h"
 #include "system/input_manager.h"
+#include "wall/wall.h"
 
 //=============================================================================
 // constructor
@@ -83,6 +84,11 @@ Game::Game()
 	}
 
 	field_ = std::make_shared<Field>();
+
+	for (u32 i = 0; i < WALL_MAX; ++i)
+	{
+		wall_[i] = std::make_shared<Wall>();
+	}
 
 #ifdef _DEBUG
 	debug_player_number_ = 0;

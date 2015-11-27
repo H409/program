@@ -24,6 +24,7 @@
 class Bullet;
 class Field;
 class FieldIcon;
+class Wall;
 class Player;
 class Observer2D;
 class FollowerObserver;
@@ -62,6 +63,7 @@ public:
 	virtual void Draw(void) override;
 private:
 	static const u32 PLAYER_MAX = 4;
+	static const u32 WALL_MAX = 4;
 
 	std::shared_ptr<Player> players_[PLAYER_MAX];
 	std::shared_ptr<FollowerObserver> observers_[PLAYER_MAX];
@@ -72,6 +74,7 @@ private:
 	std::shared_ptr<graphic::directx9::texture::DX9Texture> normal_textures_[PLAYER_MAX];
 	std::shared_ptr<graphic::directx9::texture::DX9Texture> position_textures_[PLAYER_MAX];
 	std::shared_ptr<MeshObject> sprite_objects_[PLAYER_MAX];
+	std::shared_ptr<Wall> wall_[WALL_MAX];
 	std::shared_ptr<Observer2D> observer_2d_;
 
 #ifdef _DEBUG

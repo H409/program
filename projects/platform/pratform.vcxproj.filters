@@ -65,6 +65,9 @@
     <Filter Include="sources\x_model">
       <UniqueIdentifier>{e53aa46a-690b-44b6-8425-ef125621fb33}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\wall">
+      <UniqueIdentifier>{4af044d3-9707-44a4-95de-496d9a3f12a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\windows\win_main.cpp">
@@ -195,6 +198,12 @@
     </ClCompile>
     <ClCompile Include="sources\system\xi_pad.cpp">
       <Filter>sources\system</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\mesh\mesh_dome.cpp">
+      <Filter>sources\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\wall\wall.cpp">
+      <Filter>sources\wall</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -329,6 +338,12 @@
     </ClInclude>
     <ClInclude Include="sources\system\xi_pad.h">
       <Filter>sources\system</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\mesh\mesh_dome.h">
+      <Filter>sources\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\wall\wall.h">
+      <Filter>sources\wall</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
