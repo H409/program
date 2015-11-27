@@ -13,8 +13,8 @@
 #ifndef _XI_PAD_H_
 #define _XI_PAD_H_
 
-namespace input {
-namespace directinput8 {
+//namespace input {
+//namespace directinput8 {
 class XIPad
 {
 public:
@@ -48,6 +48,7 @@ public:
 	};
 
 	// constructor
+	XIPad() {};
 	explicit XIPad(u32 in_number);
 
 	// destructor
@@ -82,8 +83,8 @@ private:
 	bool is_release_[(u32)KEY::MAX];
 	u32 number_;
 };
-} // namespace directinput8
-} // namespace input
+//} // namespace directinput8
+//} // namespace input
 
 #endif // _XI_PAD_H_
 

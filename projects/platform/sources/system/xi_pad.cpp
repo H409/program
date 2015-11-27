@@ -13,8 +13,8 @@
 #include <XInput.h>
 #pragma comment(lib,"xinput.lib")
 
-namespace input {
-namespace directinput8 {
+//namespace input {
+//namespace directinput8 {
 XIPad::XIPad(u32 in_number)
 	:number_(in_number)
 {
@@ -116,7 +116,8 @@ f32 XIPad::GetRTrigger(void) const
 {
 	return r_trigger_;
 }
-} // namespace directinput8
-} // namespace input
+//} // namespace directinput8
+//} // namespace input
+
 
 //---------------------------------- EOF --------------------------------------

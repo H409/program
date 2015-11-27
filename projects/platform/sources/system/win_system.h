@@ -35,6 +35,7 @@ class WinWindow;
 class InputKeyboard;
 class InputMouse;
 class InputManager;
+class InputXPad;
 
 
 //*****************************************************************************
@@ -93,8 +94,10 @@ private:
 
 #define GET_GRAPHIC_DEVICE() WinSystem::GetInstance()->GetGraphicDevice()
 #define GET_DIRECTX9_DEVICE() WinSystem::GetInstance()->GetDirectx9Device()
-#define GET_INPUT_KEYBOARD() WinSystem::GetInstance()->GetKeyboard()
-#define GET_INPUT_MOUSE() WinSystem::GetInstance()->GetMouse()
+#define GET_INPUT_KEYBOARD() WinSystem::GetInstance()->GetInputManager()->GetKeyboard()
+#define GET_INPUT_MOUSE() WinSystem::GetInstance()->GetInputManager()->GetMouse()
+#define GET_INPUT_JOYPAD(player_number) WinSystem::GetInstance()->GetInputManager()->GetJoypad(player_number)
+#define GET_INPUT_XPAD(player_number) WinSystem::GetInstance()->GetInputManager()->GetXIPad(player_number)
 #define GET_INPUT_MANAGER() WinSystem::GetInstance()->GetInputManager()
 
 #endif // _SYSTEM_H_

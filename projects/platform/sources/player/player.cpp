@@ -9,6 +9,7 @@
 // インクルード
 //------------------------------------------------------------------------
 #include "../system/win_system.h"
+#include "../system/input_manager.h"
 #include "../system/input_keyboard.h"
 
 #include "../system/input_mouse.h"

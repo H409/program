@@ -11,6 +11,7 @@
 //*****************************************************************************
 #include "math/math.h"
 #include "../system/win_system.h"
+#include "../system/input_manager.h"
 #include "../system/input_mouse.h"
 
 #include "follower_observer.h"

@@ -28,6 +28,7 @@
 #include "math/math.h"
 #include "x_model/x_model.h"
 #include "develop_tool/develop_tool.h"
+#include "system/input_manager.h"
 
 //=============================================================================
 // constructor

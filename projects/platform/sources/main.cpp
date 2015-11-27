@@ -57,8 +57,7 @@ int main(int argc,char* argv)
 		DEVELOP_DISPLAY("FPS : %d\n",fps);
 
 		GET_INPUT_MANAGER()->Update();
-		GET_INPUT_MOUSE()->Update();
-		GET_INPUT_KEYBOARD()->Update();
+
 		DEVELOP_TOOL_UPDATE();
 
 		scene_manager.Update();
