@@ -90,6 +90,17 @@ Game::Game()
 		wall_[i] = std::make_shared<Wall>();
 	}
 
+	wall_[0]->GetObject()->SetPosition(0.0f, 0.0f, 30.0f);
+	wall_[0]->GetObject()->SetRotation(0.0f, 0.0f, 0.0f);
+	wall_[1]->GetObject()->SetPosition(30.0f, 0.0f, 0.0f);
+	wall_[1]->GetObject()->SetRotation(0.0f, D3DX_PI/2, 0.0f);
+	wall_[2]->GetObject()->SetPosition(0.0f, 0.0f, -30.0f);
+	wall_[2]->GetObject()->SetRotation(0.0f, D3DX_PI, 0.0f);
+	wall_[3]->GetObject()->SetPosition(-30.0f, 0.0f, 0.0f);
+	wall_[3]->GetObject()->SetRotation(0.0f, D3DX_PI/-2, 0.0f);
+	
+	
+
 #ifdef _DEBUG
 	debug_player_number_ = 0;
 	auto sprite = std::make_shared<mesh::Sprite>(float2(200,150));
@@ -360,6 +371,19 @@ void Game::Draw()
 			players_[j]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[i]->GetViewMatrix());
 			players_[j]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[i]->GetProjectionMatrix());
 			players_[j]->Draw();
+		}
+
+		//draw wall
+		for (u32 i = 0; i < WALL_MAX; ++i)
+		{
+			object = wall_[i]->GetObject();
+
+			world_matrix = object->GetMatrix();
+
+			gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
+			gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());
+
+			object->Draw();
 		}
 	}
 
