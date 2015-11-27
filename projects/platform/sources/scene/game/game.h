@@ -25,9 +25,11 @@ class Bullet;
 class Field;
 class FieldIcon;
 class Player;
+class PlayerIcon;
 class Observer2D;
 class FollowerObserver;
 class MeshObject;
+class Flower;
 
 namespace graphic {
 namespace directx9 {
@@ -64,6 +66,7 @@ private:
 	static const u32 PLAYER_MAX = 4;
 
 	std::shared_ptr<Player> players_[PLAYER_MAX];
+	std::shared_ptr<PlayerIcon> player_icons_[PLAYER_MAX];
 	std::shared_ptr<FollowerObserver> observers_[PLAYER_MAX];
 	std::shared_ptr<Field> field_;
 	std::shared_ptr<FieldIcon> field_icons_[PLAYER_MAX];
@@ -73,11 +76,13 @@ private:
 	std::shared_ptr<graphic::directx9::texture::DX9Texture> position_textures_[PLAYER_MAX];
 	std::shared_ptr<MeshObject> sprite_objects_[PLAYER_MAX];
 	std::shared_ptr<Observer2D> observer_2d_;
+	std::vector<std::shared_ptr<Flower>> flowers_;
 
 #ifdef _DEBUG
 	std::shared_ptr<MeshObject> debug_sprite_object_;
 	std::shared_ptr<MeshObject> debug_object_;
 	u32 debug_player_number_;
+	bool debugRenderTarget_;
 #endif
 };
 

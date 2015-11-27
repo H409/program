@@ -28,8 +28,8 @@ Field::Field(void)
 {
 	select_index_x_ = 0;
 	select_index_y_ = 0;
-	block_width_ = 1.0f;
-	block_height_ = 1.0f;
+	block_width_ = 0.5f;
+	block_height_ = 0.5f;
 	width_count_ = 60;
 	height_count_ = 60;
 	size_._x = width_count_ * block_width_;
