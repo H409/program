@@ -124,6 +124,9 @@ struct KIM_BONE_DATA
 //=============================================================================
 class Kim
 {
+#define NOW_ANIMETION ( int )wepon_ * ( int )ANIME::MAX + ( int )anime_
+#define OLD_ANIMETION ( int )wepon_ * ( int )ANIME::MAX + ( int )old_anime_
+
 	static const int BONE_MAX = 13;
 
 	enum DRAW_TYPE{
@@ -135,6 +138,27 @@ class Kim
 	};
 
 public : 
+	enum class WEAPON
+	{
+		LAUNCHER = 0 ,
+		GUN ,
+		HOE ,
+		MAX
+	};
+
+	enum class ANIME
+	{
+		NONE = -1 ,		// なし
+		TAKE_OUT ,		// 取り出し
+		WAIT ,			// 待機
+		WALK ,			// 歩く
+		ACTION ,		// 行動
+		DAMAGE ,		// ダメージ
+		//DASH ,		// 走り 
+
+		MAX
+	};
+
 	// 処理:コンストラクタ
 	Kim(LPDIRECT3DDEVICE9 d3d_device);
 		
@@ -156,47 +180,42 @@ public :
 	// 処理:解放
 	void Release(void);
 
-	// 処理:生成
-	static Kim* Create(LPDIRECT3DDEVICE9 d3d_device,const char* file_name);
-
 	// 処理:ﾜｰﾙﾄﾞﾏﾄﾘｸｽのｾｯﾀ
 	void SetWorld(D3DXMATRIX world){ world_ = world; };
 
 	void SetView( D3DXMATRIX *view ){ view_ = *view ; }
 	void SetProjection( D3DXMATRIX *projection ){ projection_ = *projection ; }
 
+	ANIME GetAnime( void ){ return anime_ ; }
+	void SetAnime( const ANIME& anime );
+
+	ANIME GetOldAnime( void ){ return anime_ ; }
+	void SetOldAnime( const ANIME& anime ){ old_anime_ = anime ; };
+
+	WEAPON GetAnimeState( void ){ return wepon_ ; };
+	void SetAnimeState( const WEAPON& wepon ){ wepon_ = wepon ; };
+
 private:
 	// 処理:ｼｪｰﾀﾞｰのｺﾝﾊﾟｲﾙ
 	HRESULT CompileShader(void);
+
 	// 処理:ﾎﾞｰﾝｲﾝﾃﾞｯｸｽの正規化
 	void BoneIndexNormalize(int mesh_idx,VERTEX_KIM* vtx);
+
 	// 処理:送信する頂点情報の設定
 	void CreateVertexDecl(void);
+
 	// 処理:ボーンの更新(行列変換)
 	void UpdateBone(KIM_BONE_DATA* me, D3DXMATRIX *parentWorldMat);
+
 	// 処理:ﾎﾞｰﾝ配列の初期位置の設定
 	void CalcRelativeMat(KIM_BONE_DATA* me, D3DXMATRIX *parentoffsetMat);
+
 	// ﾏﾃﾘｱﾙの設定
 	void SetMaterial(D3DMATERIAL9 *material);
-	// 1ﾒｯｼｭ	自作ｼｪｰﾀﾞｰ用描画
-	void OneMeshMyShader(void);
-	// 1ﾒｯｼｭ	固定ｼｪｰﾀﾞｰ用描画
-	void OneMeshOriginShader(void);
+
 	// 複数ﾒｯｼｭ	自作ｼｪｰﾀﾞｰ用描画
 	void MultiMeshMyShader(void);
-	// 複数ﾒｯｼｭ	固定ｼｪｰﾀﾞｰ用描画
-	void MultiMeshOriginShader(void);
-	// 静的ﾒｯｼｭ描画
-	void StaticMesh(void);
-
-	//===========================================================================
-	// ﾃﾞﾊﾞｯｸﾞ用関数
-	//===========================================================================
-	// 処理:ﾎﾞｰﾝの描画
-	void DrawBone(void);
-	// 処理:ﾃﾞﾊﾞｯｸﾞ用関数
-	bool DebugUpdate(void);
-	
 
 private : 
 	LPDIRECT3DDEVICE9 d3d_device_;
@@ -227,6 +246,26 @@ private :
 
 	D3DXVECTOR3 vertex_min_;
 	D3DXVECTOR3 vertex_max_;
+
+	int anime_speed = 1;
+	float value_ = 0.0f;
+	float times_ = 15.0f;
+	int cursor_bone_ = 0;
+	int cursor_mesh_ = 0;
+	int anim_type_ = 0;
+	int anime_value = 1;
+	int all_vertex_num_ = 0;
+
+	int current_key_ ;
+	int next_key_ ;
+
+	bool animation_ ;
+
+	static int anime_data_[][ 3 ];
+	ANIME anime_ ;
+	ANIME old_anime_ ;
+
+	WEAPON wepon_ ;		// 0 : ランチャー , 1 : 銃 , 2 : クワ
 };
 
 #endif // _SCENE_KIM_H_

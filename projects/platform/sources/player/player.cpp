@@ -33,6 +33,7 @@
 // 静的メンバ変数
 //------------------------------------------------------------------------
 
+
 //------------------------------------------------------------------------
 // グローバル変数
 //------------------------------------------------------------------------
@@ -48,18 +49,13 @@ Player::Player( LPDIRECT3DDEVICE9 pDevice ) : Object()
 	pKim_ = nullptr;
 	camera_vector_ = float3();
 	move_ = float3();
-	speed_ = float3( 0.025f , 0.025f , 0.025f );
+	speed_ = float3( 0.01f , 0.01f , 0.01f );
 
 	position_ = float3( 0 , 0 , 0 );
 
 	ID_ = 0 ;		// 1P
 	
 	state_ = STATE::NONE ;
-	anime_ = STATE::NONE ;
-
-	//anime_data_[][ 2 ] = { { 0 , 0 } ,
-	//					   { 0 , 0 } ,
-	//					    };
 
 }
 
@@ -99,7 +95,7 @@ void Player::Update( void )
 {
 	old_position_ = position_ ;
 
-	//--  操作  --//
+	//--  移動  --//
 	Control();
 
 	//--  kim更新  --//
@@ -136,8 +132,8 @@ void Player::Uninit( void )
 void Player::Control( void )
 {
 	D3DXVec3Normalize( ( D3DXVECTOR3* )&camera_vector_ , ( D3DXVECTOR3* )&camera_vector_ );
+//	pKim_->SetAnime( Kim::ANIME::WAIT );
 
-	
 	if( GET_INPUT_MOUSE()->GetTrigger( InputMouse::MOUSE_KEY::RIGHT ) == true )
 	{
 		if( state_ != STATE::AIM )
@@ -150,10 +146,21 @@ void Player::Control( void )
 		}
 	}
 
-	if( state_ == AIM )
+	//--  エイム  --//
+	if( state_ == STATE::AIM )
 	{
 		rotDest_._y = atan2f( camera_vector_._x , camera_vector_._z );
 		rotDest_._y += 0.4f ;
+
+		//--  発射  --//
+		if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_SPACE ) )
+		{
+			if( pKim_->GetAnime() != Kim::ANIME::ACTION )
+			{
+				pKim_->SetAnime( Kim::ANIME::ACTION );
+				pKim_->SetOldAnime( Kim::ANIME::WAIT );
+			}
+		}
 	}
 
 	//--  移動　前  --//	
@@ -166,6 +173,9 @@ void Player::Control( void )
 		move_._z += camera_vector_._z * speed_._z ;
 
 		rotDest_._y = atan2f( camera_vector_._x , camera_vector_._z );
+
+		//--  アニメーション  --//
+		pKim_->SetAnime( Kim::ANIME::WALK );
 	}
 
 
@@ -179,6 +189,9 @@ void Player::Control( void )
 		move_._z -= camera_vector_._z * speed_._z ;
 
 		rotDest_._y = atan2f( -camera_vector_._x , -camera_vector_._z );
+
+		//--  アニメーション  --//
+		pKim_->SetAnime( Kim::ANIME::WALK );
 	}
 
 	//--  移動　左  --//
@@ -194,6 +207,9 @@ void Player::Control( void )
 
 		//rotDest_._y = -D3DX_PI * 0.5f ;
 		rotDest_._y = atan2f( -vec.x , -vec.z );
+
+		//--  アニメーション  --//
+		pKim_->SetAnime( Kim::ANIME::WALK );
 	}
 
 	//--  移動　右  --//
@@ -211,6 +227,9 @@ void Player::Control( void )
 		rotDest_._y = atan2f( vec.x , vec.z );
 
 		//rotDest_._y = D3DX_PI * 0.5f ;
+
+		//--  アニメーション  --//
+		pKim_->SetAnime( Kim::ANIME::WALK );
 	}
 
 	//--  移動  --//
@@ -228,7 +247,6 @@ void Player::Control( void )
 	diff = utility::math::Wrap( diff , ( f32 )-utility::math::PI , ( f32 )utility::math::PI );
 
 	rotation_._y += diff * 0.09f ;
-
 }
 
 
