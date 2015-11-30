@@ -286,8 +286,8 @@ HRESULT Kim::Load(const char* file_name)
 	}
 
 	// ｼｪｰﾀﾞｰのｺﾝﾊﾟｲﾙ
-	if (draw_type_ == TYPE_ONE_MY || draw_type_ == TYPE_MULTI_MY)
-		return CompileShader();
+	//if (draw_type_ == TYPE_ONE_MY || draw_type_ == TYPE_MULTI_MY)
+		//return CompileShader();
 
 	return S_OK ;
 }
@@ -780,14 +780,14 @@ void Kim::SetMaterial(D3DMATERIAL9 *material)
 void Kim::MultiMeshMyShader(void)
 {
 	// 現在のシェーダー情報の確保
-	LPDIRECT3DVERTEXSHADER9 current_vertex_shader;
-	LPDIRECT3DPIXELSHADER9 current_pixelshader;
-	d3d_device_->GetVertexShader(&current_vertex_shader);
-	d3d_device_->GetPixelShader(&current_pixelshader);
+	//LPDIRECT3DVERTEXSHADER9 current_vertex_shader;
+	//LPDIRECT3DPIXELSHADER9 current_pixelshader;
+	//d3d_device_->GetVertexShader(&current_vertex_shader);
+	//d3d_device_->GetPixelShader(&current_pixelshader);
 
 	// シェーダ設定
-	d3d_device_->SetVertexShader(vertex_shader_);
-	d3d_device_->SetPixelShader(pixel_shader_);
+	//d3d_device_->SetVertexShader(vertex_shader_);
+	//d3d_device_->SetPixelShader(pixel_shader_);
 
 	// 送信する頂点情報の設定
 	d3d_device_->SetVertexDeclaration(decl_);
@@ -839,8 +839,8 @@ void Kim::MultiMeshMyShader(void)
 	}
 
 	// 前回のシェーダーに戻す
-	d3d_device_->SetVertexShader(current_vertex_shader);
-	d3d_device_->SetPixelShader(current_pixelshader);
+//	d3d_device_->SetVertexShader(current_vertex_shader);
+//	d3d_device_->SetPixelShader(current_pixelshader);
 
 }
 

@@ -31,32 +31,15 @@ struct OUT_VERTEX
 	float4 world_position : TEXCOORD1;
 };
 
-float4x4 _world_matrix:register(c0);;
+float4x4 _world_matrix:register(c0);
 float4x4 _view_matrix:register(c4);
-float4x4 _projection_matrix:register(c8);;
+float4x4 _projection_matrix:register(c8);
 float4x4 bone[50]:register(c18);
 
 
-//=============================================================================
-// deferred
-//=============================================================================
-OUT_VERTEX Deferred(IN_VS in_vertex,float4x4 in_world_matrix,float4x4 in_world_view_projection_matrix)
-{
-	OUT_VERTEX out_vertex;
-
-	out_vertex.position = mul(float4(in_vertex.pos,1.0f),in_world_view_projection_matrix);
-	out_vertex.texcoord = in_vertex.uv;
-	out_vertex.normal_depth.xyz = mul(float4(in_vertex.nor,0.0f),in_world_matrix).xyz;
-	out_vertex.normal_depth.w = out_vertex.position.z / out_vertex.position.w;
-	out_vertex.world_position.xyzw = mul(float4(in_vertex.pos,1.0f),in_world_matrix);
-	out_vertex.color = in_vertex.col;
-
-	return out_vertex;
-}
-
 OUT_VERTEX main(IN_VS in_vertex)
 {
-	OUT_VERTEX out_vertex;
+	OUT_VERTEX out_vertex = ( OUT_VERTEX )1 ;
 
 	// Ω∑∆›∏ﬁópç¿ïWïœä∑
 	float w[ 4 ] = ( float[ 4 ] )in_vertex.blend ;
@@ -71,14 +54,15 @@ OUT_VERTEX main(IN_VS in_vertex)
 	}
 
 	comb += bone[ in_vertex.idx[ 3 ] ] * ( 1.0f - last_blend_weight );
-	in_vertex.pos = mul( float4( in_vertex.pos , 1.0f ) , comb );
+	out_vertex.position = mul( float4( in_vertex.pos , 1.0f ) , comb );
+	out_vertex.position = mul( out_vertex.position , _view_matrix );
+	out_vertex.position = mul( out_vertex.position , _projection_matrix );
 
-
-	float4x4 wvp = mul( mul( _world_matrix , _view_matrix ) , _projection_matrix );
-
-	out_vertex = Deferred( in_vertex , _world_matrix ,wvp );
+	out_vertex.texcoord = in_vertex.uv;
 	out_vertex.normal_depth.xyz = mul( float4( in_vertex.nor ,0.0f ) , comb ).xyz ;
 	out_vertex.normal_depth.w = out_vertex.position.z / out_vertex.position.w ;
+	//out_vertex.color = in_vertex.col ;
+	out_vertex.world_position.xyzw = mul( float4( in_vertex.pos , 1.0f ) , _world_matrix );
 
 	return out_vertex;
 }
