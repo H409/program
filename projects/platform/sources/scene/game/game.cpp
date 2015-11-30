@@ -29,8 +29,12 @@
 #include "x_model/x_model.h"
 #include "develop_tool/develop_tool.h"
 #include "system/input_manager.h"
+//<<<<<<< HEAD
 #include "player_icon/player_icon.h"
 #include "field_object/flower.h"
+//=======
+#include "wall/wall.h"
+//>>>>>>> origin/yuminaga/作業
 
 //=============================================================================
 // constructor
@@ -89,6 +93,22 @@ Game::Game()
 	}
 
 	field_ = std::make_shared<Field>();
+
+	for (u32 i = 0; i < WALL_MAX; ++i)
+	{
+		wall_[i] = std::make_shared<Wall>();
+	}
+
+	wall_[0]->GetObject()->SetPosition(0.0f, 0.0f, 15.0f);
+	wall_[0]->GetObject()->SetRotation(0.0f, 0.0f, 0.0f);
+	wall_[1]->GetObject()->SetPosition(15.0f, 0.0f, 0.0f);
+	wall_[1]->GetObject()->SetRotation(0.0f, D3DX_PI/2, 0.0f);
+	wall_[2]->GetObject()->SetPosition(0.0f, 0.0f, -15.0f);
+	wall_[2]->GetObject()->SetRotation(0.0f, D3DX_PI, 0.0f);
+	wall_[3]->GetObject()->SetPosition(-15.0f, 0.0f, 0.0f);
+	wall_[3]->GetObject()->SetRotation(0.0f, D3DX_PI/-2, 0.0f);
+	
+	
 
 #ifdef _DEBUG
 	debugRenderTarget_ = false;
@@ -427,6 +447,19 @@ void Game::Draw()
 				gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
 				object->Draw();
 			}
+		}
+
+		//draw wall
+		for(u32 j = 0; j < WALL_MAX; ++j)
+		{
+			object = wall_[j]->GetObject();
+
+			world_matrix = object->GetMatrix();
+
+			gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
+			gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
+
+			object->Draw();
 		}
 
 		graphic_device->SetVertexShader(gb_vs_fbx);
