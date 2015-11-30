@@ -16,20 +16,26 @@
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
-int anime_speed = 1;
-float value_ = 0.0f;
-float times_ = 15.0f;
-int cursor_bone_ = 0;
-int cursor_mesh_ = 0;
-int anim_type_ = 0;
-int anime_value = 1;
-int all_vertex_num_ = 0;
+int Kim::anime_data_[][ 3 ] = { //--  ランチャー  --//
+								{ 31  , 60  , 0 } ,		// 取り出し
+								{ 61  , 150 , 1 } ,		// 待機
+								{ 151 , 180 , 1 } ,		// 歩く
+								{ 181 , 240 , 0 } ,		// 行動
+								{ 241 , 300 , 0 } ,		// ダメージ
 
-LPSTR debug_string[4] =
-{ "内蔵ｱﾆﾒｰｼｮﾝ", "Y軸回転", "X軸回転", "Z軸回転" };
-LPSTR type_string[2] =
-{ "FBX", "独自形式" };
+								//--  ショットガン  --//
+								{ 331 , 360 , 0 } ,		// 取り出し
+								{ 361 , 450 , 1 } ,		// 待機
+								{ 451 , 480 , 1 } ,		// 歩く
+								{ 481 , 510 , 0 } ,		// 行動
+								{ 511 , 570 , 0 } ,		// ダメージ
 
+								//--  クワ  --//
+								{ 601 , 630 , 0 } ,		// 取り出し
+								{ 631 , 720 , 1 } ,		// 待機
+								{ 721 , 750 , 1 } ,		// 歩く
+								{ 751 , 810 , 0 } ,		// 行動
+								{ 811 , 870 , 0 } };	// ダメージ
 
 //=============================================================================
 // 役割 : コンストラクタ
@@ -60,9 +66,14 @@ Kim::Kim(LPDIRECT3DDEVICE9 d3d_device)
 
 	D3DXMatrixIdentity(&world_);
 
-
 	//--  このﾌﾚｰﾑﾜｰｸ用  --//
-	all_vertex_num_ = 0;
+//	all_vertex_num_ = 0;
+
+	old_anime_ = ANIME::WAIT ;
+	anime_ = ANIME::WAIT ;
+	wepon_ = WEAPON::GUN ;
+	current_key_ = anime_data_[ NOW_ANIMETION ][ 0 ];
+	animation_ = true ;
 }
 
 //=============================================================================
@@ -194,8 +205,6 @@ HRESULT Kim::Load(const char* file_name)
 		// ﾃｸｽﾁｬの生成
 		D3DXCreateTextureFromFile(d3d_device_, mesh_[i].texture_filename_, &mesh_[i].texture_);
 		//D3DXCreateTextureFromFile(d3d_device_, "resources/texture/ZZI_S_texture.jpg", &mesh_[i].texture_);
-
-		
 	}
 
 	// ﾎﾞｰﾝ情報の入ってないﾓﾃﾞﾙの場合は読み込まない
@@ -354,12 +363,7 @@ void Kim::Uninit( void )
 void Kim::Update(void)
 {
 
-#ifdef _DEBUG
-	if (DebugUpdate() == false)
-		return;
-#endif
-
-	if (!GetAsyncKeyState('Y') & 0x0001)
+	//if (!GetAsyncKeyState('Y') & 0x0001)
 	{
 		//// ﾎﾞｰﾝがなければそもそもｽｷﾆﾝｸﾞされてない
 		//if (bone_ == NULL)
@@ -500,16 +504,18 @@ void Kim::Update(void)
 			//dest_bone->anime[ 0 ].num_key = 60 ;
 
 			// 可読性がヤバイのでﾃﾝﾎﾟﾗﾘを用意
-			int current_key = dest_bone->anime[ 0 ].current_key ;
-			int next_key = ( dest_bone->anime[ 0 ].current_key + 1 ) % ( dest_bone->anime[ 0 ].num_key );
+		//	int current_key = dest_bone->anime[ 0 ].current_key ;
+		//	int next_key = ( dest_bone->anime[ 0 ].current_key + 1 ) % ( dest_bone->anime[ 0 ].num_key );
 
+			//current_key_ = anime_data_[ anime_ ][ 0 ];
+			next_key_ = ( current_key_ + 1 ) % ( anime_data_[ NOW_ANIMETION ][ 1 ] );
 
-			KIM_KEY_FRAME *cur_flame = &dest_bone->anime[ 0 ].keyframe[ current_key ];
+			KIM_KEY_FRAME *cur_flame = &dest_bone->anime[ 0 ].keyframe[ current_key_ ];
 			KIM_KEY_FRAME *next_flame ;
 
 			//if ( 0  ==  0 )
 			{
-				next_flame = &dest_bone->anime[ 0 ].keyframe[ next_key ];
+				next_flame = &dest_bone->anime[ 0 ].keyframe[ next_key_ ];
 			}
 
 			// それぞれの変換情報線形補間
@@ -533,11 +539,19 @@ void Kim::Update(void)
 
 			//	if ( 0  ==  0 )
 				{
-					dest_bone->anime[ 0 ].current_key++;
-
-					if( dest_bone->anime[ 0 ].current_key >= dest_bone->anime[ 0 ].num_key )
+					if( current_key_ >= anime_data_[ NOW_ANIMETION ][ 1 ] )
 					{
-						dest_bone->anime[ 0 ].current_key = 0 ;		// 
+						//--  リピートありなら  --//
+						if( anime_data_[ NOW_ANIMETION ][ 2 ] == 1 )
+						{
+							current_key_ = anime_data_[ NOW_ANIMETION ][ 0 ];
+						}
+						else
+						{
+							current_key_ = anime_data_[ OLD_ANIMETION ][ 0 ];
+							anime_ = old_anime_ ;
+							//animation_ = false ;
+						}
 						//dest_bone->anime[ 0 ].current_key %= dest_bone->anime[ 0 ].num_key;
 					}
 				}
@@ -545,6 +559,11 @@ void Kim::Update(void)
 
 			// 時を進める
 			dest_bone->current_time += anime_speed ;
+		}
+
+		//if( animation_ == true )
+		{
+			current_key_++;
 		}
 
 		// 座標の更新:掛ける順番は 子 × 親 
@@ -574,26 +593,9 @@ void Kim::Draw(void)
 	}
 	if( !GetAsyncKeyState('N') )
 #endif
-
 	{
-		switch (draw_type_)
-		{
-		case TYPE_MULTI_MY:
-			MultiMeshMyShader();
-			break;
-
-		case TYPE_STATIC_MESH:
-			StaticMesh();
-			break;
-		}
+		MultiMeshMyShader();
 	}
-#ifdef _DEBUG
-	
-	if( _bone == true )
-	{
-		DrawBone();
-	}
-#endif
 
 	d3d_device_->SetVertexDeclaration(before_decl);
 }
@@ -772,14 +774,6 @@ void Kim::SetMaterial(D3DMATERIAL9 *material)
 	}
 }
 
-
-//=============================================================================
-// 1ﾒｯｼｭ	自作ｼｪｰﾀﾞｰ用描画
-//=============================================================================
-void Kim::OneMeshMyShader(void)
-{
-}
-
 //=============================================================================
 // 複数ﾒｯｼｭ	自作ｼｪｰﾀﾞｰ用描画
 //=============================================================================
@@ -850,272 +844,6 @@ void Kim::MultiMeshMyShader(void)
 
 }
 
-//=============================================================================
-// 1ﾒｯｼｭ	固定ｼｪｰﾀﾞｰ用描画
-//=============================================================================
-void Kim::OneMeshOriginShader(void)
-{
-
-}
-
-//=============================================================================
-// 複数ﾒｯｼｭ	固定ｼｪｰﾀﾞｰ用描画
-//=============================================================================
-void Kim::MultiMeshOriginShader(void)
-{
-}
-
-//=============================================================================
-// 静的ﾒｯｼｭの描画
-//=============================================================================
-void Kim::StaticMesh(void)
-{
-	// 現在のシェーダー情報の確保
-	LPDIRECT3DVERTEXSHADER9 current_vertex_shader;
-	LPDIRECT3DPIXELSHADER9 current_pixelshader;
-	d3d_device_->GetVertexShader(&current_vertex_shader);
-	d3d_device_->GetPixelShader(&current_pixelshader);
-
-	// シェーダ設定
-	d3d_device_->SetVertexShader(vertex_shader_);
-	d3d_device_->SetPixelShader(pixel_shader_);
-
-	// 送信する頂点情報の設定
-	d3d_device_->SetVertexDeclaration(decl_);
-
-	// ﾋﾞｭｰ,ﾌﾟﾛｼﾞｪｸｼｮﾝの取得
-	D3DXMATRIX view, proj;
-	d3d_device_->GetTransform(D3DTS_VIEW, &view);
-	d3d_device_->GetTransform(D3DTS_PROJECTION, &proj);
-
-	D3DXMatrixTranspose(&view, &view);
-	D3DXMatrixTranspose(&proj, &proj);
-
-	// ﾜｰﾙﾄﾞ,ﾋﾞｭｰ,ﾌﾟﾛｼﾞｪｸｼｮﾝ,指向性ﾗｲﾄ情報の転送
-	d3d_device_->SetVertexShaderConstantF(0, static_cast<const float*>(world_), 4);
-	d3d_device_->SetVertexShaderConstantF(4, static_cast<const float*>(view), 4);
-	d3d_device_->SetVertexShaderConstantF(8, static_cast<const float*>(proj), 4);
-	d3d_device_->SetVertexShaderConstantF(16, static_cast<const float*>(light_directional), 4);
-
-	// ﾄｩｰﾝﾏｯﾌﾟの設定
-	d3d_device_->SetTexture(1, toon_map);
-
-	// 全ﾒｯｼｭの描画
-	for (int i = 0; i < mesh_num_; i++)
-	{
-		SetMaterial(&mesh_[i].material_);
-		d3d_device_->SetTexture(0, mesh_[i].texture_);
-		d3d_device_->SetIndices(mesh_[i].index_buffer_);
-		d3d_device_->SetStreamSource(0, mesh_[i].vertex_buffer_, 0, sizeof(VERTEX_KIM));	// 頂点ﾊﾞｯﾌｧをﾃﾞﾊﾞｲｽに関連付け
-		d3d_device_->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, mesh_[i].vertex_num_, 0, mesh_[i].index_num_ / 3);
-
-	}
-
-	// 前回のシェーダーに戻す
-	d3d_device_->SetVertexShader(current_vertex_shader);
-	d3d_device_->SetPixelShader(current_pixelshader);
-
-
-}
-
-//=============================================================================
-// 処理:ﾎﾞｰﾝの描画
-//=============================================================================
-void Kim::DrawBone(void)
-{
-	// 固定ｼｪｰﾀﾞの頂点ﾌﾞﾚﾝﾄﾞを切る
-	d3d_device_->SetRenderState(D3DRS_INDEXEDVERTEXBLENDENABLE, FALSE);
-
-	for (int i = 0; i < bone_num_; i++)
-	{
-		ID3DXMesh *boneObj;
-		D3DXCreateCylinder(d3d_device_, 0.2f, 0.5f, 5.0f, 16, 1, &boneObj, 0);
-
-		D3DMATERIAL9 material = { { 1.0f, 1.0f, 1.0f, 1.0f } }; material.Power = 10.0f;
-		D3DLIGHT9 light = { D3DLIGHT_DIRECTIONAL, { 1.0f, 0.7f, 0.5f, 1.0f } };
-		light.Direction = (D3DVECTOR)D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-
-		d3d_device_->SetLight(0, &light);
-		d3d_device_->LightEnable(0, TRUE);
-		d3d_device_->SetRenderState(D3DRS_LIGHTING, TRUE);
-		d3d_device_->SetMaterial(&material);
-		d3d_device_->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-		d3d_device_->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-		D3DXMATRIX boneObjRot;
-		D3DXMatrixRotationY(&boneObjRot, D3DXToRadian(-90.0f));
-		d3d_device_->SetTransform(D3DTS_WORLD, &(boneObjRot * bone_[i].bone_matrix));
-		boneObj->DrawSubset(0);
-		boneObj->Release();
-	}
-}
-
-//=============================================================================
-// ﾃﾞﾊﾞｯｸﾞ用関数
-//=============================================================================
-bool Kim::DebugUpdate(void)
-{
-	bool return_data = true;
-
-	//CDebugProc::Print("F5:再読み込み\n");
-	//CDebugProc::Print("//--  メッシュ系  --//\n");
-	//CDebugProc::Print("総頂点数:%d\n", all_vertex_num_);
-	//CDebugProc::Print("最小頂点 x:%f y:%f z:%f\n", vertex_max_.x, vertex_max_.y, vertex_max_.z);
-	//CDebugProc::Print("最大頂点 x:%f y:%f z:%f\n", vertex_min_.x, vertex_min_.y, vertex_min_.z);
-	//CDebugProc::Print("P:ｶﾘﾝｸﾞを切る O:ﾜｲﾔｰﾌﾚｰﾑ\n");
-	//CDebugProc::Print("//--  カメラ系  --//\n");
-	//CDebugProc::Print("W,S:ｶﾒﾗの遠近 Q,E:ｶﾒﾗの左右回り込み\n");
-	//CDebugProc::Print("R,F:ｶﾒﾗの高さ調節\n");
-	//CDebugProc::Print("//--  ボーン系  --//\n");
-	//CDebugProc::Print("B:ﾎﾞｰﾝの描画 M:ﾎﾞｰﾝの稼働\n");
-	//CDebugProc::Print("左右:選択ﾎﾞｰﾝの変更\n");
-	//CDebugProc::Print("//--  ｱﾆﾒｰｼｮﾝ系  --//\n");
-	//CDebugProc::Print("T,G:ｱﾆﾒｰｼｮﾝ速度の増減\n");
-	//CDebugProc::Print("上下:ﾓｰｼｮﾝﾀｲﾌﾟの変更\n");
-
-	////switch (draw_type_)
-	////{
-	////case TYPE_ONE_MY:
-	////	CDebugProc::Print("1ﾒｯｼｭ	自作ｼｪｰﾀﾞｰ\n");
-	////	break;
-	////case TYPE_ONE_ORIGINE:
-	////	CDebugProc::Print("1ﾒｯｼｭ	固定ｼｪｰﾀﾞｰ\n");
-	////	break;
-	////case TYPE_MULTI_MY:
-	////	CDebugProc::Print("複数ﾒｯｼｭ	自作ｼｪｰﾀﾞｰ\n");
-	////	break;
-	////case TYPE_MULTI_ORIGINE:
-	////	CDebugProc::Print("複数ﾒｯｼｭ	固定ｼｪｰﾀﾞｰ\n");
-	////	break;
-	////}
-	//
-	//if (bone_ != NULL)
-	//{
-	//	CDebugProc::Print("ｱﾆﾒｰｼｮﾝ変更:数字キー\n");
-	//	CDebugProc::Print("現在のｱﾆﾒ:%d 速度:%d\n",  0 , anime_speed);
-	//	CDebugProc::Print("現在の動かし方:%s\n", debug_string[anim_type_]);
-	//	CDebugProc::Print("ｷｰﾌﾚｰﾑ数:%d 時間:%d\n", bone_[cursor_bone_].anime[ 0 ].current_key, bone_[cursor_bone_].current_time);
-	//	CDebugProc::Print("ﾎﾞｰﾝ数:%d ﾒｯｼｭ数:%d\n", bone_num_, mesh_num_);
-	//	CDebugProc::Print("左右:選択ﾎﾞｰﾝの変更\n");
-	//	CDebugProc::Print("現在のﾎﾞｰﾝ番号:%d\n", cursor_bone_);
-	//	CDebugProc::Print("現在のﾎﾞｰﾝ:%s\n", bone_[cursor_bone_].name);
-	//	if (bone_[cursor_bone_].anime_num != 0)
-	//	{
-	//		CDebugProc::Print("現在のﾎﾞｰﾝの移動: x:%f y:%f z:%f\n",
-	//			bone_[cursor_bone_].anime[ 0 ].keyframe[bone_[cursor_bone_].anime[ 0 ].current_key].translation.x,
-	//			bone_[cursor_bone_].anime[ 0 ].keyframe[bone_[cursor_bone_].anime[ 0 ].current_key].translation.y,
-	//			bone_[cursor_bone_].anime[ 0 ].keyframe[bone_[cursor_bone_].anime[ 0 ].current_key].translation.z);
-	//		CDebugProc::Print("現在のﾎﾞｰﾝの回転: x:%e y:%e z:%e\n",
-	//			bone_[cursor_bone_].anime[ 0 ].keyframe[bone_[cursor_bone_].anime[ 0 ].current_key].rotation.x,
-	//			bone_[cursor_bone_].anime[ 0 ].keyframe[bone_[cursor_bone_].anime[ 0 ].current_key].rotation.y,
-	//			bone_[cursor_bone_].anime[ 0 ].keyframe[bone_[cursor_bone_].anime[ 0 ].current_key].rotation.z);
-	//	}
-
-	//	if (GetAsyncKeyState('M'))
-	//	{	// ﾃﾞﾊﾞｯｸﾞ用
-	//		value_ += 0.03f;
-	//		float temp = D3DXToRadian(sinf(value_) * times_);
-
-	//		for (int i = 0; i < bone_num_; i++)
-	//		{
-	//			D3DXMatrixIdentity(&bone_[i].bone_matrix);
-	//			bone_[i].bone_matrix *= bone_[i].init_matrix;
-	//			switch (anim_type_)
-	//			{
-	//			case 0:
-	//				D3DXMatrixRotationYawPitchRoll(&bone_[cursor_bone_].bone_matrix, temp, temp, temp);
-	//				break;
-	//			case 1:
-	//				D3DXMatrixRotationX(&bone_[cursor_bone_].bone_matrix, temp);
-	//				break;
-	//			case 2:
-	//				D3DXMatrixRotationY(&bone_[cursor_bone_].bone_matrix, temp);
-	//				break;
-	//			case 3:
-	//				D3DXMatrixRotationZ(&bone_[cursor_bone_].bone_matrix, temp);
-	//				break;
-	//			default:
-	//				break;
-	//			}
-	//			bone_[cursor_bone_].bone_matrix *= bone_[cursor_bone_].init_matrix;
-	//		}
-	//		CDebugProc::Print("うごいた量:%f\n", temp);
-	//		UpdateBone(bone_, &world_);
-	//		return_data = false;
-	//	}
-	//}
-
-	//d3d_device_->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);				// 裏面をカリング
-	//d3d_device_->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);				// 裏面をカリング
-
-	//if (GetAsyncKeyState('P'))
-	//{
-	//	d3d_device_->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);				// 裏面をカリング
-	//}
-	//if (GetAsyncKeyState('O'))
-	//{
-	//	d3d_device_->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);				// 裏面をカリング
-	//}
-
-	//if (GetAsyncKeyState('T') & 0x0001)
-	//	anime_speed++;
-	//if (GetAsyncKeyState('G') & 0x0001)
-	//	anime_speed--;
-	//
-	//if (GetAsyncKeyState(VK_UP) & 0x0001)
-	//	anim_type_++;
-	//if (GetAsyncKeyState(VK_DOWN) & 0x0001)
-	//	anim_type_--;
-
-	//if (!GetAsyncKeyState(VK_LSHIFT))
-	//{
-	//	if (GetAsyncKeyState(VK_LEFT) & 0x0001)
-	//		cursor_bone_++;
-	//	if (GetAsyncKeyState(VK_RIGHT) & 0x0001)
-	//		cursor_bone_--;
-	//}
-	//else
-	//{
-	//	CDebugProc::Print("左右:選択ﾒｯｼｭの変更\n");
-	//	if (GetAsyncKeyState(VK_LEFT) & 0x0001)
-	//		cursor_mesh_++;
-	//	if (GetAsyncKeyState(VK_RIGHT) & 0x0001)
-	//		cursor_mesh_--;
-	//}
-
-	//if (cursor_bone_ < 0)
-	//	cursor_bone_ = bone_num_ - 1;
-	//if (cursor_bone_ == bone_num_)
-	//	cursor_bone_ = 0;
-
-	//if (cursor_mesh_ < 0)
-	//	cursor_mesh_ = mesh_num_ - 1;
-	//if (cursor_mesh_ == mesh_num_)
-	//	cursor_mesh_ = 0;
-
-	//if (anim_type_ < 0)
-	//	anim_type_ = 3;
-	//if (anim_type_ > 3)
-	//	anim_type_ = 0;
-
-	//for (int i = 48; i < 58; i++)
-	//{
-	//	if (GetAsyncKeyState(i))
-	//	{
-	//		set_anime_ = i - 48;
-	//	}
-	//}
-
-	//if (bone_ != NULL)
-	//{
-	//	if (set_anime_ >= bone_->anime_num)
-	//	{
-	//		set_anime_ = bone_->anime_num - 1;
-	//	}
-
-	//}
-
-	return return_data;
-}
 
 //=============================================================================
 // 処理:ｼｪｰﾀﾞｰのｺﾝﾊﾟｲﾙ
@@ -1180,16 +908,26 @@ void Kim::CreateVertexDecl(void)
 	d3d_device_->CreateVertexDeclaration(declAry, &decl_);
 }
 
-//=============================================================================
-// 処理:生成
-//=============================================================================
-Kim* Kim::Create(LPDIRECT3DDEVICE9 d3d_device, const char* file_name)
-{
-	Kim* obj = new Kim(d3d_device);
-	obj->Load(file_name);
 
-	return obj;
+//-----------------------------------------------------------------------------
+//
+//-----------------------------------------------------------------------------
+void Kim::SetAnime( const ANIME& anime )
+{ 
+	if( anime_ == anime )
+	{
+		return ;
+	}
 
+ 	old_anime_ = anime_ ;
+
+	anime_ = anime ;
+
+	current_key_ = anime_data_[ NOW_ANIMETION ][ 0 ];
+
+	animation_ = true ; 
+	
 }
+
 
 // EOF

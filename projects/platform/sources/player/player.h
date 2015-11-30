@@ -35,7 +35,7 @@
 class Player : public Object
 {
 public : 
-	enum STATE
+	enum class STATE
 	{
 		NONE = -1 ,		// なし
 		WAIT ,			// 待機
@@ -51,7 +51,7 @@ public :
 	Player( LPDIRECT3DDEVICE9 pDevice );		// コンストラクタ
 	~Player();									// デストラクタ
 
-	void Init( float3 pos );		// 初期化
+	void Init( float3 pos );			// 初期化
 	void Update( void );				// 更新
 	void Draw( void );					// 描画
 	void Uninit( void );				// 終了
@@ -60,7 +60,6 @@ public :
 	Kim* GetKimPointer( void ){ return pKim_ ; }
 	
 	STATE GetState( void ){ return state_ ; }
-	STATE GetAnime( void ){ return anime_ ; }
 
 	void SetID( const int& id ){ ID_ = id ; }
 	int GetID( void ){ return ID_ ; }
@@ -70,6 +69,7 @@ public :
 
 	void SetMove(const float3& in_move) { move_ = in_move; }
 	const float3& GetMove(void) { return move_; }
+	
 	//--  設定  --//
 	void SetCameraVector( const float3& vec ){ camera_vector_ = vec ; }
 
@@ -87,10 +87,8 @@ private :
 	float3 old_position_ ;		// 前の位置
 
 	int ID_ ;
-	int anime_data_[ STATE::MAX ][ 2 ];
 
 	STATE state_ ;
-	STATE anime_ ;
 
 	void Control( void );
 	void UpdateKimMatrix( void );
