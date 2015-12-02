@@ -110,7 +110,7 @@ Game::Game()
 	wall_[3]->GetObject()->SetRotation(0.0f, D3DX_PI/-2, 0.0f);
 	
 	dome_ = std::make_shared<Dome>();
-	dome_->GetObjectA()->SetPosition(0.0f,-3.0f, 0.0f);
+	dome_->GetObjectA()->SetPosition(0.0f,-6.0f, 0.0f);
 
 #ifdef _DEBUG
 	debugRenderTarget_ = false;

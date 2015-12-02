@@ -35,7 +35,7 @@ Dome::Dome(void)
 	size_._x = width_count_ * block_width_;
 	size_._y = height_count_ * block_height_;
 	mesh_sprite_dome_ = std::make_shared<mesh::MeshDome>(block_width_, block_height_, width_count_, height_count_);
-	mesh_sprite_dome_->SetTexcoord(4, 1);
+	mesh_sprite_dome_->SetTexcoord(8, 1);
 	types_.resize(width_count_ * height_count_);
 	for (auto& type : types_)
 	{

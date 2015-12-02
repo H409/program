@@ -108,13 +108,27 @@ namespace mesh {
 	//=============================================================================
 	// set index
 	//=============================================================================
-	void MeshDome::SetIndex(u32 x, u32 y, u32 indes)
+	void MeshDome::SetIndex(u32 x, u32 y, u32 index)
 	{
-
+		indexs_[y * width_count_ + x] = index;
+		is_dirty_ = true;
 	}
+
 	//=============================================================================
 	// set index
 	//=============================================================================
+	void MeshDome::SetIndex(const std::vector<u32>& in_indexs)
+	{
+		DEBUG_ASSERT(in_indexs.size() == width_count_ * height_count_);
+
+		auto size = width_count_ * height_count_;
+
+		for (u32 i = 0; i < size; ++i)
+		{
+			indexs_[i] = in_indexs[i];
+		}
+		is_dirty_ = true;
+	}
 
 	//=============================================================================
 	// set color
@@ -178,8 +192,13 @@ namespace mesh {
 
 			for (u32 j = 0; j < width_count_; ++j)
 			{
-				float left = 1.0f / division_width_  * ((indexs_[i * width_count_ + j] % division_width_) + 0);
+				/*float left = 1.0f / division_width_  * ((indexs_[i * width_count_ + j] % division_width_) + 0);
 				float right = 1.0f / division_width_  * ((indexs_[i * width_count_ + j] % division_width_) + 1);
+				float top = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 0);
+				float bottom = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 1);*/
+
+				float left = (1.0f / division_width_)*j;
+				float right = (1.0f / division_width_)*j + (1.0f/division_width_);
 				float top = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 0);
 				float bottom = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 1);
 				

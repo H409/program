@@ -33,7 +33,7 @@ namespace mesh {
 
 		// set index
 		void SetIndex(u32 in_x, u32 in_y, u32 in_index);
-		//void SetIndex(const std::vector<u32>& in_indexs);
+		void SetIndex(const std::vector<u32>& in_indexs);
 
 		//// set color
 		//void SetColor(u32 in_x, u32 in_y, const float4& in_color);
