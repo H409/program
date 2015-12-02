@@ -29,7 +29,13 @@
 #include "x_model/x_model.h"
 #include "develop_tool/develop_tool.h"
 #include "system/input_manager.h"
+//<<<<<<< HEAD
+#include "player_icon/player_icon.h"
+#include "field_object/flower.h"
+//=======
 #include "wall/wall.h"
+#include "dome/dome.h"
+//>>>>>>> origin/yuminaga/ä½œæ¥­
 
 //=============================================================================
 // constructor
@@ -80,6 +86,10 @@ Game::Game()
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
+		player_icons_[i] = std::make_shared<PlayerIcon>(i);
+	}
+	for(u32 i = 0;i < PLAYER_MAX;++i)
+	{
 		players_[i] = std::make_shared<Player>(graphic_device->GetDevice());
 	}
 
@@ -90,18 +100,20 @@ Game::Game()
 		wall_[i] = std::make_shared<Wall>();
 	}
 
-	wall_[0]->GetObject()->SetPosition(0.0f, 0.0f, 30.0f);
+	wall_[0]->GetObject()->SetPosition(0.0f, 0.0f, 15.0f);
 	wall_[0]->GetObject()->SetRotation(0.0f, 0.0f, 0.0f);
-	wall_[1]->GetObject()->SetPosition(30.0f, 0.0f, 0.0f);
+	wall_[1]->GetObject()->SetPosition(15.0f, 0.0f, 0.0f);
 	wall_[1]->GetObject()->SetRotation(0.0f, D3DX_PI/2, 0.0f);
-	wall_[2]->GetObject()->SetPosition(0.0f, 0.0f, -30.0f);
+	wall_[2]->GetObject()->SetPosition(0.0f, 0.0f, -15.0f);
 	wall_[2]->GetObject()->SetRotation(0.0f, D3DX_PI, 0.0f);
-	wall_[3]->GetObject()->SetPosition(-30.0f, 0.0f, 0.0f);
+	wall_[3]->GetObject()->SetPosition(-15.0f, 0.0f, 0.0f);
 	wall_[3]->GetObject()->SetRotation(0.0f, D3DX_PI/-2, 0.0f);
 	
-	
+	dome_ = std::make_shared<Dome>();
+	dome_->GetObjectA()->SetPosition(0.0f,-3.0f, 0.0f);
 
 #ifdef _DEBUG
+	debugRenderTarget_ = false;
 	debug_player_number_ = 0;
 	auto sprite = std::make_shared<mesh::Sprite>(float2(200,150));
 	debug_sprite_object_ = std::make_shared<MeshObject>(sprite);
@@ -127,15 +139,19 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 {
 	float3 positions[] =
 	{
-		float3(-15.0f,0.0f,-15.0f),
-		float3( 15.0f,0.0f,-15.0f),
-		float3(-15.0f,0.0f, 15.0f),
-		float3( 15.0f,0.0f, 15.0f),
+		float3(-10.0f,0.0f,-10.0f),
+		float3( 10.0f,0.0f,-10.0f),
+		float3(-10.0f,0.0f, 10.0f),
+		float3( 10.0f,0.0f, 10.0f),
 	};
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
 		players_[i]->Init(positions[i]);
+	}
+	for(u32 i = 0;i < PLAYER_MAX;++i)
+	{
+		player_icons_[i]->SetPosition(players_[i]->GetPosition());
 	}
 	return true;
 }
@@ -158,17 +174,36 @@ void Game::Update()
 		field_->Reset();
 	}
 #endif
+
+#ifdef _DEBUG
+	if(debugRenderTarget_)
+	{
+		players_[debug_player_number_]->SetCameraVector(observers_[debug_player_number_]->GetFrontVector());
+		players_[debug_player_number_]->Update();
+	}
+#endif
+
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
+#ifdef _DEBUG
+		if(!debugRenderTarget_)
+		{
+			players_[i]->SetCameraVector(observers_[i]->GetFrontVector());
+			players_[i]->Update();
+		}
+#else
 		players_[i]->SetCameraVector(observers_[i]->GetFrontVector());
 		players_[i]->Update();
-
+#endif
+		player_icons_[i]->SetPosition(players_[i]->GetPosition());
+		player_icons_[i]->Update();
 		auto front_vector = observers_[i]->GetFrontVector();
 		field_icons_[i]->SetFrontVector(front_vector);
 		field_icons_[i]->SetBasicPosition(players_[i]->GetPosition());
 		field_icons_[i]->Update();
 
-		if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_SPACE))
+		//if( players_[ i ]->GetKimPointer()->GetAnime() == Kim::ANIME::GUN_ACTION )
+		if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_SPACE ) )
 		{
 			// Ží‚Ü‚«
 			if(field_icons_[i]->IsShow())
@@ -216,7 +251,6 @@ void Game::Update()
 			field_icons_[i]->Show(false);
 			observers_[i]->SetState( FollowerObserver::STATE::FOLLWER );
 		}
-		
 
 		observers_[i]->SetFieldIconPosition( field_icons_[i]->GetPosition() );
 		observers_[i]->SetTargetPosition(players_[i]->GetPosition());
@@ -261,6 +295,11 @@ void Game::Update()
 		}
 	}
 
+	for(auto flower : flowers_)
+	{
+		flower->Update();
+	}
+
 	// 
 	for(auto bullet : bullets_)
 	{
@@ -278,6 +317,24 @@ void Game::Update()
 					if(field_->GetType(position) == 1)
 					{
 						field_->SetType(position,2);
+						auto is_create = true;
+						auto flower_position = field_->GetBlockPosition(position);
+						for(auto flower : flowers_)
+						{
+							if(!flower->IsShow())
+							{
+								flower->SetPosition(flower_position);
+								is_create = false;
+								break;
+							}
+						}
+
+						if(is_create)
+						{
+							auto flower = std::make_shared<Flower>();
+							flower->SetPosition(flower_position);
+							flowers_.push_back(flower);
+						}
 					}
 					bullet->Remove();
 				}
@@ -298,7 +355,8 @@ void Game::Draw()
 	auto d_ps = graphic_device->LoadPixelShader("resources/shader/deferred.psc");
 	auto basic_vs = graphic_device->LoadVertexShader("resources/shader/basic.vsc");
 	auto basic_ps = graphic_device->LoadPixelShader("resources/shader/basic.psc");
-
+	auto gb_vs_fbx = graphic_device->LoadVertexShader("resources/shader/graphics_buffer_fbx.vsc");
+	//auto gb_ps_fbx = graphic_device->LoadVertexShader("resources/shader/graphics_buffer_fbx.psc");
 	auto default_texture = graphic_device->GetRenderTarget(0);
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
@@ -325,11 +383,11 @@ void Game::Draw()
 		gb_vs->SetValue("_view_matrix",(f32*)&observers_[i]->GetViewMatrix(),16);
 		gb_vs->SetValue("_projection_matrix",(f32*)&observers_[i]->GetProjectionMatrix(),16);
 
-		auto object = field_->GetObject();
 
 		auto view_matrix = observers_[i]->GetViewMatrix();
 		auto i_view_matrix = utility::math::InverseB(view_matrix);
 
+		auto object = field_->GetObject();
 		auto world_matrix = object->GetMatrix();
 
 		gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
@@ -342,7 +400,6 @@ void Game::Draw()
 			object = field_icons_[i]->GetObject();
 
 			world_matrix = object->GetMatrix();
-			world_matrix = utility::math::Multiply(i_view_matrix,world_matrix);
 
 			// object
 			gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
@@ -366,24 +423,62 @@ void Game::Draw()
 			}
 		}
 
+		for(auto flower : flowers_)
+		{
+			if(flower->IsShow())
+			{
+				object = flower->GetObject();
+				world_matrix = object->GetMatrix();
+				world_matrix = utility::math::Multiply(i_view_matrix,world_matrix);
+
+				gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
+				gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
+
+				object->Draw();
+			}
+		}
+
+		for(u32 j = 0;j < PLAYER_MAX;++j)
+		{
+			if(i != j)
+			{
+				object = player_icons_[j]->GetObject();
+				world_matrix = object->GetMatrix();
+				world_matrix = utility::math::Multiply(i_view_matrix,world_matrix);
+				gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
+				gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
+				object->Draw();
+			}
+		}
+
+		//draw wall
+		for(u32 j = 0; j < WALL_MAX; ++j)
+		{
+			object = wall_[j]->GetObject();
+
+			world_matrix = object->GetMatrix();
+
+			gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
+			gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
+
+			object->Draw();
+		}
+
+		//draw dome
+		object = dome_->GetObjectA();
+		world_matrix = object->GetMatrix();
+		gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
+		gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());
+
+		object->Draw();
+
+		graphic_device->SetVertexShader(gb_vs_fbx);
+
 		for(u32 j = 0;j < PLAYER_MAX;++j)
 		{
 			players_[j]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[i]->GetViewMatrix());
 			players_[j]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[i]->GetProjectionMatrix());
 			players_[j]->Draw();
-		}
-
-		//draw wall
-		for (u32 i = 0; i < WALL_MAX; ++i)
-		{
-			object = wall_[i]->GetObject();
-
-			world_matrix = object->GetMatrix();
-
-			gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
-			gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());
-
-			object->Draw();
 		}
 	}
 
@@ -412,7 +507,6 @@ void Game::Draw()
 	}
 
 #ifdef _DEBUG 
-	static bool _debugRenderTarget = false;
 	static int _debugRenderTargetIndex = 0;
 
 	LPDIRECT3DTEXTURE9 tex[3];
@@ -422,10 +516,10 @@ void Game::Draw()
 
 	if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_0) == true)
 	{
-		_debugRenderTarget = !_debugRenderTarget;
+		debugRenderTarget_ = !debugRenderTarget_;
 	}
 
-	if(_debugRenderTarget == true)
+	if(debugRenderTarget_ == true)
 	{
 		if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_LEFT) == true)
 		{

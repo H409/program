@@ -34,11 +34,12 @@ FieldIcon::FieldIcon(void)
 	,min_(1.5f)
 	,is_show_(false)
 {
-	sprite_3d_ = std::make_shared<mesh::Sprite3D>(float2(1.0f,2.0f));
+	sprite_3d_ = std::make_shared<mesh::Sprite3D>(float2(0.5f,0.5f));
 	mesh_object_ = std::make_shared<MeshObject>(sprite_3d_);
-	mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/test.png"));
-	sprite_3d_->SetAnchorPoint(float2(0.5f,1.0f));
+	mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/field_icon.png"));
+	sprite_3d_->SetAnchorPoint(float2(0.5f,0.5f));
 	sprite_3d_->Apply();
+	mesh_object_->SetRotationX(utility::math::ToRadian(90.0f));
 }
 
 //=============================================================================
@@ -68,7 +69,7 @@ void FieldIcon::Update(void)
 		position_ = basic_position_ + vector * min_;
 	}
 
-	mesh_object_->SetPosition(position_);
+	mesh_object_->SetPosition(float3(position_._x,position_._y + 0.001f,position_._z));
 }
 
 //=============================================================================

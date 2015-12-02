@@ -28,10 +28,12 @@
     <ClCompile Include="sources\bullet\bullet.cpp" />
     <ClCompile Include="sources\develop_tool\develop_display.cpp" />
     <ClCompile Include="sources\develop_tool\develop_tool.cpp" />
+    <ClCompile Include="sources\dome\dome.cpp" />
     <ClCompile Include="sources\dome\mesh_sprite_dome.cpp" />
     <ClCompile Include="sources\fbx\kim.cpp" />
     <ClCompile Include="sources\field\field.cpp" />
     <ClCompile Include="sources\field_icon\field_icon.cpp" />
+    <ClCompile Include="sources\field_object\flower.cpp" />
     <ClCompile Include="sources\main.cpp" />
     <ClCompile Include="sources\mesh\mesh.cpp" />
     <ClCompile Include="sources\mesh\mesh_sprite_3d.cpp" />
@@ -44,6 +46,7 @@
     <ClCompile Include="sources\observer\observer_2d.cpp" />
     <ClCompile Include="sources\observer\observer_3d.cpp" />
     <ClCompile Include="sources\player\player.cpp" />
+    <ClCompile Include="sources\player_icon\player_icon.cpp" />
     <ClCompile Include="sources\scene\base\scene_manager.cpp" />
     <ClCompile Include="sources\scene\demo\demo.cpp" />
     <ClCompile Include="sources\scene\game\game.cpp" />
@@ -75,10 +78,12 @@
     <ClInclude Include="sources\bullet\bullet.h" />
     <ClInclude Include="sources\develop_tool\develop_display.h" />
     <ClInclude Include="sources\develop_tool\develop_tool.h" />
+    <ClInclude Include="sources\dome\dome.h" />
     <ClInclude Include="sources\dome\mesh_sprite_dome.h" />
     <ClInclude Include="sources\fbx\kim.h" />
     <ClInclude Include="sources\field\field.h" />
     <ClInclude Include="sources\field_icon\field_icon.h" />
+    <ClInclude Include="sources\field_object\flower.h" />
     <ClInclude Include="sources\main.h" />
     <ClInclude Include="sources\mesh\mesh.h" />
     <ClInclude Include="sources\mesh\mesh_sprite_3d.h" />
@@ -91,6 +96,7 @@
     <ClInclude Include="sources\observer\observer_2d.h" />
     <ClInclude Include="sources\observer\observer_3d.h" />
     <ClInclude Include="sources\player\player.h" />
+    <ClInclude Include="sources\player_icon\player_icon.h" />
     <ClInclude Include="sources\scene\base\scene_base.h" />
     <ClInclude Include="sources\scene\base\scene_factory.h" />
     <ClInclude Include="sources\scene\base\scene_manager.h" />

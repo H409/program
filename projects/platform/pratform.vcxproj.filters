@@ -1,352 +1,104 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="sources">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd;c;cpp;</Extensions>
-    </Filter>
-    <Filter Include="sources\windows">
-      <UniqueIdentifier>{97a60c57-beb9-42c7-b08d-4cad413c47ba}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="sources\system">
-      <UniqueIdentifier>{422ba392-f1d0-4772-b0ef-5a1a3ed8761c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="sources\object">
-      <UniqueIdentifier>{37139ce6-4ea0-421f-834f-97ccdc3d6d23}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="sources\mesh">
-      <UniqueIdentifier>{982b7f76-a875-4056-8d21-8329f19e33a0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="sources\observer">
-      <UniqueIdentifier>{7a4fef94-7c5b-4889-9832-d14d5108ffcd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="sources\action">
-      <UniqueIdentifier>{4cdd7809-ce2f-48b9-842d-d92f77819595}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="sources\fbx">
-      <UniqueIdentifier>{c18f048a-ded3-4cc0-b99d-b31a09c09a25}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="sources\scene">
-      <UniqueIdentifier>{6e80e78b-4045-47f3-8f71-7f2a58527673}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="sources\player">
-      <UniqueIdentifier>{cd05187b-ffbb-4201-82f1-3a6c1a3caed2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="sources\scene\base">
-      <UniqueIdentifier>{a9141462-0511-450b-b985-7c3fc42f545d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="sources\scene\demo">
-      <UniqueIdentifier>{5584d4fc-a0a4-4e17-b730-b54688f39b12}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="sources\scene\title">
-      <UniqueIdentifier>{80273549-715c-463e-90ff-fc3580c24475}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="sources\scene\result">
-      <UniqueIdentifier>{9d9ec928-40b7-4bb4-9051-acca449a4418}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="sources\scene\game">
-      <UniqueIdentifier>{e1692b3f-8617-4242-8d0d-c0ce6602611d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="sources\scene\tutorial">
-      <UniqueIdentifier>{fa05c3e6-4657-4166-bcdf-116984569a92}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="sources\field_icon">
-      <UniqueIdentifier>{7ccfe92e-5a35-411c-8449-7b30aaffdfa5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="sources\field">
-      <UniqueIdentifier>{2254b91b-abee-42ee-b3f5-dbeeeaae482c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="sources\bullet">
-      <UniqueIdentifier>{eb220bde-4348-4545-88ab-c979161ddb50}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="sources\develop_tool">
-      <UniqueIdentifier>{671b6e7c-78b2-4581-bd38-3159d0d46ea3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="sources\x_model">
-      <UniqueIdentifier>{e53aa46a-690b-44b6-8425-ef125621fb33}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="sources\wall">
-      <UniqueIdentifier>{4af044d3-9707-44a4-95de-496d9a3f12a8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="sources\dome">
-      <UniqueIdentifier>{fa52060a-f238-4fb6-89d6-1d30cb428320}</UniqueIdentifier>
-    </Filter>
+    <ClCompile Include="sources\action\action.cpp" />
+    <ClCompile Include="sources\action\callback.cpp" />
+    <ClCompile Include="sources\action\delay_time.cpp" />
+    <ClCompile Include="sources\action\fade_to.cpp" />
+    <ClCompile Include="sources\action\move_by.cpp" />
+    <ClCompile Include="sources\action\move_to.cpp" />
+    <ClCompile Include="sources\action\repeat.cpp" />
+    <ClCompile Include="sources\action\rotate_by.cpp" />
+    <ClCompile Include="sources\action\sequence.cpp" />
+    <ClCompile Include="sources\action\spawn.cpp" />
+    <ClCompile Include="sources\bullet\bullet.cpp" />
+    <ClCompile Include="sources\develop_tool\develop_display.cpp" />
+    <ClCompile Include="sources\develop_tool\develop_tool.cpp" />
+    <ClCompile Include="sources\dome\mesh_sprite_dome.cpp" />
+    <ClCompile Include="sources\fbx\kim.cpp" />
+    <ClCompile Include="sources\field\field.cpp" />
+    <ClCompile Include="sources\field_icon\field_icon.cpp" />
+    <ClCompile Include="sources\field_object\flower.cpp" />
+    <ClCompile Include="sources\main.cpp" />
+    <ClCompile Include="sources\mesh\mesh.cpp" />
+    <ClCompile Include="sources\mesh\mesh_sprite_3d.cpp" />
+    <ClCompile Include="sources\mesh\sprite.cpp" />
+    <ClCompile Include="sources\mesh\sprite_3d.cpp" />
+    <ClCompile Include="sources\object\mesh_object.cpp" />
+    <ClCompile Include="sources\object\object.cpp" />
+    <ClCompile Include="sources\observer\follower_observer.cpp" />
+    <ClCompile Include="sources\observer\observer.cpp" />
+    <ClCompile Include="sources\observer\observer_2d.cpp" />
+    <ClCompile Include="sources\observer\observer_3d.cpp" />
+    <ClCompile Include="sources\player\player.cpp" />
+    <ClCompile Include="sources\player_icon\player_icon.cpp" />
+    <ClCompile Include="sources\scene\base\scene_manager.cpp" />
+    <ClCompile Include="sources\scene\demo\demo.cpp" />
+    <ClCompile Include="sources\scene\game\game.cpp" />
+    <ClCompile Include="sources\scene\result\result.cpp" />
+    <ClCompile Include="sources\scene\title\title.cpp" />
+    <ClCompile Include="sources\scene\tutorial\tutorial.cpp" />
+    <ClCompile Include="sources\system\input.cpp" />
+    <ClCompile Include="sources\system\input_joypad.cpp" />
+    <ClCompile Include="sources\system\input_keyboard.cpp" />
+    <ClCompile Include="sources\system\input_manager.cpp" />
+    <ClCompile Include="sources\system\input_mouse.cpp" />
+    <ClCompile Include="sources\system\win_system.cpp" />
+    <ClCompile Include="sources\system\xi_pad.cpp" />
+    <ClCompile Include="sources\wall\wall.cpp" />
+    <ClCompile Include="sources\windows\win_main.cpp" />
+    <ClCompile Include="sources\x_model\x_model.cpp" />
+    <ClCompile Include="sources\dome\dome.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="sources\windows\win_main.cpp">
-      <Filter>sources\windows</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\system\win_system.cpp">
-      <Filter>sources\system</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\main.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\object\object.cpp">
-      <Filter>sources\object</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\mesh\mesh.cpp">
-      <Filter>sources\mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\mesh\sprite.cpp">
-      <Filter>sources\mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\mesh\sprite_3d.cpp">
-      <Filter>sources\mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\observer\observer.cpp">
-      <Filter>sources\observer</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\observer\observer_2d.cpp">
-      <Filter>sources\observer</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\observer\observer_3d.cpp">
-      <Filter>sources\observer</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\mesh\mesh_sprite_3d.cpp">
-      <Filter>sources\mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\observer\follower_observer.cpp">
-      <Filter>sources\observer</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\action\action.cpp">
-      <Filter>sources\action</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\action\move_to.cpp">
-      <Filter>sources\action</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\action\sequence.cpp">
-      <Filter>sources\action</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\action\move_by.cpp">
-      <Filter>sources\action</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\action\callback.cpp">
-      <Filter>sources\action</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\action\fade_to.cpp">
-      <Filter>sources\action</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\action\spawn.cpp">
-      <Filter>sources\action</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\action\repeat.cpp">
-      <Filter>sources\action</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\action\delay_time.cpp">
-      <Filter>sources\action</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\action\rotate_by.cpp">
-      <Filter>sources\action</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\system\input.cpp">
-      <Filter>sources\system</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\fbx\kim.cpp">
-      <Filter>sources\fbx</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\player\player.cpp">
-      <Filter>sources\player</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\system\input_keyboard.cpp">
-      <Filter>sources\system</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\system\input_mouse.cpp">
-      <Filter>sources\system</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\object\mesh_object.cpp">
-      <Filter>sources\object</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\scene\base\scene_manager.cpp">
-      <Filter>sources\scene\base</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\scene\demo\demo.cpp">
-      <Filter>sources\scene\demo</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\scene\game\game.cpp">
-      <Filter>sources\scene\game</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\scene\result\result.cpp">
-      <Filter>sources\scene\result</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\scene\tutorial\tutorial.cpp">
-      <Filter>sources\scene\tutorial</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\scene\title\title.cpp">
-      <Filter>sources\scene\title</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\field_icon\field_icon.cpp">
-      <Filter>sources\field_icon</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\field\field.cpp">
-      <Filter>sources\field</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\bullet\bullet.cpp">
-      <Filter>sources\bullet</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\system\input_manager.cpp">
-      <Filter>sources\system</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\system\input_joypad.cpp">
-      <Filter>sources\system</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\develop_tool\develop_display.cpp">
-      <Filter>sources\develop_tool</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\develop_tool\develop_tool.cpp">
-      <Filter>sources\develop_tool</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\x_model\x_model.cpp">
-      <Filter>sources\x_model</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\system\xi_pad.cpp">
-      <Filter>sources\system</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\wall\wall.cpp">
-      <Filter>sources\wall</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\dome\mesh_sprite_dome.cpp">
-      <Filter>sources\dome</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="sources\main.h">
-      <Filter>sources</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\system\win_system.h">
-      <Filter>sources\system</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\object\object.h">
-      <Filter>sources\object</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\mesh\mesh.h">
-      <Filter>sources\mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\mesh\sprite.h">
-      <Filter>sources\mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\mesh\sprite_3d.h">
-      <Filter>sources\mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\observer\observer.h">
-      <Filter>sources\observer</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\observer\observer_2d.h">
-      <Filter>sources\observer</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\observer\observer_3d.h">
-      <Filter>sources\observer</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\mesh\mesh_sprite_3d.h">
-      <Filter>sources\mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\observer\follower_observer.h">
-      <Filter>sources\observer</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\action\action.h">
-      <Filter>sources\action</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\action\move_to.h">
-      <Filter>sources\action</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\action\sequence.h">
-      <Filter>sources\action</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\action\move_by.h">
-      <Filter>sources\action</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\action\callback.h">
-      <Filter>sources\action</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\action\fade_to.h">
-      <Filter>sources\action</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\action\spawn.h">
-      <Filter>sources\action</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\action\repeat.h">
-      <Filter>sources\action</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\action\delay_time.h">
-      <Filter>sources\action</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\action\rotate_by.h">
-      <Filter>sources\action</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\system\input.h">
-      <Filter>sources\system</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\fbx\kim.h">
-      <Filter>sources\fbx</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\player\player.h">
-      <Filter>sources\player</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\system\input_mouse.h">
-      <Filter>sources\system</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\system\input_keyboard.h">
-      <Filter>sources\system</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\object\mesh_object.h">
-      <Filter>sources\object</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\scene\base\scene_manager.h">
-      <Filter>sources\scene\base</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\scene\base\scene_base.h">
-      <Filter>sources\scene\base</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\scene\base\scene_factory.h">
-      <Filter>sources\scene\base</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\scene\demo\demo.h">
-      <Filter>sources\scene\demo</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\scene\game\game.h">
-      <Filter>sources\scene\game</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\scene\result\result.h">
-      <Filter>sources\scene\result</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\scene\tutorial\tutorial.h">
-      <Filter>sources\scene\tutorial</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\scene\title\title.h">
-      <Filter>sources\scene\title</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\field_icon\field_icon.h">
-      <Filter>sources\field_icon</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\field\field.h">
-      <Filter>sources\field</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\bullet\bullet.h">
-      <Filter>sources\bullet</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\system\input_manager.h">
-      <Filter>sources\system</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\system\input_joypad.h">
-      <Filter>sources\system</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\develop_tool\develop_display.h">
-      <Filter>sources\develop_tool</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\develop_tool\develop_tool.h">
-      <Filter>sources\develop_tool</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\x_model\x_model.h">
-      <Filter>sources\x_model</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\system\xi_pad.h">
-      <Filter>sources\system</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\wall\wall.h">
-      <Filter>sources\wall</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\dome\mesh_sprite_dome.h">
-      <Filter>sources\dome</Filter>
-    </ClInclude>
+    <ClInclude Include="sources\action\action.h" />
+    <ClInclude Include="sources\action\callback.h" />
+    <ClInclude Include="sources\action\delay_time.h" />
+    <ClInclude Include="sources\action\fade_to.h" />
+    <ClInclude Include="sources\action\move_by.h" />
+    <ClInclude Include="sources\action\move_to.h" />
+    <ClInclude Include="sources\action\repeat.h" />
+    <ClInclude Include="sources\action\rotate_by.h" />
+    <ClInclude Include="sources\action\sequence.h" />
+    <ClInclude Include="sources\action\spawn.h" />
+    <ClInclude Include="sources\bullet\bullet.h" />
+    <ClInclude Include="sources\develop_tool\develop_display.h" />
+    <ClInclude Include="sources\develop_tool\develop_tool.h" />
+    <ClInclude Include="sources\dome\mesh_sprite_dome.h" />
+    <ClInclude Include="sources\fbx\kim.h" />
+    <ClInclude Include="sources\field\field.h" />
+    <ClInclude Include="sources\field_icon\field_icon.h" />
+    <ClInclude Include="sources\field_object\flower.h" />
+    <ClInclude Include="sources\main.h" />
+    <ClInclude Include="sources\mesh\mesh.h" />
+    <ClInclude Include="sources\mesh\mesh_sprite_3d.h" />
+    <ClInclude Include="sources\mesh\sprite.h" />
+    <ClInclude Include="sources\mesh\sprite_3d.h" />
+    <ClInclude Include="sources\object\mesh_object.h" />
+    <ClInclude Include="sources\object\object.h" />
+    <ClInclude Include="sources\observer\follower_observer.h" />
+    <ClInclude Include="sources\observer\observer.h" />
+    <ClInclude Include="sources\observer\observer_2d.h" />
+    <ClInclude Include="sources\observer\observer_3d.h" />
+    <ClInclude Include="sources\player\player.h" />
+    <ClInclude Include="sources\player_icon\player_icon.h" />
+    <ClInclude Include="sources\scene\base\scene_base.h" />
+    <ClInclude Include="sources\scene\base\scene_factory.h" />
+    <ClInclude Include="sources\scene\base\scene_manager.h" />
+    <ClInclude Include="sources\scene\demo\demo.h" />
+    <ClInclude Include="sources\scene\game\game.h" />
+    <ClInclude Include="sources\scene\result\result.h" />
+    <ClInclude Include="sources\scene\title\title.h" />
+    <ClInclude Include="sources\scene\tutorial\tutorial.h" />
+    <ClInclude Include="sources\system\input.h" />
+    <ClInclude Include="sources\system\input_joypad.h" />
+    <ClInclude Include="sources\system\input_keyboard.h" />
+    <ClInclude Include="sources\system\input_manager.h" />
+    <ClInclude Include="sources\system\input_mouse.h" />
+    <ClInclude Include="sources\system\win_system.h" />
+    <ClInclude Include="sources\system\xi_pad.h" />
+    <ClInclude Include="sources\wall\wall.h" />
+    <ClInclude Include="sources\x_model\x_model.h" />
+    <ClInclude Include="sources\dome\dome.h" />
   </ItemGroup>
 </Project>

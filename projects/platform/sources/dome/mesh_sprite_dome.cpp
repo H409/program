@@ -123,6 +123,13 @@ namespace mesh {
 	//=============================================================================
 	// set texcoord
 	//=============================================================================
+	void MeshDome::SetTexcoord(u32 in_division_width, u32 in_division_height)
+	{
+		division_width_ = in_division_width;
+		division_height_ = in_division_height;
+		is_dirty_ = true;
+	}
+
 
 	void MeshDome::AttachRenderState_(void)
 	{
@@ -164,8 +171,10 @@ namespace mesh {
 		{
 			//çÇÇ≥Ç…ÇÊÇÈïœìÆÇ∑ÇÈîºåaXZ
 			float dr_xz = domemaxradius*((float)i / (float)height_count_)*((float)i / (float)height_count_);
+			float olddr_xz = domemaxradius*((float)(i - 1) / (float)height_count_)*((float)(i - 1) / (float)height_count_);
 			float yh = ((float)i / (float)height_count_)*((float)i / (float)height_count_);
-			float yc = height_count_*(size_._y/height_count_) / 2;
+			float oldyh= ((float)(i-1) / (float)height_count_)*((float)(i-1) / (float)height_count_);
+			float yc = height_count_*(block_size_._y) / 2;
 
 			for (u32 j = 0; j < width_count_; ++j)
 			{
@@ -173,18 +182,11 @@ namespace mesh {
 				float right = 1.0f / division_width_  * ((indexs_[i * width_count_ + j] % division_width_) + 1);
 				float top = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 0);
 				float bottom = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 1);
-
-				/*
-				vertex[(i * width_count_ + j) * 4 + 0]._position = float3(offset._x + block_size_._width * (j + 0), offset._y - block_size_._height * (i + 1), 0.0f);
-				vertex[(i * width_count_ + j) * 4 + 1]._position = float3(offset._x + block_size_._width * (j + 0), offset._y - block_size_._height * (i + 0), 0.0f);
-				vertex[(i * width_count_ + j) * 4 + 2]._position = float3(offset._x + block_size_._width * (j + 1), offset._y - block_size_._height * (i + 1), 0.0f);
-				vertex[(i * width_count_ + j) * 4 + 3]._position = float3(offset._x + block_size_._width * (j + 1), offset._y - block_size_._height * (i + 0), 0.0f);*/
-
 				
-				vertex[(i * width_count_ + j) * 4 + 0]._position = float3(-(cosf(faceangle_x*((float)j + 0)))*dr_xz, ((-size_._y / width_count_)*((float)i + 1))*yh + yc, (sinf(faceangle_x*((float)j + 0)))*dr_xz);
-				vertex[(i * width_count_ + j) * 4 + 1]._position = float3(-(cosf(faceangle_x*((float)j + 0)))*dr_xz, ((-size_._y / width_count_)*((float)i + 0))*yh + yc, (sinf(faceangle_x*((float)j + 0)))*dr_xz);
-				vertex[(i * width_count_ + j) * 4 + 2]._position = float3(-(cosf(faceangle_x*((float)j + 1)))*dr_xz, ((-size_._y / width_count_)*((float)i + 1))*yh + yc, (sinf(faceangle_x*((float)j + 1)))*dr_xz);
-				vertex[(i * width_count_ + j) * 4 + 3]._position = float3(-(cosf(faceangle_x*((float)j + 1)))*dr_xz, ((-size_._y / width_count_)*((float)i + 0))*yh + yc, (sinf(faceangle_x*((float)j + 1)))*dr_xz);
+				vertex[(i * width_count_ + j) * 4 + 0]._position = float3(-(cosf(faceangle_x*(j + 0)))*dr_xz, (-block_size_._y*(i + 1))*yh		+ yc, (sinf(faceangle_x*(j + 0)))*dr_xz);
+				vertex[(i * width_count_ + j) * 4 + 1]._position = float3(-(cosf(faceangle_x*(j + 0)))*olddr_xz, (-block_size_._y*(i + 0))*oldyh	+ yc, (sinf(faceangle_x*(j + 0)))*olddr_xz);
+				vertex[(i * width_count_ + j) * 4 + 2]._position = float3(-(cosf(faceangle_x*(j + 1)))*dr_xz, (-block_size_._y*(i + 1))*yh		+ yc, (sinf(faceangle_x*(j + 1)))*dr_xz);
+				vertex[(i * width_count_ + j) * 4 + 3]._position = float3(-(cosf(faceangle_x*(j + 1)))*olddr_xz, (-block_size_._y*(i + 0))*oldyh	+ yc, (sinf(faceangle_x*(j + 1)))*olddr_xz);
 
 				vertex[(i * width_count_ + j) * 4 + 0]._normal = float3(0.0f, 1.0f, 0.0f);
 				vertex[(i * width_count_ + j) * 4 + 1]._normal = float3(0.0f, 1.0f, 0.0f);

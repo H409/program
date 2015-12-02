@@ -1,58 +1,73 @@
 //*****************************************************************************
 //
-// wall
-// Author		: Eyuu Yuminaga
+// Dome
+//
+// Author		: Eyu Yuminaga
 //
 //*****************************************************************************
 
 //*****************************************************************************
 // include
 //*****************************************************************************
-#include "wall.h"
-#include "mesh/sprite_3d.h"
+#include "dome.h"
+#include "dome/mesh_sprite_dome.h"
+#include "object/mesh_object.h"
 #include "system/win_system.h"
 #include "dx9_device.h"
-#include "object/mesh_object.h"
+
 //*****************************************************************************
 // constant definition
 //*****************************************************************************
+const float4 Dome::DEFAULT_COLOR = float4(1.0f, 1.0f, 1.0f, 1.0f);
+const float4 Dome::SELECT_COLOR = float4(0.0f, 0.0f, 1.0f, 1.0f);
 
 //=============================================================================
 // constructor
 //=============================================================================
-Wall::Wall(void)
+Dome::Dome(void)
 {
-	block_width_ = 0.5f;
-	block_height_ = 0.5f;
-	width_count_ = 60;
-	height_count_ = 5;
+	select_index_x_ = 0;
+	select_index_y_ = 0;
+	block_width_ = 35.0f;
+	block_height_ = 45.0f;
+	width_count_ = 10.0f;
+	height_count_ = 8.0f;
 	size_._x = width_count_ * block_width_;
 	size_._y = height_count_ * block_height_;
-	sprite_3d_ = std::make_shared<mesh::Sprite3D>(size_);
+	mesh_sprite_dome_ = std::make_shared<mesh::MeshDome>(block_width_, block_height_, width_count_, height_count_);
+	mesh_sprite_dome_->SetTexcoord(4, 1);
+	types_.resize(width_count_ * height_count_);
+	for (auto& type : types_)
+	{
+		type = 1;
+	}
 
-	mesh_object_ = std::make_shared<MeshObject>(sprite_3d_);
-	mesh_object_->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/field.png"));
-	
+	mesh_sprite_dome_->Apply();
+
+	mesh_object_ = std::make_shared<MeshObject>(mesh_sprite_dome_);
+	mesh_object_->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/sky000.jpg"));
 }
 
 //=============================================================================
 // destructor
 //=============================================================================
-Wall::~Wall(void)
+Dome::~Dome(void)
 {
+
 }
 
 //=============================================================================
 // update
 //=============================================================================
-void Wall::Update(void)
+void Dome::Update(void)
 {
 
 }
+
 //=============================================================================
 // get object
 //=============================================================================
-Wall::TMeshObject Wall::GetObject(void) const
+Dome::TMeshObject Dome::GetObject(void) const
 {
 	return mesh_object_;
 }

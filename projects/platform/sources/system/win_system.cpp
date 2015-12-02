@@ -24,7 +24,7 @@
 //*****************************************************************************
 // constant definition
 //*****************************************************************************
-const float2 WinSystem::DEFAULT_DISPLAY_SIZE = float2(800.0f,600.0f);
+const float2 WinSystem::DEFAULT_DISPLAY_SIZE = float2(1920.0f,1080.0f);
 const std::string WinSystem::DEFAULT_CAPTION_NAME = "";
 
 //=============================================================================

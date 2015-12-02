@@ -39,7 +39,7 @@ namespace mesh {
 		//void SetColor(u32 in_x, u32 in_y, const float4& in_color);
 
 		//// set texcoord
-		//void SetTexcoord(u32 in_division_width, u32 in_division_height);
+		void SetTexcoord(u32 in_division_width, u32 in_division_height);
 
 	private:
 		struct VERTEX
