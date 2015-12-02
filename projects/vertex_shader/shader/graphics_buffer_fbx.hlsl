@@ -34,7 +34,7 @@ struct OUT_VERTEX
 float4x4 _world_matrix:register(c0);
 float4x4 _view_matrix:register(c4);
 float4x4 _projection_matrix:register(c8);
-float4x4 bone[50]:register(c18);
+float4x4 bone[26]:register(c18);
 
 
 OUT_VERTEX main(IN_VS in_vertex)
@@ -54,12 +54,15 @@ OUT_VERTEX main(IN_VS in_vertex)
 	}
 
 	comb += bone[ in_vertex.idx[ 3 ] ] * ( 1.0f - last_blend_weight );
+	//comb = mul( comb , _world_matrix );
+	//comb = ( float4x4 )0 ;
+
 	out_vertex.position = mul( float4( in_vertex.pos , 1.0f ) , comb );
 	out_vertex.position = mul( out_vertex.position , _view_matrix );
 	out_vertex.position = mul( out_vertex.position , _projection_matrix );
 
 	out_vertex.texcoord = in_vertex.uv;
-	out_vertex.normal_depth.xyz = mul( float4( in_vertex.nor ,0.0f ) , comb ).xyz ;
+	out_vertex.normal_depth.xyz = mul( float4( in_vertex.nor , 0.0f ) , comb ).xyz ;
 	out_vertex.normal_depth.w = out_vertex.position.z / out_vertex.position.w ;
 	//out_vertex.color = in_vertex.col ;
 	out_vertex.world_position.xyzw = mul( float4( in_vertex.pos , 1.0f ) , _world_matrix );

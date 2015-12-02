@@ -180,8 +180,11 @@ void Game::Update()
 		field_icons_[i]->SetBasicPosition(players_[i]->GetPosition());
 		field_icons_[i]->Update();
 
-		//if( players_[ i ]->GetKimPointer()->GetAnime() == Kim::ANIME::GUN_ACTION )
-		if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_SPACE ) )
+		if( players_[ i ]->GetKimPointer()->GetWepon() == Kim::WEAPON::GUN &&
+			//GET_INPUT_KEYBOARD()->GetTrigger( DIK_SPACE ) &&
+			players_[ i ]->GetAction() == true )
+	//		GET_INPUT_KEYBOARD()->GetTrigger( DIK_SPACE )
+		//if(  )
 		{
 			// Ží‚Ü‚«
 			if(field_icons_[i]->IsShow())

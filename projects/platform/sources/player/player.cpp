@@ -54,7 +54,8 @@ Player::Player( LPDIRECT3DDEVICE9 pDevice ) : Object()
 	position_ = float3( 0 , 0 , 0 );
 
 	ID_ = 0 ;		// 1P
-	
+	action_animation_end_ = false ;
+
 	state_ = STATE::NONE ;
 
 }
@@ -133,6 +134,8 @@ void Player::Control( void )
 {
 	D3DXVec3Normalize( ( D3DXVECTOR3* )&camera_vector_ , ( D3DXVECTOR3* )&camera_vector_ );
 //	pKim_->SetAnime( Kim::ANIME::WAIT );
+	bool bMove = false ;	// 移動
+	action_ = false ;
 
 	if( GET_INPUT_MOUSE()->GetTrigger( InputMouse::MOUSE_KEY::RIGHT ) == true )
 	{
@@ -143,23 +146,6 @@ void Player::Control( void )
 		else
 		{
 			state_ = STATE::WAIT ;
-		}
-	}
-
-	//--  エイム  --//
-	if( state_ == STATE::AIM )
-	{
-		rotDest_._y = atan2f( camera_vector_._x , camera_vector_._z );
-		rotDest_._y += 0.4f ;
-
-		//--  発射  --//
-		if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_SPACE ) )
-		{
-			if( pKim_->GetAnime() != Kim::ANIME::ACTION )
-			{
-				pKim_->SetAnime( Kim::ANIME::ACTION );
-				pKim_->SetOldAnime( Kim::ANIME::WAIT );
-			}
 		}
 	}
 
@@ -174,8 +160,7 @@ void Player::Control( void )
 
 		rotDest_._y = atan2f( camera_vector_._x , camera_vector_._z );
 
-		//--  アニメーション  --//
-		pKim_->SetAnime( Kim::ANIME::WALK );
+		bMove = true ;
 	}
 
 
@@ -190,8 +175,8 @@ void Player::Control( void )
 
 		rotDest_._y = atan2f( -camera_vector_._x , -camera_vector_._z );
 
-		//--  アニメーション  --//
-		pKim_->SetAnime( Kim::ANIME::WALK );
+		bMove = true ;
+
 	}
 
 	//--  移動　左  --//
@@ -208,8 +193,7 @@ void Player::Control( void )
 		//rotDest_._y = -D3DX_PI * 0.5f ;
 		rotDest_._y = atan2f( -vec.x , -vec.z );
 
-		//--  アニメーション  --//
-		pKim_->SetAnime( Kim::ANIME::WALK );
+		bMove = true ;
 	}
 
 	//--  移動　右  --//
@@ -228,8 +212,53 @@ void Player::Control( void )
 
 		//rotDest_._y = D3DX_PI * 0.5f ;
 
+		bMove = true ;
+	}
+
+	//--  エイム  --//
+	if( state_ == STATE::AIM )
+	{
+		rotDest_._y = atan2f( camera_vector_._x , camera_vector_._z );
+		rotDest_._y += 0.4f ;
+
+		//--  アクション  --//
+		if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_SPACE ) )
+		{
+			if( pKim_->GetAnime() != Kim::ANIME::ACTION )
+			{
+				action_ = true ;
+				pKim_->SetAnime( Kim::ANIME::ACTION );
+				pKim_->SetOldAnime( Kim::ANIME::WAIT );
+			}
+		}
+
+		move_ *= 0 ;
+
+		bMove = false ;
+	}
+	
+	//--  武器取り出し  --//
+	if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_E ) == true )
+	{
+		int wepon = ( int )pKim_->GetWepon();
+		wepon = ( wepon + 1 ) % 3 ;
+
+		pKim_->SetWepon( ( Kim::WEAPON )wepon );
+		pKim_->SetAnime( Kim::ANIME::TAKE_OUT );
+		pKim_->SetOldAnime( Kim::ANIME::WAIT );
+	}
+
+	//--  動いたなら  --//
+	if( bMove == true )
+	{
 		//--  アニメーション  --//
 		pKim_->SetAnime( Kim::ANIME::WALK );
+	}
+
+	//--  アニメーション終わったら  --//
+	if( pKim_->GetNewAnimarionEnd() == true )
+	{
+		action_animation_end_ = false ;
 	}
 
 	//--  移動  --//
