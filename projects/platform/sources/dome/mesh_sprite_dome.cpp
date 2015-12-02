@@ -208,6 +208,4 @@ namespace mesh {
 		// unlock
 		direct3dvertexbuffer9_->Unlock();
 	}
-
-
 } //namespace mesh
