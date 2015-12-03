@@ -32,6 +32,7 @@
 #include "player_icon/player_icon.h"
 #include "field_object/flower.h"
 #include "wall/wall.h"
+#include "dome/dome.h"
 
 //=============================================================================
 // constructor
@@ -106,7 +107,8 @@ Game::Game()
 	wall_[3]->GetObject()->SetPosition(-15.0f, 0.0f, 0.0f);
 	wall_[3]->GetObject()->SetRotation(0.0f, D3DX_PI/-2, 0.0f);
 	
-	
+	dome_ = std::make_shared<Dome>();
+	dome_->GetObjectA()->SetPosition(0.0f,-6.0f, 0.0f);
 
 #ifdef _DEBUG
 	debugRenderTarget_ = false;
@@ -463,6 +465,14 @@ void Game::Draw()
 
 			object->Draw();
 		}
+
+		//draw dome
+		object = dome_->GetObjectA();
+		world_matrix = object->GetMatrix();
+		gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
+		gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());
+
+		object->Draw();
 
 		graphic_device->SetVertexShader(gb_vs_fbx);
 

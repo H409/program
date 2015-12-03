@@ -25,6 +25,7 @@ class Bullet;
 class Field;
 class FieldIcon;
 class Wall;
+class Dome;
 class Player;
 class PlayerIcon;
 class Observer2D;
@@ -78,6 +79,7 @@ private:
 	std::shared_ptr<graphic::directx9::texture::DX9Texture> position_textures_[PLAYER_MAX];
 	std::shared_ptr<MeshObject> sprite_objects_[PLAYER_MAX];
 	std::shared_ptr<Wall> wall_[WALL_MAX];
+	std::shared_ptr<Dome> dome_;
 	std::shared_ptr<Observer2D> observer_2d_;
 	std::vector<std::shared_ptr<Flower>> flowers_;
 

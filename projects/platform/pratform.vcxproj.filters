@@ -74,6 +74,9 @@
     <Filter Include="sources\wall">
       <UniqueIdentifier>{e838fdf2-fc43-4778-a815-253c826612fc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\dome">
+      <UniqueIdentifier>{2214da7c-4d9d-4492-9b83-0b0ec724b6b8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\windows\win_main.cpp">
@@ -205,9 +208,6 @@
     <ClCompile Include="sources\system\xi_pad.cpp">
       <Filter>sources\system</Filter>
     </ClCompile>
-    <ClCompile Include="sources\mesh\mesh_dome.cpp">
-      <Filter>sources\mesh</Filter>
-    </ClCompile>
     <ClCompile Include="sources\player_icon\player_icon.cpp">
       <Filter>sources\player_icon</Filter>
     </ClCompile>
@@ -216,6 +216,12 @@
     </ClCompile>
     <ClCompile Include="sources\wall\wall.cpp">
       <Filter>sources\wall</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\dome\mesh_sprite_dome.cpp">
+      <Filter>sources\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\dome\dome.cpp">
+      <Filter>sources\dome</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -351,9 +357,6 @@
     <ClInclude Include="sources\system\xi_pad.h">
       <Filter>sources\system</Filter>
     </ClInclude>
-    <ClInclude Include="sources\mesh\mesh_dome.h">
-      <Filter>sources\mesh</Filter>
-    </ClInclude>
     <ClInclude Include="sources\player_icon\player_icon.h">
       <Filter>sources\player_icon</Filter>
     </ClInclude>
@@ -362,6 +365,12 @@
     </ClInclude>
     <ClInclude Include="sources\wall\wall.h">
       <Filter>sources\wall</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\dome\mesh_sprite_dome.h">
+      <Filter>sources\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\dome\dome.h">
+      <Filter>sources\dome</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

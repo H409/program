@@ -69,7 +69,7 @@ int main(int argc,char* argv)
 		DEVELOP_TOOL_DRAW();
 		graphic_device->EndRendering();
 
-		std::this_thread::sleep_until(start_time + std::chrono::milliseconds(16));
+		//std::this_thread::sleep_until(start_time + std::chrono::milliseconds(16));
 	}
 
 	return 0;
