@@ -74,6 +74,7 @@ Kim::Kim(LPDIRECT3DDEVICE9 d3d_device)
 	wepon_ = WEAPON::GUN ;
 	current_key_ = anime_data_[ NOW_ANIMETION ][ 0 ];
 	animation_ = true ;
+	new_animarion_end_ = true ;
 }
 
 //=============================================================================
@@ -552,6 +553,8 @@ void Kim::Update(void)
 							anime_ = old_anime_ ;
 							//animation_ = false ;
 						}
+
+						new_animarion_end_ = true ;	// 新しいアニメーション終わり
 						//dest_bone->anime[ 0 ].current_key %= dest_bone->anime[ 0 ].num_key;
 					}
 				}
@@ -566,10 +569,9 @@ void Kim::Update(void)
 			current_key_++;
 		}
 
+
 		// 座標の更新:掛ける順番は 子 × 親 
-		//UpdateBone(bone_,&world_);
 		auto world = world_;
-		//D3DXMatrixIdentity(&world_);
 		D3DXMatrixIdentity(&world);
 		UpdateBone( bone_ , &world);
 
@@ -933,7 +935,7 @@ void Kim::SetAnime( const ANIME& anime )
 	current_key_ = anime_data_[ NOW_ANIMETION ][ 0 ];
 
 	animation_ = true ; 
-	
+	new_animarion_end_ = false ;
 }
 
 

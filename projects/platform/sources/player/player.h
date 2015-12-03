@@ -73,6 +73,11 @@ public :
 	//--  設定  --//
 	void SetCameraVector( const float3& vec ){ camera_vector_ = vec ; }
 
+	//void SetActionAnimationEnd( const int& id ){ ID_ = id ; }
+	bool GetActionAnimationEnd( void ){ return action_animation_end_ ; }
+	bool GetAction( void ){ return action_ ; }
+
+
 	//--  インスタンス生成  --//
 	//static Player* Create( LPDIRECT3DDEVICE9 pDevice , float3 pos );
 
@@ -87,6 +92,8 @@ private :
 	float3 old_position_ ;		// 前の位置
 
 	int ID_ ;
+	bool action_animation_end_ ;
+	bool action_ ;
 
 	STATE state_ ;
 

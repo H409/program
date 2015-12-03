@@ -192,8 +192,10 @@ public :
 	ANIME GetOldAnime( void ){ return anime_ ; }
 	void SetOldAnime( const ANIME& anime ){ old_anime_ = anime ; };
 
-	WEAPON GetAnimeState( void ){ return wepon_ ; };
-	void SetAnimeState( const WEAPON& wepon ){ wepon_ = wepon ; };
+	WEAPON GetWepon( void ){ return wepon_ ; };
+	void SetWepon( const WEAPON& wepon ){ wepon_ = wepon ; };
+
+	bool GetNewAnimarionEnd( void ){ return new_animarion_end_ ; }	// trueで終わっている
 
 private:
 	// 処理:ｼｪｰﾀﾞｰのｺﾝﾊﾟｲﾙ
@@ -260,10 +262,12 @@ private :
 	int next_key_ ;
 
 	bool animation_ ;
+	bool new_animarion_end_ ;	// 新しいアニメーション終わったか
 
 	static int anime_data_[][ 3 ];
 	ANIME anime_ ;
 	ANIME old_anime_ ;
+
 
 	WEAPON wepon_ ;		// 0 : ランチャー , 1 : 銃 , 2 : クワ
 };
