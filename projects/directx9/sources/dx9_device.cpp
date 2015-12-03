@@ -74,7 +74,9 @@ DX9Device::DX9Device(const HWND& in_hwnd,const u16& in_width,const u16& in_heigh
 
 	// ウィンドウモード
 	d3dpresent_parameters_.Windowed = true;
-
+#ifdef _RELEASE
+	d3dpresent_parameters_.Windowed = false;
+#endif
 	// デプスバッファ（Ｚバッファ）とステンシルバッファを作成
 	d3dpresent_parameters_.EnableAutoDepthStencil = TRUE;
 

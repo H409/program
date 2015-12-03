@@ -29,12 +29,9 @@
 #include "x_model/x_model.h"
 #include "develop_tool/develop_tool.h"
 #include "system/input_manager.h"
-//<<<<<<< HEAD
 #include "player_icon/player_icon.h"
 #include "field_object/flower.h"
-//=======
 #include "wall/wall.h"
-//>>>>>>> origin/yuminaga/ä½œæ¥­
 
 //=============================================================================
 // constructor
@@ -42,10 +39,11 @@
 Game::Game()
 {
 	auto graphic_device = GET_GRAPHIC_DEVICE();
+	auto window = GET_WINDOW();
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
-		observers_[i] = std::make_shared<FollowerObserver>(utility::math::ToRadian(60.0f),800.0f,600.0f);
+		observers_[i] = std::make_shared<FollowerObserver>(utility::math::ToRadian(60.0f),window->GetWidth(),window->GetHeight());
 		observers_[i]->SetTargetPosition(float3(0.0f,0.0f,0.0f));
 		observers_[i]->SetTargetVector(float3(0.0f,0.0f,1.0f));
 		observers_[i]->SetLength(2.0f);
@@ -54,13 +52,13 @@ Game::Game()
 		observers_[i]->Update();
 	}
 
-	observer_2d_ = std::make_shared<Observer2D>(800.0f,600.0f);
+	observer_2d_ = std::make_shared<Observer2D>(window->GetWidth(),window->GetHeight());
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
-		color_textures_[i] = graphic_device->CreateTexture(800,600,D3DFMT_A8R8G8B8);
-		normal_textures_[i] = graphic_device->CreateTexture(800,600,D3DFMT_A16B16G16R16F);
-		position_textures_[i] = graphic_device->CreateTexture(800,600,D3DFMT_A16B16G16R16F);
+		color_textures_[i] = graphic_device->CreateTexture(window->GetWidth(),window->GetHeight(),D3DFMT_A8R8G8B8);
+		normal_textures_[i] = graphic_device->CreateTexture(window->GetWidth(),window->GetHeight(),D3DFMT_A16B16G16R16F);
+		position_textures_[i] = graphic_device->CreateTexture(window->GetWidth(),window->GetHeight(),D3DFMT_A16B16G16R16F);
 	}
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
@@ -71,13 +69,13 @@ Game::Game()
 	float2 positions[]
 	{
 		float2(  0.0f,  0.0f),
-		float2(400.0f,  0.0f),
-		float2(  0.0f,300.0f),
-		float2(400.0f,300.0f),
+		float2(window->GetWidth() * 0.5f,  0.0f),
+		float2(  0.0f,window->GetHeight() * 0.5f),
+		float2(window->GetWidth() * 0.5f,window->GetHeight() * 0.5f),
 	};
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
-		auto sprite = std::make_shared<mesh::Sprite>(float2(400,300));
+		auto sprite = std::make_shared<mesh::Sprite>(float2(window->GetWidth() * 0.5f,window->GetHeight() * 0.5f));
 		sprite_objects_[i] = std::make_shared<MeshObject>(sprite);
 		sprite->SetAnchorPoint(float2(0.0f,0.0f));
 		sprite_objects_[i]->SetPosition(positions[i]._x  - 0.5f,positions[i]._y - 0.5f,0.0f);
@@ -113,10 +111,10 @@ Game::Game()
 #ifdef _DEBUG
 	debugRenderTarget_ = false;
 	debug_player_number_ = 0;
-	auto sprite = std::make_shared<mesh::Sprite>(float2(200,150));
+	auto sprite = std::make_shared<mesh::Sprite>(float2(window->GetWidth() * 0.25f,window->GetHeight() * 0.25f));
 	debug_sprite_object_ = std::make_shared<MeshObject>(sprite);
 	debug_sprite_object_->SetPosition(-0.5f,-0.5f,0.0f);
-	sprite = std::make_shared<mesh::Sprite>(float2(800,600));
+	sprite = std::make_shared<mesh::Sprite>(float2(window->GetWidth(),window->GetHeight()));
 	debug_object_ = std::make_shared<MeshObject>(sprite);
 	debug_object_->SetPosition(-0.5f,-0.5f,0.0f);
 #endif
@@ -217,6 +215,7 @@ void Game::Update()
 					if(bullet->IsDeath())
 					{
 						bullet->Reset(start_position,end_position);
+						bullet->SetTag(i);
 						is_create = false;
 						break;
 					}
@@ -224,7 +223,9 @@ void Game::Update()
 
 				if(is_create)
 				{
-					bullets_.push_back(std::make_shared<Bullet>(start_position,end_position));
+					auto bullet = std::make_shared<Bullet>(start_position,end_position);
+					bullet->SetTag(i);
+					bullets_.push_back(bullet);
 				}
 			}
 			// Œ@‚è•Ô‚µ
@@ -322,6 +323,7 @@ void Game::Update()
 							if(!flower->IsShow())
 							{
 								flower->SetPosition(flower_position);
+								flower->SetNumber(bullet->GetTag());
 								is_create = false;
 								break;
 							}
@@ -329,7 +331,7 @@ void Game::Update()
 
 						if(is_create)
 						{
-							auto flower = std::make_shared<Flower>();
+							auto flower = std::make_shared<Flower>(bullet->GetTag());
 							flower->SetPosition(flower_position);
 							flowers_.push_back(flower);
 						}

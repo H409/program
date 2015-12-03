@@ -32,7 +32,7 @@ Wall::Wall(void)
 	sprite_3d_ = std::make_shared<mesh::Sprite3D>(size_);
 
 	mesh_object_ = std::make_shared<MeshObject>(sprite_3d_);
-	mesh_object_->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/field.png"));
+	mesh_object_->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/wall.png"));
 	
 }
 

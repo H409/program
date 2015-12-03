@@ -31,7 +31,7 @@ public:
 	using TMeshObject = std::shared_ptr<MeshObject>;
 
 	// constructor
-	Flower(void);
+	Flower(u32 in_number);
 
 	// destructor
 	virtual ~Flower(void);
@@ -51,6 +51,8 @@ public:
 	// 
 	void Show(bool in_is_show);
 
+	void SetNumber(u32 in_number);
+
 	bool IsShow(void)const;
 
 private:
@@ -59,6 +61,8 @@ private:
 	TMeshObject mesh_object_;
 	bool is_show_;
 	float height_;
+
+	void SetTexture(u32 in_number);
 };
 
 #endif // _FLOWER_H_

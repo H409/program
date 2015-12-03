@@ -71,6 +71,9 @@
     <Filter Include="sources\player_icon">
       <UniqueIdentifier>{ad7b624a-1c55-4979-be3c-a1842d356366}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\wall">
+      <UniqueIdentifier>{e838fdf2-fc43-4778-a815-253c826612fc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\windows\win_main.cpp">
@@ -205,14 +208,14 @@
     <ClCompile Include="sources\mesh\mesh_dome.cpp">
       <Filter>sources\mesh</Filter>
     </ClCompile>
-    <ClCompile Include="sources\mesh\mesh_wall.cpp">
-      <Filter>sources\mesh</Filter>
-    </ClCompile>
     <ClCompile Include="sources\player_icon\player_icon.cpp">
       <Filter>sources\player_icon</Filter>
     </ClCompile>
     <ClCompile Include="sources\field_object\flower.cpp">
       <Filter>sources\field_object</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\wall\wall.cpp">
+      <Filter>sources\wall</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -351,14 +354,14 @@
     <ClInclude Include="sources\mesh\mesh_dome.h">
       <Filter>sources\mesh</Filter>
     </ClInclude>
-    <ClInclude Include="sources\mesh\mesh_wall.h">
-      <Filter>sources\mesh</Filter>
-    </ClInclude>
     <ClInclude Include="sources\player_icon\player_icon.h">
       <Filter>sources\player_icon</Filter>
     </ClInclude>
     <ClInclude Include="sources\field_object\flower.h">
       <Filter>sources\field_object</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\wall\wall.h">
+      <Filter>sources\wall</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

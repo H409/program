@@ -24,7 +24,7 @@
 //*****************************************************************************
 // constant definition
 //*****************************************************************************
-const float2 WinSystem::DEFAULT_DISPLAY_SIZE = float2(800.0f,600.0f);
+const float2 WinSystem::DEFAULT_DISPLAY_SIZE = float2(1280.0f,720.0f);
 const std::string WinSystem::DEFAULT_CAPTION_NAME = "";
 
 //=============================================================================
@@ -34,6 +34,11 @@ WinSystem* WinSystem::GetInstance(void)
 {
 	static WinSystem instance;
 	return &instance;
+}
+
+WinSystem::TWindow WinSystem::GetWindow(void)
+{
+	return window_;
 }
 
 //=============================================================================
@@ -109,6 +114,7 @@ WinSystem::WinSystem(void)
 	window->SetCallback([&](){Stop_();});
 
 	graphic_device_ = std::make_shared<graphic::directx9::DX9Device>(hwnd_,(u16)DEFAULT_DISPLAY_SIZE._x,(u16)DEFAULT_DISPLAY_SIZE._y);
+	//graphic_device_ = std::make_shared<graphic::directx9::DX9Device>(hwnd_,(u16)1920,(u16)1080);
 
 	input_keyboard_ = std::make_shared<InputKeyboard>();
 

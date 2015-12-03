@@ -567,7 +567,11 @@ void Kim::Update(void)
 		}
 
 		// À•W‚ÌXV:Š|‚¯‚é‡”Ô‚Í Žq ~ e 
-		UpdateBone( bone_ , &world_ );
+		//UpdateBone(bone_,&world_);
+		auto world = world_;
+		//D3DXMatrixIdentity(&world_);
+		D3DXMatrixIdentity(&world);
+		UpdateBone( bone_ , &world);
 
 	}
 }
@@ -800,14 +804,17 @@ void Kim::MultiMeshMyShader(void)
 	//D3DXMatrixTranspose(&view, &view);
 	//D3DXMatrixTranspose(&proj, &proj);
 
-	D3DXMatrixTranspose( &view_, &view_ );
-	D3DXMatrixTranspose( &projection_ , &projection_ );
+	D3DXMATRIX world;
+	D3DXMATRIX view;
+	D3DXMATRIX projection;
+	D3DXMatrixTranspose(&world,&world_);
+	D3DXMatrixTranspose( &view, &view_ );
+	D3DXMatrixTranspose(&projection,&projection_);
 
 	// Ü°ÙÄÞ,ËÞ­°,ÌßÛ¼Þª¸¼®Ý,ŽwŒü«×²Äî•ñ‚Ì“]‘—
-	d3d_device_->SetVertexShaderConstantF(0, static_cast<const float*>(world_), 4);
-	d3d_device_->SetVertexShaderConstantF(4, static_cast<const float*>(view_), 4);
-	d3d_device_->SetVertexShaderConstantF(8, static_cast<const float*>(projection_), 4);
-	d3d_device_->SetVertexShaderConstantF(16, static_cast<const float*>(light_directional), 4);
+	d3d_device_->SetVertexShaderConstantF(0, static_cast<const float*>(world), 4);
+	d3d_device_->SetVertexShaderConstantF(4, static_cast<const float*>(view), 4);
+	d3d_device_->SetVertexShaderConstantF(8, static_cast<const float*>(projection), 4);
 
 	//// Ä©°ÝÏ¯Ìß‚ÌÝ’è
 	//d3d_device_->SetTexture(1, toon_map);
@@ -825,7 +832,7 @@ void Kim::MultiMeshMyShader(void)
 				D3DXMatrixTranspose(&export_bone[cnt], &export_bone[cnt]);
 			}
 		}
-		d3d_device_->SetVertexShaderConstantF(18, static_cast<const float*>(*export_bone), 4 * mesh_[i].bind_weight);
+		d3d_device_->SetVertexShaderConstantF(155, static_cast<const float*>(*export_bone), 4 * mesh_[i].bind_weight);
 
 		SetMaterial(&mesh_[i].material_);
 		d3d_device_->SetTexture(0, mesh_[i].texture_);
