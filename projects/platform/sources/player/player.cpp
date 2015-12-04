@@ -46,7 +46,7 @@
 Player::Player( LPDIRECT3DDEVICE9 pDevice ) : Object()
 {
 	pDevice_ = pDevice ;
-	pKim_ = nullptr;
+	pKim_ = nullptr ;
 	camera_vector_ = float3();
 	move_ = float3();
 	speed_ = float3( 0.01f , 0.01f , 0.01f );
@@ -275,7 +275,15 @@ void Player::Control( void )
 	auto diff = rotDest_._y - rotation_._y ;
 	diff = utility::math::Wrap( diff , ( f32 )-utility::math::PI , ( f32 )utility::math::PI );
 
-	rotation_._y += diff * 0.09f ;
+	if( state_ != STATE::AIM )
+	{
+		rotation_._y += diff * 0.09f ;
+	}
+	else
+	{
+		rotation_._y += diff * 0.2f ;
+	}
+
 }
 
 

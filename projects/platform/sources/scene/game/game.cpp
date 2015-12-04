@@ -364,7 +364,25 @@ void Game::Draw()
 	//auto gb_ps_fbx = graphic_device->LoadVertexShader("resources/shader/graphics_buffer_fbx.psc");
 	auto default_texture = graphic_device->GetRenderTarget(0);
 
+
+#ifdef _DEBUG
+	int max = PLAYER_MAX ;
+
+	static bool _d = false ;
+	if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_9))
+	{
+		_d = !_d ;
+	}
+
+	if( _d == true )
+	{
+		max = 1 ;
+	}
+
+	for(u32 i = 0;i < max;++i)
+#else
 	for(u32 i = 0;i < PLAYER_MAX;++i)
+#endif // _DEBUG
 	{
 		graphic_device->SetRenderTarget(0,color_textures_[i]);
 		graphic_device->SetRenderTarget(1,normal_textures_[i]);
