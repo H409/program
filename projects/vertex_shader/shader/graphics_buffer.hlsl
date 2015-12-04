@@ -43,7 +43,7 @@ OUT_VERTEX Deferred(IN_VERTEX in_vertex,float4x4 in_world_matrix,float4x4 in_wor
 	out_vertex.position = mul(float4(in_vertex.position,1.0f),in_world_view_projection_matrix);
 	out_vertex.texcoord = in_vertex.texcoord;
 	out_vertex.normal_depth.xyz = mul(float4(in_vertex.normal,0.0f),in_world_matrix).xyz;
-	out_vertex.normal_depth.w = out_vertex.position.z / out_vertex.position.w;
+	out_vertex.normal_depth.w = 1;
 	out_vertex.world_position.xyzw = mul(float4(in_vertex.position,1.0f),in_world_matrix);
 	out_vertex.color = in_vertex.color;
 
