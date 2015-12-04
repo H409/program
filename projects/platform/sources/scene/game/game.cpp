@@ -572,7 +572,7 @@ void Game::Draw()
 		d_vs->SetValue("_projection_matrix",(f32*)&observer_2d_->GetProjectionMatrix(),sizeof(float4x4));
 		d_vs->SetValue("_world_matrix",(f32*)&debug_object_->GetMatrix(),sizeof(float4x4));
 
-		d_ps->SetValue("_light_vector",(f32*)&float3(0.0f,-1.0f,0.0f),sizeof(float3));
+		d_ps->SetValue("_light_vector",(f32*)&float3(0.0f,0.0f,-1.0f),sizeof(float3));
 		d_ps->SetValue("_light_deffuse",(f32*)&float3(1.0f,1.0f,1.0f),sizeof(float3));
 		d_ps->SetTexture("_color_sampler",color_textures_[debug_player_number_]->GetTexture());
 		d_ps->SetTexture("_normal_sampler",normal_textures_[debug_player_number_]->GetTexture());

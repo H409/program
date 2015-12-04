@@ -70,11 +70,11 @@ Field::~Field(void)
 void Field::Update(void)
 {
 #ifndef _RELEASE
-	if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_LEFT))
+	if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_5))
 	{
 		mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/field.jpg"));
 	}
-	if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_RIGHT))
+	if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_6))
 	{
 		mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/field_.jpg"));
 	}

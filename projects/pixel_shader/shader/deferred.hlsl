@@ -41,7 +41,8 @@ OUT_PIXEL main(IN_PIXEL in_pixel)
 	light = light * 0.5f + 0.5f;
 	float3 light_color = _light_deffuse * light;
 
-	out_pixel.color = float4(light_color.rgb * color.rgb,1.0f);
+//	out_pixel.color = float4(light_color.rgb * color.rgb,1.0f);
+	out_pixel.color = float4(color.rgb,1.0f);
 
 	return out_pixel;
 }
