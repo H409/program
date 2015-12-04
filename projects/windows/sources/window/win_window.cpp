@@ -1,3 +1,5 @@
+#include "win_window.h"
+#include "win_window.h"
 //*****************************************************************************
 //
 // windows window
@@ -80,6 +82,9 @@ WinWindow::WinWindow(const std::string& in_caption_name,const std::string& in_cl
 
 		// ウィンドウクラスの登録
 		RegisterClassEx(&wndclassex_);
+
+		width_ = in_width;
+		height_ = in_height;
 
 		hwnd_ = CreateWindowEx(0,
 			wndclassex_.lpszClassName,
@@ -195,6 +200,16 @@ bool WinWindow::SetSize(const u16& in_width,const u16& in_height)
 void WinWindow::SetCallback(std::function<void(void)> in_callback)
 {
 	callbacks_.push_back(in_callback);
+}
+
+u16 WinWindow::GetWidth(void) const
+{
+	return width_;
+}
+
+u16 WinWindow::GetHeight(void) const
+{
+	return height_;
 }
 
 //=============================================================================

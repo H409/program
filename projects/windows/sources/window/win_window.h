@@ -49,6 +49,11 @@ public:
 	// accessor
 	const HWND& __hwnd(void)const{ return hwnd_; }
 
+	//
+	u16 GetWidth(void)const;
+
+	u16 GetHeight(void)const;
+
 private:
 	static const s8* DEFAULT_CLASS_NAME;
 	static const s8* DEFAULT_CAPTION_NAME;
@@ -59,7 +64,8 @@ private:
 	std::vector<std::function<void(void)>> callbacks_;
 	std::mutex mutex_;
 	std::condition_variable condition_variable_;
-
+	u16 width_;
+	u16 height_;
 	std::thread::id thread_id_;
 
 	static std::unordered_map<HWND,WinWindow*> instances_;

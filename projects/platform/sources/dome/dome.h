@@ -1,8 +1,8 @@
 //*****************************************************************************
 //
-// flower
+// field
 //
-// Author		: Kenji Kabutomori
+// Author		: Eyu Yuminaga
 //
 //*****************************************************************************
 
@@ -10,61 +10,60 @@
 // include guard
 //*****************************************************************************
 #pragma once
-#ifndef _FLOWER_H_
-#define _FLOWER_H_
+#ifndef _DOME_H_
+#define _DOME_H_
 
 //*****************************************************************************
 // forward declaration
 //*****************************************************************************
 namespace mesh {
-class Sprite3D;
+class MeshDome;
 } // namespace mesh
 class MeshObject;
 
 //*****************************************************************************
 // class declaration
 //*****************************************************************************
-class Flower// : public MeshObject
+class Dome
 {
 public:
-	using TSprite3D = std::shared_ptr<mesh::Sprite3D>;
+	using TMeshDome = std::shared_ptr<mesh::MeshDome>;
 	using TMeshObject = std::shared_ptr<MeshObject>;
 
 	// constructor
-	Flower(u32 in_number);
+	Dome(void);
 
 	// destructor
-	virtual ~Flower(void);
+	virtual ~Dome(void);
 
 	// update
 	void Update(void);
 
+	// reset
+	void Reset(void);
+
 	// get object
 	TMeshObject GetObject(void)const;
 
-	// set position
-	void SetPosition(const float3& in_position);
+	// is in range
+	bool IsInRange(const float3& in_position)const;
 
-	// get position
-	const float3& GetPosition(void)const;
-
-	// 
-	void Show(bool in_is_show);
-
-	void SetNumber(u32 in_number);
-
-	bool IsShow(void)const;
+	u32 GetBlockIndex(const float3& in_position);
 
 private:
-	float3 position_;
-	TSprite3D sprite_3d_;
-	TMeshObject mesh_object_;
-	bool is_show_;
-	float height_;
+	static const float4 DEFAULT_COLOR;
+	static const float4 SELECT_COLOR;
 
-	void SetTexture(u32 in_number);
+	f32 block_width_;
+	f32 block_height_;
+	u32 width_count_;
+	u32 height_count_;
+	float2 size_;
+	std::vector<u32> types_;
+	u32 select_index_x_;
+	u32 select_index_y_;
+	TMeshDome mesh_sprite_dome_;
+	TMeshObject mesh_object_;
 };
 
-#endif // _FLOWER_H_
-
-//---------------------------------- EOF --------------------------------------
+#endif

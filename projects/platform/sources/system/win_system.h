@@ -16,6 +16,7 @@
 //*****************************************************************************
 // include
 //*****************************************************************************
+#include "window/win_window.h"
 
 //*****************************************************************************
 // forward declaration
@@ -58,6 +59,8 @@ public:
 	};
 	static WinSystem* GetInstance(void);
 
+	TWindow GetWindow(void);
+
 	// get graphic device
 	TGraphicDevice GetGraphicDevice(void);
 
@@ -79,6 +82,7 @@ protected:
 	// destructor
 	virtual ~WinSystem(void);
 private:
+	
 	static const float2 DEFAULT_DISPLAY_SIZE;
 	static const std::string DEFAULT_CAPTION_NAME;
 
@@ -92,6 +96,7 @@ private:
 	void Stop_(void);
 };
 
+#define GET_WINDOW() WinSystem::GetInstance()->GetWindow();
 #define GET_GRAPHIC_DEVICE() WinSystem::GetInstance()->GetGraphicDevice()
 #define GET_DIRECTX9_DEVICE() WinSystem::GetInstance()->GetDirectx9Device()
 #define GET_INPUT_KEYBOARD() WinSystem::GetInstance()->GetInputManager()->GetKeyboard()

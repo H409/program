@@ -9,7 +9,7 @@
 //*****************************************************************************
 // include
 //*****************************************************************************
-#include"mesh_dome.h"
+#include"mesh_sprite_dome.h"
 #include "system/win_system.h"
 
 namespace mesh {
@@ -108,13 +108,27 @@ namespace mesh {
 	//=============================================================================
 	// set index
 	//=============================================================================
-	void MeshDome::SetIndex(u32 x, u32 y, u32 indes)
+	void MeshDome::SetIndex(u32 x, u32 y, u32 index)
 	{
-
+		indexs_[y * width_count_ + x] = index;
+		is_dirty_ = true;
 	}
+
 	//=============================================================================
 	// set index
 	//=============================================================================
+	void MeshDome::SetIndex(const std::vector<u32>& in_indexs)
+	{
+		DEBUG_ASSERT(in_indexs.size() == width_count_ * height_count_);
+
+		auto size = width_count_ * height_count_;
+
+		for (u32 i = 0; i < size; ++i)
+		{
+			indexs_[i] = in_indexs[i];
+		}
+		is_dirty_ = true;
+	}
 
 	//=============================================================================
 	// set color
@@ -123,6 +137,13 @@ namespace mesh {
 	//=============================================================================
 	// set texcoord
 	//=============================================================================
+	void MeshDome::SetTexcoord(u32 in_division_width, u32 in_division_height)
+	{
+		division_width_ = in_division_width;
+		division_height_ = in_division_height;
+		is_dirty_ = true;
+	}
+
 
 	void MeshDome::AttachRenderState_(void)
 	{
@@ -150,22 +171,41 @@ namespace mesh {
 		VERTEX* vertex = nullptr;
 		float2 offset = float2(-size_._x * anchor_point_._x, size_._y * anchor_point_._y);
 
+		//ƒh[ƒ€‚Ìˆê”Ô‘å‚«‚¢êŠ‚Ì”¼Œa
+		float domemaxradius = size_._x/D3DX_PI/2;
+		//–Êˆê–‡‚²‚Æ‚ÌŠp“x(X)
+		float faceangle_x = (D3DX_PI * 2) / width_count_;
+		//–Êˆê–‡‚²‚Æ‚ÌŠp“x(Y)
+		float faceangle_y = (D3DX_PI * 2) / height_count_;
+
 		// lock
 		direct3dvertexbuffer9_->Lock(0, 0, (void**)&vertex, 0);
 
 		for (u32 i = 0; i < height_count_; ++i)
 		{
+			//‚‚³‚É‚æ‚é•Ï“®‚·‚é”¼ŒaXZ
+			float dr_xz = domemaxradius*((float)i / (float)height_count_)*((float)i / (float)height_count_);
+			float olddr_xz = domemaxradius*((float)(i - 1) / (float)height_count_)*((float)(i - 1) / (float)height_count_);
+			float yh = ((float)i / (float)height_count_)*((float)i / (float)height_count_);
+			float oldyh= ((float)(i-1) / (float)height_count_)*((float)(i-1) / (float)height_count_);
+			float yc = height_count_*(block_size_._y) / 2;
+
 			for (u32 j = 0; j < width_count_; ++j)
 			{
-				float left = 1.0f / division_width_  * ((indexs_[i * width_count_ + j] % division_width_) + 0);
+				/*float left = 1.0f / division_width_  * ((indexs_[i * width_count_ + j] % division_width_) + 0);
 				float right = 1.0f / division_width_  * ((indexs_[i * width_count_ + j] % division_width_) + 1);
 				float top = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 0);
-				float bottom = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 1);
+				float bottom = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 1);*/
 
-				vertex[(i * width_count_ + j) * 4 + 0]._position = float3(offset._x + block_size_._width * (j + 0), offset._y - block_size_._height * (i + 1), 0.0f);
-				vertex[(i * width_count_ + j) * 4 + 1]._position = float3(offset._x + block_size_._width * (j + 0), offset._y - block_size_._height * (i + 0), 0.0f);
-				vertex[(i * width_count_ + j) * 4 + 2]._position = float3(offset._x + block_size_._width * (j + 1), offset._y - block_size_._height * (i + 1), 0.0f);
-				vertex[(i * width_count_ + j) * 4 + 3]._position = float3(offset._x + block_size_._width * (j + 1), offset._y - block_size_._height * (i + 0), 0.0f);
+				float left = (1.0f / division_width_)*j;
+				float right = (1.0f / division_width_)*j + (1.0f/division_width_);
+				float top = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 0);
+				float bottom = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 1);
+				
+				vertex[(i * width_count_ + j) * 4 + 0]._position = float3(-(cosf(faceangle_x*(j + 0)))*dr_xz, (-block_size_._y*(i + 1))*yh		+ yc, (sinf(faceangle_x*(j + 0)))*dr_xz);
+				vertex[(i * width_count_ + j) * 4 + 1]._position = float3(-(cosf(faceangle_x*(j + 0)))*olddr_xz, (-block_size_._y*(i + 0))*oldyh	+ yc, (sinf(faceangle_x*(j + 0)))*olddr_xz);
+				vertex[(i * width_count_ + j) * 4 + 2]._position = float3(-(cosf(faceangle_x*(j + 1)))*dr_xz, (-block_size_._y*(i + 1))*yh		+ yc, (sinf(faceangle_x*(j + 1)))*dr_xz);
+				vertex[(i * width_count_ + j) * 4 + 3]._position = float3(-(cosf(faceangle_x*(j + 1)))*olddr_xz, (-block_size_._y*(i + 0))*oldyh	+ yc, (sinf(faceangle_x*(j + 1)))*olddr_xz);
 
 				vertex[(i * width_count_ + j) * 4 + 0]._normal = float3(0.0f, 1.0f, 0.0f);
 				vertex[(i * width_count_ + j) * 4 + 1]._normal = float3(0.0f, 1.0f, 0.0f);
@@ -187,6 +227,4 @@ namespace mesh {
 		// unlock
 		direct3dvertexbuffer9_->Unlock();
 	}
-
-
 } //namespace mesh

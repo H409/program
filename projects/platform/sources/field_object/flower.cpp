@@ -18,23 +18,19 @@
 #include "system/input_manager.h"
 #include "math/math.h"
 
-//*****************************************************************************
-// constant definition
-//*****************************************************************************
-
 //=============================================================================
 // constructor
 //=============================================================================
-Flower::Flower(void)
+Flower::Flower(u32 in_number)
 	:position_(0.0f,0.0f,0.0f)
 	,is_show_(true)
 {
 	sprite_3d_ = std::make_shared<mesh::Sprite3D>(float2(0.5f,0.5f));
 	mesh_object_ = std::make_shared<MeshObject>(sprite_3d_);
-	mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/flower_0.png"));
 	sprite_3d_->SetAnchorPoint(float2(0.5f,0.5f));
 	sprite_3d_->Apply();
 	height_ = 0.25f;
+	SetNumber(in_number);
 }
 
 //=============================================================================
@@ -82,9 +78,21 @@ void Flower::Show(bool in_is_show)
 	is_show_ = in_is_show;
 }
 
+void Flower::SetNumber(u32 in_number)
+{
+	SetTexture(in_number);
+}
+
 bool Flower::IsShow(void) const
 {
 	return is_show_;
+}
+
+void Flower::SetTexture(u32 in_number)
+{
+	char work[256] = { 0 };
+	sprintf_s(work,"resources/texture/flower_%d.png",in_number / 2);
+	mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture(work));
 }
 
 //---------------------------------- EOF --------------------------------------
