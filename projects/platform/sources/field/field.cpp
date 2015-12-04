@@ -10,10 +10,12 @@
 // include
 //*****************************************************************************
 #include "field.h"
-#include "mesh/mesh_sprite_3d.h"
+//#include "mesh/mesh_sprite_3d.h"
+#include "mesh/sprite_3d.h"
 #include "object/mesh_object.h"
 #include "system/win_system.h"
 #include "dx9_device.h"
+#include "math/math.h"
 
 //*****************************************************************************
 // constant definition
@@ -34,19 +36,25 @@ Field::Field(void)
 	height_count_ = 60;
 	size_._x = width_count_ * block_width_;
 	size_._y = height_count_ * block_height_;
-	mesh_sprite_3d_ = std::make_shared<mesh::MeshSprite3D>(block_width_,block_height_,width_count_,height_count_);
-	mesh_sprite_3d_->SetTexcoord(4,4);
+	//mesh_sprite_3d_ = std::make_shared<mesh::MeshSprite3D>(block_width_,block_height_,width_count_,height_count_);
+	sprite_3d_ = std::make_shared<mesh::Sprite3D>(size_);
+	sprite_3d_->SetAnchorPoint(float2(0.5f,0.5f));
+	sprite_3d_->SetTexcoord(0.0f,60.0f,0.0f,60.0f);
+
+	//mesh_sprite_3d_->SetTexcoord(4,4);
 	types_.resize(width_count_ * height_count_);
 	for(auto& type : types_)
 	{
 		type = 1;
 	}
 
-	mesh_sprite_3d_->SetIndex(types_);
-	mesh_sprite_3d_->Apply();
-
-	mesh_object_ = std::make_shared<MeshObject>(mesh_sprite_3d_);
-	mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/field.png"));
+	//mesh_sprite_3d_->SetIndex(types_);
+	//mesh_sprite_3d_->Apply();
+	sprite_3d_->Apply();
+	//mesh_object_ = std::make_shared<MeshObject>(mesh_sprite_3d_);
+	mesh_object_ = std::make_shared<MeshObject>(sprite_3d_);
+	mesh_object_->SetRotationX(utility::math::ToRadian(90.0f));
+	mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/field.jpg"));
 }
 
 //=============================================================================
@@ -61,6 +69,16 @@ Field::~Field(void)
 //=============================================================================
 void Field::Update(void)
 {
+#ifndef _RELEASE
+	if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_LEFT))
+	{
+		mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/field.jpg"));
+	}
+	if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_RIGHT))
+	{
+		mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/field_.jpg"));
+	}
+#endif
 	for(u32 i = 0;i < height_count_;++i)
 	{
 		for(u32 j = 0;j < width_count_;++j)
@@ -83,8 +101,8 @@ void Field::Reset(void)
 		type = 1;
 	}
 
-	mesh_sprite_3d_->SetIndex(types_);
-	mesh_sprite_3d_->Apply();
+	//mesh_sprite_3d_->SetIndex(types_);
+	//mesh_sprite_3d_->Apply();
 }
 
 //=============================================================================
@@ -135,19 +153,19 @@ void Field::SelectBlock(const float3& in_position)
 		return;
 	}
 
-	mesh_sprite_3d_->SetColor(select_index_x_,select_index_y_,DEFAULT_COLOR);
+	//mesh_sprite_3d_->SetColor(select_index_x_,select_index_y_,DEFAULT_COLOR);
 
 	float3 position = float3(in_position._x + size_._x * 0.5f,in_position._y,-(in_position._z - size_._y * 0.5f));
 
 	select_index_x_ = static_cast<u32>(position._x / block_width_);
 	select_index_y_ = static_cast<u32>(position._z / block_height_);
 
-	mesh_sprite_3d_->SetColor(select_index_x_,select_index_y_,SELECT_COLOR);
+	//mesh_sprite_3d_->SetColor(select_index_x_,select_index_y_,SELECT_COLOR);
 }
 
 void Field::NotSelectBlock(void)
 {
-	mesh_sprite_3d_->SetColor(select_index_x_,select_index_y_,DEFAULT_COLOR);
+	//mesh_sprite_3d_->SetColor(select_index_x_,select_index_y_,DEFAULT_COLOR);
 }
 
 float3 Field::GetBlockPosition(const float3& in_position)
@@ -247,9 +265,9 @@ void Field::SetType(const u32& in_x,const u32& in_y,const u32& in_type)
 
 	types_[index] = in_type;
 
-	mesh_sprite_3d_->SetIndex(in_x,in_y,in_type);
+	//mesh_sprite_3d_->SetIndex(in_x,in_y,in_type);
 
-	mesh_sprite_3d_->Apply();
+	//mesh_sprite_3d_->Apply();
 }
 
 //=============================================================================

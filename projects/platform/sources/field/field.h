@@ -22,7 +22,8 @@
 // forward declaration
 //*****************************************************************************
 namespace mesh {
-class MeshSprite3D;
+//class MeshSprite3D;
+class Sprite3D;
 } // namespace mesh
 class MeshObject;
 
@@ -32,7 +33,8 @@ class MeshObject;
 class Field
 {
 public:
-	using TMeshSprite3D = std::shared_ptr<mesh::MeshSprite3D>;
+	//using TMeshSprite3D = std::shared_ptr<mesh::MeshSprite3D>;
+	using TSprite3D = std::shared_ptr<mesh::Sprite3D>;
 	using TMeshObject = std::shared_ptr<MeshObject>;
 
 	// constructor
@@ -97,7 +99,8 @@ private:
 	std::vector<u32> types_;
 	u32 select_index_x_;
 	u32 select_index_y_;
-	TMeshSprite3D mesh_sprite_3d_;
+	//TMeshSprite3D mesh_sprite_3d_;
+	TSprite3D sprite_3d_;
 	TMeshObject mesh_object_;
 };
 
