@@ -189,6 +189,26 @@ void FollowerObserver::SetHeight(const f32& in_height)
 
 //---------------------------------- EOF --------------------------------------
 
+//
+//typedef struct
+//{
+//	float a ;
+//	float b ;
+//	float c ;
+//	float d ;
+//}PLANE ;		// ïΩñ 
+//
+//typedef struct
+//{
+//	PLANE LeftPlane ;
+//	PLANE RightPlane ;
+//	PLANE TopPlane ;
+//	PLANE BottomPlane ;
+//	float NearClip ;
+//	float FarClip ;
+//}FRUSTUM ;		// éãêçë‰
+
+
 	//--  ê›íË  --//
 	//SetupFOVClipPlanes( &frustum_ );
 
