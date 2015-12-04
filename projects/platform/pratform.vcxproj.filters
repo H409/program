@@ -217,11 +217,11 @@
     <ClCompile Include="sources\wall\wall.cpp">
       <Filter>sources\wall</Filter>
     </ClCompile>
-    <ClCompile Include="sources\dome\mesh_sprite_dome.cpp">
-      <Filter>sources\mesh</Filter>
-    </ClCompile>
     <ClCompile Include="sources\dome\dome.cpp">
       <Filter>sources\dome</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\dome\mesh_dome.cpp">
+      <Filter>sources\mesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -366,11 +366,11 @@
     <ClInclude Include="sources\wall\wall.h">
       <Filter>sources\wall</Filter>
     </ClInclude>
-    <ClInclude Include="sources\dome\mesh_sprite_dome.h">
-      <Filter>sources\mesh</Filter>
-    </ClInclude>
     <ClInclude Include="sources\dome\dome.h">
       <Filter>sources\dome</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\dome\mesh_dome.h">
+      <Filter>sources\mesh</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

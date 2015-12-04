@@ -9,7 +9,7 @@
 //*****************************************************************************
 // include
 //*****************************************************************************
-#include"mesh_sprite_dome.h"
+#include"mesh_dome.h"
 #include "system/win_system.h"
 
 namespace mesh {
@@ -144,25 +144,6 @@ namespace mesh {
 		is_dirty_ = true;
 	}
 
-
-	void MeshDome::AttachRenderState_(void)
-	{
-		auto directx9 = GET_DIRECTX9_DEVICE();
-
-		directx9->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_NONE);
-		directx9->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_NONE);
-		directx9->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
-		directx9->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
-	}
-
-	void MeshDome::DetachRenderState_(void)
-	{
-		auto directx9 = GET_DIRECTX9_DEVICE();
-		directx9->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-		directx9->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-		directx9->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
-		directx9->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
-	}
 	//=============================================================================
 	// update vertex buffer
 	//=============================================================================

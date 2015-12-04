@@ -66,8 +66,6 @@ namespace mesh {
 		u32* indexs_;
 		float2 anchor_point_;
 
-		void AttachRenderState_(void)override;
-		void DetachRenderState_(void)override;
 		void UpdateVertexBuffer_(void)override;
 
 	};

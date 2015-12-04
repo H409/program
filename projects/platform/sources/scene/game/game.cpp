@@ -96,6 +96,7 @@ Game::Game()
 	for (u32 i = 0; i < WALL_MAX; ++i)
 	{
 		wall_[i] = std::make_shared<Wall>();
+		wall_[i]->Update();
 	}
 
 	wall_[0]->GetObject()->SetPosition(0.0f, 0.0f, 15.0f);
