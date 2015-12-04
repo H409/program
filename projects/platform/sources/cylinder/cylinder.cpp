@@ -28,14 +28,14 @@ Cylinder::Cylinder(void)
 {
 	select_index_x_ = 0;
 	select_index_y_ = 0;
-	block_width_ = 10.0;
-	block_height_ = 45.0;
-	width_count_ = 36.0;
-	height_count_ = 4.0;
+	block_width_ = (u32)1.0;
+	block_height_ = (u32)1.0;
+	width_count_ = (u32)36.0;
+	height_count_ = (u32)10.0;
 	size_._x = width_count_ * block_width_;
 	size_._y = height_count_ * block_height_;
 	mesh_sprite_dome_ = std::make_shared<mesh::MeshCylinder>(block_width_, block_height_, width_count_, height_count_);
-	mesh_sprite_dome_->SetTexcoord(8, 1);
+	mesh_sprite_dome_->SetTexcoord(1, 1);
 	types_.resize(width_count_ * height_count_);
 	for (auto& type : types_)
 	{
