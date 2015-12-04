@@ -178,8 +178,8 @@ namespace mesh {
 				float top = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 0);
 				float bottom = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 1);*/
 
-				float left = (1.0f / division_width_)*j;
-				float right = (1.0f / division_width_)*j + (1.0f/division_width_);
+				float left = (1.0f / width_count_)*j;
+				float right = (1.0f / width_count_)*j + (1.0f/ width_count_);
 				float top = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 0);
 				float bottom = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 1);
 				

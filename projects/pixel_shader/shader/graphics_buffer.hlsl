@@ -38,7 +38,7 @@ OUT_PIXEL GraphicsBuffer(IN_PIXEL in_pixel,sampler texture_sampler)
 	out_pixel.position = 0;
 
 	out_pixel.color = in_pixel.color * tex2D(texture_sampler,in_pixel.texcoord);
-	out_pixel.normal_depth = float4(normalize(in_pixel.normal_depth.xyz),in_pixel.normal_depth.w);
+	out_pixel.normal_depth = float4(normalize(in_pixel.normal_depth.xyz),1.0f);//in_pixel.normal_depth.w);
 	out_pixel.position = in_pixel.world_position;
 
 	return out_pixel;

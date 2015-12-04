@@ -72,11 +72,11 @@ void Field::Update(void)
 #ifndef _RELEASE
 	if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_LEFT))
 	{
-		mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/field.jpg"));
+		//mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/field.jpg"));
 	}
 	if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_RIGHT))
 	{
-		mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/field_.jpg"));
+		//mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/field_.jpg"));
 	}
 #endif
 	for(u32 i = 0;i < height_count_;++i)

@@ -40,7 +40,10 @@ OUT_PIXEL main(IN_PIXEL in_pixel)
 	light = max(-dot(normal_depth.xyz,light_vector),0.0f);
 	light = light * 0.5f + 0.5f;
 	float3 light_color = _light_deffuse * light;
+	//light_color = float3(1.0f,1.0f,1.0f);
 
+	//out_pixel.color = float4(0.0f,1.0f,0.0f, 1.0f);
+	out_pixel.color = float4(normal_depth.xyz, 1.0f);
 	out_pixel.color = float4(light_color.rgb * color.rgb,1.0f);
 
 	return out_pixel;
