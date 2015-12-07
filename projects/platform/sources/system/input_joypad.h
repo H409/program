@@ -77,6 +77,7 @@ public:
 	bool GetHold(int nKey);									// ホールドキー情報取得
 	bool GetRelease(int nKey);								// リリースキー情報取得
 	float GetRightAnalogStick(void);						// 右アナログスティック角度取得
+	float GetLeftAnalogStick(void);							// 左アナログスティック角度取得
 
 private:
 	JOYINFOEX				m_joyState;							// パッド情報保存用
