@@ -95,7 +95,11 @@ void DX9Shader::SetValue(const std::string & in_handle_name,const f32& in_value)
 //=============================================================================
 void DX9Shader::SetValue(const std::string& in_handle_name,const f32* in_value,const u32& in_count)
 {
+<<<<<<< HEAD
 	//DEBUG_ASSERT(d3dxconstanttable_->SetFloatArray(direct3ddevice9_, in_handle_name.c_str(), in_value, in_count) == S_OK);
+=======
+	//DEBUG_ASSERT(d3dxconstanttable_->SetFloatArray(direct3ddevice9_,in_handle_name.c_str(),in_value,in_count) == S_OK);
+>>>>>>> 808aa2ac0b5bf515e2c9503b52f80804ac50d856
 	d3dxconstanttable_->SetFloatArray(direct3ddevice9_,in_handle_name.c_str(),in_value,in_count);
 }
 

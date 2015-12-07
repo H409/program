@@ -91,7 +91,8 @@ bool Flower::IsShow(void) const
 void Flower::SetTexture(u32 in_number)
 {
 	char work[256] = { 0 };
-	sprintf_s(work,"resources/texture/flower_%d.png",in_number / 2);
+	int a = rand()%3 + 1;
+	sprintf_s(work,"resources/texture/flower_0%d.png",a);
 	mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture(work));
 }
 

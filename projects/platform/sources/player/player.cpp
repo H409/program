@@ -46,7 +46,7 @@
 Player::Player( LPDIRECT3DDEVICE9 pDevice ) : Object()
 {
 	pDevice_ = pDevice ;
-	pKim_ = nullptr;
+	pKim_ = nullptr ;
 	camera_vector_ = float3();
 	move_ = float3();
 	speed_ = float3( 0.01f , 0.01f , 0.01f );
@@ -54,10 +54,8 @@ Player::Player( LPDIRECT3DDEVICE9 pDevice ) : Object()
 	position_ = float3( 0 , 0 , 0 );
 
 	ID_ = 0 ;		// 1P
-	action_animation_end_ = false ;
 
 	state_ = STATE::NONE ;
-
 }
 
 //-------------------------------------------------------------------
@@ -67,7 +65,7 @@ Player::Player( LPDIRECT3DDEVICE9 pDevice ) : Object()
 //-------------------------------------------------------------------
 Player::~Player( void )
 {
-	SafeRelease(pKim_);
+	SafeRelease( pKim_ );
 }
 
 //-------------------------------------------------------------------
@@ -132,15 +130,17 @@ void Player::Uninit( void )
 //-------------------------------------------------------------------
 void Player::Control( void )
 {
-	D3DXVec3Normalize( ( D3DXVECTOR3* )&camera_vector_ , ( D3DXVECTOR3* )&camera_vector_ );
-//	pKim_->SetAnime( Kim::ANIME::WAIT );
 	bool bMove = false ;	// 移動
 	action_ = false ;
+	float rot_diff = 0 ;	//
+
+	D3DXVec3Normalize( ( D3DXVECTOR3* )&camera_vector_ , ( D3DXVECTOR3* )&camera_vector_ );
 
 	if( GET_INPUT_MOUSE()->GetTrigger( InputMouse::MOUSE_KEY::RIGHT ) == true )
 	{
 		if( state_ != STATE::AIM )
 		{
+			pKim_->SetAnime( Kim::ANIME::WAIT );
 			state_ = STATE::AIM ;
 		}
 		else
@@ -152,9 +152,6 @@ void Player::Control( void )
 	//--  移動　前  --//	
 	if( GET_INPUT_KEYBOARD()->GetPress( DIK_W ) == true )
 	{
-		//move_._x += sinf( camera_vector_._y ) * speed_._x ;
-		//move_._z += cosf( camera_vector_._y ) * speed_._z ;
-
 		move_._x += camera_vector_._x * speed_._x ; 
 		move_._z += camera_vector_._z * speed_._z ;
 
@@ -167,9 +164,6 @@ void Player::Control( void )
 	//--  移動　後  --//
 	if( GET_INPUT_KEYBOARD()->GetPress( DIK_S ) == true )
 	{
-		//move_._x -= sinf( camera_vector_._y ) * speed_._x ;
-		//move_._z -= cosf( camera_vector_._y ) * speed_._z ;
-
 		move_._x -= camera_vector_._x * speed_._x ; 
 		move_._z -= camera_vector_._z * speed_._z ;
 
@@ -182,15 +176,12 @@ void Player::Control( void )
 	//--  移動　左  --//
 	if( GET_INPUT_KEYBOARD()->GetPress( DIK_A ) == true )
 	{
-		//move_._x -= sinf( camera_vector_._y + D3DX_PI * 0.5f ) * speed_._x ;
-		//move_._z -= cosf( camera_vector_._y + D3DX_PI * 0.5f ) * speed_._z ;
 		D3DXVECTOR3 vec ;
 		D3DXVec3Cross( &vec , &D3DXVECTOR3( 0 , 1 , 0 ) , ( D3DXVECTOR3* )&camera_vector_ );
 
 		move_._x -= vec.x * speed_._x ;
 		move_._z -= vec.z * speed_._z ;
 
-		//rotDest_._y = -D3DX_PI * 0.5f ;
 		rotDest_._y = atan2f( -vec.x , -vec.z );
 
 		bMove = true ;
@@ -199,9 +190,6 @@ void Player::Control( void )
 	//--  移動　右  --//
 	if( GET_INPUT_KEYBOARD()->GetPress( DIK_D ) == true )
 	{
-		//move_._x += sinf( camera_vector_._y + D3DX_PI * 0.5f ) * speed_._x ;
-		//move_._z += cosf( camera_vector_._y + D3DX_PI * 0.5f ) * speed_._z ;
-
 		D3DXVECTOR3 vec ;
 		D3DXVec3Cross( &vec , &D3DXVECTOR3( 0 , 1 , 0 ) , ( D3DXVECTOR3* )&camera_vector_ );
 
@@ -209,8 +197,6 @@ void Player::Control( void )
 		move_._z += vec.z * speed_._z ;
 
 		rotDest_._y = atan2f( vec.x , vec.z );
-
-		//rotDest_._y = D3DX_PI * 0.5f ;
 
 		bMove = true ;
 	}
@@ -221,31 +207,56 @@ void Player::Control( void )
 		rotDest_._y = atan2f( camera_vector_._x , camera_vector_._z );
 		rotDest_._y += 0.4f ;
 
-		//--  アクション  --//
-		if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_SPACE ) )
+		//--  アニメーションが待機なら  --//
+		if( pKim_->GetAnime() == Kim::ANIME::WAIT )
 		{
-			if( pKim_->GetAnime() != Kim::ANIME::ACTION )
+			//--  アクション  --//
+			if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_SPACE ) )
 			{
-				action_ = true ;
-				pKim_->SetAnime( Kim::ANIME::ACTION );
-				pKim_->SetOldAnime( Kim::ANIME::WAIT );
+				if( action_ == false )
+				{
+					action_ = true ;
+					pKim_->SetAnime( Kim::ANIME::ACTION );
+					pKim_->SetOldAnime( Kim::ANIME::WAIT );
+				}
 			}
 		}
 
 		move_ *= 0 ;
-
+		rot_diff = 0.11f ;
 		bMove = false ;
 	}
-	
-	//--  武器取り出し  --//
-	if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_E ) == true )
+	else
 	{
-		int wepon = ( int )pKim_->GetWepon();
-		wepon = ( wepon + 1 ) % 3 ;
+		//--  停止時  --//
+		const float stop = 0.02f ;
+		if( pKim_->GetAnime() != Kim::ANIME::TAKE_OUT )
+		{
+			if( move_._x < stop && move_._x > -stop &&
+				move_._z < stop && move_._z > -stop )
+			{
+				pKim_->SetAnime( Kim::ANIME::WAIT );
+			}
+		}
+	}
+	
+	//--  待機中  --//
+	if( pKim_->GetAnime() == Kim::ANIME::WAIT )
+	{
+		//--  武器取り出し  --//
+		if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_E ) == true )
+		{
+			//--  取り出しアニメーションをしていないなら  --//
+			if( pKim_->GetAnimarionPlay( ( int )Kim::ANIME::TAKE_OUT ) == false )
+			{
+				int wepon = ( int )pKim_->GetWepon();
+				wepon = ( wepon + 1 ) % 3 ;
 
-		pKim_->SetWepon( ( Kim::WEAPON )wepon );
-		pKim_->SetAnime( Kim::ANIME::TAKE_OUT );
-		pKim_->SetOldAnime( Kim::ANIME::WAIT );
+				pKim_->SetWepon( ( Kim::WEAPON )wepon );
+				pKim_->SetAnime( Kim::ANIME::TAKE_OUT );
+				pKim_->SetOldAnime( Kim::ANIME::WAIT );
+			}
+		}
 	}
 
 	//--  動いたなら  --//
@@ -254,13 +265,7 @@ void Player::Control( void )
 		//--  アニメーション  --//
 		pKim_->SetAnime( Kim::ANIME::WALK );
 	}
-
-	//--  アニメーション終わったら  --//
-	if( pKim_->GetNewAnimarionEnd() == true )
-	{
-		action_animation_end_ = false ;
-	}
-
+	
 	//--  移動  --//
 	position_._x += move_._x ;
 	position_._y += move_._y ;
@@ -275,7 +280,7 @@ void Player::Control( void )
 	auto diff = rotDest_._y - rotation_._y ;
 	diff = utility::math::Wrap( diff , ( f32 )-utility::math::PI , ( f32 )utility::math::PI );
 
-	rotation_._y += diff * 0.09f ;
+	rotation_._y += diff * ( 0.09f + rot_diff );
 }
 
 

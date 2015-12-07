@@ -74,7 +74,8 @@ Kim::Kim(LPDIRECT3DDEVICE9 d3d_device)
 	wepon_ = WEAPON::GUN ;
 	current_key_ = anime_data_[ NOW_ANIMETION ][ 0 ];
 	animation_ = true ;
-	new_animarion_end_ = true ;
+
+	memset( &animation_play_ , 0 , sizeof( animation_play_ ) );
 }
 
 //=============================================================================
@@ -534,14 +535,19 @@ void Kim::Update(void)
 			bone_[ i ].bone_matrix = scl * rot * trans * bone_[ i ].init_matrix ;
 
 			// 次のﾌﾚｰﾑに移動
-			if( dest_bone->current_time >= next_flame->frame_chenge )
+			if( dest_bone->current_time >= 1 )
 			{
 				dest_bone->current_time = 0;
 
 			//	if ( 0  ==  0 )
 				{
+					auto a = NOW_ANIMETION ;
+					auto b = anime_data_[ NOW_ANIMETION ][ 1 ] ;
+
 					if( current_key_ >= anime_data_[ NOW_ANIMETION ][ 1 ] )
 					{
+						animation_play_[ ( int )anime_ ] = false ;	// アニメーション終わり
+
 						//--  リピートありなら  --//
 						if( anime_data_[ NOW_ANIMETION ][ 2 ] == 1 )
 						{
@@ -554,7 +560,6 @@ void Kim::Update(void)
 							//animation_ = false ;
 						}
 
-						new_animarion_end_ = true ;	// 新しいアニメーション終わり
 						//dest_bone->anime[ 0 ].current_key %= dest_bone->anime[ 0 ].num_key;
 					}
 				}
@@ -935,7 +940,9 @@ void Kim::SetAnime( const ANIME& anime )
 	current_key_ = anime_data_[ NOW_ANIMETION ][ 0 ];
 
 	animation_ = true ; 
-	new_animarion_end_ = false ;
+
+	memset( &animation_play_ , 0 , sizeof( animation_play_ ) );
+	animation_play_[ ( int )anime_ ] = true ;	// アニメーション終わり
 }
 
 
