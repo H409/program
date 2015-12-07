@@ -28,10 +28,10 @@ Cylinder::Cylinder(void)
 {
 	select_index_x_ = 0;
 	select_index_y_ = 0;
-	block_width_ = (u32)1.0;
-	block_height_ = (u32)1.0;
+	block_width_ = (f32)0.3;
+	block_height_ = (f32)1.0;
 	width_count_ = (u32)36.0;
-	height_count_ = (u32)10.0;
+	height_count_ = (u32)3.0;
 	size_._x = width_count_ * block_width_;
 	size_._y = height_count_ * block_height_;
 	mesh_sprite_dome_ = std::make_shared<mesh::MeshCylinder>(block_width_, block_height_, width_count_, height_count_);
