@@ -200,11 +200,22 @@ void Game::Update()
 		field_icons_[i]->SetBasicPosition(players_[i]->GetPosition());
 		field_icons_[i]->Update();
 
+#ifdef _DEBUG
+	static bool _bullet_debug = false ;
+
+	if( GET_INPUT_KEYBOARD()->GetPress(DIK_B) )
+	{
+		_bullet_debug = !_bullet_debug ;
+	}
+
+	if( _bullet_debug == true )
+	{
+		players_[ i ]->SetAction( true );
+	}
+#endif // _DEBUG
+
 		if( players_[ i ]->GetKimPointer()->GetWepon() == Kim::WEAPON::GUN &&
-			//GET_INPUT_KEYBOARD()->GetTrigger( DIK_SPACE ) &&
 			players_[ i ]->GetAction() == true )
-	//		GET_INPUT_KEYBOARD()->GetTrigger( DIK_SPACE )
-		//if(  )
 		{
 			// Ží‚Ü‚«
 			if(field_icons_[i]->IsShow())

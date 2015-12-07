@@ -195,7 +195,9 @@ public :
 	WEAPON GetWepon( void ){ return wepon_ ; };
 	void SetWepon( const WEAPON& wepon ){ wepon_ = wepon ; };
 
-	bool GetNewAnimarionEnd( void ){ return new_animarion_end_ ; }	// trueで終わっている
+	bool GetAnimarionPlay( int i ){ 
+		return animation_play_[ i ];
+	}	// trueで終わっている
 
 private:
 	// 処理:ｼｪｰﾀﾞｰのｺﾝﾊﾟｲﾙ
@@ -262,7 +264,7 @@ private :
 	int next_key_ ;
 
 	bool animation_ ;
-	bool new_animarion_end_ ;	// 新しいアニメーション終わったか
+	bool animation_play_[ 5 ];	// 新しいアニメーション終わったか
 
 	static int anime_data_[][ 3 ];
 	ANIME anime_ ;

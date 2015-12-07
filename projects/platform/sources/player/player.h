@@ -76,10 +76,8 @@ public :
 	//void SetActionAnimationEnd( const int& id ){ ID_ = id ; }
 	bool GetActionAnimationEnd( void ){ return action_animation_end_ ; }
 	bool GetAction( void ){ return action_ ; }
+	void SetAction( bool b ){ action_ = b ; }
 
-
-	//--  インスタンス生成  --//
-	//static Player* Create( LPDIRECT3DDEVICE9 pDevice , float3 pos );
 
 private : 
 	LPDIRECT3DDEVICE9 pDevice_ ;
