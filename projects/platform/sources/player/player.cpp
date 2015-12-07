@@ -11,6 +11,8 @@
 #include "../system/win_system.h"
 #include "../system/input_manager.h"
 #include "../system/input_keyboard.h"
+#include "../system/input_joypad.h"
+#include "../system/xi_pad.h"
 
 #include "../system/input_mouse.h"
 
@@ -20,6 +22,9 @@
 //------------------------------------------------------------------------
 // マクロ定義
 //------------------------------------------------------------------------
+#ifdef _DEBUG
+#define _KEYBOAD_DEBUG
+#endif // _DEBUG
 
 //------------------------------------------------------------------------
 // 構造体
@@ -129,6 +134,22 @@ void Player::Uninit( void )
 // 返り値 : なし
 //-------------------------------------------------------------------
 void Player::Control( void )
+{
+#ifdef _KEYBOAD_DEBUG
+	ControlKeyBorad();
+
+#else
+	ControlJoypad();
+
+#endif // _DEBUG
+}
+//-------------------------------------------------------------------
+// 関数名 : キーボード更新
+//
+// 引数   : なし
+// 返り値 : なし
+//-------------------------------------------------------------------	
+void Player::ControlKeyBorad( void )
 {
 	bool bMove = false ;	// 移動
 	action_ = false ;
@@ -245,6 +266,124 @@ void Player::Control( void )
 	{
 		//--  武器取り出し  --//
 		if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_E ) == true )
+		{
+			//--  取り出しアニメーションをしていないなら  --//
+			if( pKim_->GetAnimarionPlay( ( int )Kim::ANIME::TAKE_OUT ) == false )
+			{
+				int wepon = ( int )pKim_->GetWepon();
+				wepon = ( wepon + 1 ) % 3 ;
+
+				pKim_->SetWepon( ( Kim::WEAPON )wepon );
+				pKim_->SetAnime( Kim::ANIME::TAKE_OUT );
+				pKim_->SetOldAnime( Kim::ANIME::WAIT );
+			}
+		}
+	}
+
+	//--  動いたなら  --//
+	if( bMove == true )
+	{
+		//--  アニメーション  --//
+		pKim_->SetAnime( Kim::ANIME::WALK );
+	}
+	
+	//--  移動  --//
+	position_._x += move_._x ;
+	position_._y += move_._y ;
+	position_._z += move_._z ;
+
+	move_._x *= 0.855f ;
+	move_._z *= 0.855f ;
+
+	rotDest_._y = utility::math::Wrap( rotDest_._y , ( f32 )-utility::math::PI , ( f32 )utility::math::PI );
+
+	//--  向きの慣性更新  --//
+	auto diff = rotDest_._y - rotation_._y ;
+	diff = utility::math::Wrap( diff , ( f32 )-utility::math::PI , ( f32 )utility::math::PI );
+
+	rotation_._y += diff * ( 0.09f + rot_diff );
+}
+
+//-------------------------------------------------------------------
+// 関数名 : ジョイパッド更新
+//
+// 引数   : なし
+// 返り値 : なし
+//-------------------------------------------------------------------	
+void Player::ControlJoypad( void )
+{
+	bool bMove = false ;	// 移動
+	action_ = false ;
+	float rot_diff = 0 ;	//
+
+	D3DXVec3Normalize( ( D3DXVECTOR3* )&camera_vector_ , ( D3DXVECTOR3* )&camera_vector_ );
+
+	if( GET_INPUT_XPAD( ID_ )->GetPress( XIPad::KEY::L1 ) == true )
+	{
+		if( state_ != STATE::AIM )
+		{
+			pKim_->SetAnime( Kim::ANIME::WAIT );
+			state_ = STATE::AIM ;
+		}
+		else
+		{
+			state_ = STATE::WAIT ;
+		}
+	}
+
+	//--  移動  --//	
+	auto x_pad_move = GET_INPUT_XPAD( ID_ )->GetLStick();
+	
+	move_._x += camera_vector_._x * speed_._x * x_pad_move._x ; 
+	move_._z += camera_vector_._z * speed_._z * x_pad_move._x ;
+
+	rotDest_._y = atan2f( x_pad_move._x , x_pad_move._y );
+
+
+	//--  エイム  --//
+	if( state_ == STATE::AIM )
+	{
+		rotDest_._y = atan2f( camera_vector_._x , camera_vector_._z );
+		rotDest_._y += 0.4f ;
+
+		//--  アニメーションが待機なら  --//
+		if( pKim_->GetAnime() == Kim::ANIME::WAIT )
+		{
+			//--  アクション  --//
+			if( GET_INPUT_XPAD( ID_ )->GetPress( XIPad::KEY::R1 ) == true )
+			{
+				if( action_ == false )
+				{
+					action_ = true ;
+					pKim_->SetAnime( Kim::ANIME::ACTION );
+					pKim_->SetOldAnime( Kim::ANIME::WAIT );
+				}
+			}
+		}
+
+		move_ *= 0 ;
+		rot_diff = 0.11f ;
+		bMove = false ;
+	}
+	else
+	{
+		//--  停止時  --//
+		const float stop = 0.02f ;
+		if( pKim_->GetAnime() != Kim::ANIME::TAKE_OUT )
+		{
+			if( move_._x < stop && move_._x > -stop &&
+				move_._z < stop && move_._z > -stop )
+			{
+				pKim_->SetAnime( Kim::ANIME::WAIT );
+			}
+		}
+	}
+	
+	//--  待機中  --//
+	if( pKim_->GetAnime() == Kim::ANIME::WAIT )
+	{
+		//--  武器取り出し  --//
+		if( GET_INPUT_XPAD( ID_ )->GetPress( XIPad::KEY::B ) == true == true )
 		{
 			//--  取り出しアニメーションをしていないなら  --//
 			if( pKim_->GetAnimarionPlay( ( int )Kim::ANIME::TAKE_OUT ) == false )

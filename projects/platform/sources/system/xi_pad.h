@@ -60,9 +60,9 @@ public:
 	// clear
 	void Clear(void);
 
-	bool IsPress(KEY in_key)const;
-	bool IsTrigger(KEY in_key)const;
-	bool IsRelease(KEY in_key)const;
+	bool GetPress(KEY in_key)const;
+	bool GetTrigger(KEY in_key)const;
+	bool GetRelease(KEY in_key)const;
 
 	const float2& GetLStick(void)const;
 	const float2& GetRStick(void)const;
