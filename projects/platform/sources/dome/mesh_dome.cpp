@@ -9,7 +9,7 @@
 //*****************************************************************************
 // include
 //*****************************************************************************
-#include"mesh_sprite_dome.h"
+#include"mesh_dome.h"
 #include "system/win_system.h"
 
 namespace mesh {
@@ -144,25 +144,6 @@ namespace mesh {
 		is_dirty_ = true;
 	}
 
-
-	void MeshDome::AttachRenderState_(void)
-	{
-		auto directx9 = GET_DIRECTX9_DEVICE();
-
-		directx9->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_NONE);
-		directx9->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_NONE);
-		directx9->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
-		directx9->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
-	}
-
-	void MeshDome::DetachRenderState_(void)
-	{
-		auto directx9 = GET_DIRECTX9_DEVICE();
-		directx9->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-		directx9->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-		directx9->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
-		directx9->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
-	}
 	//=============================================================================
 	// update vertex buffer
 	//=============================================================================
@@ -197,8 +178,8 @@ namespace mesh {
 				float top = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 0);
 				float bottom = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 1);*/
 
-				float left = (1.0f / division_width_)*j;
-				float right = (1.0f / division_width_)*j + (1.0f/division_width_);
+				float left = (1.0f / width_count_)*j;
+				float right = (1.0f / width_count_)*j + (1.0f/ width_count_);
 				float top = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 0);
 				float bottom = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 1);
 				

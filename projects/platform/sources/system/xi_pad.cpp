@@ -82,17 +82,17 @@ void XIPad::Clear(void)
 	}
 }
 
-bool XIPad::IsPress(KEY in_key) const
+bool XIPad::GetPress(KEY in_key) const
 {
 	return is_press_[(u32)in_key];
 }
 
-bool XIPad::IsTrigger(KEY in_key) const
+bool XIPad::GetTrigger(KEY in_key) const
 {
 	return is_trigger_[(u32)in_key];
 }
 
-bool XIPad::IsRelease(KEY in_key) const
+bool XIPad::GetRelease(KEY in_key) const
 {
 	return is_release_[(u32)in_key];
 }
