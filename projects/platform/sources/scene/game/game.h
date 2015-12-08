@@ -34,6 +34,12 @@ class FollowerObserver;
 class MeshObject;
 class Flower;
 
+namespace utility {
+namespace culling {
+class FrustumCulling;
+} // namespace utility
+} // namespace culling
+
 namespace graphic {
 namespace directx9 {
 namespace texture {
@@ -85,6 +91,7 @@ private:
 	std::shared_ptr<Observer2D> observer_2d_;
 	std::vector<std::shared_ptr<Flower>> flowers_;
 
+	std::unique_ptr<utility::culling::FrustumCulling> frustum_culling_;
 #ifdef _DEBUG
 	std::shared_ptr<MeshObject> debug_sprite_object_;
 	std::shared_ptr<MeshObject> debug_object_;

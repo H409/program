@@ -45,8 +45,6 @@ Flower::~Flower(void)
 //=============================================================================
 void Flower::Update(void)
 {
-	auto position = float3(position_._x,position_._y + height_,position_._z);
-	mesh_object_->SetPosition(position);
 }
 
 //=============================================================================
@@ -63,6 +61,8 @@ Flower::TMeshObject Flower::GetObject(void) const
 void Flower::SetPosition(const float3& in_position)
 {
 	position_ = in_position;
+	auto position = float3(position_._x,position_._y + height_,position_._z);
+	mesh_object_->SetPosition(position);
 }
 
 //=============================================================================

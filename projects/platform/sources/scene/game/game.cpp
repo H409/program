@@ -34,6 +34,7 @@
 #include "wall/wall.h"
 #include "dome/dome.h"
 #include "cylinder/cylinder.h"
+#include "culling/frustum_culling.h"
 
 //=============================================================================
 // constructor
@@ -55,6 +56,8 @@ Game::Game()
 	}
 
 	observer_2d_ = std::make_shared<Observer2D>(window->GetWidth(),window->GetHeight());
+
+	frustum_culling_ = std::make_unique<utility::culling::FrustumCulling>(utility::math::ToRadian(90.0f),(f32)window->GetWidth() / window->GetHeight(),0.1f,100.0f);
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
@@ -115,6 +118,12 @@ Game::Game()
 	cylinder_ = std::make_shared<Cylinder>();
 	cylinder_->GetObjectA()->SetPosition(0.0f,0.0f,0.0f);
 
+	flowers_.resize(field_->GetBlockCount());
+
+	for(auto& flower : flowers_)
+	{
+		flower = std::make_shared<Flower>(0);
+	}
 #ifdef _DEBUG
 	debugRenderTarget_ = false;
 	debug_player_number_ = 0;
@@ -156,8 +165,15 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 	{
 		player_icons_[i]->SetPosition(players_[i]->GetPosition());
 	}
+
+	for(auto flower : flowers_)
+	{
+		flower->Show(false);
+	}
+
 	return true;
 }
+
 //=============================================================================
 // finalize
 //=============================================================================
@@ -322,10 +338,10 @@ void Game::Update()
 		}
 	}
 
-	for(auto flower : flowers_)
-	{
-		flower->Update();
-	}
+	//for(auto flower : flowers_)
+	//{
+	//	flower->Update();
+	//}
 
 	// 
 	for(auto bullet : bullets_)
@@ -346,23 +362,11 @@ void Game::Update()
 						field_->SetType(position,(u32)Field::TYPE::FLOWER);
 						auto is_create = true;
 						auto flower_position = field_->GetBlockPosition(position);
-						for(auto flower : flowers_)
-						{
-							if(!flower->IsShow())
-							{
-								flower->SetPosition(flower_position);
-								flower->SetNumber(bullet->GetTag());
-								is_create = false;
-								break;
-							}
-						}
+						auto index = field_->GetBlockIndex(position);
 
-						if(is_create)
-						{
-							auto flower = std::make_shared<Flower>(bullet->GetTag());
-							flower->SetPosition(flower_position);
-							flowers_.push_back(flower);
-						}
+						flowers_[index]->SetNumber(bullet->GetTag());
+						flowers_[index]->Show(true);
+						flowers_[index]->SetPosition(flower_position);
 					}
 					bullet->Remove();
 				}
@@ -384,7 +388,6 @@ void Game::Draw()
 	auto basic_vs = graphic_device->LoadVertexShader("resources/shader/basic.vsc");
 	auto basic_ps = graphic_device->LoadPixelShader("resources/shader/basic.psc");
 	auto gb_vs_fbx = graphic_device->LoadVertexShader("resources/shader/graphics_buffer_fbx.vsc");
-	//auto gb_ps_fbx = graphic_device->LoadVertexShader("resources/shader/graphics_buffer_fbx.psc");
 	auto default_texture = graphic_device->GetRenderTarget(0);
 
 
@@ -441,10 +444,15 @@ void Game::Draw()
 		auto object = field_->GetObject();
 		auto world_matrix = object->GetMatrix();
 
+		frustum_culling_->SetViewMatrix(view_matrix);
+
 		gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
 		gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
 
-		object->Draw();
+		//if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
+		{
+			object->Draw();
+		}
 
 		if(field_icons_[i]->IsShow())
 		{
@@ -456,7 +464,10 @@ void Game::Draw()
 			gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
 			gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
 
-			object->Draw();
+			if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
+			{
+				object->Draw();
+			}
 		}
 
 		for(auto bullet : bullets_)
@@ -470,7 +481,10 @@ void Game::Draw()
 				gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
 				gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
 
-				object->Draw();
+				if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
+				{
+					object->Draw();
+				}
 			}
 		}
 
@@ -485,20 +499,10 @@ void Game::Draw()
 				gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
 				gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
 
-				object->Draw();
-			}
-		}
-
-		for(u32 j = 0;j < PLAYER_MAX;++j)
-		{
-			if(i != j)
-			{
-				object = player_icons_[j]->GetObject();
-				world_matrix = object->GetMatrix();
-				world_matrix = utility::math::Multiply(i_view_matrix,world_matrix);
-				gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
-				gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
-				object->Draw();
+				if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
+				{
+					object->Draw();
+				}
 			}
 		}
 
@@ -512,7 +516,10 @@ void Game::Draw()
 			gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
 			gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
 
-			object->Draw();
+			//if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
+			{
+				object->Draw();
+			}
 		}
 
 		//draw dome
@@ -521,7 +528,10 @@ void Game::Draw()
 		gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
 		gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());
 
-		object->Draw();
+		//if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
+		{
+			object->Draw();
+		}
 
 		//draw cylinder
 		object = cylinder_->GetObjectA();
@@ -529,7 +539,26 @@ void Game::Draw()
 		gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
 		gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());
 
-		object->Draw();
+		//if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
+		{
+			object->Draw();
+		}
+
+		for(u32 j = 0;j < PLAYER_MAX;++j)
+		{
+			if(i != j)
+			{
+				object = player_icons_[j]->GetObject();
+				world_matrix = object->GetMatrix();
+				world_matrix = utility::math::Multiply(i_view_matrix,world_matrix);
+				gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
+				gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
+				if(frustum_culling_->IsCulling(players_[j]->GetPosition(),2.0f))
+				{
+					object->Draw();
+				}
+			}
+		}
 
 		graphic_device->SetVertexShader(gb_vs_fbx);
 
@@ -537,7 +566,11 @@ void Game::Draw()
 		{
 			players_[j]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[i]->GetViewMatrix());
 			players_[j]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[i]->GetProjectionMatrix());
-			players_[j]->Draw();
+
+			if(frustum_culling_->IsCulling(players_[j]->GetPosition(),2.0f))
+			{
+				players_[j]->Draw();
+			}
 		}
 	}
 

@@ -84,6 +84,8 @@ public:
 
 	u32 GetBlockIndex(const float3& in_position);
 
+	u32 GetBlockCount(void)const;
+
 	// get positions
 	std::vector<float3> GetPositionsF(const u32& in_type);
 	std::vector<float3> GetPositionsT(const u32& in_type);
