@@ -92,7 +92,7 @@ Game::Game()
 	}
 
 	field_ = std::make_shared<Field>();
-
+	field_->Load("resources/map/map.txt");
 	for (u32 i = 0; i < WALL_MAX; ++i)
 	{
 		wall_[i] = std::make_shared<Wall>();
@@ -248,9 +248,9 @@ void Game::Update()
 			else
 			{
 				auto position = players_[i]->GetPosition();
-				if(field_->GetType(position) == 3)
+				if(field_->GetType(position) == (u32)Field::TYPE::FLOWER)
 				{
-					field_->SetType(position,1);
+					field_->SetType(position,(u32)Field::TYPE::SOIL);
 				}
 			}
 		}
@@ -283,19 +283,26 @@ void Game::Update()
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
+#ifdef _DEBUG
+		if(GET_INPUT_KEYBOARD()->GetPress(DIK_COMMA))
+		{
+			continue;
+		}
+#endif
 		auto player = players_[i];
 		auto player_old_position = player->GetOldPosition();
 		auto player_move = player->GetMove();
 		auto player_position = player->GetPosition();
 
-		if(field_->GetType(player_position) == 3)
+		auto type = field_->GetType(player_position);
+		if(type == (u32)Field::TYPE::BUILDING)
 		{
 			player->SetPosition(player->GetOldPosition());
 			player->SetMove(float3(0.0f,0.0f,0.0f));
 		}
 
 		player_position = float3(player_old_position._x + player_move._x,0.0f,player_old_position._z);
-		if(field_->GetType(player_position) == 3)
+		if(type == (u32)Field::TYPE::BUILDING)
 		{
 			player->SetPosition(player->GetOldPosition());
 			player->SetMove(float3(0.0f,0.0f,0.0f));
@@ -303,7 +310,7 @@ void Game::Update()
 
 		player_position = float3(player_old_position._x,0.0f,player_old_position._z + player_move._z);
 
-		if(field_->GetType(player_position) == 3)
+		if(type == (u32)Field::TYPE::BUILDING)
 		{
 			player->SetPosition(player->GetOldPosition());
 			player->SetMove(float3(0.0f,0.0f,0.0f));
@@ -321,7 +328,7 @@ void Game::Update()
 		if(!bullet->IsDeath())
 		{
 			auto position = bullet->GetPosition();
-			if(field_->GetType(position) == 3)
+			if(field_->GetType(position) == (u32)Field::TYPE::BUILDING)
 			{
 				bullet->Remove();
 			}
@@ -329,9 +336,9 @@ void Game::Update()
 			{
 				if(position._y <= 0.0f)
 				{
-					if(field_->GetType(position) == 1)
+					if(field_->GetType(position) == (u32)Field::TYPE::SOIL)
 					{
-						field_->SetType(position,2);
+						field_->SetType(position,(u32)Field::TYPE::FLOWER);
 						auto is_create = true;
 						auto flower_position = field_->GetBlockPosition(position);
 						for(auto flower : flowers_)
@@ -388,6 +395,11 @@ void Game::Draw()
 	if( _d == true )
 	{
 		max = 1 ;
+	}
+
+	if(GET_INPUT_KEYBOARD()->GetPress(DIK_M))
+	{
+		GET_DIRECTX9_DEVICE()->SetRenderState(D3DRS_FILLMODE,D3DFILL_WIREFRAME);
 	}
 
 	for(u32 i = 0;i < max;++i)
@@ -516,6 +528,9 @@ void Game::Draw()
 		}
 	}
 
+#ifdef _DEBUG
+	GET_DIRECTX9_DEVICE()->SetRenderState(D3DRS_FILLMODE,D3DFILL_FORCE_DWORD);
+#endif
 	graphic_device->SetRenderTarget(0,default_texture);
 	graphic_device->SetRenderTarget(1,nullptr);
 	graphic_device->SetRenderTarget(2,nullptr);
