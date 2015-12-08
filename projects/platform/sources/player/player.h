@@ -97,6 +97,8 @@ private :
 
 	void Control( void );
 	void UpdateKimMatrix( void );
+	void ControlKeyBorad( void );
+	void ControlJoypad( void );
 
 protected : 
 };
