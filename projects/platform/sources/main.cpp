@@ -39,6 +39,19 @@ int main(int argc,char* argv)
 	u32 frame_count = 0;
 	auto st = timeGetTime();
 
+#ifdef _DEBUG
+	char debug_command_string[] = "debug command \n"
+								  "0 : 1画面\n"
+								  "←→レンダーターゲット\n"
+								  "1 , 2 , 3 , 4 : プレイヤー切り替え\n"
+								  //"5 : フィールドテクスチャ\n"
+								  "9 : 1プレイヤーのみ描画\n"
+								  "B : 弾連射\n"
+								  "E : 武器切り替え\n"
+								  "space : 弾\n"
+								  "\n";
+#endif // _DEBUG
+
 	while(is_loop)
 	{
 		auto start_time = std::chrono::system_clock::now();
@@ -55,6 +68,13 @@ int main(int argc,char* argv)
 		}
 
 		DEVELOP_DISPLAY("FPS : %d\n",fps);
+
+#ifdef _DEBUG
+		static bool r_ctrl = false ;
+		if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_RCONTROL ) ){ r_ctrl = !r_ctrl ; }
+		if( r_ctrl == true ){ DEVELOP_DISPLAY_R( debug_command_string ); }
+		else{ DEVELOP_DISPLAY_R( "RCtrl" ); }
+#endif // _DEBUG
 
 		GET_INPUT_MANAGER()->Update();
 
