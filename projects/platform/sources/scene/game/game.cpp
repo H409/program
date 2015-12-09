@@ -95,6 +95,11 @@ Game::Game()
 		players_[i] = std::make_shared<Player>(graphic_device->GetDevice());
 	}
 
+	for(u32 i = 0;i < PLAYER_MAX;++i)
+	{
+		players_[i]->Init(float3(0.0f,0.0f,0.0f));
+	}
+
 	field_ = std::make_shared<Field>();
 	field_->Load("resources/map/map.txt");
 	for (u32 i = 0; i < WALL_MAX; ++i)
@@ -159,8 +164,9 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
-		players_[i]->Init(positions[i]);
+		players_[i]->SetPosition(positions[i]);
 	}
+
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
 		player_icons_[i]->SetPosition(players_[i]->GetPosition());
@@ -317,34 +323,39 @@ void Game::Update()
 		auto player_old_position = player->GetOldPosition();
 		auto player_move = player->GetMove();
 		auto player_position = player->GetPosition();
-
+		auto player_block_position = field_->GetBlockPosition(player_old_position);
 		auto type = field_->GetType(player_position);
-		if(type == (u32)Field::TYPE::BUILDING)
-		{
-			player->SetPosition(player->GetOldPosition());
-			player->SetMove(float3(0.0f,0.0f,0.0f));
-		}
+		//if(type == (u32)Field::TYPE::BUILDING)
+		//{
+			//player->SetPosition(player->GetOldPosition());
+			//player->SetMove(float3(0.0f,0.0f,0.0f));
+		//}
 
 		player_position = float3(player_old_position._x + player_move._x,0.0f,player_old_position._z);
 		if(type == (u32)Field::TYPE::BUILDING)
 		{
-			player->SetPosition(player->GetOldPosition());
-			player->SetMove(float3(0.0f,0.0f,0.0f));
+			auto x = field_->GetBlockPosition(player_position)._x - player_block_position._x;
+			player->SetPositionX(player->GetOldPosition()._x);
+			//player->SetPositionX(player_block_position._x + x);
+			//player->SetMove(float3(0.0f,player->GetMove()._y,player->GetMove()._z));
+			//player->SetMove(float3(0.0f,0.0f,0.0f));
 		}
 
 		player_position = float3(player_old_position._x,0.0f,player_old_position._z + player_move._z);
 
 		if(type == (u32)Field::TYPE::BUILDING)
 		{
-			player->SetPosition(player->GetOldPosition());
-			player->SetMove(float3(0.0f,0.0f,0.0f));
+			auto z = field_->GetBlockPosition(player_position)._z - player_block_position._z;
+			player->SetPositionZ(player->GetOldPosition()._z);
+			//player->SetPositionZ(player_block_position._z + z);
+			//player->SetMove(float3(player->GetMove()._x,player->GetMove()._y,0.0f));
 		}
 	}
 
-	//for(auto flower : flowers_)
-	//{
-	//	flower->Update();
-	//}
+	for(auto flower : flower_list_)
+	{
+		flower._Get()->Update();
+	}
 
 	// 
 	for(auto bullet : bullets_)

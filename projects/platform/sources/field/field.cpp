@@ -43,7 +43,7 @@ Field::Field(void)
 	types_.resize(width_count_ * height_count_);
 	for(auto& type : types_)
 	{
-		type = 1;
+		type = 0;
 	}
 
 #if MESH
@@ -90,13 +90,13 @@ void Field::Update(void)
 	{
 		for(u32 j = 0;j < width_count_;++j)
 		{
-			if(CheckTypeRightBottom(j,i,2))
-			{
-				SetType(j + 0,i + 0,3);
-				SetType(j + 1,i + 0,3);
-				SetType(j + 0,i + 1,3);
-				SetType(j + 1,i + 1,3);
-			}
+			//if(CheckTypeRightBottom(j,i,2))
+			//{
+			//	SetType(j + 0,i + 0,3);
+			//	SetType(j + 1,i + 0,3);
+			//	SetType(j + 0,i + 1,3);
+			//	SetType(j + 1,i + 1,3);
+			//}
 		}
 	}
 }
@@ -130,15 +130,16 @@ void Field::Load(const std::string& in_path)
 	auto size = str.size();
 
 	auto data = "data=";
-	auto offset = str.find_last_of("=") + 1;
+	auto offset = str.find_last_of("=") + 2;
 
 	for(auto& type : types_)
 	{
+		//type = 0;
 		type = atoi((str.c_str() + offset)) - 1;
-
-		if(str.find_first_of(",",offset) != str.npos)
+		
+		if(str.find_first_of(',',offset) != str.npos)
 		{
-			offset = str.find_first_of(",",offset) + 1;
+			offset = str.find_first_of(',',offset) + 1;
 			if(str[offset] == '\n')
 			{
 				offset++;
@@ -148,6 +149,7 @@ void Field::Load(const std::string& in_path)
 
 #if MESH
 	mesh_sprite_3d_->SetIndex(types_);
+	mesh_sprite_3d_->Apply();
 #endif
 }
 
