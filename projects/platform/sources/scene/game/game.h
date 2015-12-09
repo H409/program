@@ -33,6 +33,7 @@ class Observer2D;
 class FollowerObserver;
 class MeshObject;
 class Flower;
+class FBXObject ;
 
 namespace utility {
 namespace culling {
@@ -74,6 +75,7 @@ public:
 private:
 	static const u32 PLAYER_MAX = 4;
 	static const u32 WALL_MAX = 4;
+	static const u32 FBX_OBJECT_MAX = 10 ;
 
 	std::shared_ptr<Player> players_[PLAYER_MAX];
 	std::shared_ptr<PlayerIcon> player_icons_[PLAYER_MAX];
@@ -90,6 +92,7 @@ private:
 	std::shared_ptr<Cylinder> cylinder_;
 	std::shared_ptr<Observer2D> observer_2d_;
 	std::vector<std::shared_ptr<Flower>> flowers_;
+	std::shared_ptr<FBXObject> fbx_object_[ FBX_OBJECT_MAX ];
 
 	std::unique_ptr<utility::culling::FrustumCulling> frustum_culling_;
 #ifdef _DEBUG

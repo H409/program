@@ -1,3 +1,4 @@
+
 //*****************************************************************************
 //
 // game.cpp
@@ -35,6 +36,7 @@
 #include "dome/dome.h"
 #include "cylinder/cylinder.h"
 #include "culling/frustum_culling.h"
+#include "fbx_object/fbx_object.h"
 
 //=============================================================================
 // constructor
@@ -124,6 +126,10 @@ Game::Game()
 	{
 		flower = std::make_shared<Flower>(0);
 	}
+
+	fbx_object_[ 0 ] = std::make_shared<FBXObject>( graphic_device->GetDevice() );
+	fbx_object_[ 0 ]->Load( "resources/model/ki_obj.kim" );
+
 #ifdef _DEBUG
 	debugRenderTarget_ = false;
 	debug_player_number_ = 0;
@@ -338,6 +344,8 @@ void Game::Update()
 		}
 	}
 
+	fbx_object_[ 0 ]->SetPosition( -10 , 0 , 0 );
+	fbx_object_[ 0 ]->Update();
 	//for(auto flower : flowers_)
 	//{
 	//	flower->Update();
@@ -591,6 +599,11 @@ void Game::Draw()
 				players_[j]->Draw();
 			}
 		}
+
+		
+		fbx_object_[ 0 ]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[ i ]->GetViewMatrix());
+		fbx_object_[ 0 ]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[ i ]->GetProjectionMatrix());
+		fbx_object_[ 0 ]->Draw();
 	}
 
 #ifdef _DEBUG
