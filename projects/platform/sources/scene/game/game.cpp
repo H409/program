@@ -1,3 +1,4 @@
+
 //*****************************************************************************
 //
 // game.cpp
@@ -35,6 +36,7 @@
 #include "dome/dome.h"
 #include "cylinder/cylinder.h"
 #include "culling/frustum_culling.h"
+#include "fbx_object/fbx_object.h"
 
 //=============================================================================
 // constructor
@@ -57,7 +59,7 @@ Game::Game()
 
 	observer_2d_ = std::make_shared<Observer2D>(window->GetWidth(),window->GetHeight());
 
-	frustum_culling_ = std::make_unique<utility::culling::FrustumCulling>(utility::math::ToRadian(90.0f),(f32)window->GetWidth() / window->GetHeight(),0.1f,100.0f);
+	frustum_culling_ = std::make_unique<utility::culling::FrustumCulling>(utility::math::ToRadian(70.0f),(f32)window->GetWidth() / window->GetHeight(),0.1f,100.0f);
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
@@ -129,6 +131,10 @@ Game::Game()
 	{
 		flower = std::make_shared<Flower>(0);
 	}
+
+	fbx_object_[ 0 ] = std::make_shared<FBXObject>( graphic_device->GetDevice() );
+	fbx_object_[ 0 ]->Load( "resources/model/ki_obj.kim" );
+
 #ifdef _DEBUG
 	debugRenderTarget_ = false;
 	debug_player_number_ = 0;
@@ -356,6 +362,8 @@ void Game::Update()
 	{
 		flower._Get()->Update();
 	}
+	fbx_object_[ 0 ]->SetPosition( -10 , 0 , 0 );
+	fbx_object_[ 0 ]->Update();
 
 	// 
 	for(auto bullet : bullets_)
@@ -408,6 +416,10 @@ void Game::Draw()
 
 
 #ifdef _DEBUG
+
+	int debug_object_draw_num = 0 ;
+
+
 	int max = PLAYER_MAX ;
 
 	static bool _d = false ;
@@ -480,8 +492,11 @@ void Game::Draw()
 			gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
 			gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
 
-			if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
+			if(frustum_culling_->IsCulling(object->GetPosition(),0.5f))
 			{
+#ifdef _DEBUG
+			debug_object_draw_num++ ;
+#endif // _DEBUG
 				object->Draw();
 			}
 		}
@@ -497,8 +512,11 @@ void Game::Draw()
 				gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
 				gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
 
-				if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
+				if(frustum_culling_->IsCulling(object->GetPosition(),0.5f))
 				{
+#ifdef _DEBUG
+			debug_object_draw_num++ ;
+#endif // _DEBUG
 					object->Draw();
 				}
 			}
@@ -515,8 +533,11 @@ void Game::Draw()
 				gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
 				gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
 
-				if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
+				if(frustum_culling_->IsCulling(object->GetPosition(),0.5f))
 				{
+#ifdef _DEBUG
+			debug_object_draw_num++ ;
+#endif // _DEBUG
 					object->Draw();
 				}
 			//}
@@ -569,8 +590,11 @@ void Game::Draw()
 				world_matrix = utility::math::Multiply(i_view_matrix,world_matrix);
 				gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
 				gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
-				if(frustum_culling_->IsCulling(players_[j]->GetPosition(),2.0f))
+				if(frustum_culling_->IsCulling(players_[j]->GetPosition(),0.5f))
 				{
+#ifdef _DEBUG
+			debug_object_draw_num++ ;
+#endif // _DEBUG
 					object->Draw();
 				}
 			}
@@ -583,14 +607,23 @@ void Game::Draw()
 			players_[j]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[i]->GetViewMatrix());
 			players_[j]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[i]->GetProjectionMatrix());
 
-			if(frustum_culling_->IsCulling(players_[j]->GetPosition(),2.0f))
+			if(frustum_culling_->IsCulling(players_[j]->GetPosition(),1.0f))
 			{
+#ifdef _DEBUG
+			debug_object_draw_num++ ;
+#endif // _DEBUG
 				players_[j]->Draw();
 			}
 		}
+
+		
+		fbx_object_[ 0 ]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[ i ]->GetViewMatrix());
+		fbx_object_[ 0 ]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[ i ]->GetProjectionMatrix());
+		fbx_object_[ 0 ]->Draw();
 	}
 
 #ifdef _DEBUG
+	DEVELOP_DISPLAY("object_draw : %d\n", debug_object_draw_num );
 	GET_DIRECTX9_DEVICE()->SetRenderState(D3DRS_FILLMODE,D3DFILL_FORCE_DWORD);
 #endif
 	graphic_device->SetRenderTarget(0,default_texture);

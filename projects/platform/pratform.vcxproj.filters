@@ -80,6 +80,9 @@
     <Filter Include="sources\player_icon">
       <UniqueIdentifier>{ad7b624a-1c55-4979-be3c-a1842d356366}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\fbx_object">
+      <UniqueIdentifier>{e338b918-8f7a-4b74-bee7-143576e3ac02}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\windows\win_main.cpp">
@@ -231,6 +234,9 @@
     </ClCompile>
     <ClCompile Include="sources\cylinder\cylinder.cpp">
       <Filter>sources\cylinder</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\fbx_object\fbx_object.cpp">
+      <Filter>sources\fbx_object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -386,6 +392,9 @@
     </ClInclude>
     <ClInclude Include="sources\cylinder\cylinder.h">
       <Filter>sources\cylinder</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\fbx_object\fbx_object.h">
+      <Filter>sources\fbx_object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

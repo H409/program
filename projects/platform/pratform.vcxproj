@@ -32,6 +32,7 @@
     <ClCompile Include="sources\dome\dome.cpp" />
     <ClCompile Include="sources\dome\mesh_dome.cpp" />
     <ClCompile Include="sources\fbx\kim.cpp" />
+    <ClCompile Include="sources\fbx_object\fbx_object.cpp" />
     <ClCompile Include="sources\field\field.cpp" />
     <ClCompile Include="sources\field_icon\field_icon.cpp" />
     <ClCompile Include="sources\field_object\flower.cpp" />
@@ -84,6 +85,7 @@
     <ClInclude Include="sources\dome\dome.h" />
     <ClInclude Include="sources\dome\mesh_dome.h" />
     <ClInclude Include="sources\fbx\kim.h" />
+    <ClInclude Include="sources\fbx_object\fbx_object.h" />
     <ClInclude Include="sources\field\field.h" />
     <ClInclude Include="sources\field_icon\field_icon.h" />
     <ClInclude Include="sources\field_object\flower.h" />

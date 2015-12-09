@@ -12,6 +12,7 @@
 
 #include <stdio.h>
 #include "kim.h"
+#include "system/win_system.h"
 #include "develop_tool/develop_tool.h"
 
 //*****************************************************************************
@@ -365,6 +366,11 @@ void Kim::Uninit( void )
 //=============================================================================
 void Kim::Update(void)
 {
+	// ÎÞ°Ý‚ª‚È‚¯‚ê‚Î‚»‚à‚»‚à½·ÆÝ¸Þ‚³‚ê‚Ä‚È‚¢
+	if( bone_ == NULL )
+	{
+		return ;
+	}
 
 	//if (!GetAsyncKeyState('Y') & 0x0001)
 	{

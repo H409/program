@@ -98,7 +98,7 @@ void FrustumCulling::SetViewMatrix(const float4x4 & in_view_matrix)
 
 void FrustumCulling::CreatePlane(void)
 {
-	f32 tangent = tanf(angle_ * 0.5f);
+	f32 tangent = tanf(angle_ * 0.9f);
 	float3 point_a;
 	float3 point_b;
 	float3 point_c;
