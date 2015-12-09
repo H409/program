@@ -12,6 +12,7 @@
 
 #include <stdio.h>
 #include "kim.h"
+#include "system/win_system.h"
 #include "develop_tool/develop_tool.h"
 
 //*****************************************************************************
