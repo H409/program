@@ -80,6 +80,9 @@
     <Filter Include="sources\cylinder">
       <UniqueIdentifier>{281146f6-bc09-405b-a7be-0eb94c6881ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\score">
+      <UniqueIdentifier>{2eb491e2-9fb3-4236-8d32-01cce3b56e93}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\windows\win_main.cpp">
@@ -231,6 +234,9 @@
     </ClCompile>
     <ClCompile Include="sources\cylinder\cylinder.cpp">
       <Filter>sources\cylinder</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\score\score.cpp">
+      <Filter>sources\score</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -386,6 +392,9 @@
     </ClInclude>
     <ClInclude Include="sources\cylinder\cylinder.h">
       <Filter>sources\cylinder</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\score\score.h">
+      <Filter>sources\score</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

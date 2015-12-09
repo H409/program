@@ -1,8 +1,8 @@
 //*****************************************************************************
 //
-// result.h
+// score
 //
-// Author		: Masahiro Yamaguchi
+// Author		: Eyuu Yuminaga
 //
 //*****************************************************************************
 
@@ -10,52 +10,58 @@
 // include guard
 //*****************************************************************************
 #pragma once
-#ifndef _RESULT_H_
-#define _RESULT_H_
+#ifndef _SCORE_H_
+#define _SCORE_H_
+
 
 //*****************************************************************************
 // include
 //*****************************************************************************
-#include "../base/scene_base.h"
+
 
 //*****************************************************************************
 // forward declaration
 //*****************************************************************************
-class Player;
-class Field;
+namespace mesh {
+	class Sprite;
+}	//namespace mesh
+class MeshObject;
 
 //*****************************************************************************
-// class definition
+// class declaration
 //*****************************************************************************
-class Result : public SceneBase
+class Score
 {
 public:
-	// コンストラクタ
-	Result();
+	using TSprite = std::shared_ptr<mesh::Sprite>;
+	using TMeshObject = std::shared_ptr<MeshObject>;
 
-	// デストラクタ
-	virtual ~Result();
+	// constructor
+	Score(void);
 
-	// シーンの初期化。
-	virtual bool Initialize(SceneManager* p_scene_manager) override;
+	//destructor
+	virtual ~Score(void);
 
-	// シーンの終了処理。
-	virtual void Finalize(void) override;
+	// update
+	void Update(void);
 
-	// 更新処理を行う。
-	virtual void Update(void) override;
+	//GetSprite3D
+	TSprite GetSprite(void) { return sprite_; }
 
-	// 描画処理を行う。
-	virtual void Draw(void) override;
+	// get object
+	TMeshObject GetObject(void)const;
+
 private:
-	static const u32 PLAYER_MAX = 4;
 
-	std::shared_ptr<Player> players_[PLAYER_MAX];	//プレイヤー
-	std::shared_ptr<Field> field_;					//フィールド
-	//得点表示
-	//シーン遷移用カウントダウン
-	//カメラ
-
+	f32 block_width_;
+	f32 block_height_;
+	u32 width_count_;
+	u32 height_count_;
+	float2 size_;
+	TSprite sprite_;
+	TMeshObject mesh_object_;
 };
 
 #endif
+
+//---------------------------------- EOF --------------------------------------
