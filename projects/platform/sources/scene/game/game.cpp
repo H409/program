@@ -124,6 +124,8 @@ Game::Game()
 	{
 		flower = std::make_shared<Flower>(0);
 	}
+	
+	result_state_ = false;
 #ifdef _DEBUG
 	debugRenderTarget_ = false;
 	debug_player_number_ = 0;
@@ -601,6 +603,8 @@ void Game::Draw()
 		sprite_objects_[i]->Draw();
 	}
 
+	
+
 #ifdef _DEBUG 
 	static int _debugRenderTargetIndex = 0;
 
@@ -682,5 +686,17 @@ void Game::Draw()
 		debug_sprite_object_->Draw();
 	}
 #endif
+
+	//Draw Result
+	if (result_state_)
+	{
+		graphic_device->Clear(float4(0.0f, 0.0f, 0.0f, 0.0f), 1.0f);
+		float4 color = float4(1.0f, 1.0f, 1.0f, 1.0f);
+
+		basic_vs->SetValue("_view_matrix", (f32*)&observer_2d_->GetViewMatrix(), sizeof(float4x4));
+		basic_vs->SetValue("_projection_matrix", (f32*)&observer_2d_->GetProjectionMatrix(), sizeof(float4x4));
+		basic_vs->SetValue("_world_matrix", (f32*)&debug_sprite_object_->GetMatrix(), sizeof(float4x4));
+		basic_vs->SetValue("_color",(f32*)&color,sizeof(f32)*4);
+	}
 
 }

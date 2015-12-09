@@ -23,6 +23,7 @@
 //*****************************************************************************
 class Player;
 class Field;
+class Score;
 
 //*****************************************************************************
 // class definition
@@ -48,11 +49,7 @@ public:
 	// 描画処理を行う。
 	virtual void Draw(void) override;
 private:
-	static const u32 PLAYER_MAX = 4;
-
-	std::shared_ptr<Player> players_[PLAYER_MAX];	//プレイヤー
-	std::shared_ptr<Field> field_;					//フィールド
-	//得点表示
+	std::shared_ptr<Score> score_;					//得点表示
 	//シーン遷移用カウントダウン
 	//カメラ
 

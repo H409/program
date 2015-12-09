@@ -77,6 +77,7 @@ public:
 	TInputKeyboard GetKeyboard(void);
 	TInputMouse GetMouse(void);
 	TInputManager GetInputManager(void);
+	float2 GetDefaultDisplaySize(void) { return DEFAULT_DISPLAY_SIZE; }
 
 protected:
 	// constructor
@@ -107,6 +108,7 @@ private:
 #define GET_INPUT_JOYPAD(player_number) WinSystem::GetInstance()->GetInputManager()->GetJoypad(player_number)
 #define GET_INPUT_XPAD(player_number) WinSystem::GetInstance()->GetInputManager()->GetXIPad(player_number)
 #define GET_INPUT_MANAGER() WinSystem::GetInstance()->GetInputManager()
+#define GET_DEFAULT_DISPLAY_SIZE() WinSystem::GetInstance()->GetDefaultDisplaySize()
 
 #endif // _SYSTEM_H_
 

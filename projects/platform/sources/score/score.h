@@ -36,6 +36,13 @@ public:
 	using TSprite = std::shared_ptr<mesh::Sprite>;
 	using TMeshObject = std::shared_ptr<MeshObject>;
 
+	enum class TEAM
+	{
+		RED = 0,
+		BLUE,
+		MAX
+	};
+
 	// constructor
 	Score(void);
 
@@ -45,21 +52,16 @@ public:
 	// update
 	void Update(void);
 
-	//GetSprite3D
-	TSprite GetSprite(void) { return sprite_; }
+	//draw
+	void Draw(void);
 
-	// get object
-	TMeshObject GetObject(void)const;
+	//GetSprite3D
+	TSprite GetSprite(int i) { return back_ground_sprite_[i]; }
 
 private:
-
-	f32 block_width_;
-	f32 block_height_;
-	u32 width_count_;
-	u32 height_count_;
 	float2 size_;
-	TSprite sprite_;
-	TMeshObject mesh_object_;
+	TSprite back_ground_sprite_[(unsigned int)TEAM::MAX];
+	TMeshObject back_ground_mesh_object_[(unsigned int)TEAM::MAX];
 };
 
 #endif

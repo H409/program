@@ -33,6 +33,7 @@ class Observer2D;
 class FollowerObserver;
 class MeshObject;
 class Flower;
+class Score;
 
 namespace utility {
 namespace culling {
@@ -90,8 +91,12 @@ private:
 	std::shared_ptr<Cylinder> cylinder_;
 	std::shared_ptr<Observer2D> observer_2d_;
 	std::vector<std::shared_ptr<Flower>> flowers_;
-
 	std::unique_ptr<utility::culling::FrustumCulling> frustum_culling_;
+	
+	//result
+	
+	std::shared_ptr<Score> score_;					//得点表示
+	bool result_state_;								//リザルト画面表示
 #ifdef _DEBUG
 	std::shared_ptr<MeshObject> debug_sprite_object_;
 	std::shared_ptr<MeshObject> debug_object_;

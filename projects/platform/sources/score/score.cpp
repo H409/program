@@ -1,6 +1,7 @@
 //*****************************************************************************
 //
 // score
+//
 // Author		: Eyuu Yuminaga
 //
 //*****************************************************************************
@@ -22,17 +23,22 @@
 //=============================================================================
 Score::Score(void)
 {
-	block_width_ = 0.5f;
-	block_height_ = 0.5f;
-	width_count_ = 60;
-	height_count_ = 2;
-	size_._x = width_count_ * block_width_;
-	size_._y = height_count_ * block_height_;
-	sprite_ = std::make_shared<mesh::Sprite>(size_);
-	sprite_->SetAnchorPoint(float2(0.5f, 1.0f));
-	mesh_object_ = std::make_shared<MeshObject>(sprite_);
-	mesh_object_->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/wall.png"));
+	//ÉXÉRÉAîwåiÇÃê›íË
+	size_._x = GET_DEFAULT_DISPLAY_SIZE()._x / 3;
+	size_._y = GET_DEFAULT_DISPLAY_SIZE()._y / 3;
 
+	//ÉXÉRÉAï\é¶îwåiê∂ê¨ê‘
+	back_ground_sprite_[(unsigned int)TEAM::RED] = std::make_shared<mesh::Sprite>(size_);
+	back_ground_sprite_[(unsigned int)TEAM::RED]->SetAnchorPoint(float2(0.5f, 1.0f));
+	back_ground_mesh_object_[(unsigned int)TEAM::RED] = std::make_shared<MeshObject>(back_ground_sprite_[(unsigned int)TEAM::RED]);
+	back_ground_mesh_object_[(unsigned int)TEAM::RED]->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/wall.png"));
+
+
+	//ÉXÉRÉAï\é¶îwåiê∂ê¨ê¬
+	back_ground_sprite_[(unsigned int)TEAM::BLUE] = std::make_shared<mesh::Sprite>(size_);
+	back_ground_sprite_[(unsigned int)TEAM::BLUE]->SetAnchorPoint(float2(0.5f, 1.0f));
+	back_ground_mesh_object_[(unsigned int)TEAM::RED] = std::make_shared<MeshObject>(back_ground_sprite_[(unsigned int)TEAM::BLUE]);
+	back_ground_mesh_object_[(unsigned int)TEAM::RED]->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/wall.png"));
 }
 
 //=============================================================================
@@ -40,19 +46,21 @@ Score::Score(void)
 //=============================================================================
 Score::~Score(void)
 {
-}
 
+}
 //=============================================================================
 // update
 //=============================================================================
 void Score::Update(void)
 {
-	sprite_->SetAnchorPoint(float2(0.5f, 1.0f));
+	back_ground_sprite_[(unsigned int)TEAM::RED]->SetAnchorPoint(float2(0.5f, 0.5f));
+	back_ground_sprite_[(unsigned int)TEAM::BLUE]->SetAnchorPoint(float2(0.5f, 0.5f));
 }
 //=============================================================================
-// get object
+// draw
 //=============================================================================
-Score::TMeshObject Score::GetObject(void) const
+void Score::Draw(void)
 {
-	return mesh_object_;
+	back_ground_mesh_object_[(unsigned int)TEAM::RED]->Draw();
+	back_ground_mesh_object_[(unsigned int)TEAM::BLUE]->Draw();
 }
