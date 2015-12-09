@@ -19,6 +19,7 @@
 #include "window/win_window.h"
 #include "input_manager.h"
 #include "input_keyboard.h"
+#include "input_mouse.h"
 
 //*****************************************************************************
 // forward declaration

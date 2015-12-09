@@ -26,12 +26,19 @@ class Field;
 class FieldIcon;
 class Wall;
 class Dome;
+class Cylinder;
 class Player;
 class PlayerIcon;
 class Observer2D;
 class FollowerObserver;
 class MeshObject;
 class Flower;
+
+namespace utility {
+namespace culling {
+class FrustumCulling;
+} // namespace utility
+} // namespace culling
 
 namespace graphic {
 namespace directx9 {
@@ -80,9 +87,11 @@ private:
 	std::shared_ptr<MeshObject> sprite_objects_[PLAYER_MAX];
 	std::shared_ptr<Wall> wall_[WALL_MAX];
 	std::shared_ptr<Dome> dome_;
+	std::shared_ptr<Cylinder> cylinder_;
 	std::shared_ptr<Observer2D> observer_2d_;
 	std::vector<std::shared_ptr<Flower>> flowers_;
 
+	std::unique_ptr<utility::culling::FrustumCulling> frustum_culling_;
 #ifdef _DEBUG
 	std::shared_ptr<MeshObject> debug_sprite_object_;
 	std::shared_ptr<MeshObject> debug_object_;

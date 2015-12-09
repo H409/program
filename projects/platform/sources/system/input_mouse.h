@@ -21,6 +21,9 @@ public:
 	{
 		LEFT = 0,
 		RIGHT,
+		MIDDLE,
+		BACKWARD,
+		FORWARD,
 		MAX,
 	};
 

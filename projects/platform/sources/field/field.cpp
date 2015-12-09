@@ -10,12 +10,15 @@
 // include
 //*****************************************************************************
 #include "field.h"
-//#include "mesh/mesh_sprite_3d.h"
-#include "mesh/sprite_3d.h"
 #include "object/mesh_object.h"
 #include "system/win_system.h"
 #include "dx9_device.h"
 #include "math/math.h"
+#if MESH
+#include "mesh/mesh_sprite_3d.h"
+#else
+#include "mesh/sprite_3d.h"
+#endif
 
 //*****************************************************************************
 // constant definition
@@ -36,24 +39,28 @@ Field::Field(void)
 	height_count_ = 60;
 	size_._x = width_count_ * block_width_;
 	size_._y = height_count_ * block_height_;
-	//mesh_sprite_3d_ = std::make_shared<mesh::MeshSprite3D>(block_width_,block_height_,width_count_,height_count_);
-	sprite_3d_ = std::make_shared<mesh::Sprite3D>(size_);
-	sprite_3d_->SetAnchorPoint(float2(0.5f,0.5f));
-	sprite_3d_->SetTexcoord(0.0f,60.0f,0.0f,60.0f);
 
-	//mesh_sprite_3d_->SetTexcoord(4,4);
 	types_.resize(width_count_ * height_count_);
 	for(auto& type : types_)
 	{
 		type = 1;
 	}
 
-	//mesh_sprite_3d_->SetIndex(types_);
-	//mesh_sprite_3d_->Apply();
+#if MESH
+	mesh_sprite_3d_ = std::make_shared<mesh::MeshSprite3D>(block_width_,block_height_,width_count_,height_count_);
+	mesh_sprite_3d_->SetTexcoord(2,2);
+	mesh_object_ = std::make_shared<MeshObject>(mesh_sprite_3d_);
+	mesh_sprite_3d_->SetIndex(types_);
+	mesh_sprite_3d_->Apply();
+#else
+	sprite_3d_ = std::make_shared<mesh::Sprite3D>(size_);
+	sprite_3d_->SetAnchorPoint(float2(0.5f,0.5f));
+	sprite_3d_->SetTexcoord(0.0f,60.0f,0.0f,60.0f);
 	sprite_3d_->Apply();
-	//mesh_object_ = std::make_shared<MeshObject>(mesh_sprite_3d_);
 	mesh_object_ = std::make_shared<MeshObject>(sprite_3d_);
 	mesh_object_->SetRotationX(utility::math::ToRadian(90.0f));
+#endif
+
 	mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/field.jpg"));
 }
 
@@ -72,11 +79,11 @@ void Field::Update(void)
 #ifndef _RELEASE
 	if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_5))
 	{
-		mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/field.jpg"));
+		//mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/field.jpg"));
 	}
 	if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_6))
 	{
-		mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/field_.jpg"));
+		//mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/field_.jpg"));
 	}
 #endif
 	for(u32 i = 0;i < height_count_;++i)
@@ -101,8 +108,47 @@ void Field::Reset(void)
 		type = 1;
 	}
 
-	//mesh_sprite_3d_->SetIndex(types_);
-	//mesh_sprite_3d_->Apply();
+#if MESH
+	mesh_sprite_3d_->SetIndex(types_);
+	mesh_sprite_3d_->Apply();
+#endif
+}
+
+void Field::Load(const std::string& in_path)
+{
+	std::ifstream file(in_path);
+
+	if(file.fail())
+	{
+		BREAK(true);
+		return;
+	}
+
+	std::string str((std::istreambuf_iterator<char>(file)),std::istreambuf_iterator<char>());
+	file.close();
+
+	auto size = str.size();
+
+	auto data = "data=";
+	auto offset = str.find_last_of("=") + 1;
+
+	for(auto& type : types_)
+	{
+		type = atoi((str.c_str() + offset)) - 1;
+
+		if(str.find_first_of(",",offset) != str.npos)
+		{
+			offset = str.find_first_of(",",offset) + 1;
+			if(str[offset] == '\n')
+			{
+				offset++;
+			}
+		}
+	}
+
+#if MESH
+	mesh_sprite_3d_->SetIndex(types_);
+#endif
 }
 
 //=============================================================================
@@ -192,6 +238,11 @@ u32 Field::GetBlockIndex(const float3& in_position)
 	return y * width_count_ + x;
 }
 
+u32 Field::GetBlockCount(void) const
+{
+	return width_count_ * height_count_;
+}
+
 //=============================================================================
 // get positions
 //=============================================================================
@@ -265,9 +316,11 @@ void Field::SetType(const u32& in_x,const u32& in_y,const u32& in_type)
 
 	types_[index] = in_type;
 
-	//mesh_sprite_3d_->SetIndex(in_x,in_y,in_type);
+#if MESH
+	mesh_sprite_3d_->SetIndex(in_x,in_y,in_type);
 
-	//mesh_sprite_3d_->Apply();
+	mesh_sprite_3d_->Apply();
+#endif
 }
 
 //=============================================================================
@@ -348,12 +401,12 @@ bool Field::CheckTypeLeftTop(const u32& in_x,const u32& in_y,const u32& in_type)
 		return false;
 	}
 
-	if(in_x > width_count_)
+	if(in_x >= width_count_)
 	{
 		return false;
 	}
 
-	if(in_y > height_count_)
+	if(in_y >= height_count_)
 	{
 		return false;
 	}
@@ -393,12 +446,12 @@ bool Field::CheckTypeLeftBottom(const u32& in_x,const u32& in_y,const u32& in_ty
 		return false;
 	}
 
-	if(in_x > width_count_)
+	if(in_x >= width_count_)
 	{
 		return false;
 	}
 
-	if(in_y >= height_count_)
+	if(in_y >= (height_count_ - 1))
 	{
 		return false;
 	}
@@ -438,12 +491,12 @@ bool Field::CheckTypeRightTop(const u32& in_x,const u32& in_y,const u32& in_type
 		return false;
 	}
 
-	if(in_x >= width_count_)
+	if(in_x >= (width_count_ - 1))
 	{
 		return false;
 	}
 
-	if(in_y > height_count_)
+	if(in_y >= height_count_)
 	{
 		return false;
 	}
@@ -478,12 +531,12 @@ bool Field::CheckTypeRightTop(const u32& in_x,const u32& in_y,const u32& in_type
 //=============================================================================
 bool Field::CheckTypeRightBottom(const u32& in_x,const u32& in_y,const u32& in_type)
 {
-	if(in_x >= width_count_)
+	if(in_x >= (width_count_ - 1))
 	{
 		return false;
 	}
 
-	if(in_y >= height_count_)
+	if(in_y >= (height_count_ - 1))
 	{
 		return false;
 	}

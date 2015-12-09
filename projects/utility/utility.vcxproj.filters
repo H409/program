@@ -14,6 +14,9 @@
     <Filter Include="sources\shape">
       <UniqueIdentifier>{2e46bb3e-4101-4cbc-a0a4-bfe3a162c002}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\culling">
+      <UniqueIdentifier>{714e9a88-b515-45b4-a27d-861221506a4f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sources\base\base.h">
@@ -28,10 +31,16 @@
     <ClInclude Include="sources\math\math.h">
       <Filter>sources\math</Filter>
     </ClInclude>
+    <ClInclude Include="sources\culling\frustum_culling.h">
+      <Filter>sources\culling</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\math\math.cpp">
       <Filter>sources\math</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\culling\frustum_culling.cpp">
+      <Filter>sources\culling</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

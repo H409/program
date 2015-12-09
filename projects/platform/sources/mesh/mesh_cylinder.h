@@ -1,56 +1,76 @@
-#ifndef CYLINDER
-#define CYLINDER
-#define SUM_INDEX(X,Z) ((X+1)*(Z-1)+((X+1)*(Z+1))+(Z-1)*2)	//インデックス数計算用
+//*****************************************************************************
+//
+// mesh cylinder
+//
+// Author		: Eyuu Yuminaga
+//
+//*****************************************************************************
 
-class Cylinder:public CScene3D
-{
+//*****************************************************************************
+// include guard
+//*****************************************************************************
+#pragma once
+#ifndef _MESH_CYLINDER_H_
+#define _MESH_CYLINDER_H_
+
+//*****************************************************************************
+// include
+//*****************************************************************************
+#include "../mesh/mesh.h"
+
+//*****************************************************************************
+// class definition
+//*****************************************************************************
+namespace mesh {
+	class MeshCylinder :public Mesh
+	{
 	public:
-	Cylinder(LPDIRECT3DDEVICE9 device):CScene3D(device){pDevice=device;};
-	Cylinder(int nPriority):CScene3D(nPriority){}
-	virtual ~Cylinder();
+		// constructor
+		MeshCylinder(const u32& in_width_count, const u32& in_height_count);
+		MeshCylinder(const f32& in_block_width, const f32& in_block_height, const u32& in_width_count, const u32& in_height_count);
+		//destructor
+		virtual ~MeshCylinder(void);
 
-	HRESULT Init(	float posX,float posY,float posZ,float rotY,
-					int nNumBlockX,int nNumBlockZ,float fSizeBlockX,
-					float fSizeBlockZ);			//メッシュフィールド初期化
+		// set index
+		void SetIndex(u32 in_x, u32 in_y, u32 in_index);
+		void SetIndex(const std::vector<u32>& in_indexs);
 
-	void Uninit(void);							//解放
-	void Update(void);							//モデル更新
-	void Draw(void);							//モデル描画
-	static Cylinder* Create(LPDIRECT3DDEVICE9 device);
+		//// set color
+		//void SetColor(u32 in_x, u32 in_y, const float4& in_color);
 
-	void SetPosition(D3DXVECTOR3 pos);			//座標アクセサー
-	void SetPosition(float x,float y,float z);
-	D3DXVECTOR3 GetPosition(void){return m_pos;};
+		//// set texcoord
+		void SetTexcoord(u32 in_division_width, u32 in_division_height);
 
-	void SetRotation(D3DXVECTOR3 rot);			//角度アクセサー
-	void SetRotation(float x,float y,float z);
-	D3DXVECTOR3 GetRotation(void){return m_rot;};
+	private:
+		struct VERTEX
+		{
+			float3 _position;
+			float2 _texcoord;
+			float3 _normal;
+			D3DCOLOR _color;
+		};
 
-private:
+		static const D3DXVECTOR2 DEFAULT_SIZE;
+		static const D3DCOLOR DEFAULT_COLOR;
+		static const D3DXVECTOR2 DEFAULT_POSITION;
 
-	LPDIRECT3DTEXTURE9		g_pD3DTexture;		//テクスチャへのポインタ
-	LPDIRECT3DVERTEXBUFFER9	g_pD3DVtxBuff;		//頂点バッファインターフェースへのポインタ
-	LPDIRECT3DINDEXBUFFER9	g_pIndexBuff;		//インデックスバッファ
-	int g_VtxIdxNum;							//頂点の総インデックス数
-	LPDIRECT3DDEVICE9 pDevice;					//デバイス保存ポインタ
+		s32 index_;
 
-	D3DXMATRIX g_mtxWorld;						//ワールドマトリックス
+		float2 size_;
+		float2 block_size_;
+		u32 width_count_;
+		u32 height_count_;
+		u32 division_width_;
+		u32 division_height_;
+		u32 index_count_;
+		u32* indexs_;
+		float2 anchor_point_;
 
-	int g_NumBlockX,g_NumBlockZ;				//ブロック数
-	int g_NumVtx;								//総頂点数
-	int g_NumPolygon;							//総ポリゴン数
-	float g_SizeBlockX,g_SizeBlockZ;			//ブロックサイズ
-	
-	D3DXVECTOR3			m_pos;					//シリンダーの位置
-	D3DXVECTOR3			m_rot;					//シリンダーの回転
-	D3DXVECTOR3			m_scl;					//壁の拡大縮小
+		void UpdateVertexBuffer_(void)override;
 
-	float m_cylindersizeX;						//シリンダーの大きさ
-	float m_cylindersizeY;
-	float m_circumference;						//シリンダーの円周
-	float m_radius;								//シリンダーの半径
+	};
+} // namespace mesh
 
-	D3DXVECTOR3* m_normalBuf;					//法線バッファ
-};
+#endif//_MESH_CYLINDER_H_
 
-#endif
+  //---------------------------------- EOF --------------------------------------

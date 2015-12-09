@@ -18,9 +18,11 @@
     <ClInclude Include="sources\base\base.h" />
     <ClInclude Include="sources\base\flyweight.h" />
     <ClInclude Include="sources\base\non_copyable.h" />
+    <ClInclude Include="sources\culling\frustum_culling.h" />
     <ClInclude Include="sources\math\math.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="sources\culling\frustum_culling.cpp" />
     <ClCompile Include="sources\math\math.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

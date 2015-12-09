@@ -10,7 +10,7 @@
 // include
 //*****************************************************************************
 #include "dome.h"
-#include "dome/mesh_sprite_dome.h"
+#include "dome/mesh_dome.h"
 #include "object/mesh_object.h"
 #include "system/win_system.h"
 #include "dx9_device.h"
@@ -28,10 +28,10 @@ Dome::Dome(void)
 {
 	select_index_x_ = 0;
 	select_index_y_ = 0;
-	block_width_ = 35.0f;
+	block_width_ = 10.0f;
 	block_height_ = 45.0f;
-	width_count_ = 10.0f;
-	height_count_ = 8.0f;
+	width_count_ = 36;
+	height_count_ = 4;
 	size_._x = width_count_ * block_width_;
 	size_._y = height_count_ * block_height_;
 	mesh_sprite_dome_ = std::make_shared<mesh::MeshDome>(block_width_, block_height_, width_count_, height_count_);

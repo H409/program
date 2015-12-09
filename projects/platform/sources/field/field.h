@@ -17,13 +17,17 @@
 // include
 //*****************************************************************************
 //#include "../mesh_object.h"
+#define MESH 1
 
 //*****************************************************************************
 // forward declaration
 //*****************************************************************************
 namespace mesh {
-//class MeshSprite3D;
+#if MESH
+class MeshSprite3D;
+#else
 class Sprite3D;
+#endif
 } // namespace mesh
 class MeshObject;
 
@@ -33,10 +37,21 @@ class MeshObject;
 class Field
 {
 public:
-	//using TMeshSprite3D = std::shared_ptr<mesh::MeshSprite3D>;
+#if MESH
+	using TMeshSprite3D = std::shared_ptr<mesh::MeshSprite3D>;
+#else
 	using TSprite3D = std::shared_ptr<mesh::Sprite3D>;
+#endif
 	using TMeshObject = std::shared_ptr<MeshObject>;
 
+	enum class TYPE
+	{
+		SOIL,
+		CONCRETE,
+		ROAD,
+		BUILDING,
+		FLOWER,
+	};
 	// constructor
 	Field(void);
 
@@ -48,6 +63,9 @@ public:
 
 	// reset
 	void Reset(void);
+
+	// load
+	void Load(const std::string& in_path);
 
 	// get object
 	TMeshObject GetObject(void)const;
@@ -65,6 +83,8 @@ public:
 	float3 GetBlockPosition(const float3& in_position);
 
 	u32 GetBlockIndex(const float3& in_position);
+
+	u32 GetBlockCount(void)const;
 
 	// get positions
 	std::vector<float3> GetPositionsF(const u32& in_type);
@@ -99,8 +119,11 @@ private:
 	std::vector<u32> types_;
 	u32 select_index_x_;
 	u32 select_index_y_;
-	//TMeshSprite3D mesh_sprite_3d_;
+#if MESH
+	TMeshSprite3D mesh_sprite_3d_;
+#else
 	TSprite3D sprite_3d_;
+#endif
 	TMeshObject mesh_object_;
 };
 

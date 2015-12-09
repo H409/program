@@ -384,3 +384,20 @@ float InputJoypad::GetRightAnalogStick(void)
 		return atan(fy / fx) - (D3DX_PI / 2);
 	}
 }
+
+float InputJoypad::GetLeftAnalogStick(void)
+{
+	float fx = (float)m_joyState.dwXpos - 32727.0f;
+	float fy = (float)m_joyState.dwYpos - 32727.0f;
+	if (fx == 0)
+	{
+		return (fy >= 0 ? 1 : -1)*D3DX_PI / 2.f;
+	}
+	else if (fx<0)
+	{
+		return atan(fy / fx) + D3DX_PI - (D3DX_PI / 2);
+	}
+	else {
+		return atan(fy / fx) - (D3DX_PI / 2);
+	}
+}
