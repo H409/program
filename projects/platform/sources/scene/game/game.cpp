@@ -171,6 +171,7 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 		flower->Show(false);
 	}
 
+	flower_list_.clear();
 	return true;
 }
 
@@ -235,11 +236,10 @@ void Game::Update()
 	}
 #endif // _DEBUG
 
-		if( players_[ i ]->GetKimPointer()->GetWepon() == Kim::WEAPON::GUN &&
-			players_[ i ]->GetAction() == true )
+		if(players_[ i ]->GetAction() == true )
 		{
 			// Ží‚Ü‚«
-			if(field_icons_[i]->IsShow())
+			if(players_[i]->GetKimPointer()->GetWepon() == Kim::WEAPON::GUN)
 			{
 				auto start_position = players_[i]->GetPosition();
 				start_position._y += 0.7f;
@@ -266,12 +266,15 @@ void Game::Update()
 				}
 			}
 			// Œ@‚è•Ô‚µ
-			else
+			if(players_[i]->GetKimPointer()->GetWepon() == Kim::WEAPON::HOE)
 			{
 				auto position = players_[i]->GetPosition();
 				if(field_->GetType(position) == (u32)Field::TYPE::FLOWER)
 				{
-					field_->SetType(position,(u32)Field::TYPE::SOIL);
+					auto index = field_->GetBlockIndex(position);
+					field_->SetType(index,(u32)Field::TYPE::SOIL);
+					flowers_[index]->Show(false);
+					flower_list_.erase(remove_if(flower_list_.begin(),flower_list_.end(),[](std::weak_ptr<Flower> flower)->bool {return !flower._Get()->IsShow();}),flower_list_.end());
 				}
 			}
 		}
@@ -359,14 +362,16 @@ void Game::Update()
 				{
 					if(field_->GetType(position) == (u32)Field::TYPE::SOIL)
 					{
-						field_->SetType(position,(u32)Field::TYPE::FLOWER);
+						auto index = field_->GetBlockIndex(position);
+						field_->SetType(index,(u32)Field::TYPE::FLOWER);
 						auto is_create = true;
 						auto flower_position = field_->GetBlockPosition(position);
-						auto index = field_->GetBlockIndex(position);
 
 						flowers_[index]->SetNumber(bullet->GetTag());
 						flowers_[index]->Show(true);
 						flowers_[index]->SetPosition(flower_position);
+
+						flower_list_.push_back(flowers_[index]);
 					}
 					bullet->Remove();
 				}
@@ -488,11 +493,11 @@ void Game::Draw()
 			}
 		}
 
-		for(auto flower : flowers_)
+		for(auto flower : flower_list_)
 		{
-			if(flower->IsShow())
-			{
-				object = flower->GetObject();
+			//if(flower->IsShow())
+			//{
+				object = flower._Get()->GetObject();
 				world_matrix = object->GetMatrix();
 				world_matrix = utility::math::Multiply(i_view_matrix,world_matrix);
 
@@ -503,7 +508,7 @@ void Game::Draw()
 				{
 					object->Draw();
 				}
-			}
+			//}
 		}
 
 		//draw wall

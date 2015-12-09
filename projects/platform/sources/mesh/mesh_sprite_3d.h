@@ -34,6 +34,7 @@ public:
 
 	// set index
 	void SetIndex(u32 in_x,u32 in_y,u32 in_index);
+	void SetIndex(u32 in_offset,u32 in_index);
 	void SetIndex(const std::vector<u32>& in_indexs);
 
 	// set color

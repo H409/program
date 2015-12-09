@@ -90,6 +90,7 @@ private:
 	std::shared_ptr<Cylinder> cylinder_;
 	std::shared_ptr<Observer2D> observer_2d_;
 	std::vector<std::shared_ptr<Flower>> flowers_;
+	std::list<std::weak_ptr<Flower>> flower_list_;
 
 	std::unique_ptr<utility::culling::FrustumCulling> frustum_culling_;
 #ifdef _DEBUG

@@ -217,23 +217,26 @@ void Field::NotSelectBlock(void)
 float3 Field::GetBlockPosition(const float3& in_position)
 {
 	float3 position = float3(0.0f,0.0f,0.0f);
-	float3 offset = float3(-block_width_ * width_count_ * 0.5f,0.0f,-block_height_ * height_count_ * 0.5f);
+	//float3 offset = float3(-block_width_ * width_count_ * 0.5f,0.0f,-block_height_ * height_count_ * 0.5f);
 
-	auto x = (u32)((in_position._x - offset._x) / block_width_);
-	auto y = (u32)((in_position._z - offset._z) / block_height_);
+	auto index = GetBlockIndex(in_position);
+	auto x = index % width_count_;
+	auto y = index / width_count_;
+	//auto x = (u32)((in_position._x - offset._x) / block_width_);
+	//auto y = (u32)((in_position._z - offset._z) / block_height_);
 
-	position._x = x * block_width_ + block_width_ * 0.5f + offset._x;
+	position._x = x * block_width_ + block_width_ * 0.5f - size_._x * 0.5f;
 	position._y = 0.0f;
-	position._z = y * block_height_ + block_height_ * 0.5f + offset._z;
+	position._z = -(y * block_height_ + block_height_ * 0.5f) + size_._y * 0.5f;
 
 	return position;
 }
 
 u32 Field::GetBlockIndex(const float3& in_position)
 {
-	float3 offset = float3(-block_width_ * width_count_ * 0.5f,0.0f,-block_height_ * height_count_ * 0.5f);
+	float3 offset = float3(-size_._x * 0.5f,0.0f,-size_._y * 0.5f);
 	auto x = (u32)((in_position._x - offset._x) / block_width_);
-	auto y = (u32)((in_position._z - offset._z) / block_height_);
+	auto y = (u32)((-in_position._z - offset._z) / block_height_);
 
 	return y * width_count_ + x;
 }
@@ -311,13 +314,17 @@ void Field::SetType(const float3& in_position,const u32& in_type)
 void Field::SetType(const u32& in_x,const u32& in_y,const u32& in_type)
 {
 	u32 index = in_y * width_count_ + in_x;
+	SetType(index,in_type);
+}
 
-	DEBUG_ASSERT(types_.size() > index);
+void Field::SetType(u32 in_index,u32 in_type)
+{
+	DEBUG_ASSERT(types_.size() > in_index);
 
-	types_[index] = in_type;
+	types_[in_index] = in_type;
 
 #if MESH
-	mesh_sprite_3d_->SetIndex(in_x,in_y,in_type);
+	mesh_sprite_3d_->SetIndex(in_index,in_type);
 
 	mesh_sprite_3d_->Apply();
 #endif

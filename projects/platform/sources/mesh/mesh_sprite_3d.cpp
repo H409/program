@@ -117,7 +117,13 @@ MeshSprite3D::~MeshSprite3D(void)
 //=============================================================================
 void MeshSprite3D::SetIndex(u32 x,u32 y,u32 index)
 {
-	indexs_[y * width_count_ + x] = index;
+	auto offset = y * width_count_ + x;
+	SetIndex(offset,index);
+}
+
+void MeshSprite3D::SetIndex(u32 in_offset,u32 in_index)
+{
+	indexs_[in_offset] = in_index;
 	is_dirty_ = true;
 }
 

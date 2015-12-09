@@ -68,9 +68,6 @@
     <Filter Include="sources\field_object">
       <UniqueIdentifier>{629374c7-bc53-4017-a8c9-953b1f813222}</UniqueIdentifier>
     </Filter>
-    <Filter Include="sources\player_icon">
-      <UniqueIdentifier>{ad7b624a-1c55-4979-be3c-a1842d356366}</UniqueIdentifier>
-    </Filter>
     <Filter Include="sources\wall">
       <UniqueIdentifier>{e838fdf2-fc43-4778-a815-253c826612fc}</UniqueIdentifier>
     </Filter>
@@ -79,6 +76,9 @@
     </Filter>
     <Filter Include="sources\cylinder">
       <UniqueIdentifier>{281146f6-bc09-405b-a7be-0eb94c6881ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\player_icon">
+      <UniqueIdentifier>{ad7b624a-1c55-4979-be3c-a1842d356366}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
