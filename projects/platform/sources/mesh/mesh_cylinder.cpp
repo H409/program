@@ -54,6 +54,8 @@ namespace mesh {
 		// create index buffer
 		directx9->CreateIndexBuffer(sizeof(u32) * index_count_, D3DUSAGE_WRITEONLY, D3DFMT_INDEX32, D3DPOOL_MANAGED, &direct3dindexbuffer9_, NULL);
 
+		division_height_ = 10;
+
 		u32* index = nullptr;
 		u32 rect_count = vertex_count_ / 4;
 
@@ -174,18 +176,13 @@ namespace mesh {
 
 				float left = (1.0f / width_count_)*j;
 				float right = (1.0f / width_count_)*j + (1.0f / width_count_);
-				float top = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 0);
-				float bottom = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 1);
+				float top = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 1);
+				float bottom = 1.0f / division_height_ * ((indexs_[i * width_count_ + j] / division_width_) + 0);
 				
-				vertex[(i * width_count_ + j) * 4 + 0]._position = float3(-(cosf(faceangle_x*(j + 0)))*cylinderradius, (-block_size_._y*(-i - 1)),(sinf(faceangle_x*(j + 0)))*cylinderradius);
-				vertex[(i * width_count_ + j) * 4 + 1]._position = float3(-(cosf(faceangle_x*(j + 0)))*cylinderradius, (-block_size_._y*(-i - 0)),(sinf(faceangle_x*(j + 0)))*cylinderradius);
-				vertex[(i * width_count_ + j) * 4 + 2]._position = float3(-(cosf(faceangle_x*(j + 1)))*cylinderradius, (-block_size_._y*(-i - 1)),(sinf(faceangle_x*(j + 1)))*cylinderradius);
-				vertex[(i * width_count_ + j) * 4 + 3]._position = float3(-(cosf(faceangle_x*(j + 1)))*cylinderradius, (-block_size_._y*(-i - 0)),(sinf(faceangle_x*(j + 1)))*cylinderradius);
-
-				/*vertex[(i * width_count_ + j) * 4 + 0]._position = float3(-(cosf(faceangle_x*(-j - 0)))*cylinderradius, (-block_size_._y*(-i - 1)), (sinf(faceangle_x*(-j - 0)))*cylinderradius);
-				vertex[(i * width_count_ + j) * 4 + 1]._position = float3(-(cosf(faceangle_x*(-j - 0)))*cylinderradius, (-block_size_._y*(-i - 0)), (sinf(faceangle_x*(-j - 0)))*cylinderradius);
-				vertex[(i * width_count_ + j) * 4 + 2]._position = float3(-(cosf(faceangle_x*(-j - 1)))*cylinderradius, (-block_size_._y*(-i - 1)), (sinf(faceangle_x*(-j - 1)))*cylinderradius);
-				vertex[(i * width_count_ + j) * 4 + 3]._position = float3(-(cosf(faceangle_x*(-j - 1)))*cylinderradius, (-block_size_._y*(-i - 0)), (sinf(faceangle_x*(-j - 1)))*cylinderradius);*/
+				vertex[(i * width_count_ + j) * 4 + 0]._position = float3(-(cosf(faceangle_x*(-j - 0)))*cylinderradius, (-block_size_._y*(-i - 1)),(sinf(faceangle_x*(-j - 0)))*cylinderradius);
+				vertex[(i * width_count_ + j) * 4 + 1]._position = float3(-(cosf(faceangle_x*(-j - 0)))*cylinderradius, (-block_size_._y*(-i - 0)),(sinf(faceangle_x*(-j - 0)))*cylinderradius);
+				vertex[(i * width_count_ + j) * 4 + 2]._position = float3(-(cosf(faceangle_x*(-j - 1)))*cylinderradius, (-block_size_._y*(-i - 1)),(sinf(faceangle_x*(-j - 1)))*cylinderradius);
+				vertex[(i * width_count_ + j) * 4 + 3]._position = float3(-(cosf(faceangle_x*(-j - 1)))*cylinderradius, (-block_size_._y*(-i - 0)),(sinf(faceangle_x*(-j - 1)))*cylinderradius);
 
 				vertex[(i * width_count_ + j) * 4 + 0]._normal = float3(0.0f, 1.0f, 0.0f);
 				vertex[(i * width_count_ + j) * 4 + 1]._normal = float3(0.0f, 1.0f, 0.0f);

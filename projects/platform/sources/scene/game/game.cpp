@@ -116,7 +116,7 @@ Game::Game()
 	dome_->GetObjectA()->SetPosition(0.0f,-6.0f, 0.0f);
 
 	cylinder_ = std::make_shared<Cylinder>();
-	cylinder_->GetObjectA()->SetPosition(0.0f,0.0f,0.0f);
+	cylinder_->GetObjectA()->SetPosition(0.0f,-5.0f,0.0f);
 
 	flowers_.resize(field_->GetBlockCount());
 

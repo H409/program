@@ -28,10 +28,10 @@ Cylinder::Cylinder(void)
 {
 	select_index_x_ = 0;
 	select_index_y_ = 0;
-	block_width_ = (f32)0.3;
-	block_height_ = (f32)1.0;
+	block_width_ = (f32)4.5;
+	block_height_ = (f32)7.5;
 	width_count_ = (u32)36.0;
-	height_count_ = (u32)3.0;
+	height_count_ = (u32)1.0;
 	size_._x = width_count_ * block_width_;
 	size_._y = height_count_ * block_height_;
 	mesh_sprite_dome_ = std::make_shared<mesh::MeshCylinder>(block_width_, block_height_, width_count_, height_count_);
@@ -45,7 +45,7 @@ Cylinder::Cylinder(void)
 	mesh_sprite_dome_->Apply();
 
 	mesh_object_ = std::make_shared<MeshObject>(mesh_sprite_dome_);
-	mesh_object_->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/sky000.jpg"));
+	mesh_object_->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/field_.jpg"));
 }
 
 //=============================================================================
