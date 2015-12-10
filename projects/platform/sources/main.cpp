@@ -51,6 +51,7 @@ int main(int argc,char* argv)
 								  "space : 弾\n"
 								  "M : メッシュ表示\n"
 								  "ミドルクリック : 当たり判定無視\n"
+								  "Shift + 数字 : シーン切り替え"
 								  "\n";
 #endif // _DEBUG
 
