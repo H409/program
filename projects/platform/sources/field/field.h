@@ -50,7 +50,8 @@ public:
 		CONCRETE,
 		ROAD,
 		BUILDING,
-		FLOWER,
+		TREE,
+		MAX,
 	};
 	// constructor
 	Field(void);
@@ -85,6 +86,8 @@ public:
 	u32 GetBlockIndex(const float3& in_position);
 
 	u32 GetBlockCount(void)const;
+
+	std::vector<u32> GetIndexs(TYPE in_type);
 
 	// get positions
 	std::vector<float3> GetPositionsF(const u32& in_type);

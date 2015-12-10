@@ -65,6 +65,7 @@ public:
 	void SetTag(const u32 in_tag);
 
 	void SetType(TYPE in_type);
+
 	// get object
 	TMeshObject GetObject(void)const;
 

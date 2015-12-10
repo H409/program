@@ -118,7 +118,7 @@ Game::Game()
 	wall_[2]->GetObject()->SetRotation(0.0f, D3DX_PI, 0.0f);
 	wall_[3]->GetObject()->SetPosition(-15.0f, 0.0f, 0.0f);
 	wall_[3]->GetObject()->SetRotation(0.0f, D3DX_PI/-2, 0.0f);
-	
+
 	dome_ = std::make_shared<Dome>();
 	dome_->GetObjectA()->SetPosition(0.0f,-6.0f, 0.0f);
 
@@ -235,17 +235,17 @@ void Game::Update()
 		field_icons_[i]->Update();
 
 #ifdef _DEBUG
-	static bool _bullet_debug = false ;
+		static bool _bullet_debug = false ;
 
-	if( GET_INPUT_KEYBOARD()->GetPress(DIK_B) )
-	{
-		_bullet_debug = !_bullet_debug ;
-	}
+		if( GET_INPUT_KEYBOARD()->GetPress(DIK_B) )
+		{
+			_bullet_debug = !_bullet_debug ;
+		}
 
-	if( _bullet_debug == true )
-	{
-		players_[ i ]->SetAction( true );
-	}
+		if( _bullet_debug == true )
+		{
+			players_[ i ]->SetAction( true );
+		}
 #endif // _DEBUG
 
 		if(players_[ i ]->GetAction() == true )
@@ -282,10 +282,10 @@ void Game::Update()
 			if(players_[i]->GetKimPointer()->GetWepon() == Kim::WEAPON::HOE)
 			{
 				auto position = players_[i]->GetPosition();
-				if(field_->GetType(position) == (u32)Field::TYPE::FLOWER)
+				//if(field_->GetType(position) == (u32)Field::TYPE::SOIL)
 				{
 					auto index = field_->GetBlockIndex(position);
-					field_->SetType(index,(u32)Field::TYPE::SOIL);
+					//field_->SetType(index,(u32)Field::TYPE::SOIL);
 					flowers_[index]->Show(false);
 					flower_list_.erase(remove_if(flower_list_.begin(),flower_list_.end(),[](std::weak_ptr<Flower> flower)->bool {return !flower._Get()->IsShow();}),flower_list_.end());
 				}
@@ -348,6 +348,7 @@ void Game::Update()
 		bullet->Update();
 	}
 
+	// “–‚½‚è”»’è
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
 #ifdef _DEBUG
@@ -361,7 +362,13 @@ void Game::Update()
 		auto player_move = player->GetMove();
 		auto player_position = player->GetPosition();
 		auto player_block_position = field_->GetBlockPosition(player_old_position);
+
+		player_position._x = utility::math::Clamp(player_position._x,-14.5f,14.5f);
+		player_position._z = utility::math::Clamp(player_position._z,-14.5f,14.5f);
+		player->SetPosition(player_position);
+
 		auto type = field_->GetType(player_position);
+
 		//if(type == (u32)Field::TYPE::BUILDING)
 		//{
 			//player->SetPosition(player->GetOldPosition());
@@ -415,15 +422,17 @@ void Game::Update()
 						if(field_->GetType(position) == (u32)Field::TYPE::SOIL)
 						{
 							auto index = field_->GetBlockIndex(position);
-							field_->SetType(index,(u32)Field::TYPE::FLOWER);
-							auto is_create = true;
+							//field_->SetType(index,(u32)Field::TYPE::FLOWER);
 							auto flower_position = field_->GetBlockPosition(position);
 
-							flowers_[index]->SetNumber(bullet->GetTag());
-							flowers_[index]->Show(true);
-							flowers_[index]->SetPosition(flower_position);
+							if(!flowers_[index]->IsShow())
+							{
+								flowers_[index]->SetNumber(bullet->GetTag());
+								flowers_[index]->Show(true);
+								flowers_[index]->SetPosition(flower_position);
 
-							flower_list_.push_back(flowers_[index]);
+								flower_list_.push_back(flowers_[index]);
+							}
 						}
 					}
 					bullet->Remove();
