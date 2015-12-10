@@ -83,6 +83,9 @@
     <Filter Include="sources\fbx_object">
       <UniqueIdentifier>{e338b918-8f7a-4b74-bee7-143576e3ac02}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\timer">
+      <UniqueIdentifier>{a9499020-669f-4407-894c-061f738c59b5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\windows\win_main.cpp">

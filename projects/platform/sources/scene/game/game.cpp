@@ -263,6 +263,7 @@ void Game::Update()
 				{
 					if(bullet->IsDeath())
 					{
+						bullet->SetType(Bullet::TYPE::SEED);
 						bullet->Reset(start_position,end_position);
 						bullet->SetTag(i);
 						is_create = false;
@@ -287,6 +288,36 @@ void Game::Update()
 					field_->SetType(index,(u32)Field::TYPE::SOIL);
 					flowers_[index]->Show(false);
 					flower_list_.erase(remove_if(flower_list_.begin(),flower_list_.end(),[](std::weak_ptr<Flower> flower)->bool {return !flower._Get()->IsShow();}),flower_list_.end());
+				}
+			}
+
+			// –WŠQ
+			if(players_[i]->GetKimPointer()->GetWepon() == Kim::WEAPON::LAUNCHER)
+			{
+				auto start_position = players_[i]->GetPosition();
+				start_position._y += 0.7f;
+				auto end_position = field_icons_[i]->GetPosition();
+
+				auto is_create = true;
+
+				for(auto bullet : bullets_)
+				{
+					if(bullet->IsDeath())
+					{
+						bullet->SetType(Bullet::TYPE::BOMB);
+						bullet->Reset(start_position,end_position);
+						bullet->SetTag(i);
+						is_create = false;
+						break;
+					}
+				}
+
+				if(is_create)
+				{
+					auto bullet = std::make_shared<Bullet>(start_position,end_position);
+					bullet->SetType(Bullet::TYPE::BOMB);
+					bullet->SetTag(i);
+					bullets_.push_back(bullet);
 				}
 			}
 		}
@@ -379,18 +410,21 @@ void Game::Update()
 			{
 				if(position._y <= 0.0f)
 				{
-					if(field_->GetType(position) == (u32)Field::TYPE::SOIL)
+					if(bullet->GetType() == Bullet::TYPE::SEED)
 					{
-						auto index = field_->GetBlockIndex(position);
-						field_->SetType(index,(u32)Field::TYPE::FLOWER);
-						auto is_create = true;
-						auto flower_position = field_->GetBlockPosition(position);
+						if(field_->GetType(position) == (u32)Field::TYPE::SOIL)
+						{
+							auto index = field_->GetBlockIndex(position);
+							field_->SetType(index,(u32)Field::TYPE::FLOWER);
+							auto is_create = true;
+							auto flower_position = field_->GetBlockPosition(position);
 
-						flowers_[index]->SetNumber(bullet->GetTag());
-						flowers_[index]->Show(true);
-						flowers_[index]->SetPosition(flower_position);
+							flowers_[index]->SetNumber(bullet->GetTag());
+							flowers_[index]->Show(true);
+							flowers_[index]->SetPosition(flower_position);
 
-						flower_list_.push_back(flowers_[index]);
+							flower_list_.push_back(flowers_[index]);
+						}
 					}
 					bullet->Remove();
 				}
