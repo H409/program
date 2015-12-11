@@ -69,10 +69,19 @@ void XIPad::Update(void)
 
 void XIPad::Clear(void)
 {
+	XINPUT_STATE xinput_state = { NULL };
+	XInputGetState(number_, &xinput_state);
+
 	l_stick_ = float2(0.0f,0.0f);
 	r_stick_ = float2(0.0f,0.0f);
 	l_trigger_ = 0.0f;
 	r_trigger_ = 0.0f;
+
+	//コントローラー毎に存在するアナログパッドの誤差を保存
+	l_stick_newtral_param._x = xinput_state.Gamepad.sThumbLX;
+	l_stick_newtral_param._y = xinput_state.Gamepad.sThumbLY;
+	r_stick_newtral_param._x = xinput_state.Gamepad.sThumbRX;
+	r_stick_newtral_param._y = xinput_state.Gamepad.sThumbRY;
 
 	for(u32 i = 0;i < (u32)KEY::MAX;++i)
 	{
@@ -99,12 +108,116 @@ bool XIPad::GetRelease(KEY in_key) const
 
 const float2& XIPad::GetLStick(void) const
 {
-	return l_stick_;
+	float2 out = l_stick_;
+
+	out._x /= 32767.0f;
+	out._y /= 32767.0f;
+
+	if (l_stick_newtral_param._x >= 0.0f)
+	{
+		if (l_stick_._x >= 0.0f&&l_stick_._x <= l_stick_newtral_param._x)
+		{
+			out._x = 0.0f;
+		}
+	}
+	else if (l_stick_newtral_param._x <= 0.0f)
+	{
+		if (l_stick_._x <= 0.0f&&l_stick_._x >= l_stick_newtral_param._x)
+		{
+			out._x = 0.0f;
+		}
+	}
+
+	if (l_stick_newtral_param._y >= 0.0f)
+	{
+		if (l_stick_._y >= 0.0f&&l_stick_._y <= l_stick_newtral_param._y)
+		{
+			out._y = 0.0f;
+		}
+	}
+	else if (l_stick_newtral_param._y <= 0.0f)
+	{
+		if (l_stick_._y <= 0.0f&&l_stick_._y >= l_stick_newtral_param._y)
+		{
+			out._y = 0.0f;
+		}
+	}
+
+	if (out._x > 1.0f)
+	{
+		out._x = 1.0f;
+	}
+	if (out._y > 1.0f)
+	{
+		out._y = 1.0f;
+	}
+	if (out._x < -1.0f)
+	{
+		out._x = -1.0f;
+	}
+	if (out._y < -1.0f)
+	{
+		out._y = -1.0f;
+	}
+
+	return out;
 }
 
 const float2& XIPad::GetRStick(void) const
 {
-	return r_stick_;
+	float2 out = r_stick_;
+
+	out._x /= 32767.0f;
+	out._y /= 32767.0f;
+
+	if (r_stick_newtral_param._x >= 0.0f)
+	{
+		if (r_stick_._x >= 0.0f&&r_stick_._x <= r_stick_newtral_param._x)
+		{
+			out._x = 0.0f;
+		}
+	}
+	else if (r_stick_newtral_param._x <= 0.0f)
+	{
+		if (r_stick_._x <= 0.0f&&r_stick_._x >= r_stick_newtral_param._x)
+		{
+			out._x = 0.0f;
+		}
+	}
+
+	if (r_stick_newtral_param._y >= 0.0f)
+	{
+		if (r_stick_._y >= 0.0f&&r_stick_._y <= r_stick_newtral_param._y)
+		{
+			out._y = 0.0f;
+		}
+	}
+	else if (r_stick_newtral_param._y <= 0.0f)
+	{
+		if (r_stick_._y <= 0.0f&&r_stick_._y >= r_stick_newtral_param._y)
+		{
+			out._y = 0.0f;
+		}
+	}
+
+	if (out._x > 1.0f)
+	{
+		out._x = 1.0f;
+	}
+	if (out._y > 1.0f)
+	{
+		out._y = 1.0f;
+	}
+	if (out._x < -1.0f)
+	{
+		out._x = -1.0f;
+	}
+	if (out._y < -1.0f)
+	{
+		out._y = -1.0f;
+	}
+
+	return out;
 }
 
 f32 XIPad::GetLTrigger(void) const

@@ -38,6 +38,7 @@
 #include "culling/frustum_culling.h"
 #include "fbx_object/fbx_object.h"
 #include "timer/timer.h"
+#include "system/xi_pad.h"
 
 //=============================================================================
 // constructor
@@ -134,15 +135,12 @@ Game::Game()
 	{
 		flower = std::make_shared<Flower>(0);
 	}
-<<<<<<< HEAD
 	
 	result_state_ = false;
-=======
 
 	fbx_object_[ 0 ] = std::make_shared<FBXObject>( graphic_device->GetDevice() );
 	fbx_object_[ 0 ]->Load( "resources/model/ki_obj.kim" );
 
->>>>>>> 09fc9090b0cb05bd1970c2da1eed3bad1a1cbbaa
 #ifdef _DEBUG
 	debugRenderTarget_ = false;
 	debug_player_number_ = 0;
@@ -469,6 +467,8 @@ void Game::Update()
 			}
 		}
 	}
+
+	GET_INPUT_XPAD(0)->GetLStick();
 
 #ifndef _RELEASE
 	for(auto i = 0;i < PLAYER_MAX;++i)
