@@ -72,6 +72,12 @@ public:
 
 	// 描画処理を行う。
 	virtual void Draw(void) override;
+
+	//リザルトシーンの更新を行う。
+	void UpdateResult(void);
+
+	//リザルトシーンの描画を行う。
+	void DrawResult(void);
 private:
 	static const u32 PLAYER_MAX = 4;
 	static const u32 WALL_MAX = 4;
