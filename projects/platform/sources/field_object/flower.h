@@ -30,6 +30,11 @@ public:
 	using TSprite3D = std::shared_ptr<mesh::Sprite3D>;
 	using TMeshObject = std::shared_ptr<MeshObject>;
 
+	enum class TYPE
+	{
+		SPROUT,
+		FLOWER,
+	};
 	// constructor
 	Flower(u32 in_number);
 
@@ -62,6 +67,9 @@ private:
 	bool is_show_;
 	float height_;
 
+	u32 number_;
+	u32 time_count_;
+	TYPE type_;
 	void SetTexture(u32 in_number);
 };
 

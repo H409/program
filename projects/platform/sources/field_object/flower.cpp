@@ -1,6 +1,6 @@
 //*****************************************************************************
 //
-// field
+// flower
 //
 // Author		: Kenji Kabutomori
 //
@@ -24,6 +24,9 @@
 Flower::Flower(u32 in_number)
 	:position_(0.0f,0.0f,0.0f)
 	,is_show_(true)
+	,type_(TYPE::SPROUT)
+	,time_count_(0)
+	,number_(0)
 {
 	sprite_3d_ = std::make_shared<mesh::Sprite3D>(float2(0.5f,0.5f));
 	mesh_object_ = std::make_shared<MeshObject>(sprite_3d_);
@@ -45,6 +48,17 @@ Flower::~Flower(void)
 //=============================================================================
 void Flower::Update(void)
 {
+	time_count_++;
+
+	if(type_ == TYPE::SPROUT)
+	{
+		if(time_count_ > 60 * 3)
+		{
+			time_count_ = 0;
+			type_ = TYPE::FLOWER;
+			SetTexture(number_);
+		}
+	}
 }
 
 //=============================================================================
@@ -76,10 +90,13 @@ const float3& Flower::GetPosition(void)const
 void Flower::Show(bool in_is_show)
 {
 	is_show_ = in_is_show;
+	type_ = TYPE::SPROUT;
+	time_count_ = 0;
 }
 
 void Flower::SetNumber(u32 in_number)
 {
+	number_ = in_number;
 	SetTexture(in_number);
 }
 
@@ -91,9 +108,18 @@ bool Flower::IsShow(void) const
 void Flower::SetTexture(u32 in_number)
 {
 	char work[256] = { 0 };
-	auto team = in_number / 2;
-	int number = rand() % 4 + team * 4;
-	sprintf_s(work,"resources/texture/flower_00%d.png",number);
+
+	if(type_ == TYPE::FLOWER)
+	{
+		auto team = in_number / 2;
+		int number = rand() % 4 + team * 4;
+		sprintf_s(work,"resources/texture/flower_00%d.png",number);
+	}
+
+	if(type_ == TYPE::SPROUT)
+	{
+		sprintf_s(work,"resources/texture/sprout.png");
+	}
 	mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture(work));
 }
 

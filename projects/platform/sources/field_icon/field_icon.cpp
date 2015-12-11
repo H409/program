@@ -31,7 +31,7 @@ FieldIcon::FieldIcon(void)
 	,basic_position_(0.0f,0.0f,0.0f)
 	,range_(5.0f)
 	,speed_(0.1f)
-	,min_(1.5f)
+	,min_(1.0f)
 	,is_show_(false)
 {
 	sprite_3d_ = std::make_shared<mesh::Sprite3D>(float2(0.5f,0.5f));
