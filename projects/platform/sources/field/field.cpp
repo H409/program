@@ -43,7 +43,7 @@ Field::Field(void)
 	types_.resize(width_count_ * height_count_);
 	for(auto& type : types_)
 	{
-		type = 1;
+		type = 0;
 	}
 
 #if MESH
@@ -90,13 +90,13 @@ void Field::Update(void)
 	{
 		for(u32 j = 0;j < width_count_;++j)
 		{
-			if(CheckTypeRightBottom(j,i,2))
-			{
-				SetType(j + 0,i + 0,3);
-				SetType(j + 1,i + 0,3);
-				SetType(j + 0,i + 1,3);
-				SetType(j + 1,i + 1,3);
-			}
+			//if(CheckTypeRightBottom(j,i,2))
+			//{
+			//	SetType(j + 0,i + 0,3);
+			//	SetType(j + 1,i + 0,3);
+			//	SetType(j + 0,i + 1,3);
+			//	SetType(j + 1,i + 1,3);
+			//}
 		}
 	}
 }
@@ -130,15 +130,16 @@ void Field::Load(const std::string& in_path)
 	auto size = str.size();
 
 	auto data = "data=";
-	auto offset = str.find_last_of("=") + 1;
+	auto offset = str.find_last_of("=") + 2;
 
 	for(auto& type : types_)
 	{
+		//type = 0;
 		type = atoi((str.c_str() + offset)) - 1;
-
-		if(str.find_first_of(",",offset) != str.npos)
+		
+		if(str.find_first_of(',',offset) != str.npos)
 		{
-			offset = str.find_first_of(",",offset) + 1;
+			offset = str.find_first_of(',',offset) + 1;
 			if(str[offset] == '\n')
 			{
 				offset++;
@@ -148,6 +149,7 @@ void Field::Load(const std::string& in_path)
 
 #if MESH
 	mesh_sprite_3d_->SetIndex(types_);
+	mesh_sprite_3d_->Apply();
 #endif
 }
 
@@ -217,23 +219,26 @@ void Field::NotSelectBlock(void)
 float3 Field::GetBlockPosition(const float3& in_position)
 {
 	float3 position = float3(0.0f,0.0f,0.0f);
-	float3 offset = float3(-block_width_ * width_count_ * 0.5f,0.0f,-block_height_ * height_count_ * 0.5f);
+	//float3 offset = float3(-block_width_ * width_count_ * 0.5f,0.0f,-block_height_ * height_count_ * 0.5f);
 
-	auto x = (u32)((in_position._x - offset._x) / block_width_);
-	auto y = (u32)((in_position._z - offset._z) / block_height_);
+	auto index = GetBlockIndex(in_position);
+	auto x = index % width_count_;
+	auto y = index / width_count_;
+	//auto x = (u32)((in_position._x - offset._x) / block_width_);
+	//auto y = (u32)((in_position._z - offset._z) / block_height_);
 
-	position._x = x * block_width_ + block_width_ * 0.5f + offset._x;
+	position._x = x * block_width_ + block_width_ * 0.5f - size_._x * 0.5f;
 	position._y = 0.0f;
-	position._z = y * block_height_ + block_height_ * 0.5f + offset._z;
+	position._z = -(y * block_height_ + block_height_ * 0.5f) + size_._y * 0.5f;
 
 	return position;
 }
 
 u32 Field::GetBlockIndex(const float3& in_position)
 {
-	float3 offset = float3(-block_width_ * width_count_ * 0.5f,0.0f,-block_height_ * height_count_ * 0.5f);
+	float3 offset = float3(-size_._x * 0.5f,0.0f,-size_._y * 0.5f);
 	auto x = (u32)((in_position._x - offset._x) / block_width_);
-	auto y = (u32)((in_position._z - offset._z) / block_height_);
+	auto y = (u32)((-in_position._z - offset._z) / block_height_);
 
 	return y * width_count_ + x;
 }
@@ -241,6 +246,32 @@ u32 Field::GetBlockIndex(const float3& in_position)
 u32 Field::GetBlockCount(void) const
 {
 	return width_count_ * height_count_;
+}
+
+u32 Field::GetBlockCount(TYPE in_type)
+{
+	u32 count = 0;
+	for(auto type : types_)
+	{
+		if(type == (u32)in_type)
+		{
+			count++;
+		}
+	}
+	return count;
+}
+
+std::vector<u32> Field::GetIndexs(TYPE in_type)
+{
+	std::vector<u32> indexs;
+
+	auto i = 0;
+	for(auto type : types_)
+	{
+		indexs.push_back(i);
+		++i;
+	}
+	return indexs;
 }
 
 //=============================================================================
@@ -311,13 +342,17 @@ void Field::SetType(const float3& in_position,const u32& in_type)
 void Field::SetType(const u32& in_x,const u32& in_y,const u32& in_type)
 {
 	u32 index = in_y * width_count_ + in_x;
+	SetType(index,in_type);
+}
 
-	DEBUG_ASSERT(types_.size() > index);
+void Field::SetType(u32 in_index,u32 in_type)
+{
+	DEBUG_ASSERT(types_.size() > in_index);
 
-	types_[index] = in_type;
+	types_[in_index] = in_type;
 
 #if MESH
-	mesh_sprite_3d_->SetIndex(in_x,in_y,in_type);
+	mesh_sprite_3d_->SetIndex(in_index,in_type);
 
 	mesh_sprite_3d_->Apply();
 #endif

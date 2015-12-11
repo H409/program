@@ -17,6 +17,7 @@
 #include "../demo/demo.h"
 #include "../game/game.h"
 #include "../result/result.h"
+#include "system/win_system.h"
 
 //=============================================================================
 // constructor
@@ -66,6 +67,37 @@ void SceneManager::Update()
 	{
 		p_current_scene_->Update();
 	}
+
+#ifndef _RELEASE
+	if(GET_INPUT_KEYBOARD()->GetPress(DIK_LSHIFT))
+	{
+		if(GET_INPUT_KEYBOARD()->GetPress(DIK_1))
+		{
+			set_p_next_scene(get_title());
+			set_scene_change_flag(true);
+		}
+		if(GET_INPUT_KEYBOARD()->GetPress(DIK_2))
+		{
+			set_p_next_scene(get_tutorial());
+			set_scene_change_flag(true);
+		}
+		if(GET_INPUT_KEYBOARD()->GetPress(DIK_3))
+		{
+			set_p_next_scene(get_demo());
+			set_scene_change_flag(true);
+		}
+		if(GET_INPUT_KEYBOARD()->GetPress(DIK_4))
+		{
+			set_p_next_scene(get_game());
+			set_scene_change_flag(true);
+		}
+		if(GET_INPUT_KEYBOARD()->GetPress(DIK_5))
+		{
+			set_p_next_scene(get_result());
+			set_scene_change_flag(true);
+		}
+	}
+#endif
 
 	//シーン切り替えフラグがONになっていたらシーン切り替え
 	if (SceneManager::Instance().get_scene_change_flag())

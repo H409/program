@@ -1,3 +1,4 @@
+
 //*****************************************************************************
 //
 // game.cpp
@@ -35,6 +36,8 @@
 #include "dome/dome.h"
 #include "cylinder/cylinder.h"
 #include "culling/frustum_culling.h"
+#include "fbx_object/fbx_object.h"
+#include "timer/timer.h"
 
 //=============================================================================
 // constructor
@@ -43,6 +46,8 @@ Game::Game()
 {
 	auto graphic_device = GET_GRAPHIC_DEVICE();
 	auto window = GET_WINDOW();
+
+	timer_ = std::make_unique<Timer>();
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
@@ -57,7 +62,7 @@ Game::Game()
 
 	observer_2d_ = std::make_shared<Observer2D>(window->GetWidth(),window->GetHeight());
 
-	frustum_culling_ = std::make_unique<utility::culling::FrustumCulling>(utility::math::ToRadian(90.0f),(f32)window->GetWidth() / window->GetHeight(),0.1f,100.0f);
+	frustum_culling_ = std::make_unique<utility::culling::FrustumCulling>(utility::math::ToRadian(70.0f),(f32)window->GetWidth() / window->GetHeight(),0.1f,100.0f);
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
@@ -95,6 +100,11 @@ Game::Game()
 		players_[i] = std::make_shared<Player>(graphic_device->GetDevice());
 	}
 
+	for(u32 i = 0;i < PLAYER_MAX;++i)
+	{
+		players_[i]->Init(float3(0.0f,0.0f,0.0f));
+	}
+
 	field_ = std::make_shared<Field>();
 	field_->Load("resources/map/map.txt");
 	for (u32 i = 0; i < WALL_MAX; ++i)
@@ -111,7 +121,7 @@ Game::Game()
 	wall_[2]->GetObject()->SetRotation(0.0f, D3DX_PI, 0.0f);
 	wall_[3]->GetObject()->SetPosition(-15.0f, 0.0f, 0.0f);
 	wall_[3]->GetObject()->SetRotation(0.0f, D3DX_PI/-2, 0.0f);
-	
+
 	dome_ = std::make_shared<Dome>();
 	dome_->GetObjectA()->SetPosition(0.0f,-6.0f, 0.0f);
 
@@ -124,8 +134,15 @@ Game::Game()
 	{
 		flower = std::make_shared<Flower>(0);
 	}
+<<<<<<< HEAD
 	
 	result_state_ = false;
+=======
+
+	fbx_object_[ 0 ] = std::make_shared<FBXObject>( graphic_device->GetDevice() );
+	fbx_object_[ 0 ]->Load( "resources/model/ki_obj.kim" );
+
+>>>>>>> 09fc9090b0cb05bd1970c2da1eed3bad1a1cbbaa
 #ifdef _DEBUG
 	debugRenderTarget_ = false;
 	debug_player_number_ = 0;
@@ -161,8 +178,9 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
-		players_[i]->Init(positions[i]);
+		players_[i]->SetPosition(positions[i]);
 	}
+
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
 		player_icons_[i]->SetPosition(players_[i]->GetPosition());
@@ -170,8 +188,12 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 
 	for(auto flower : flowers_)
 	{
-		flower->Show(false);
+		flower->Death();
 	}
+
+	flower_list_.clear();
+
+	timer_->Reset();
 
 	return true;
 }
@@ -189,13 +211,13 @@ void Game::Finalize()
 //=============================================================================
 void Game::Update()
 {
-#ifndef _RELEASE
-	if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_R))
-	{
-		field_->Reset();
-	}
-#endif
+	timer_->Update();
 
+	if(timer_->GetTimeLeft() == 0)
+	{
+		// I—¹
+		return;
+	}
 #ifdef _DEBUG
 	if(debugRenderTarget_)
 	{
@@ -224,24 +246,23 @@ void Game::Update()
 		field_icons_[i]->Update();
 
 #ifdef _DEBUG
-	static bool _bullet_debug = false ;
+		static bool _bullet_debug = false ;
 
-	if( GET_INPUT_KEYBOARD()->GetPress(DIK_B) )
-	{
-		_bullet_debug = !_bullet_debug ;
-	}
+		if( GET_INPUT_KEYBOARD()->GetPress(DIK_B) )
+		{
+			_bullet_debug = !_bullet_debug;
+		}
 
-	if( _bullet_debug == true )
-	{
-		players_[ i ]->SetAction( true );
-	}
+		if( _bullet_debug == true )
+		{
+			players_[ i ]->SetAction( true );
+		}
 #endif // _DEBUG
 
-		if( players_[ i ]->GetKimPointer()->GetWepon() == Kim::WEAPON::GUN &&
-			players_[ i ]->GetAction() == true )
+		if(players_[ i ]->GetAction() == true )
 		{
 			// Ží‚Ü‚«
-			if(field_icons_[i]->IsShow())
+			if(players_[i]->GetKimPointer()->GetWepon() == Kim::WEAPON::GUN)
 			{
 				auto start_position = players_[i]->GetPosition();
 				start_position._y += 0.7f;
@@ -253,6 +274,7 @@ void Game::Update()
 				{
 					if(bullet->IsDeath())
 					{
+						bullet->SetType(Bullet::TYPE::SEED);
 						bullet->Reset(start_position,end_position);
 						bullet->SetTag(i);
 						is_create = false;
@@ -268,12 +290,45 @@ void Game::Update()
 				}
 			}
 			// Œ@‚è•Ô‚µ
-			else
+			if(players_[i]->GetKimPointer()->GetWepon() == Kim::WEAPON::HOE)
 			{
 				auto position = players_[i]->GetPosition();
-				if(field_->GetType(position) == (u32)Field::TYPE::FLOWER)
+				//if(field_->GetType(position) == (u32)Field::TYPE::SOIL)
 				{
-					field_->SetType(position,(u32)Field::TYPE::SOIL);
+					auto index = field_->GetBlockIndex(position);
+					//field_->SetType(index,(u32)Field::TYPE::SOIL);
+					flowers_[index]->Death();
+					flower_list_.erase(remove_if(flower_list_.begin(),flower_list_.end(),[](std::weak_ptr<Flower> flower)->bool {return !flower._Get()->IsShow();}),flower_list_.end());
+				}
+			}
+
+			// –WŠQ
+			if(players_[i]->GetKimPointer()->GetWepon() == Kim::WEAPON::LAUNCHER)
+			{
+				auto start_position = players_[i]->GetPosition();
+				start_position._y += 0.7f;
+				auto end_position = field_icons_[i]->GetPosition();
+
+				auto is_create = true;
+
+				for(auto bullet : bullets_)
+				{
+					if(bullet->IsDeath())
+					{
+						bullet->SetType(Bullet::TYPE::BOMB);
+						bullet->Reset(start_position,end_position);
+						bullet->SetTag(i);
+						is_create = false;
+						break;
+					}
+				}
+
+				if(is_create)
+				{
+					auto bullet = std::make_shared<Bullet>(start_position,end_position);
+					bullet->SetType(Bullet::TYPE::BOMB);
+					bullet->SetTag(i);
+					bullets_.push_back(bullet);
 				}
 			}
 		}
@@ -304,6 +359,7 @@ void Game::Update()
 		bullet->Update();
 	}
 
+	// “–‚½‚è”»’è
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
 #ifdef _DEBUG
@@ -316,34 +372,47 @@ void Game::Update()
 		auto player_old_position = player->GetOldPosition();
 		auto player_move = player->GetMove();
 		auto player_position = player->GetPosition();
+		auto player_block_position = field_->GetBlockPosition(player_old_position);
+
+		player_position._x = utility::math::Clamp(player_position._x,-14.5f,14.5f);
+		player_position._z = utility::math::Clamp(player_position._z,-14.5f,14.5f);
+		player->SetPosition(player_position);
 
 		auto type = field_->GetType(player_position);
-		if(type == (u32)Field::TYPE::BUILDING)
-		{
-			player->SetPosition(player->GetOldPosition());
-			player->SetMove(float3(0.0f,0.0f,0.0f));
-		}
+
+		//if(type == (u32)Field::TYPE::BUILDING)
+		//{
+			//player->SetPosition(player->GetOldPosition());
+			//player->SetMove(float3(0.0f,0.0f,0.0f));
+		//}
 
 		player_position = float3(player_old_position._x + player_move._x,0.0f,player_old_position._z);
 		if(type == (u32)Field::TYPE::BUILDING)
 		{
-			player->SetPosition(player->GetOldPosition());
-			player->SetMove(float3(0.0f,0.0f,0.0f));
+			auto x = field_->GetBlockPosition(player_position)._x - player_block_position._x;
+			player->SetPositionX(player->GetOldPosition()._x);
+			//player->SetPositionX(player_block_position._x + x);
+			//player->SetMove(float3(0.0f,player->GetMove()._y,player->GetMove()._z));
+			//player->SetMove(float3(0.0f,0.0f,0.0f));
 		}
 
 		player_position = float3(player_old_position._x,0.0f,player_old_position._z + player_move._z);
 
 		if(type == (u32)Field::TYPE::BUILDING)
 		{
-			player->SetPosition(player->GetOldPosition());
-			player->SetMove(float3(0.0f,0.0f,0.0f));
+			auto z = field_->GetBlockPosition(player_position)._z - player_block_position._z;
+			player->SetPositionZ(player->GetOldPosition()._z);
+			//player->SetPositionZ(player_block_position._z + z);
+			//player->SetMove(float3(player->GetMove()._x,player->GetMove()._y,0.0f));
 		}
 	}
 
-	//for(auto flower : flowers_)
-	//{
-	//	flower->Update();
-	//}
+	for(auto flower : flower_list_)
+	{
+		flower._Get()->Update();
+	}
+	fbx_object_[ 0 ]->SetPosition( -10 , 0 , 0 );
+	fbx_object_[ 0 ]->Update();
 
 	// 
 	for(auto bullet : bullets_)
@@ -359,22 +428,54 @@ void Game::Update()
 			{
 				if(position._y <= 0.0f)
 				{
-					if(field_->GetType(position) == (u32)Field::TYPE::SOIL)
+					if(bullet->GetType() == Bullet::TYPE::SEED)
 					{
-						field_->SetType(position,(u32)Field::TYPE::FLOWER);
-						auto is_create = true;
-						auto flower_position = field_->GetBlockPosition(position);
-						auto index = field_->GetBlockIndex(position);
+						if(field_->GetType(position) == (u32)Field::TYPE::SOIL)
+						{
+							auto index = field_->GetBlockIndex(position);
+							//field_->SetType(index,(u32)Field::TYPE::FLOWER);
+							auto flower_position = field_->GetBlockPosition(position);
 
-						flowers_[index]->SetNumber(bullet->GetTag());
-						flowers_[index]->Show(true);
-						flowers_[index]->SetPosition(flower_position);
+							if(!flowers_[index]->IsLive())
+							{
+								flowers_[index]->SetNumber(bullet->GetTag());
+								flowers_[index]->Show();
+								flowers_[index]->SetPosition(flower_position);
+
+								flower_list_.push_back(flowers_[index]);
+							}
+						}
 					}
+
+					if(bullet->GetType() == Bullet::TYPE::BOMB)
+					{
+						position._y = 0.0f;
+						for(u32 i = 0;i < PLAYER_MAX;++i)
+						{
+							if(bullet->GetTag() / 2 != i / 2)
+							{
+								auto& player = players_[i];
+								auto player_position = player->GetPosition();
+								if(utility::math::Distance(position,player_position) < 0.5f + 1.0f)
+								{
+									DEBUG_TRACE("hit");
+								}
+							}
+						}
+					}
+
 					bullet->Remove();
 				}
 			}
 		}
 	}
+
+#ifndef _RELEASE
+	for(auto i = 0;i < PLAYER_MAX;++i)
+	{
+		DEVELOP_DISPLAY("player %d : %d\n",i,GetPoint(i));
+	}
+#endif
 }
 
 //=============================================================================
@@ -394,6 +495,10 @@ void Game::Draw()
 
 
 #ifdef _DEBUG
+
+	int debug_object_draw_num = 0 ;
+
+	int min = 0;
 	int max = PLAYER_MAX ;
 
 	static bool _d = false ;
@@ -404,7 +509,12 @@ void Game::Draw()
 
 	if( _d == true )
 	{
-		max = 1 ;
+		max = 1;
+		if(debugRenderTarget_)
+		{
+			min = debug_player_number_;
+			max = debug_player_number_ + 1;
+		}
 	}
 
 	if(GET_INPUT_KEYBOARD()->GetPress(DIK_M))
@@ -412,7 +522,7 @@ void Game::Draw()
 		GET_DIRECTX9_DEVICE()->SetRenderState(D3DRS_FILLMODE,D3DFILL_WIREFRAME);
 	}
 
-	for(u32 i = 0;i < max;++i)
+	for(u32 i = min;i < max;++i)
 #else
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 #endif // _DEBUG
@@ -456,19 +566,32 @@ void Game::Draw()
 			object->Draw();
 		}
 
-		if(field_icons_[i]->IsShow())
+		for(u32 j = 0;j < PLAYER_MAX;++j)
 		{
-			object = field_icons_[i]->GetObject();
-
-			world_matrix = object->GetMatrix();
-
-			// object
-			gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
-			gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
-
-			if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
+			if(field_icons_[j]->IsShow())
 			{
-				object->Draw();
+				if(i != j)
+				{
+					if(!field_icons_[j]->IsShowAll())
+					{
+						continue;
+					}
+				}
+				object = field_icons_[j]->GetObject();
+
+				world_matrix = object->GetMatrix();
+
+				// object
+				gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
+				gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
+
+				if(frustum_culling_->IsCulling(object->GetPosition(),0.5f))
+				{
+#ifdef _DEBUG
+					debug_object_draw_num++;
+#endif // _DEBUG
+					object->Draw();
+				}
 			}
 		}
 
@@ -483,29 +606,35 @@ void Game::Draw()
 				gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
 				gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
 
-				if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
+				if(frustum_culling_->IsCulling(object->GetPosition(),0.5f))
 				{
+#ifdef _DEBUG
+			debug_object_draw_num++ ;
+#endif // _DEBUG
 					object->Draw();
 				}
 			}
 		}
 
-		for(auto flower : flowers_)
+		for(auto flower : flower_list_)
 		{
-			if(flower->IsShow())
-			{
-				object = flower->GetObject();
+			//if(flower->IsShow())
+			//{
+				object = flower._Get()->GetObject();
 				world_matrix = object->GetMatrix();
 				world_matrix = utility::math::Multiply(i_view_matrix,world_matrix);
 
 				gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
 				gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
 
-				if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
+				if(frustum_culling_->IsCulling(object->GetPosition(),0.5f))
 				{
+#ifdef _DEBUG
+			debug_object_draw_num++ ;
+#endif // _DEBUG
 					object->Draw();
 				}
-			}
+			//}
 		}
 
 		//draw wall
@@ -555,8 +684,11 @@ void Game::Draw()
 				world_matrix = utility::math::Multiply(i_view_matrix,world_matrix);
 				gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
 				gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
-				if(frustum_culling_->IsCulling(players_[j]->GetPosition(),2.0f))
+				if(frustum_culling_->IsCulling(players_[j]->GetPosition(),0.5f))
 				{
+#ifdef _DEBUG
+			debug_object_draw_num++ ;
+#endif // _DEBUG
 					object->Draw();
 				}
 			}
@@ -569,14 +701,23 @@ void Game::Draw()
 			players_[j]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[i]->GetViewMatrix());
 			players_[j]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[i]->GetProjectionMatrix());
 
-			if(frustum_culling_->IsCulling(players_[j]->GetPosition(),2.0f))
+			if(frustum_culling_->IsCulling(players_[j]->GetPosition(),1.0f))
 			{
+#ifdef _DEBUG
+			debug_object_draw_num++ ;
+#endif // _DEBUG
 				players_[j]->Draw();
 			}
 		}
+
+		
+		fbx_object_[ 0 ]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[ i ]->GetViewMatrix());
+		fbx_object_[ 0 ]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[ i ]->GetProjectionMatrix());
+		fbx_object_[ 0 ]->Draw();
 	}
 
 #ifdef _DEBUG
+	DEVELOP_DISPLAY("object_draw : %d\n", debug_object_draw_num );
 	GET_DIRECTX9_DEVICE()->SetRenderState(D3DRS_FILLMODE,D3DFILL_FORCE_DWORD);
 #endif
 	graphic_device->SetRenderTarget(0,default_texture);
@@ -620,6 +761,7 @@ void Game::Draw()
 
 	if(debugRenderTarget_ == true)
 	{
+		DEVELOP_DISPLAY("‘€ìƒvƒŒƒCƒ„[ : %d\n",debug_player_number_ + 1);
 		if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_LEFT) == true)
 		{
 			_debugRenderTargetIndex--;
@@ -718,4 +860,18 @@ void Game::DrawResult(void)
 	basic_vs->SetValue("_projection_matrix", (f32*)&observer_2d_->GetProjectionMatrix(), sizeof(float4x4));
 	basic_vs->SetValue("_world_matrix", (f32*)&debug_sprite_object_->GetMatrix(), sizeof(float4x4));
 	basic_vs->SetValue("_color", (f32*)&color, sizeof(f32) * 4);
+}
+
+u32 Game::GetPoint(u32 player_number) const
+{
+	u32 count = 0;
+
+	for(auto flower : flower_list_)
+	{
+		if(flower._Get()->GetNumber() == player_number)
+		{
+			count++;
+		}
+	}
+	return count;
 }

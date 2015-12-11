@@ -68,9 +68,6 @@
     <Filter Include="sources\field_object">
       <UniqueIdentifier>{629374c7-bc53-4017-a8c9-953b1f813222}</UniqueIdentifier>
     </Filter>
-    <Filter Include="sources\player_icon">
-      <UniqueIdentifier>{ad7b624a-1c55-4979-be3c-a1842d356366}</UniqueIdentifier>
-    </Filter>
     <Filter Include="sources\wall">
       <UniqueIdentifier>{e838fdf2-fc43-4778-a815-253c826612fc}</UniqueIdentifier>
     </Filter>
@@ -80,8 +77,19 @@
     <Filter Include="sources\cylinder">
       <UniqueIdentifier>{281146f6-bc09-405b-a7be-0eb94c6881ee}</UniqueIdentifier>
     </Filter>
+<<<<<<< HEAD
     <Filter Include="sources\score">
       <UniqueIdentifier>{2eb491e2-9fb3-4236-8d32-01cce3b56e93}</UniqueIdentifier>
+=======
+    <Filter Include="sources\player_icon">
+      <UniqueIdentifier>{ad7b624a-1c55-4979-be3c-a1842d356366}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\fbx_object">
+      <UniqueIdentifier>{e338b918-8f7a-4b74-bee7-143576e3ac02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\timer">
+      <UniqueIdentifier>{a9499020-669f-4407-894c-061f738c59b5}</UniqueIdentifier>
+>>>>>>> 09fc9090b0cb05bd1970c2da1eed3bad1a1cbbaa
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -235,8 +243,16 @@
     <ClCompile Include="sources\cylinder\cylinder.cpp">
       <Filter>sources\cylinder</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="sources\score\score.cpp">
       <Filter>sources\score</Filter>
+=======
+    <ClCompile Include="sources\fbx_object\fbx_object.cpp">
+      <Filter>sources\fbx_object</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\timer\timer.cpp">
+      <Filter>sources\timer</Filter>
+>>>>>>> 09fc9090b0cb05bd1970c2da1eed3bad1a1cbbaa
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -393,8 +409,16 @@
     <ClInclude Include="sources\cylinder\cylinder.h">
       <Filter>sources\cylinder</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="sources\score\score.h">
       <Filter>sources\score</Filter>
+=======
+    <ClInclude Include="sources\fbx_object\fbx_object.h">
+      <Filter>sources\fbx_object</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\timer\timer.h">
+      <Filter>sources\timer</Filter>
+>>>>>>> 09fc9090b0cb05bd1970c2da1eed3bad1a1cbbaa
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -57,9 +57,11 @@ public:
 	const float3& GetPosition(void)const;
 
 	// 
-	void Show(bool in_is_show);
+	void Show(bool in_is_show,bool in_is_show_all = false);
 
 	bool IsShow(void)const;
+
+	bool IsShowAll(void)const;
 
 private:
 	float3 position_;
@@ -71,6 +73,7 @@ private:
 	TMeshObject mesh_object_;
 	float3 front_vector_;
 	bool is_show_;
+	bool is_show_all_;
 
 	float3 GetVector_(void)const;
 	bool IsOverRange_(void)const;

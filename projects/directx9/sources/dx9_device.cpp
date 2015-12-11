@@ -79,8 +79,10 @@ DX9Device::DX9Device(const HWND& in_hwnd,const u16& in_width,const u16& in_heigh
 #endif
 	// デプスバッファ（Ｚバッファ）とステンシルバッファを作成
 	d3dpresent_parameters_.EnableAutoDepthStencil = TRUE;
+	//d3dpresent_parameters_.EnableAutoDepthStencil = FALSE;
 
 	// デプスバッファとして16bitを使う
+	//d3dpresent_parameters_.AutoDepthStencilFormat = D3DFMT_D16;
 	d3dpresent_parameters_.AutoDepthStencilFormat = D3DFMT_D16;
 
 	// マルチサンプルを使用
@@ -101,7 +103,8 @@ DX9Device::DX9Device(const HWND& in_hwnd,const u16& in_width,const u16& in_heigh
 	else
 	{
 		// バックバッファ
-		d3dpresent_parameters_.BackBufferFormat = D3DFMT_R5G6B5;
+		//d3dpresent_parameters_.BackBufferFormat = D3DFMT_R5G6B5;
+		d3dpresent_parameters_.BackBufferFormat = D3DFMT_R8G8B8;
 
 		// リフレッシュレート
 		d3dpresent_parameters_.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
@@ -113,7 +116,7 @@ DX9Device::DX9Device(const HWND& in_hwnd,const u16& in_width,const u16& in_heigh
 	// デバイスオブジェクトの生成
 	if(FAILED(direct3d9_->CreateDevice(D3DADAPTER_DEFAULT,D3DDEVTYPE_HAL,in_hwnd,D3DCREATE_SOFTWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED,&d3dpresent_parameters_,&direct3ddevice9_)))
 	{
-		DEBUG_ASSERT("デバイスの生成に失敗しました");
+		DEBUG_ASSERT_MESSAGE(false,"デバイスの生成に失敗しました");
 	}
 
 	// レンダーステートの設定
@@ -312,9 +315,10 @@ void DX9Device::SetDefaultRenderState_(void)
 	//direct3ddevice9_->SetRenderState(D3DRS_CULLMODE,D3DCULL_NONE);
 	direct3ddevice9_->SetRenderState(D3DRS_CULLMODE,D3DCULL_CCW);					// 裏面をカリング
 	direct3ddevice9_->SetRenderState(D3DRS_ZENABLE,TRUE);							// Zバッファを使用
-	direct3ddevice9_->SetRenderState(D3DRS_ALPHABLENDENABLE,TRUE);				// αブレンドを行う
-	direct3ddevice9_->SetRenderState(D3DRS_SRCBLEND,D3DBLEND_SRCALPHA);			// αソースカラーの指定
-	direct3ddevice9_->SetRenderState(D3DRS_DESTBLEND,D3DBLEND_INVSRCALPHA);		// αデスティネーションカラーの指定
+	direct3ddevice9_->SetRenderState(D3DRS_ALPHABLENDENABLE,FALSE);
+	//direct3ddevice9_->SetRenderState(D3DRS_ALPHABLENDENABLE,TRUE);				// αブレンドを行う
+	//direct3ddevice9_->SetRenderState(D3DRS_SRCBLEND,D3DBLEND_SRCALPHA);			// αソースカラーの指定
+	//direct3ddevice9_->SetRenderState(D3DRS_DESTBLEND,D3DBLEND_INVSRCALPHA);		// αデスティネーションカラーの指定
 	direct3ddevice9_->SetRenderState(D3DRS_ALPHAREF,1);
 	direct3ddevice9_->SetRenderState(D3DRS_ALPHATESTENABLE,TRUE);
 	direct3ddevice9_->SetRenderState(D3DRS_ALPHAFUNC,D3DCMP_GREATEREQUAL);

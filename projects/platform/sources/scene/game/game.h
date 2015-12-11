@@ -33,7 +33,12 @@ class Observer2D;
 class FollowerObserver;
 class MeshObject;
 class Flower;
+<<<<<<< HEAD
 class Score;
+=======
+class FBXObject ;
+class Timer;
+>>>>>>> 09fc9090b0cb05bd1970c2da1eed3bad1a1cbbaa
 
 namespace utility {
 namespace culling {
@@ -81,6 +86,7 @@ public:
 private:
 	static const u32 PLAYER_MAX = 4;
 	static const u32 WALL_MAX = 4;
+	static const u32 FBX_OBJECT_MAX = 10 ;
 
 	std::shared_ptr<Player> players_[PLAYER_MAX];
 	std::shared_ptr<PlayerIcon> player_icons_[PLAYER_MAX];
@@ -97,18 +103,31 @@ private:
 	std::shared_ptr<Cylinder> cylinder_;
 	std::shared_ptr<Observer2D> observer_2d_;
 	std::vector<std::shared_ptr<Flower>> flowers_;
+<<<<<<< HEAD
 	std::unique_ptr<utility::culling::FrustumCulling> frustum_culling_;
 	
 	//result
 	
 	std::shared_ptr<Score> score_;					//得点表示
 	bool result_state_;								//リザルト画面表示
+=======
+	std::list<std::weak_ptr<Flower>> flower_list_;
+	std::shared_ptr<FBXObject> fbx_object_[ FBX_OBJECT_MAX ];
+
+	std::unique_ptr<utility::culling::FrustumCulling> frustum_culling_;
+
+	std::unique_ptr<Timer> timer_;
+>>>>>>> 09fc9090b0cb05bd1970c2da1eed3bad1a1cbbaa
 #ifdef _DEBUG
 	std::shared_ptr<MeshObject> debug_sprite_object_;
 	std::shared_ptr<MeshObject> debug_object_;
 	u32 debug_player_number_;
 	bool debugRenderTarget_;
 #endif
+
+	u32 GetPoint(u32 player_number)const;
+
+
 };
 
 #endif

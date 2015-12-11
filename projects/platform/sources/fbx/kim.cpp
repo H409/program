@@ -12,6 +12,8 @@
 
 #include <stdio.h>
 #include "kim.h"
+#include "system/win_system.h"
+#include "develop_tool/develop_tool.h"
 
 //*****************************************************************************
 // グローバル変数
@@ -364,6 +366,11 @@ void Kim::Uninit( void )
 //=============================================================================
 void Kim::Update(void)
 {
+	// ﾎﾞｰﾝがなければそもそもｽｷﾆﾝｸﾞされてない
+	if( bone_ == NULL )
+	{
+		return ;
+	}
 
 	//if (!GetAsyncKeyState('Y') & 0x0001)
 	{
@@ -535,9 +542,9 @@ void Kim::Update(void)
 			bone_[ i ].bone_matrix = scl * rot * trans * bone_[ i ].init_matrix ;
 
 			// 次のﾌﾚｰﾑに移動
-			if( dest_bone->current_time >= 1 )
+			//if( dest_bone->current_time >= 1 )
 			{
-				dest_bone->current_time = 0;
+				//dest_bone->current_time = 0;
 
 			//	if ( 0  ==  0 )
 				{
@@ -565,8 +572,8 @@ void Kim::Update(void)
 				}
 			}
 
-			// 時を進める
-			dest_bone->current_time += anime_speed ;
+			/// 時を進める
+			//dest_bone->current_time += anime_speed ;
 		}
 
 		//if( animation_ == true )
@@ -579,8 +586,10 @@ void Kim::Update(void)
 		auto world = world_;
 		D3DXMatrixIdentity(&world);
 		UpdateBone( bone_ , &world);
-
 	}
+
+	DEVELOP_DISPLAY( "current_key_ : %d\n" , current_key_ );
+
 }
 
 //=============================================================================
@@ -594,19 +603,7 @@ void Kim::Draw(void)
 	// 送信する頂点情報の設定
 	d3d_device_->SetVertexDeclaration(decl_);
 
-#ifdef _DEBUG
-	static bool _bone = false ;
-
-	// ﾒｯｼｭの描画
-	if (GetAsyncKeyState('B'))
-	{
-		_bone = !_bone ;
-	}
-	if( !GetAsyncKeyState('N') )
-#endif
-	{
-		MultiMeshMyShader();
-	}
+	MultiMeshMyShader();
 
 	d3d_device_->SetVertexDeclaration(before_decl);
 }
