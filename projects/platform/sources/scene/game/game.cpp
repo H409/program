@@ -206,13 +206,6 @@ void Game::Finalize()
 //=============================================================================
 void Game::Update()
 {
-#ifndef _RELEASE
-	if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_R))
-	{
-		field_->Reset();
-	}
-#endif
-
 	timer_->Update();
 
 	if(timer_->GetTimeLeft() == 0)
@@ -252,7 +245,7 @@ void Game::Update()
 
 		if( GET_INPUT_KEYBOARD()->GetPress(DIK_B) )
 		{
-			_bullet_debug = !_bullet_debug ;
+			_bullet_debug = !_bullet_debug;
 		}
 
 		if( _bullet_debug == true )
@@ -568,22 +561,32 @@ void Game::Draw()
 			object->Draw();
 		}
 
-		if(field_icons_[i]->IsShow())
+		for(u32 j = 0;j < PLAYER_MAX;++j)
 		{
-			object = field_icons_[i]->GetObject();
-
-			world_matrix = object->GetMatrix();
-
-			// object
-			gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
-			gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
-
-			if(frustum_culling_->IsCulling(object->GetPosition(),0.5f))
+			if(field_icons_[j]->IsShow())
 			{
+				if(i != j)
+				{
+					if(!field_icons_[j]->IsShowAll())
+					{
+						continue;
+					}
+				}
+				object = field_icons_[j]->GetObject();
+
+				world_matrix = object->GetMatrix();
+
+				// object
+				gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
+				gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
+
+				if(frustum_culling_->IsCulling(object->GetPosition(),0.5f))
+				{
 #ifdef _DEBUG
-			debug_object_draw_num++ ;
+					debug_object_draw_num++;
 #endif // _DEBUG
-				object->Draw();
+					object->Draw();
+				}
 			}
 		}
 

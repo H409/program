@@ -40,10 +40,6 @@ void Timer::Update(void)
 	DEVELOP_DISPLAY("Žc‚èŽžŠÔ : %d\n",time_left_);
 }
 
-void Timer::Draw(void)
-{
-}
-
 void Timer::Reset(void)
 {
 	time_count_ = 0;

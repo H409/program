@@ -17,8 +17,6 @@ public:
 
 	void Update(void);
 
-	void Draw(void);
-
 	void Reset(void);
 
 	u32 GetTimeLeft(void) const;
