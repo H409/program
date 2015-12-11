@@ -167,8 +167,8 @@ const float2& XIPad::GetRStick(void) const
 {
 	float2 out = r_stick_;
 
-	out._x /= 32767.0f;
-	out._y /= 32767.0f;
+	out._x /= 32768.0f;
+	out._y /= 32768.0f;
 
 	if (r_stick_newtral_param._x >= 0.0f)
 	{

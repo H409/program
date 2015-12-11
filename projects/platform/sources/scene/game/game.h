@@ -102,14 +102,15 @@ private:
 	std::vector<std::shared_ptr<Flower>> flowers_;
 	std::unique_ptr<utility::culling::FrustumCulling> frustum_culling_;
 	
-	//result
-	
-	std::shared_ptr<Score> score_;					//得点表示
-	bool result_state_;								//リザルト画面表示
 	std::list<std::weak_ptr<Flower>> flower_list_;
 	std::shared_ptr<FBXObject> fbx_object_[ FBX_OBJECT_MAX ];
 
 	std::unique_ptr<Timer> timer_;
+
+	//result関連
+	bool result_flag_;								//リザルト画面表示をするかしないか
+	std::shared_ptr<Score> score_;					//得点表示
+
 #ifdef _DEBUG
 	std::shared_ptr<MeshObject> debug_sprite_object_;
 	std::shared_ptr<MeshObject> debug_object_;

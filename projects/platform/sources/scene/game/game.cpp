@@ -39,6 +39,7 @@
 #include "fbx_object/fbx_object.h"
 #include "timer/timer.h"
 #include "system/xi_pad.h"
+#include "score/score.h"
 
 //=============================================================================
 // constructor
@@ -110,7 +111,7 @@ Game::Game()
 	field_->Load("resources/map/map.txt");
 	for (u32 i = 0; i < WALL_MAX; ++i)
 	{
-		wall_[i] = std::make_shared<Wall>();
+		wall_[i] = std::make_shared<Wall>(float2(30.0f,1.0f));
 		wall_[i]->Update();
 	}
 
@@ -136,7 +137,9 @@ Game::Game()
 		flower = std::make_shared<Flower>(0);
 	}
 	
-	result_state_ = false;
+	result_flag_ = false;
+
+	score_ = std::make_shared<Score>();
 
 	fbx_object_[ 0 ] = std::make_shared<FBXObject>( graphic_device->GetDevice() );
 	fbx_object_[ 0 ]->Load( "resources/model/ki_obj.kim" );
@@ -830,36 +833,36 @@ void Game::Draw()
 #endif
 
 	//Draw Result
-	if (result_state_)
+	if (result_flag_)
 	{
 		DrawResult();
-		graphic_device->Clear(float4(0.0f, 0.0f, 0.0f, 0.0f), 1.0f);
-		float4 color = float4(1.0f, 1.0f, 1.0f, 1.0f);
-
-		basic_vs->SetValue("_view_matrix", (f32*)&observer_2d_->GetViewMatrix(), sizeof(float4x4));
-		basic_vs->SetValue("_projection_matrix", (f32*)&observer_2d_->GetProjectionMatrix(), sizeof(float4x4));
-		basic_vs->SetValue("_world_matrix", (f32*)&debug_sprite_object_->GetMatrix(), sizeof(float4x4));
-		basic_vs->SetValue("_color",(f32*)&color,sizeof(f32)*4);
 	}
 
 }
 
 void Game::UpdateResult(void)
 {
+
 }
 
 void Game::DrawResult(void)
 {
+	//フィールド描画
+
+	//2Dポリゴン描画
 	auto graphic_device = GET_GRAPHIC_DEVICE();
 	graphic_device->Clear(float4(0.0f, 0.0f, 0.0f, 0.0f), 1.0f);
 	float4 color = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	auto basic_vs = graphic_device->LoadVertexShader("resources/shader/basic.vsc");
 	auto basic_ps = graphic_device->LoadPixelShader("resources/shader/basic.psc");
-
 	basic_vs->SetValue("_view_matrix", (f32*)&observer_2d_->GetViewMatrix(), sizeof(float4x4));
 	basic_vs->SetValue("_projection_matrix", (f32*)&observer_2d_->GetProjectionMatrix(), sizeof(float4x4));
 	basic_vs->SetValue("_world_matrix", (f32*)&debug_sprite_object_->GetMatrix(), sizeof(float4x4));
 	basic_vs->SetValue("_color", (f32*)&color, sizeof(f32) * 4);
+
+	//チーム
+	//スコア
+	score_->Draw();
 }
 
 u32 Game::GetPoint(u32 player_number) const
