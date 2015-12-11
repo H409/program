@@ -110,8 +110,8 @@ const float2& XIPad::GetLStick(void) const
 {
 	float2 out = l_stick_;
 
-	out._x /= 32767.0f;
-	out._y /= 32767.0f;
+	out._x /= 32768.0f;
+	out._y /= 32768.0f;
 
 	if (l_stick_newtral_param._x >= 0.0f)
 	{
