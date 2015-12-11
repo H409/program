@@ -17,7 +17,11 @@ public:
 
 	void Update(void);
 
+	void Draw(void);
+
 	void Reset(void);
+
+	u32 GetTimeLeft(void) const;
 private:
 	static const u32 DEFAULT_TIME_MAX;
 	u32 time_max_;

@@ -214,6 +214,12 @@ void Game::Update()
 #endif
 
 	timer_->Update();
+
+	if(timer_->GetTimeLeft() == 0)
+	{
+		// I—¹
+		return;
+	}
 #ifdef _DEBUG
 	if(debugRenderTarget_)
 	{
@@ -442,6 +448,23 @@ void Game::Update()
 							}
 						}
 					}
+
+					if(bullet->GetType() == Bullet::TYPE::BOMB)
+					{
+						position._y = 0.0f;
+						for(u32 i = 0;i < PLAYER_MAX;++i)
+						{
+							if(bullet->GetTag() / 2 != i / 2)
+							{
+								auto player_position = players_[i]->GetPosition();
+								if(utility::math::Distance(position,player_position) < 0.5f + 1.0f)
+								{
+									DEBUG_TRACE("hit");
+								}
+							}
+						}
+					}
+
 					bullet->Remove();
 				}
 			}
