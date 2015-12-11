@@ -60,6 +60,9 @@ public:
 	// clear
 	void Clear(void);
 
+	//normalize analogstick
+	void NormalizeAnalogStick();
+
 	bool GetPress(KEY in_key)const;
 	bool GetTrigger(KEY in_key)const;
 	bool GetRelease(KEY in_key)const;

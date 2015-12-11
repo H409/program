@@ -847,6 +847,8 @@ void Game::UpdateResult(void)
 
 void Game::DrawResult(void)
 {
+	//クリアー
+	//graphic_device->Clear(float4(1.0f, 0.0f, 0.0f, 0.0f), 1.0f);
 	//フィールド描画
 
 	//2Dポリゴン描画

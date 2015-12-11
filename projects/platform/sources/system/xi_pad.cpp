@@ -65,6 +65,8 @@ void XIPad::Update(void)
 
 		is_press_[i] = is_press[i];
 	}
+
+	NormalizeAnalogStick();
 }
 
 void XIPad::Clear(void)
@@ -91,6 +93,118 @@ void XIPad::Clear(void)
 	}
 }
 
+void XIPad::NormalizeAnalogStick()
+{
+	//アナログスティック正規化
+
+	float2 normalize = l_stick_;
+	normalize._x /= 32768.0f;
+	normalize._y /= 32768.0f;
+
+	if (l_stick_newtral_param._x >= 0.0f)
+	{
+		if (l_stick_._x >= 0.0f&&l_stick_._x <= l_stick_newtral_param._x)
+		{
+			normalize._x = 0.0f;
+		}
+	}
+	else if (l_stick_newtral_param._x <= 0.0f)
+	{
+		if (l_stick_._x <= 0.0f&&l_stick_._x >= l_stick_newtral_param._x)
+		{
+			normalize._x = 0.0f;
+		}
+	}
+
+	if (l_stick_newtral_param._y >= 0.0f)
+	{
+		if (l_stick_._y >= 0.0f&&l_stick_._y <= l_stick_newtral_param._y)
+		{
+			normalize._y = 0.0f;
+		}
+	}
+	else if (l_stick_newtral_param._y <= 0.0f)
+	{
+		if (l_stick_._y <= 0.0f&&l_stick_._y >= l_stick_newtral_param._y)
+		{
+			normalize._y = 0.0f;
+		}
+	}
+
+	if (normalize._x > 1.0f)
+	{
+		normalize._x = 1.0f;
+	}
+	if (normalize._y > 1.0f)
+	{
+		normalize._y = 1.0f;
+	}
+	if (normalize._x < -1.0f)
+	{
+		normalize._x = -1.0f;
+	}
+	if (normalize._y < -1.0f)
+	{
+		normalize._y = -1.0f;
+	}
+
+	l_stick_ = normalize;
+
+	normalize = r_stick_;
+
+	normalize._x /= 32768.0f;
+	normalize._y /= 32768.0f;
+
+	if (r_stick_newtral_param._x >= 0.0f)
+	{
+		if (r_stick_._x >= 0.0f&&r_stick_._x <= r_stick_newtral_param._x)
+		{
+			normalize._x = 0.0f;
+		}
+	}
+	else if (r_stick_newtral_param._x <= 0.0f)
+	{
+		if (r_stick_._x <= 0.0f&&r_stick_._x >= r_stick_newtral_param._x)
+		{
+			normalize._x = 0.0f;
+		}
+	}
+
+	if (r_stick_newtral_param._y >= 0.0f)
+	{
+		if (r_stick_._y >= 0.0f&&r_stick_._y <= r_stick_newtral_param._y)
+		{
+			normalize._y = 0.0f;
+		}
+	}
+	else if (r_stick_newtral_param._y <= 0.0f)
+	{
+		if (r_stick_._y <= 0.0f&&r_stick_._y >= r_stick_newtral_param._y)
+		{
+			normalize._y = 0.0f;
+		}
+	}
+
+	if (normalize._x > 1.0f)
+	{
+		normalize._x = 1.0f;
+	}
+	if (normalize._y > 1.0f)
+	{
+		normalize._y = 1.0f;
+	}
+	if (normalize._x < -1.0f)
+	{
+		normalize._x = -1.0f;
+	}
+	if (normalize._y < -1.0f)
+	{
+		normalize._y = -1.0f;
+	}
+
+	r_stick_ = normalize;
+}
+
 bool XIPad::GetPress(KEY in_key) const
 {
 	return is_press_[(u32)in_key];
@@ -108,116 +222,12 @@ bool XIPad::GetRelease(KEY in_key) const
 
 const float2& XIPad::GetLStick(void) const
 {
-	float2 out = l_stick_;
-
-	out._x /= 32768.0f;
-	out._y /= 32768.0f;
-
-	if (l_stick_newtral_param._x >= 0.0f)
-	{
-		if (l_stick_._x >= 0.0f&&l_stick_._x <= l_stick_newtral_param._x)
-		{
-			out._x = 0.0f;
-		}
-	}
-	else if (l_stick_newtral_param._x <= 0.0f)
-	{
-		if (l_stick_._x <= 0.0f&&l_stick_._x >= l_stick_newtral_param._x)
-		{
-			out._x = 0.0f;
-		}
-	}
-
-	if (l_stick_newtral_param._y >= 0.0f)
-	{
-		if (l_stick_._y >= 0.0f&&l_stick_._y <= l_stick_newtral_param._y)
-		{
-			out._y = 0.0f;
-		}
-	}
-	else if (l_stick_newtral_param._y <= 0.0f)
-	{
-		if (l_stick_._y <= 0.0f&&l_stick_._y >= l_stick_newtral_param._y)
-		{
-			out._y = 0.0f;
-		}
-	}
-
-	if (out._x > 1.0f)
-	{
-		out._x = 1.0f;
-	}
-	if (out._y > 1.0f)
-	{
-		out._y = 1.0f;
-	}
-	if (out._x < -1.0f)
-	{
-		out._x = -1.0f;
-	}
-	if (out._y < -1.0f)
-	{
-		out._y = -1.0f;
-	}
-
-	return out;
+	return l_stick_;
 }
 
 const float2& XIPad::GetRStick(void) const
 {
-	float2 out = r_stick_;
-
-	out._x /= 32768.0f;
-	out._y /= 32768.0f;
-
-	if (r_stick_newtral_param._x >= 0.0f)
-	{
-		if (r_stick_._x >= 0.0f&&r_stick_._x <= r_stick_newtral_param._x)
-		{
-			out._x = 0.0f;
-		}
-	}
-	else if (r_stick_newtral_param._x <= 0.0f)
-	{
-		if (r_stick_._x <= 0.0f&&r_stick_._x >= r_stick_newtral_param._x)
-		{
-			out._x = 0.0f;
-		}
-	}
-
-	if (r_stick_newtral_param._y >= 0.0f)
-	{
-		if (r_stick_._y >= 0.0f&&r_stick_._y <= r_stick_newtral_param._y)
-		{
-			out._y = 0.0f;
-		}
-	}
-	else if (r_stick_newtral_param._y <= 0.0f)
-	{
-		if (r_stick_._y <= 0.0f&&r_stick_._y >= r_stick_newtral_param._y)
-		{
-			out._y = 0.0f;
-		}
-	}
-
-	if (out._x > 1.0f)
-	{
-		out._x = 1.0f;
-	}
-	if (out._y > 1.0f)
-	{
-		out._y = 1.0f;
-	}
-	if (out._x < -1.0f)
-	{
-		out._x = -1.0f;
-	}
-	if (out._y < -1.0f)
-	{
-		out._y = -1.0f;
-	}
-
-	return out;
+	return r_stick_;
 }
 
 f32 XIPad::GetLTrigger(void) const

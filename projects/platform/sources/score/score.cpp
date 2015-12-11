@@ -37,8 +37,8 @@ Score::Score(void)
 	//スコア表示背景生成青
 	back_ground_sprite_[(unsigned int)TEAM::BLUE] = std::make_shared<mesh::Sprite>(size_);
 	back_ground_sprite_[(unsigned int)TEAM::BLUE]->SetAnchorPoint(float2(0.5f, 1.0f));
-	back_ground_mesh_object_[(unsigned int)TEAM::RED] = std::make_shared<MeshObject>(back_ground_sprite_[(unsigned int)TEAM::BLUE]);
-	back_ground_mesh_object_[(unsigned int)TEAM::RED]->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/wall.png"));
+	back_ground_mesh_object_[(unsigned int)TEAM::BLUE] = std::make_shared<MeshObject>(back_ground_sprite_[(unsigned int)TEAM::BLUE]);
+	back_ground_mesh_object_[(unsigned int)TEAM::BLUE]->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/wall.png"));
 }
 
 //=============================================================================
