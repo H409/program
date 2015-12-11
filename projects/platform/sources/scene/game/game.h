@@ -105,6 +105,10 @@ private:
 	u32 debug_player_number_;
 	bool debugRenderTarget_;
 #endif
+
+	u32 GetPoint(u32 player_number)const;
+
+
 };
 
 #endif

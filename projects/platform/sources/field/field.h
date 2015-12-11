@@ -87,6 +87,8 @@ public:
 
 	u32 GetBlockCount(void)const;
 
+	u32 GetBlockCount(TYPE in_type);
+
 	std::vector<u32> GetIndexs(TYPE in_type);
 
 	// get positions

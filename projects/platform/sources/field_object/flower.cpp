@@ -27,6 +27,7 @@ Flower::Flower(u32 in_number)
 	,type_(TYPE::SPROUT)
 	,time_count_(0)
 	,number_(0)
+	,is_live_(false)
 {
 	sprite_3d_ = std::make_shared<mesh::Sprite3D>(float2(0.5f,0.5f));
 	mesh_object_ = std::make_shared<MeshObject>(sprite_3d_);
@@ -87,11 +88,24 @@ const float3& Flower::GetPosition(void)const
 	return position_;
 }
 
-void Flower::Show(bool in_is_show)
+void Flower::Show(void)
 {
-	is_show_ = in_is_show;
+	is_show_ = true;
+	is_live_ = true;
 	type_ = TYPE::SPROUT;
 	time_count_ = 0;
+	SetTexture(number_);
+}
+
+void Flower::Hide(void)
+{
+	is_show_ = false;
+}
+
+void Flower::Death(void)
+{
+	is_show_ = false;
+	is_live_ = false;
 }
 
 void Flower::SetNumber(u32 in_number)
@@ -103,6 +117,16 @@ void Flower::SetNumber(u32 in_number)
 bool Flower::IsShow(void) const
 {
 	return is_show_;
+}
+
+bool Flower::IsLive(void) const
+{
+	return is_live_;
+}
+
+u32 Flower::GetNumber(void) const
+{
+	return number_;
 }
 
 void Flower::SetTexture(u32 in_number)

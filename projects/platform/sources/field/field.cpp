@@ -248,6 +248,19 @@ u32 Field::GetBlockCount(void) const
 	return width_count_ * height_count_;
 }
 
+u32 Field::GetBlockCount(TYPE in_type)
+{
+	u32 count = 0;
+	for(auto type : types_)
+	{
+		if(type == (u32)in_type)
+		{
+			count++;
+		}
+	}
+	return count;
+}
+
 std::vector<u32> Field::GetIndexs(TYPE in_type)
 {
 	std::vector<u32> indexs;

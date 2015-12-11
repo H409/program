@@ -183,7 +183,7 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 
 	for(auto flower : flowers_)
 	{
-		flower->Show(false);
+		flower->Death();
 	}
 
 	flower_list_.clear();
@@ -299,7 +299,7 @@ void Game::Update()
 				{
 					auto index = field_->GetBlockIndex(position);
 					//field_->SetType(index,(u32)Field::TYPE::SOIL);
-					flowers_[index]->Show(false);
+					flowers_[index]->Death();
 					flower_list_.erase(remove_if(flower_list_.begin(),flower_list_.end(),[](std::weak_ptr<Flower> flower)->bool {return !flower._Get()->IsShow();}),flower_list_.end());
 				}
 			}
@@ -438,10 +438,10 @@ void Game::Update()
 							//field_->SetType(index,(u32)Field::TYPE::FLOWER);
 							auto flower_position = field_->GetBlockPosition(position);
 
-							if(!flowers_[index]->IsShow())
+							if(!flowers_[index]->IsLive())
 							{
 								flowers_[index]->SetNumber(bullet->GetTag());
-								flowers_[index]->Show(true);
+								flowers_[index]->Show();
 								flowers_[index]->SetPosition(flower_position);
 
 								flower_list_.push_back(flowers_[index]);
@@ -471,6 +471,13 @@ void Game::Update()
 			}
 		}
 	}
+
+#ifndef _RELEASE
+	for(auto i = 0;i < PLAYER_MAX;++i)
+	{
+		DEVELOP_DISPLAY("player %d : %d\n",i,GetPoint(i));
+	}
+#endif
 }
 
 //=============================================================================
@@ -812,4 +819,18 @@ void Game::Draw()
 	}
 #endif
 
+}
+
+u32 Game::GetPoint(u32 player_number) const
+{
+	u32 count = 0;
+
+	for(auto flower : flower_list_)
+	{
+		if(flower._Get()->GetNumber() == player_number)
+		{
+			count++;
+		}
+	}
+	return count;
 }
