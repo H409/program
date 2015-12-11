@@ -80,6 +80,8 @@ public:
 	//
 	void NotSelectBlock(void);
 
+	const float2& GetSize(void) const;
+
 	// get block position
 	float3 GetBlockPosition(const float3& in_position);
 
