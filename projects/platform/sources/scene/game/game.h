@@ -34,6 +34,7 @@ class FollowerObserver;
 class MeshObject;
 class Flower;
 class FBXObject ;
+class Timer;
 
 namespace utility {
 namespace culling {
@@ -96,6 +97,8 @@ private:
 	std::shared_ptr<FBXObject> fbx_object_[ FBX_OBJECT_MAX ];
 
 	std::unique_ptr<utility::culling::FrustumCulling> frustum_culling_;
+
+	std::unique_ptr<Timer> timer_;
 #ifdef _DEBUG
 	std::shared_ptr<MeshObject> debug_sprite_object_;
 	std::shared_ptr<MeshObject> debug_object_;

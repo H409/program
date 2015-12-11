@@ -63,6 +63,7 @@
     <ClCompile Include="sources\system\input_mouse.cpp" />
     <ClCompile Include="sources\system\win_system.cpp" />
     <ClCompile Include="sources\system\xi_pad.cpp" />
+    <ClCompile Include="sources\timer\timer.cpp" />
     <ClCompile Include="sources\wall\wall.cpp" />
     <ClCompile Include="sources\windows\win_main.cpp" />
     <ClCompile Include="sources\x_model\x_model.cpp" />
@@ -118,6 +119,7 @@
     <ClInclude Include="sources\system\input_mouse.h" />
     <ClInclude Include="sources\system\win_system.h" />
     <ClInclude Include="sources\system\xi_pad.h" />
+    <ClInclude Include="sources\timer\timer.h" />
     <ClInclude Include="sources\wall\wall.h" />
     <ClInclude Include="sources\x_model\x_model.h" />
   </ItemGroup>

@@ -37,6 +37,7 @@
 #include "cylinder/cylinder.h"
 #include "culling/frustum_culling.h"
 #include "fbx_object/fbx_object.h"
+#include "timer/timer.h"
 
 //=============================================================================
 // constructor
@@ -45,6 +46,8 @@ Game::Game()
 {
 	auto graphic_device = GET_GRAPHIC_DEVICE();
 	auto window = GET_WINDOW();
+
+	timer_ = std::make_unique<Timer>();
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
@@ -184,6 +187,9 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 	}
 
 	flower_list_.clear();
+
+	timer_->Reset();
+
 	return true;
 }
 
@@ -207,6 +213,7 @@ void Game::Update()
 	}
 #endif
 
+	timer_->Update();
 #ifdef _DEBUG
 	if(debugRenderTarget_)
 	{
@@ -462,7 +469,7 @@ void Game::Draw()
 
 	int debug_object_draw_num = 0 ;
 
-
+	int min = 0;
 	int max = PLAYER_MAX ;
 
 	static bool _d = false ;
@@ -473,7 +480,12 @@ void Game::Draw()
 
 	if( _d == true )
 	{
-		max = 1 ;
+		max = 1;
+		if(debugRenderTarget_)
+		{
+			min = debug_player_number_;
+			max = debug_player_number_ + 1;
+		}
 	}
 
 	if(GET_INPUT_KEYBOARD()->GetPress(DIK_M))
@@ -481,7 +493,7 @@ void Game::Draw()
 		GET_DIRECTX9_DEVICE()->SetRenderState(D3DRS_FILLMODE,D3DFILL_WIREFRAME);
 	}
 
-	for(u32 i = 0;i < max;++i)
+	for(u32 i = min;i < max;++i)
 #else
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 #endif // _DEBUG
@@ -708,6 +720,7 @@ void Game::Draw()
 
 	if(debugRenderTarget_ == true)
 	{
+		DEVELOP_DISPLAY("‘€ìƒvƒŒƒCƒ„[ : %d\n",debug_player_number_ + 1);
 		if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_LEFT) == true)
 		{
 			_debugRenderTargetIndex--;

@@ -241,6 +241,9 @@
     <ClCompile Include="sources\fbx_object\fbx_object.cpp">
       <Filter>sources\fbx_object</Filter>
     </ClCompile>
+    <ClCompile Include="sources\timer\timer.cpp">
+      <Filter>sources\timer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sources\main.h">
@@ -398,6 +401,9 @@
     </ClInclude>
     <ClInclude Include="sources\fbx_object\fbx_object.h">
       <Filter>sources\fbx_object</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\timer\timer.h">
+      <Filter>sources\timer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
