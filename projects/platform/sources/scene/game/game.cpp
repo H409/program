@@ -107,19 +107,20 @@ Game::Game()
 
 	field_ = std::make_shared<Field>();
 	field_->Load("resources/map/map.txt");
+	auto field_size = field_->GetSize();
 	for (u32 i = 0; i < WALL_MAX; ++i)
 	{
 		wall_[i] = std::make_shared<Wall>();
 		wall_[i]->Update();
 	}
 
-	wall_[0]->GetObject()->SetPosition(0.0f, 0.0f, 15.0f);
+	wall_[0]->GetObject()->SetPosition(0.0f, 0.0f, field_size._y * 0.5f);
 	wall_[0]->GetObject()->SetRotation(0.0f, 0.0f, 0.0f);
-	wall_[1]->GetObject()->SetPosition(15.0f, 0.0f, 0.0f);
+	wall_[1]->GetObject()->SetPosition(field_size._x * 0.5f, 0.0f, 0.0f);
 	wall_[1]->GetObject()->SetRotation(0.0f, D3DX_PI/2, 0.0f);
-	wall_[2]->GetObject()->SetPosition(0.0f, 0.0f, -15.0f);
+	wall_[2]->GetObject()->SetPosition(0.0f, 0.0f,-field_size._y * 0.5f);
 	wall_[2]->GetObject()->SetRotation(0.0f, D3DX_PI, 0.0f);
-	wall_[3]->GetObject()->SetPosition(-15.0f, 0.0f, 0.0f);
+	wall_[3]->GetObject()->SetPosition(-field_size._x * 0.5f, 0.0f, 0.0f);
 	wall_[3]->GetObject()->SetRotation(0.0f, D3DX_PI/-2, 0.0f);
 
 	dome_ = std::make_shared<Dome>();

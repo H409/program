@@ -60,7 +60,6 @@ Field::Field(void)
 	mesh_object_ = std::make_shared<MeshObject>(sprite_3d_);
 	mesh_object_->SetRotationX(utility::math::ToRadian(90.0f));
 #endif
-
 	mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/field.jpg"));
 }
 
@@ -76,29 +75,6 @@ Field::~Field(void)
 //=============================================================================
 void Field::Update(void)
 {
-#ifndef _RELEASE
-	if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_5))
-	{
-		//mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/field.jpg"));
-	}
-	if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_6))
-	{
-		//mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/field_.jpg"));
-	}
-#endif
-	for(u32 i = 0;i < height_count_;++i)
-	{
-		for(u32 j = 0;j < width_count_;++j)
-		{
-			//if(CheckTypeRightBottom(j,i,2))
-			//{
-			//	SetType(j + 0,i + 0,3);
-			//	SetType(j + 1,i + 0,3);
-			//	SetType(j + 0,i + 1,3);
-			//	SetType(j + 1,i + 1,3);
-			//}
-		}
-	}
 }
 
 void Field::Reset(void)
@@ -128,13 +104,20 @@ void Field::Load(const std::string& in_path)
 	file.close();
 
 	auto size = str.size();
+	auto offset = str.find_first_of('=') + 1;
 
-	auto data = "data=";
-	auto offset = str.find_last_of("=") + 2;
+	width_count_ = atoi((str.c_str() + offset));
+	offset = str.find_first_of('=',offset) + 1;
+	height_count_ = atoi((str.c_str() + offset));
+
+	offset = str.find_last_of('=') + 2;
+
+	types_.clear();
+
+	types_.resize(width_count_ * height_count_);
 
 	for(auto& type : types_)
 	{
-		//type = 0;
 		type = atoi((str.c_str() + offset)) - 1;
 		
 		if(str.find_first_of(',',offset) != str.npos)
@@ -148,8 +131,13 @@ void Field::Load(const std::string& in_path)
 	}
 
 #if MESH
+	mesh_sprite_3d_ = std::make_shared<mesh::MeshSprite3D>(block_width_,block_height_,width_count_,height_count_);
+	mesh_sprite_3d_->SetTexcoord(2,2);
+	mesh_object_ = std::make_shared<MeshObject>(mesh_sprite_3d_);
 	mesh_sprite_3d_->SetIndex(types_);
 	mesh_sprite_3d_->Apply();
+	size_ = float2(block_width_ * width_count_,block_height_ * height_count_);
+	mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/field.jpg"));
 #endif
 }
 
@@ -214,6 +202,11 @@ void Field::SelectBlock(const float3& in_position)
 void Field::NotSelectBlock(void)
 {
 	//mesh_sprite_3d_->SetColor(select_index_x_,select_index_y_,DEFAULT_COLOR);
+}
+
+const float2 & Field::GetSize(void) const
+{
+	return size_;
 }
 
 float3 Field::GetBlockPosition(const float3& in_position)
