@@ -312,9 +312,10 @@ void DX9Device::SetDefaultRenderState_(void)
 	//direct3ddevice9_->SetRenderState(D3DRS_CULLMODE,D3DCULL_NONE);
 	direct3ddevice9_->SetRenderState(D3DRS_CULLMODE,D3DCULL_CCW);					// 裏面をカリング
 	direct3ddevice9_->SetRenderState(D3DRS_ZENABLE,TRUE);							// Zバッファを使用
-	direct3ddevice9_->SetRenderState(D3DRS_ALPHABLENDENABLE,TRUE);				// αブレンドを行う
-	direct3ddevice9_->SetRenderState(D3DRS_SRCBLEND,D3DBLEND_SRCALPHA);			// αソースカラーの指定
-	direct3ddevice9_->SetRenderState(D3DRS_DESTBLEND,D3DBLEND_INVSRCALPHA);		// αデスティネーションカラーの指定
+	direct3ddevice9_->SetRenderState(D3DRS_ALPHABLENDENABLE,FALSE);
+	//direct3ddevice9_->SetRenderState(D3DRS_ALPHABLENDENABLE,TRUE);				// αブレンドを行う
+	//direct3ddevice9_->SetRenderState(D3DRS_SRCBLEND,D3DBLEND_SRCALPHA);			// αソースカラーの指定
+	//direct3ddevice9_->SetRenderState(D3DRS_DESTBLEND,D3DBLEND_INVSRCALPHA);		// αデスティネーションカラーの指定
 	direct3ddevice9_->SetRenderState(D3DRS_ALPHAREF,1);
 	direct3ddevice9_->SetRenderState(D3DRS_ALPHATESTENABLE,TRUE);
 	direct3ddevice9_->SetRenderState(D3DRS_ALPHAFUNC,D3DCMP_GREATEREQUAL);

@@ -456,7 +456,8 @@ void Game::Update()
 						{
 							if(bullet->GetTag() / 2 != i / 2)
 							{
-								auto player_position = players_[i]->GetPosition();
+								auto& player = players_[i];
+								auto player_position = player->GetPosition();
 								if(utility::math::Distance(position,player_position) < 0.5f + 1.0f)
 								{
 									DEBUG_TRACE("hit");
