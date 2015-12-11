@@ -1,17 +1,16 @@
 //-----------------------------------------------------------------------------
 //
-// プレイヤー処理 : player.h
+// 木処理 : fbx_tree.h
 // Author : sembon takanori
 //
 //-----------------------------------------------------------------------------
-#ifndef _FBX_OBJECT_H_
-#define _FBX_OBJECT_H_
+#ifndef _FBX_TREE_H_
+#define _FBX_TREE_H_
 
 //------------------------------------------------------------------------
 // インクルード
 //------------------------------------------------------------------------
-#include "../object/object.h"
-#include "../fbx/kim.h"
+#include "../fbx_object/fbx_object.h"
 
 //------------------------------------------------------------------------
 // マクロ定義
@@ -32,31 +31,27 @@
 //------------------------------------------------------------------------
 // クラス
 //------------------------------------------------------------------------
-class FBXObject : public Object
+class FBXTree : public FBXObject
 {
 public : 
-	FBXObject( LPDIRECT3DDEVICE9 pDevice );		// コンストラクタ
-	~FBXObject();									// デストラクタ
+	FBXTree( LPDIRECT3DDEVICE9 pDevice , int ID );		// コンストラクタ
+	~FBXTree();									// デストラクタ
 
 	void Init( float3 pos );			// 初期化
 	void Update( void );				// 更新
 	void Draw( void );					// 描画
 	void Uninit( void );				// 終了
 
-	void Load( char *file );
-
-	//--  kimのポインタ  --//
-	Kim* GetKimPointer( void ){ return pKim_ ; }
+	int GetID( void ){ return ID_ ; }
+	void SetID( int i ){ ID_ = i ; }
 
 private : 
+	
+	int ID_ ;
 
 protected : 
-	LPDIRECT3DDEVICE9 pDevice_ ;
-	Kim* pKim_ ;
-
-	void UpdateKimMatrix( void );
 };
 
-#endif // _FBX_OBJECT_H_
+#endif // _FBX_TREE_H_
 
 // END

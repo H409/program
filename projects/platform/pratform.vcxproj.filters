@@ -83,6 +83,9 @@
     <Filter Include="sources\fbx_object">
       <UniqueIdentifier>{17495af9-1232-4759-ad08-c5325e836be8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\fbx_tree">
+      <UniqueIdentifier>{a58da7b4-7859-4433-bbe8-85e66b7c8781}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\windows\win_main.cpp">
@@ -237,6 +240,9 @@
     </ClCompile>
     <ClCompile Include="sources\fbx_object\fbx_object.cpp">
       <Filter>sources\fbx_object</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\fbx_tree\fbx_tree.cpp">
+      <Filter>sources\fbx_tree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -396,5 +402,11 @@
     <ClInclude Include="sources\fbx_object\fbx_object.h">
       <Filter>sources\fbx_object</Filter>
     </ClInclude>
+    <ClInclude Include="sources\fbx_tree\fbx_tree.h">
+      <Filter>sources\fbx_tree</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\ToDo.txt" />
   </ItemGroup>
 </Project>

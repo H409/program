@@ -33,6 +33,7 @@
     <ClCompile Include="sources\dome\mesh_dome.cpp" />
     <ClCompile Include="sources\fbx\kim.cpp" />
     <ClCompile Include="sources\fbx_object\fbx_object.cpp" />
+    <ClCompile Include="sources\fbx_tree\fbx_tree.cpp" />
     <ClCompile Include="sources\field\field.cpp" />
     <ClCompile Include="sources\field_icon\field_icon.cpp" />
     <ClCompile Include="sources\field_object\flower.cpp" />
@@ -86,6 +87,7 @@
     <ClInclude Include="sources\dome\mesh_dome.h" />
     <ClInclude Include="sources\fbx\kim.h" />
     <ClInclude Include="sources\fbx_object\fbx_object.h" />
+    <ClInclude Include="sources\fbx_tree\fbx_tree.h" />
     <ClInclude Include="sources\field\field.h" />
     <ClInclude Include="sources\field_icon\field_icon.h" />
     <ClInclude Include="sources\field_object\flower.h" />
@@ -120,6 +122,9 @@
     <ClInclude Include="sources\system\xi_pad.h" />
     <ClInclude Include="sources\wall\wall.h" />
     <ClInclude Include="sources\x_model\x_model.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\ToDo.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D065D020-0DE1-4D84-929D-D472BD0380F4}</ProjectGuid>
