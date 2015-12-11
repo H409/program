@@ -123,9 +123,6 @@ struct KIM_BONE_DATA
 //=============================================================================
 class Kim
 {
-#define NOW_ANIMETION ( int )wepon_ * ( int )ANIME::MAX + ( int )anime_
-#define OLD_ANIMETION ( int )wepon_ * ( int )ANIME::MAX + ( int )old_anime_
-
 	static const int BONE_MAX = 13;
 
 	enum DRAW_TYPE{
@@ -137,26 +134,6 @@ class Kim
 	};
 
 public : 
-	enum class WEAPON
-	{
-		LAUNCHER = 0 ,
-		GUN ,
-		HOE ,
-		MAX
-	};
-
-	enum class ANIME
-	{
-		NONE = -1 ,		// なし
-		TAKE_OUT ,		// 取り出し
-		WAIT ,			// 待機
-		WALK ,			// 歩く
-		ACTION ,		// 行動
-		DAMAGE ,		// ダメージ
-		//DASH ,		// 走り 
-
-		MAX
-	};
 
 	// 処理:コンストラクタ
 	Kim(LPDIRECT3DDEVICE9 d3d_device);
@@ -185,18 +162,14 @@ public :
 	void SetView( D3DXMATRIX *view ){ view_ = *view ; }
 	void SetProjection( D3DXMATRIX *projection ){ projection_ = *projection ; }
 
-	ANIME GetAnime( void ){ return anime_ ; }
-	void SetAnime( const ANIME& anime );
+	LPDIRECT3DTEXTURE9 GetTexture( int i ){ return mesh_[ i ].texture_ ; }
 
-	ANIME GetOldAnime( void ){ return anime_ ; }
-	void SetOldAnime( const ANIME& anime ){ old_anime_ = anime ; };
+	bool GetAnimarionPlay( int i ){ return animation_play_[ i ]; }	// trueで終わっている
 
-	WEAPON GetWepon( void ){ return wepon_ ; };
-	void SetWepon( const WEAPON& wepon ){ wepon_ = wepon ; };
-
-	bool GetAnimarionPlay( int i ){ 
-		return animation_play_[ i ];
-	}	// trueで終わっている
+	void SetOldKey( int i ){ old_key_ = i ; }
+	void SetAnimeID( int id ){ anime_ID_ = id ; }
+	void SetAnime( int start , int end , int repeat );
+	void SetOldAnime( int start , int end , int repeat );
 
 private:
 	// 処理:ｼｪｰﾀﾞｰのｺﾝﾊﾟｲﾙ
@@ -219,6 +192,9 @@ private:
 
 	// 複数ﾒｯｼｭ	自作ｼｪｰﾀﾞｰ用描画
 	void MultiMeshMyShader(void);
+
+	void Animation( void );
+	void Animation( int i );
 
 private : 
 	LPDIRECT3DDEVICE9 d3d_device_;
@@ -250,6 +226,7 @@ private :
 	D3DXVECTOR3 vertex_min_;
 	D3DXVECTOR3 vertex_max_;
 
+	int anime_ID_ ;
 	int anime_speed = 1;
 	float value_ = 0.0f;
 	float times_ = 15.0f;
@@ -259,18 +236,16 @@ private :
 	int anime_value = 1;
 	int all_vertex_num_ = 0;
 
+	int old_key_ ;
 	int current_key_ ;
 	int next_key_ ;
 
 	bool animation_ ;
 	bool animation_play_[ 5 ];	// 新しいアニメーション終わったか
 
-	static int anime_data_[][ 3 ];
-	ANIME anime_ ;
-	ANIME old_anime_ ;
+	int anime_data_[ 3 ];
+	int old_anime_data_[ 3 ];
 
-
-	WEAPON wepon_ ;		// 0 : ランチャー , 1 : 銃 , 2 : クワ
 };
 
 #endif // _SCENE_KIM_H_

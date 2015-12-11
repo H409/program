@@ -128,7 +128,7 @@ Game::Game()
 	}
 
 	fbx_object_[ 0 ] = std::make_shared<FBXObject>( graphic_device->GetDevice() );
-	fbx_object_[ 0 ]->Load( "resources/model/ki_obj.kim" );
+	fbx_object_[ 0 ]->Load( "resources/model/ki_mo.kim" );
 
 #ifdef _DEBUG
 	debugRenderTarget_ = false;
@@ -241,7 +241,7 @@ void Game::Update()
 	}
 #endif // _DEBUG
 
-		if( players_[ i ]->GetKimPointer()->GetWepon() == Kim::WEAPON::GUN &&
+		if( players_[ i ]->GetWepon() == Player::WEAPON::GUN &&
 			players_[ i ]->GetAction() == true )
 		{
 			// Ží‚Ü‚«
@@ -584,6 +584,11 @@ void Game::Draw()
 			}
 		}
 
+		//--  “®‚©‚È‚¢FBX  --//
+		fbx_object_[ 0 ]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[ i ]->GetViewMatrix());
+		fbx_object_[ 0 ]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[ i ]->GetProjectionMatrix());
+		fbx_object_[ 0 ]->Draw();
+
 		graphic_device->SetVertexShader(gb_vs_fbx);
 
 		for(u32 j = 0;j < PLAYER_MAX;++j)
@@ -599,11 +604,6 @@ void Game::Draw()
 				players_[j]->Draw();
 			}
 		}
-
-		
-		fbx_object_[ 0 ]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[ i ]->GetViewMatrix());
-		fbx_object_[ 0 ]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[ i ]->GetProjectionMatrix());
-		fbx_object_[ 0 ]->Draw();
 	}
 
 #ifdef _DEBUG

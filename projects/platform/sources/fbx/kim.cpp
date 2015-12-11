@@ -18,26 +18,6 @@
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
-int Kim::anime_data_[][ 3 ] = { //--  ランチャー  --//
-								{ 31  , 60  , 0 } ,		// 取り出し
-								{ 61  , 150 , 1 } ,		// 待機
-								{ 151 , 180 , 1 } ,		// 歩く
-								{ 181 , 240 , 0 } ,		// 行動
-								{ 241 , 300 , 0 } ,		// ダメージ
-
-								//--  ショットガン  --//
-								{ 331 , 360 , 0 } ,		// 取り出し
-								{ 361 , 450 , 1 } ,		// 待機
-								{ 451 , 480 , 1 } ,		// 歩く
-								{ 481 , 510 , 0 } ,		// 行動
-								{ 511 , 570 , 0 } ,		// ダメージ
-
-								//--  クワ  --//
-								{ 601 , 630 , 0 } ,		// 取り出し
-								{ 631 , 720 , 1 } ,		// 待機
-								{ 721 , 750 , 1 } ,		// 歩く
-								{ 751 , 810 , 0 } ,		// 行動
-								{ 811 , 870 , 0 } };	// ダメージ
 
 //=============================================================================
 // 役割 : コンストラクタ
@@ -71,12 +51,11 @@ Kim::Kim(LPDIRECT3DDEVICE9 d3d_device)
 	//--  このﾌﾚｰﾑﾜｰｸ用  --//
 //	all_vertex_num_ = 0;
 
-	old_anime_ = ANIME::WAIT ;
-	anime_ = ANIME::WAIT ;
-	wepon_ = WEAPON::GUN ;
-	current_key_ = anime_data_[ NOW_ANIMETION ][ 0 ];
-	animation_ = true ;
+	old_key_ = 0 ;
+	current_key_ = 0 ;
+	next_key_ = 0 ;
 
+	animation_ = true ;
 	memset( &animation_play_ , 0 , sizeof( animation_play_ ) );
 }
 
@@ -367,10 +346,14 @@ void Kim::Uninit( void )
 void Kim::Update(void)
 {
 	// ﾎﾞｰﾝがなければそもそもｽｷﾆﾝｸﾞされてない
-	if( bone_ == NULL )
+	if( bone_ == 0 )
 	{
 		return ;
 	}
+
+
+	Animation();
+	
 
 	//if (!GetAsyncKeyState('Y') & 0x0001)
 	{
@@ -493,89 +476,6 @@ void Kim::Update(void)
 		//	bone_[i].bone_matrix = scl * rot * trans * bone_[i].init_matrix;
 		//}
 
-		// 普通のｱﾆﾒｰｼｮﾝ
-		for( int i = 0 ; i < bone_num_ ; i++ )
-		{
-			// 初期化
-			D3DXMatrixIdentity( &bone_[ i ].bone_matrix );
-
-			// 可読性がヤバイのでﾃﾝﾎﾟﾗﾘを用意
-			KIM_BONE_DATA *dest_bone = &bone_[ i ];
-				
-			//// ｷｰ数がない場合はおそらくｱﾆﾒｰｼｮﾝ無いので初期姿勢だけかけて次
-			//if (dest_bone->anime[ 0 ].num_key == 0)
-			//{
-			//	bone_[i].bone_matrix *= bone_[i].init_matrix;
-			//	continue;
-			//}
-
-			//dest_bone->anime[ 0 ].current_key = 1 ;
-			//dest_bone->anime[ 0 ].num_key = 60 ;
-
-			// 可読性がヤバイのでﾃﾝﾎﾟﾗﾘを用意
-		//	int current_key = dest_bone->anime[ 0 ].current_key ;
-		//	int next_key = ( dest_bone->anime[ 0 ].current_key + 1 ) % ( dest_bone->anime[ 0 ].num_key );
-
-			//current_key_ = anime_data_[ anime_ ][ 0 ];
-			next_key_ = ( current_key_ + 1 ) % ( anime_data_[ NOW_ANIMETION ][ 1 ] );
-
-			KIM_KEY_FRAME *cur_flame = &dest_bone->anime[ 0 ].keyframe[ current_key_ ];
-			KIM_KEY_FRAME *next_flame ;
-
-			//if ( 0  ==  0 )
-			{
-				next_flame = &dest_bone->anime[ 0 ].keyframe[ next_key_ ];
-			}
-
-			// それぞれの変換情報線形補間
-			D3DXVECTOR3 scaling = cur_flame->scaling ;
-			D3DXVECTOR3 translation = cur_flame->translation ;
-			D3DXQUATERNION rotation = cur_flame->rotation ;
-
-			// それぞれの行列変換
-			D3DXMATRIX scl , rot , trans ;
-			D3DXMatrixScaling( &scl , scaling.x , scaling.y , scaling.z );
-			D3DXMatrixRotationQuaternion( &rot , &rotation );
-			D3DXMatrixTranslation( &trans , translation.x , translation.y , translation.z );
-
-			// 行列合成
-			bone_[ i ].bone_matrix = scl * rot * trans * bone_[ i ].init_matrix ;
-
-			// 次のﾌﾚｰﾑに移動
-			//if( dest_bone->current_time >= 1 )
-			{
-				//dest_bone->current_time = 0;
-
-			//	if ( 0  ==  0 )
-				{
-					auto a = NOW_ANIMETION ;
-					auto b = anime_data_[ NOW_ANIMETION ][ 1 ] ;
-
-					if( current_key_ >= anime_data_[ NOW_ANIMETION ][ 1 ] )
-					{
-						animation_play_[ ( int )anime_ ] = false ;	// アニメーション終わり
-
-						//--  リピートありなら  --//
-						if( anime_data_[ NOW_ANIMETION ][ 2 ] == 1 )
-						{
-							current_key_ = anime_data_[ NOW_ANIMETION ][ 0 ];
-						}
-						else
-						{
-							current_key_ = anime_data_[ OLD_ANIMETION ][ 0 ];
-							anime_ = old_anime_ ;
-							//animation_ = false ;
-						}
-
-						//dest_bone->anime[ 0 ].current_key %= dest_bone->anime[ 0 ].num_key;
-					}
-				}
-			}
-
-			/// 時を進める
-			//dest_bone->current_time += anime_speed ;
-		}
-
 		//if( animation_ == true )
 		{
 			current_key_++;
@@ -589,7 +489,115 @@ void Kim::Update(void)
 	}
 
 	DEVELOP_DISPLAY( "current_key_ : %d\n" , current_key_ );
+	DEVELOP_DISPLAY( "anime : %d , %d , %d\n" , anime_data_[ 0 ] , anime_data_[ 1 ] , anime_data_[ 2 ] );
 
+
+}
+
+//=============================================================================
+// 処理:アニメーション
+//=============================================================================
+void Kim::Animation( void )
+{
+	//// 普通のｱﾆﾒｰｼｮﾝ
+	//for( int i = 0 ; i < bone_num_ ; i++ )
+	//{
+	//	// 初期化
+	//	D3DXMatrixIdentity( &bone_[ i ].bone_matrix );
+
+	//	// 可読性がヤバイのでﾃﾝﾎﾟﾗﾘを用意
+	//	KIM_BONE_DATA *dest_bone = &bone_[ i ];
+	//			
+	//	next_key_ = ( current_key_ + 1 ) % ( anime_data_[ NOW_ANIMETION ][ 1 ] );
+
+	//	KIM_KEY_FRAME *cur_flame = &dest_bone->anime[ 0 ].keyframe[ current_key_ ];
+	//	KIM_KEY_FRAME *next_flame ;
+
+	//	next_flame = &dest_bone->anime[ 0 ].keyframe[ next_key_ ];
+
+	//	// それぞれの変換情報線形補間
+	//	D3DXVECTOR3 scaling = cur_flame->scaling ;
+	//	D3DXVECTOR3 translation = cur_flame->translation ;
+	//	D3DXQUATERNION rotation = cur_flame->rotation ;
+
+	//	// それぞれの行列変換
+	//	D3DXMATRIX scl , rot , trans ;
+	//	D3DXMatrixScaling( &scl , scaling.x , scaling.y , scaling.z );
+	//	D3DXMatrixRotationQuaternion( &rot , &rotation );
+	//	D3DXMatrixTranslation( &trans , translation.x , translation.y , translation.z );
+
+	//	// 行列合成
+	//	bone_[ i ].bone_matrix = scl * rot * trans * bone_[ i ].init_matrix ;
+
+	//	auto a = NOW_ANIMETION ;
+	//	auto b = anime_data_[ NOW_ANIMETION ][ 1 ] ;
+
+	//	if( current_key_ >= anime_data_[ NOW_ANIMETION ][ 1 ] )
+	//	{
+	//		animation_play_[ ( int )anime_ ] = false ;	// アニメーション終わり
+
+	//		//--  リピートありなら  --//
+	//		if( anime_data_[ NOW_ANIMETION ][ 2 ] == 1 )
+	//		{
+	//			current_key_ = anime_data_[ NOW_ANIMETION ][ 0 ];
+	//		}
+	//		else
+	//		{
+	//			current_key_ = anime_data_[ OLD_ANIMETION ][ 0 ];
+	//			anime_ = old_anime_ ;
+	//		}
+	//	}
+	//}
+
+	next_key_ = ( current_key_ + 1 ) % ( anime_data_[ 1 ] );
+
+	// 普通のｱﾆﾒｰｼｮﾝ
+	for( int i = 0 ; i < bone_num_ ; i++ )
+	{
+		// 初期化
+		D3DXMatrixIdentity( &bone_[ i ].bone_matrix );
+
+		// 可読性がヤバイのでﾃﾝﾎﾟﾗﾘを用意
+		KIM_BONE_DATA *dest_bone = &bone_[ i ];
+
+		KIM_KEY_FRAME *cur_flame = &dest_bone->anime[ 0 ].keyframe[ current_key_ ];
+		KIM_KEY_FRAME *next_flame ;
+
+		next_flame = &dest_bone->anime[ 0 ].keyframe[ next_key_ ];
+
+		// それぞれの変換情報線形補間
+		D3DXVECTOR3 scaling = cur_flame->scaling ;
+		D3DXVECTOR3 translation = cur_flame->translation ;
+		D3DXQUATERNION rotation = cur_flame->rotation ;
+
+		// それぞれの行列変換
+		D3DXMATRIX scl , rot , trans ;
+		D3DXMatrixScaling( &scl , scaling.x , scaling.y , scaling.z );
+		D3DXMatrixRotationQuaternion( &rot , &rotation );
+		D3DXMatrixTranslation( &trans , translation.x , translation.y , translation.z );
+
+		// 行列合成
+		bone_[ i ].bone_matrix = scl * rot * trans * bone_[ i ].init_matrix ;
+	}
+
+	if( current_key_ > anime_data_[ 1 ] )
+	{
+		//animation_play_[ ( int )anime_ ] = false ;	// アニメーション終わり
+
+		//--  リピートありなら  --//
+		if( anime_data_[ 2 ] == 1 )
+		{
+			current_key_ = anime_data_[ 0 ];
+		}
+		else
+		{
+			//for( int i = 0 ; i < 3 ; i++ )
+			//{
+			//	anime_data_[ i ] = old_anime_data_[ i ];
+			////	old_anime_data_[ i ] = anime_data_[ i ];
+			//}
+		}
+	}
 }
 
 //=============================================================================
@@ -919,28 +927,43 @@ void Kim::CreateVertexDecl(void)
 	d3d_device_->CreateVertexDeclaration(declAry, &decl_);
 }
 
-
 //-----------------------------------------------------------------------------
 //
 //-----------------------------------------------------------------------------
-void Kim::SetAnime( const ANIME& anime )
+void Kim::SetAnime( int start , int end , int repeat )
 { 
-	if( anime_ == anime )
+	if( anime_data_[ 0 ] == start )
 	{
 		return ;
 	}
 
- 	old_anime_ = anime_ ;
+	anime_data_[ 0 ] = start ;
+	anime_data_[ 1 ] = end ;
+	anime_data_[ 2 ] = repeat ;
 
-	anime_ = anime ;
+ //	old_anime_ = anime_ ;
 
-	current_key_ = anime_data_[ NOW_ANIMETION ][ 0 ];
+	//anime_ = anime ;
+	old_key_ = current_key_ ;
+	current_key_ = start ;
 
-	animation_ = true ; 
+	//animation_ = true ; 
 
-	memset( &animation_play_ , 0 , sizeof( animation_play_ ) );
-	animation_play_[ ( int )anime_ ] = true ;	// アニメーション終わり
+	//memset( &animation_play_ , 0 , sizeof( animation_play_ ) );
+	//animation_play_[ ( int )anime_ ] = true ;	// アニメーション終わり
 }
 
+//-----------------------------------------------------------------------------
+//
+//-----------------------------------------------------------------------------
+void Kim::SetOldAnime( int start , int end , int repeat )
+{ 
+	old_anime_data_[ 0 ] = start ;
+	old_anime_data_[ 1 ] = end ;
+	old_anime_data_[ 2 ] = repeat ;
+
+	old_key_ = start ;
+	current_key_ = start ;
+}
 
 // EOF
