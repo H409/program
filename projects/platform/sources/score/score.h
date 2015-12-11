@@ -1,8 +1,8 @@
 //*****************************************************************************
 //
-// result.h
+// score
 //
-// Author		: Masahiro Yamaguchi
+// Author		: Eyuu Yuminaga
 //
 //*****************************************************************************
 
@@ -10,49 +10,60 @@
 // include guard
 //*****************************************************************************
 #pragma once
-#ifndef _RESULT_H_
-#define _RESULT_H_
+#ifndef _SCORE_H_
+#define _SCORE_H_
+
 
 //*****************************************************************************
 // include
 //*****************************************************************************
-#include "../base/scene_base.h"
+
 
 //*****************************************************************************
 // forward declaration
 //*****************************************************************************
-class Player;
-class Field;
-class Score;
+namespace mesh {
+	class Sprite;
+}	//namespace mesh
+class MeshObject;
 
 //*****************************************************************************
-// class definition
+// class declaration
 //*****************************************************************************
-class Result : public SceneBase
+class Score
 {
 public:
-	// コンストラクタ
-	Result();
+	using TSprite = std::shared_ptr<mesh::Sprite>;
+	using TMeshObject = std::shared_ptr<MeshObject>;
 
-	// デストラクタ
-	virtual ~Result();
+	enum class TEAM
+	{
+		RED = 0,
+		BLUE,
+		MAX
+	};
 
-	// シーンの初期化。
-	virtual bool Initialize(SceneManager* p_scene_manager) override;
+	// constructor
+	Score(void);
 
-	// シーンの終了処理。
-	virtual void Finalize(void) override;
+	//destructor
+	virtual ~Score(void);
 
-	// 更新処理を行う。
-	virtual void Update(void) override;
+	// update
+	void Update(void);
 
-	// 描画処理を行う。
-	virtual void Draw(void) override;
+	//draw
+	void Draw(void);
+
+	//GetSprite3D
+	TSprite GetSprite(int i) { return back_ground_sprite_[i]; }
+
 private:
-	std::shared_ptr<Score> score_;					//得点表示
-	//シーン遷移用カウントダウン
-	//カメラ
-
+	float2 size_;
+	TSprite back_ground_sprite_[(unsigned int)TEAM::MAX];
+	TMeshObject back_ground_mesh_object_[(unsigned int)TEAM::MAX];
 };
 
 #endif
+
+//---------------------------------- EOF --------------------------------------

@@ -137,7 +137,7 @@ void Player::Control( void )
 {
 #ifdef _KEYBOAD_DEBUG
 	ControlKeyBorad();
-
+	//ControlJoypad();
 #else
 	ControlJoypad();
 

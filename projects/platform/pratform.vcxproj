@@ -56,6 +56,7 @@
     <ClCompile Include="sources\scene\result\result.cpp" />
     <ClCompile Include="sources\scene\title\title.cpp" />
     <ClCompile Include="sources\scene\tutorial\tutorial.cpp" />
+    <ClCompile Include="sources\score\score.cpp" />
     <ClCompile Include="sources\system\input.cpp" />
     <ClCompile Include="sources\system\input_joypad.cpp" />
     <ClCompile Include="sources\system\input_keyboard.cpp" />
@@ -112,6 +113,7 @@
     <ClInclude Include="sources\scene\result\result.h" />
     <ClInclude Include="sources\scene\title\title.h" />
     <ClInclude Include="sources\scene\tutorial\tutorial.h" />
+    <ClInclude Include="sources\score\score.h" />
     <ClInclude Include="sources\system\input.h" />
     <ClInclude Include="sources\system\input_joypad.h" />
     <ClInclude Include="sources\system\input_keyboard.h" />

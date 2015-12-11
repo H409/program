@@ -76,6 +76,8 @@ private:
 
 	float2 l_stick_;
 	float2 r_stick_;
+	float2 l_stick_newtral_param;
+	float2 r_stick_newtral_param;
 	f32 l_trigger_;
 	f32 r_trigger_;
 	bool is_press_[(u32)KEY::MAX];

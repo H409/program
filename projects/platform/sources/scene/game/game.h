@@ -33,6 +33,7 @@ class Observer2D;
 class FollowerObserver;
 class MeshObject;
 class Flower;
+class Score;
 class FBXObject ;
 class Timer;
 
@@ -73,6 +74,12 @@ public:
 
 	// 描画処理を行う。
 	virtual void Draw(void) override;
+
+	//リザルトシーンの更新を行う。
+	void UpdateResult(void);
+
+	//リザルトシーンの描画を行う。
+	void DrawResult(void);
 private:
 	static const u32 PLAYER_MAX = 4;
 	static const u32 WALL_MAX = 4;
@@ -93,10 +100,14 @@ private:
 	std::shared_ptr<Cylinder> cylinder_;
 	std::shared_ptr<Observer2D> observer_2d_;
 	std::vector<std::shared_ptr<Flower>> flowers_;
+	std::unique_ptr<utility::culling::FrustumCulling> frustum_culling_;
+	
+	//result
+	
+	std::shared_ptr<Score> score_;					//得点表示
+	bool result_state_;								//リザルト画面表示
 	std::list<std::weak_ptr<Flower>> flower_list_;
 	std::shared_ptr<FBXObject> fbx_object_[ FBX_OBJECT_MAX ];
-
-	std::unique_ptr<utility::culling::FrustumCulling> frustum_culling_;
 
 	std::unique_ptr<Timer> timer_;
 #ifdef _DEBUG
