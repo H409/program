@@ -36,6 +36,7 @@ class Flower;
 class Score;
 class FBXObject ;
 class Timer;
+class FBXTree ;
 
 namespace utility {
 namespace culling {
@@ -108,6 +109,7 @@ private:
 	bool result_state_;								//ƒŠƒUƒ‹ƒg‰æ–Ê•\Ž¦
 	std::list<std::weak_ptr<Flower>> flower_list_;
 	std::shared_ptr<FBXObject> fbx_object_[ FBX_OBJECT_MAX ];
+	std::shared_ptr<FBXTree> fbx_tree_[ FBX_OBJECT_MAX ];
 
 	std::unique_ptr<Timer> timer_;
 #ifdef _DEBUG

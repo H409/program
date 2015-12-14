@@ -39,6 +39,7 @@
 #include "fbx_object/fbx_object.h"
 #include "timer/timer.h"
 #include "system/xi_pad.h"
+#include "fbx_tree/fbx_tree.h"
 
 //=============================================================================
 // constructor
@@ -140,7 +141,13 @@ Game::Game()
 	result_state_ = false;
 
 	fbx_object_[ 0 ] = std::make_shared<FBXObject>( graphic_device->GetDevice() );
-	fbx_object_[ 0 ]->Load( "resources/model/ki_obj.kim" );
+	fbx_object_[ 0 ]->Load( "resources/model/iwa_obj_1.kim" );
+
+	fbx_tree_[ 0 ] = std::make_shared<FBXTree>( graphic_device->GetDevice() , 0 );
+	fbx_tree_[ 1 ] = std::make_shared<FBXTree>( graphic_device->GetDevice() , 2 );
+
+	fbx_tree_[ 0 ]->SetPosition( -10 , 0 , 5 );
+	fbx_tree_[ 1 ]->SetPosition( -10 , 0 , -5 );
 
 #ifdef _DEBUG
 	debugRenderTarget_ = false;
@@ -258,10 +265,15 @@ void Game::Update()
 		}
 #endif // _DEBUG
 
-		if(players_[ i ]->GetAction() == true )
+//<<<<<<< HEAD
+//		if(players_[ i ]->GetAction() == true )
+//=======
+		if( players_[ i ]->GetWepon() == Player::WEAPON::GUN &&
+			players_[ i ]->GetAction() == true )
+//>>>>>>> origin/sembon
 		{
 			// Ží‚Ü‚«
-			if(players_[i]->GetKimPointer()->GetWepon() == Kim::WEAPON::GUN)
+			if(players_[i]->GetWepon() == Player::WEAPON::GUN)
 			{
 				auto start_position = players_[i]->GetPosition();
 				start_position._y += 0.7f;
@@ -289,7 +301,7 @@ void Game::Update()
 				}
 			}
 			// Œ@‚è•Ô‚µ
-			if(players_[i]->GetKimPointer()->GetWepon() == Kim::WEAPON::HOE)
+			if(players_[i]->GetWepon() == Player::WEAPON::HOE)
 			{
 				auto position = players_[i]->GetPosition();
 				//if(field_->GetType(position) == (u32)Field::TYPE::SOIL)
@@ -302,7 +314,7 @@ void Game::Update()
 			}
 
 			// –WŠQ
-			if(players_[i]->GetKimPointer()->GetWepon() == Kim::WEAPON::LAUNCHER)
+			if(players_[i]->GetWepon() == Player::WEAPON::LAUNCHER)
 			{
 				auto start_position = players_[i]->GetPosition();
 				start_position._y += 0.7f;
@@ -412,6 +424,8 @@ void Game::Update()
 	}
 	fbx_object_[ 0 ]->SetPosition( -10 , 0 , 0 );
 	fbx_object_[ 0 ]->Update();
+	fbx_tree_[ 0 ]->Update();
+	fbx_tree_[ 1 ]->Update();
 
 	// 
 	for(auto bullet : bullets_)
@@ -695,7 +709,20 @@ void Game::Draw()
 			}
 		}
 
+		//--  “®‚©‚È‚¢FBX  --//
+		fbx_object_[ 0 ]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[ i ]->GetViewMatrix());
+		fbx_object_[ 0 ]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[ i ]->GetProjectionMatrix());
+		fbx_object_[ 0 ]->Draw();
+
 		graphic_device->SetVertexShader(gb_vs_fbx);
+
+		fbx_tree_[ 0 ]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[ i ]->GetViewMatrix());
+		fbx_tree_[ 0 ]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[ i ]->GetProjectionMatrix());
+		fbx_tree_[ 0 ]->Draw();
+
+		fbx_tree_[ 1 ]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[ i ]->GetViewMatrix());
+		fbx_tree_[ 1 ]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[ i ]->GetProjectionMatrix());
+		fbx_tree_[ 1 ]->Draw();
 
 		for(u32 j = 0;j < PLAYER_MAX;++j)
 		{
@@ -710,11 +737,6 @@ void Game::Draw()
 				players_[j]->Draw();
 			}
 		}
-
-		
-		fbx_object_[ 0 ]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[ i ]->GetViewMatrix());
-		fbx_object_[ 0 ]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[ i ]->GetProjectionMatrix());
-		fbx_object_[ 0 ]->Draw();
 	}
 
 #ifdef _DEBUG
