@@ -37,7 +37,8 @@ public:
 	using TMeshObject = std::shared_ptr<MeshObject>;
 
 	// constructor
-	Wall(void);
+	Wall(void) {};
+	Wall(float2 size);
 
 	//destructor
 	virtual ~Wall(void);
