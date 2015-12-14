@@ -834,7 +834,8 @@ void Game::Draw()
 #endif
 
 	//Draw Result
-	if (result_flag_)
+	//if (result_flag_)
+	if (1)
 	{
 		DrawResult();
 	}

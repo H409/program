@@ -62,5 +62,5 @@ void Score::Update(void)
 void Score::Draw(void)
 {
 	back_ground_mesh_object_[(unsigned int)TEAM::RED]->Draw();
-	back_ground_mesh_object_[(unsigned int)TEAM::BLUE]->Draw();
+	//back_ground_mesh_object_[(unsigned int)TEAM::BLUE]->Draw();
 }
