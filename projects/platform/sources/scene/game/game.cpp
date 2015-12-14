@@ -37,6 +37,8 @@
 #include "cylinder/cylinder.h"
 #include "culling/frustum_culling.h"
 #include "fbx_object/fbx_object.h"
+#include "fbx_tree/fbx_tree.h"
+
 
 //=============================================================================
 // constructor
@@ -128,7 +130,13 @@ Game::Game()
 	}
 
 	fbx_object_[ 0 ] = std::make_shared<FBXObject>( graphic_device->GetDevice() );
-	fbx_object_[ 0 ]->Load( "resources/model/ki_mo.kim" );
+	fbx_object_[ 0 ]->Load( "resources/model/iwa_obj_1.kim" );
+
+	fbx_tree_[ 0 ] = std::make_shared<FBXTree>( graphic_device->GetDevice() , 0 );
+	fbx_tree_[ 1 ] = std::make_shared<FBXTree>( graphic_device->GetDevice() , 2 );
+
+	fbx_tree_[ 0 ]->SetPosition( -10 , 0 , 5 );
+	fbx_tree_[ 1 ]->SetPosition( -10 , 0 , -5 );
 
 #ifdef _DEBUG
 	debugRenderTarget_ = false;
@@ -346,6 +354,10 @@ void Game::Update()
 
 	fbx_object_[ 0 ]->SetPosition( -10 , 0 , 0 );
 	fbx_object_[ 0 ]->Update();
+	
+	fbx_tree_[ 0 ]->Update();
+	fbx_tree_[ 1 ]->Update();
+
 	//for(auto flower : flowers_)
 	//{
 	//	flower->Update();
@@ -590,6 +602,14 @@ void Game::Draw()
 		fbx_object_[ 0 ]->Draw();
 
 		graphic_device->SetVertexShader(gb_vs_fbx);
+
+		fbx_tree_[ 0 ]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[ i ]->GetViewMatrix());
+		fbx_tree_[ 0 ]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[ i ]->GetProjectionMatrix());
+		fbx_tree_[ 0 ]->Draw();
+
+		fbx_tree_[ 1 ]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[ i ]->GetViewMatrix());
+		fbx_tree_[ 1 ]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[ i ]->GetProjectionMatrix());
+		fbx_tree_[ 1 ]->Draw();
 
 		for(u32 j = 0;j < PLAYER_MAX;++j)
 		{

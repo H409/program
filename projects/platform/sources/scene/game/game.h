@@ -34,6 +34,7 @@ class FollowerObserver;
 class MeshObject;
 class Flower;
 class FBXObject ;
+class FBXTree ;
 
 namespace utility {
 namespace culling {
@@ -93,6 +94,7 @@ private:
 	std::shared_ptr<Observer2D> observer_2d_;
 	std::vector<std::shared_ptr<Flower>> flowers_;
 	std::shared_ptr<FBXObject> fbx_object_[ FBX_OBJECT_MAX ];
+	std::shared_ptr<FBXTree> fbx_tree_[ FBX_OBJECT_MAX ];
 
 	std::unique_ptr<utility::culling::FrustumCulling> frustum_culling_;
 #ifdef _DEBUG

@@ -114,6 +114,10 @@ void Player::Init( float3 pos )
 	state_ = STATE::WAIT ;
 
 	rotDest_ = float3();
+
+	old_anime_ = ANIME::WAIT ;
+	anime_ = ANIME::WAIT ;
+	wepon_ = WEAPON::GUN ;
 }
 
 //-------------------------------------------------------------------
@@ -170,7 +174,7 @@ void Player::Control( void )
 #ifdef _KEYBOAD_DEBUG
 	ControlKeyBorad();
 	ControlJoypad();
-	//ControlCamera();
+
 #else
 	ControlJoypad();
 
@@ -322,6 +326,11 @@ void Player::ControlKeyBorad( void )
 		//--  アニメーション  --//
 		anime_ = ANIME::WALK ;
 	}
+
+	if( pKim_->GetSingleAnimationEnd() == true )
+	{
+		anime_ = old_anime_ ;
+	}
 	
 	//--  移動  --//
 	position_._x += move_._x ;
@@ -352,7 +361,7 @@ void Player::ControlJoypad( void )
 	action_ = false ;
 	float rot_diff = 0 ;	//
 
-	D3DXVec3Normalize( ( D3DXVECTOR3* )&camera_vector_ , ( D3DXVECTOR3* )&camera_vector_ );
+	//D3DXVec3Normalize( ( D3DXVECTOR3* )&camera_vector_ , ( D3DXVECTOR3* )&camera_vector_ );
 
 	if( GET_INPUT_XPAD( ID_ )->GetPress( XIPad::KEY::L2 ) == true )
 	{
@@ -367,13 +376,22 @@ void Player::ControlJoypad( void )
 		}
 	}
 
-	////--  移動  --//	
-	//auto x_pad_move = GET_INPUT_XPAD( ID_ )->GetLStick();
-	//
-	//move_._x += camera_vector_._x * speed_._x * x_pad_move._x ; 
-	//move_._z += camera_vector_._z * speed_._z * x_pad_move._y ;
+	//--  移動  --//	
+	auto x_pad_move = GET_INPUT_XPAD( ID_ )->GetLStick();
+	
+	D3DXVECTOR3 vec ;
+	D3DXVec3Cross( &vec , &D3DXVECTOR3( 0 , 1 , 0 ) , ( D3DXVECTOR3* )&camera_vector_ );
+	auto vec2 = D3DXVECTOR3( x_pad_move._x , 0 , x_pad_move._y );
+	vec.x = vec.x * vec2.x ;
+	vec.y = vec.y * vec2.y ;
+	vec.z = vec.z * vec2.z ;
 
-	//rotDest_._y = atan2f( x_pad_move._x , x_pad_move._y );
+	D3DXVec3Normalize( ( D3DXVECTOR3* )&vec , ( D3DXVECTOR3* )&vec );
+
+	move_._x += vec.x * speed_._x ; 
+	move_._z += vec.z * speed_._z ;
+
+	rotDest_._y = atan2f( vec.x , vec.z );
 
 
 	//--  エイム  --//

@@ -46,8 +46,11 @@ public :
 	void SetID( int i ){ ID_ = i ; }
 
 private : 
-	
+	static int tree_anime_data_[ 3 ];
+
 	int ID_ ;
+
+	void UpdateKimMatrix( void );
 
 protected : 
 };

@@ -352,6 +352,8 @@ void Kim::Update(void)
 	}
 
 
+	current_key_++;
+
 	Animation();
 	
 
@@ -476,12 +478,6 @@ void Kim::Update(void)
 		//	bone_[i].bone_matrix = scl * rot * trans * bone_[i].init_matrix;
 		//}
 
-		//if( animation_ == true )
-		{
-			current_key_++;
-		}
-
-
 		// 座標の更新:掛ける順番は 子 × 親 
 		auto world = world_;
 		D3DXMatrixIdentity(&world);
@@ -499,6 +495,8 @@ void Kim::Update(void)
 //=============================================================================
 void Kim::Animation( void )
 {
+	single_animation_end_ = false ;
+
 	//// 普通のｱﾆﾒｰｼｮﾝ
 	//for( int i = 0 ; i < bone_num_ ; i++ )
 	//{
@@ -580,7 +578,7 @@ void Kim::Animation( void )
 		bone_[ i ].bone_matrix = scl * rot * trans * bone_[ i ].init_matrix ;
 	}
 
-	if( current_key_ > anime_data_[ 1 ] )
+	if( current_key_ == anime_data_[ 1 ] - 1 )
 	{
 		//animation_play_[ ( int )anime_ ] = false ;	// アニメーション終わり
 
@@ -591,12 +589,11 @@ void Kim::Animation( void )
 		}
 		else
 		{
-			//for( int i = 0 ; i < 3 ; i++ )
-			//{
-			//	anime_data_[ i ] = old_anime_data_[ i ];
-			////	old_anime_data_[ i ] = anime_data_[ i ];
-			//}
+			single_animation_end_ = true ;
 		}
+
+		animation_ = false ;
+
 	}
 }
 

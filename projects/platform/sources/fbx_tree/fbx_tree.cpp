@@ -26,7 +26,7 @@
 //------------------------------------------------------------------------
 // 静的メンバ変数
 //------------------------------------------------------------------------
-
+int FBXTree::tree_anime_data_[] = { 30 , 90 , 1 };
 
 //------------------------------------------------------------------------
 // グローバル変数
@@ -91,8 +91,41 @@ void FBXTree::Init( float3 pos )
 //-------------------------------------------------------------------
 void FBXTree::Update( void )
 {
+	pKim_->SetAnime( tree_anime_data_[ 0 ] , 
+					 tree_anime_data_[ 1 ] ,
+					 tree_anime_data_[ 2 ] );
+
 	//--  kim更新  --//
-	FBXObject::UpdateKimMatrix();
+	UpdateKimMatrix();
+}
+
+//-------------------------------------------------------------------
+// 関数名 : kim更新
+//
+// 引数   : なし
+// 返り値 : なし
+//-------------------------------------------------------------------
+void FBXTree::UpdateKimMatrix( void )
+{
+	//--  FBX更新  --//
+	D3DXMATRIX  mtxScl , mtxRot , mtxTranslate ; //ワーク用
+	
+	D3DXMatrixIdentity( ( D3DXMATRIX* )&matrix_ );	//ワールドマトリックス初期化
+
+	//--  スケールの反映  --//
+	D3DXMatrixScaling( &mtxScl , scale_._x , scale_._y , scale_._z );
+	D3DXMatrixMultiply( ( D3DXMATRIX* )&matrix_ , ( D3DXMATRIX* )&matrix_ , &mtxScl );	//行列の掛け算
+
+	//--  回転の反映  --//
+	D3DXMatrixRotationYawPitchRoll( &mtxRot , rotation_._y , rotation_._x , rotation_._z );
+	D3DXMatrixMultiply( ( D3DXMATRIX* )&matrix_ , ( D3DXMATRIX* )&matrix_ , &mtxRot );	//行列の掛け算
+
+	//--  位置の反映  --//
+	D3DXMatrixTranslation( &mtxTranslate , position_._x , position_._y , position_._z );
+	D3DXMatrixMultiply( ( D3DXMATRIX* )&matrix_ , ( D3DXMATRIX* )&matrix_ , &mtxTranslate );	//行列の掛け算
+
+	pKim_->SetWorld( ( D3DXMATRIX& )matrix_ );
+	pKim_->Update();
 }
 
 //-------------------------------------------------------------------

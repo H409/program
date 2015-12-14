@@ -141,8 +141,7 @@ private :
 	void UpdateKimMatrix( void );
 	void ControlKeyBorad( void );
 	void ControlJoypad( void );
-	void ControlCamera( void );
-
+	
 protected : 
 };
 
