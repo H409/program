@@ -60,6 +60,7 @@ Game::Game()
 		observers_[i]->SetLength(2.0f);
 		observers_[i]->SetHeight(1.5f);
 		observers_[i]->SetState(FollowerObserver::STATE::FOLLWER);
+		observers_[i]->SetID( i );
 		observers_[i]->Update();
 	}
 

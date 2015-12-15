@@ -484,8 +484,8 @@ void Kim::Update(void)
 		UpdateBone( bone_ , &world);
 	}
 
-	DEVELOP_DISPLAY( "current_key_ : %d\n" , current_key_ );
-	DEVELOP_DISPLAY( "anime : %d , %d , %d\n" , anime_data_[ 0 ] , anime_data_[ 1 ] , anime_data_[ 2 ] );
+	//DEVELOP_DISPLAY( "current_key_ : %d\n" , current_key_ );
+	//DEVELOP_DISPLAY( "anime : %d , %d , %d\n" , anime_data_[ 0 ] , anime_data_[ 1 ] , anime_data_[ 2 ] );
 
 
 }

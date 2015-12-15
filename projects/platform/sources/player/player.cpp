@@ -22,9 +22,9 @@
 //------------------------------------------------------------------------
 // マクロ定義
 //------------------------------------------------------------------------
-#ifdef _DEBUG
+#ifndef _RELEASE
 #define _KEYBOAD_DEBUG
-#endif // _DEBUG
+#endif // _RELESE
 
 //------------------------------------------------------------------------
 // 構造体
@@ -381,18 +381,11 @@ void Player::ControlJoypad( void )
 	
 	D3DXVECTOR3 vec ;
 	D3DXVec3Cross( &vec , &D3DXVECTOR3( 0 , 1 , 0 ) , ( D3DXVECTOR3* )&camera_vector_ );
-	auto vec2 = D3DXVECTOR3( x_pad_move._x , 0 , x_pad_move._y );
-	vec.x = vec.x * vec2.x ;
-	vec.y = vec.y * vec2.y ;
-	vec.z = vec.z * vec2.z ;
 
-	D3DXVec3Normalize( ( D3DXVECTOR3* )&vec , ( D3DXVECTOR3* )&vec );
+	move_._x += vec.x * speed_._x * x_pad_move._x ; 
+	move_._z += camera_vector_._z * speed_._z * x_pad_move._y ;
 
-	move_._x += vec.x * speed_._x ; 
-	move_._z += vec.z * speed_._z ;
-
-	rotDest_._y = atan2f( vec.x , vec.z );
-
+	rotDest_._y = atan2f( move_._x , move_._z );
 
 	//--  エイム  --//
 	if( state_ == STATE::AIM )

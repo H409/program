@@ -71,9 +71,13 @@ public:
 
 	STATE GetState(void)const;
 
+	void SetID( int id ){ ID_ = id ; };
+	int GetID( void ){ return ID_ ; }
+
 	void SetFieldIconPosition( const float3& pos ){ feild_icon_ = pos ; }
 
 private:
+	int ID_ ;
 	float3 target_position_;
 	float3 target_vector_;
 	f32 target_length_;
@@ -85,6 +89,7 @@ private:
 
 	STATE state_ ;
 
+	void TargetLookRotation_( void );
 	void MouseMove_( void );
 };
 #endif // _FOLLOWER_OBSERVER_H_
