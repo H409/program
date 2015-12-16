@@ -863,6 +863,7 @@ void Game::DrawResult(void)
 	basic_vs->SetValue("_projection_matrix", (f32*)&observer_2d_->GetProjectionMatrix(), sizeof(float4x4));
 	basic_vs->SetValue("_world_matrix", (f32*)&debug_sprite_object_->GetMatrix(), sizeof(float4x4));
 	basic_vs->SetValue("_color", (f32*)&color, sizeof(f32) * 4);
+	//basic_ps->SetTexture("_texture_sampler",)
 
 	//チーム
 	//スコア
