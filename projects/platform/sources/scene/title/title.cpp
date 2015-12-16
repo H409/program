@@ -28,6 +28,7 @@
 #include "object/object.h"
 #include "object/mesh_object.h"
 #include "math/math.h"
+#include "sound/sound.h"
 
 //=============================================================================
 // constructor
@@ -59,13 +60,13 @@ Title::Title()
 	button_ = std::make_shared<MeshObject>(sprite_button);
 	sprite_button->SetAnchorPoint(float2(0.0f, 0.0f));
 	sprite_logo->Apply();
-	button_->SetPosition(300.0f, 500.0f, 0.0f);
-	button_->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/marker_01.png"));
+	button_->SetPosition(400.0f, 500.0f, 0.0f);
+	button_->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/Push.png"));
 
 	//2DópÉJÉÅÉâê›íË
 	observer_2d_ = std::make_shared<Observer2D>(window->GetWidth(), window->GetHeight());
 
-//	Sound::Instance().PlaySound(SOUND_LABEL_BGM000);
+	Sound::Instance().PlaySound(SOUND_LABEL_BGM000);
 }
 
 //=============================================================================
