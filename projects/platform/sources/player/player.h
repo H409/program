@@ -111,6 +111,9 @@ public :
 	bool GetAction( void ){ return action_ ; }
 	//void SetAction( bool b ){ action_ = b ; }
 
+	bool GetHit( void ){ return hit_ ; }
+	void SetHit( bool b ){ hit_ = b ; }
+
 	float GetCameraRotY( void ){ return camera_rot_y ; }
 
 private : 
@@ -128,6 +131,7 @@ private :
 	int ID_ ;
 	bool action_animation_end_ ;
 	bool action_ ;
+	bool hit_ ;
 
 	STATE state_ ;
 
