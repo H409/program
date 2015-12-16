@@ -10,7 +10,6 @@
 // include
 //*****************************************************************************
 #include "result.h"
-#include "score/score.h"
 #include "system/win_system.h"
 #include "system/input_keyboard.h"
 #include "shader/dx9_vertex_shader.h"
@@ -41,7 +40,7 @@
 //=============================================================================
 Result::Result()
 {
-	score_ = std::make_shared<Score>();
+
 }
 
 //=============================================================================
@@ -73,7 +72,7 @@ void Result::Finalize()
 //=============================================================================
 void Result::Update()
 {
-	score_->Update();
+
 }
 
 //=============================================================================
@@ -81,8 +80,5 @@ void Result::Update()
 //=============================================================================
 void Result::Draw()
 {
-	auto graphic_device = GET_GRAPHIC_DEVICE();
-	auto gb_vs = graphic_device->LoadVertexShader("resources/shader/graphics_buffer.vsc");
-	auto gb_ps = graphic_device->LoadPixelShader("resources/shader/graphics_buffer.psc");
-	score_->Draw();
+
 }
