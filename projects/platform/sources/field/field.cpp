@@ -354,11 +354,11 @@ void Field::SetType(u32 in_index,u32 in_type)
 //=============================================================================
 // get type
 //=============================================================================
-u32 Field::GetType(const float3& in_position)const
+Field::TYPE Field::GetType(const float3& in_position)const
 {
 	if(!IsInRange(in_position))
 	{
-		return -1;
+		return TYPE::NONE;
 	}
 
 	float3 position = float3(in_position._x + size_._x * 0.5f,in_position._y,-(in_position._z - size_._y * 0.5f));
@@ -370,7 +370,7 @@ u32 Field::GetType(const float3& in_position)const
 
 	DEBUG_ASSERT(types_.size() > index);
 
-	return types_[index];
+	return (TYPE)types_[index];
 }
 
 u32 Field::CountType(u32 in_type)
@@ -592,6 +592,36 @@ bool Field::CheckTypeRightBottom(const u32& in_x,const u32& in_y,const u32& in_t
 	}
 
 	return true;
+}
+
+bool Field::IsObstacle(TYPE in_type)
+{
+	if(in_type == TYPE::SHRINE)
+	{
+		return true;
+	}
+
+	if(in_type == TYPE::LANTERN)
+	{
+		return true;
+	}
+
+	if(in_type == TYPE::SHRINE_2)
+	{
+		return true;
+	}
+
+	if(in_type == TYPE::ROCK_2x2)
+	{
+		return true;
+	}
+
+	if(in_type == TYPE::ROCK_4x4)
+	{
+		return true;
+	}
+
+	return false;
 }
 
 //---------------------------------- EOF --------------------------------------

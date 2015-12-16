@@ -1,4 +1,5 @@
 
+
 //*****************************************************************************
 //
 // game.cpp
@@ -115,7 +116,7 @@ Game::Game()
 	auto field_size = field_->GetSize();
 	for (u32 i = 0; i < WALL_MAX; ++i)
 	{
-		wall_[i] = std::make_shared<Wall>(float2(30.0f,1.0f));
+		wall_[i] = std::make_shared<Wall>(float2(field_size._x,1.0f));
 		wall_[i]->Update();
 	}
 
@@ -405,7 +406,7 @@ void Game::Update()
 		//}
 
 		player_position = float3(player_old_position._x + player_move._x,0.0f,player_old_position._z);
-		if(type == (u32)Field::TYPE::BUILDING)
+		if(field_->IsObstacle(type))
 		{
 			auto x = field_->GetBlockPosition(player_position)._x - player_block_position._x;
 			player->SetPositionX(player->GetOldPosition()._x);
@@ -416,7 +417,7 @@ void Game::Update()
 
 		player_position = float3(player_old_position._x,0.0f,player_old_position._z + player_move._z);
 
-		if(type == (u32)Field::TYPE::BUILDING)
+		if(field_->IsObstacle(type))
 		{
 			auto z = field_->GetBlockPosition(player_position)._z - player_block_position._z;
 			player->SetPositionZ(player->GetOldPosition()._z);
@@ -440,7 +441,7 @@ void Game::Update()
 		if(!bullet->IsDeath())
 		{
 			auto position = bullet->GetPosition();
-			if(field_->GetType(position) == (u32)Field::TYPE::BUILDING)
+			if(field_->IsObstacle(field_->GetType(position)))
 			{
 				bullet->Remove();
 			}
@@ -450,7 +451,7 @@ void Game::Update()
 				{
 					if(bullet->GetType() == Bullet::TYPE::SEED)
 					{
-						if(field_->GetType(position) == (u32)Field::TYPE::SOIL)
+						if(field_->GetType(position) == Field::TYPE::SOIL || field_->GetType(position) == Field::TYPE::TREE)
 						{
 							auto index = field_->GetBlockIndex(position);
 							//field_->SetType(index,(u32)Field::TYPE::FLOWER);
