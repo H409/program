@@ -35,6 +35,7 @@
 #include "wall/wall.h"
 #include "dome/dome.h"
 #include "cylinder/cylinder.h"
+#include "sound/sound.h"
 
 //=============================================================================
 // constructor
@@ -57,7 +58,8 @@ Result::~Result()
 //=============================================================================
 bool Result::Initialize(SceneManager* p_scene_manager)
 {
-
+	//BGM
+	Sound::Instance().PlaySound(SOUND_LABEL_BGM003);
 	return 0;
 }
 //=============================================================================
@@ -65,7 +67,7 @@ bool Result::Initialize(SceneManager* p_scene_manager)
 //=============================================================================
 void Result::Finalize()
 {
-
+	Sound::Instance().StopSound();
 }
 
 //=============================================================================

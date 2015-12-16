@@ -41,6 +41,7 @@
 #include "system/xi_pad.h"
 #include "fbx_tree/fbx_tree.h"
 #include "score/score.h"
+#include "sound/sound.h"
 
 //=============================================================================
 // constructor
@@ -171,7 +172,7 @@ Game::Game()
 //=============================================================================
 Game::~Game()
 {
-
+	
 }
 
 //=============================================================================
@@ -208,6 +209,9 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 
 	result_flag_ = false;
 
+	//BGM
+	Sound::Instance().PlaySound(SOUND_LABEL_BGM002);
+
 	return true;
 }
 
@@ -216,7 +220,7 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 //=============================================================================
 void Game::Finalize()
 {
-
+	Sound::Instance().StopSound();
 }
 
 //=============================================================================
