@@ -18,6 +18,8 @@
 #include "texture/dx9_texture.h"
 #include "mesh/sprite.h"
 #include "observer/observer_2d.h"
+#include "observer/observer_3d.h"
+#include "observer/result_observer.h"
 #include "observer/follower_observer.h"
 #include "mesh/sprite_3d.h"
 #include "object/mesh_object.h"
@@ -40,7 +42,8 @@
 #include "timer/timer.h"
 #include "system/xi_pad.h"
 #include "fbx_tree/fbx_tree.h"
-#include "score/score.h"
+#include "score/result_score.h"
+#include "result_team_icon/result_team_icon.h"
 
 //=============================================================================
 // constructor
@@ -65,6 +68,8 @@ Game::Game()
 	}
 
 	observer_2d_ = std::make_shared<Observer2D>(window->GetWidth(),window->GetHeight());
+	//result_observer = std::make_shared<Observer3D>(D3DX_PI/3,window->GetWidth(), window->GetHeight());
+	result_observer = std::make_shared<ResultObserver>(D3DX_PI / 3, window->GetWidth(), window->GetHeight());
 
 	frustum_culling_ = std::make_unique<utility::culling::FrustumCulling>(utility::math::ToRadian(70.0f),(f32)window->GetWidth() / window->GetHeight(),0.1f,100.0f);
 
@@ -141,9 +146,8 @@ Game::Game()
 		flower = std::make_shared<Flower>(0);
 	}
 	
-	result_flag_ = false;
-
 	score_ = std::make_shared<Score>();
+	result_team_icon = std::make_shared<ResultTeamIcon>();
 
 	fbx_object_[ 0 ] = std::make_shared<FBXObject>( graphic_device->GetDevice() );
 	fbx_object_[ 0 ]->Load( "resources/model/iwa_obj_1.kim" );
@@ -154,6 +158,7 @@ Game::Game()
 	fbx_tree_[ 0 ]->SetPosition( -10 , 0 , 5 );
 	fbx_tree_[ 1 ]->SetPosition( -10 , 0 , -5 );
 
+	is_result_ = false;
 #ifdef _DEBUG
 	debugRenderTarget_ = false;
 	debug_player_number_ = 0;
@@ -227,7 +232,7 @@ void Game::Update()
 	if(timer_->GetTimeLeft() == 0)
 	{
 		// 終了
-		result_flag_ = true;
+		is_result_ = true;
 	}
 #ifdef _DEBUG
 	if(debugRenderTarget_)
@@ -496,6 +501,10 @@ void Game::Update()
 		DEVELOP_DISPLAY("player %d : %d\n",i,GetPoint(i));
 	}
 #endif
+	if (is_result_)
+	{
+		UpdateResult();
+	}
 }
 
 //=============================================================================
@@ -858,7 +867,7 @@ void Game::Draw()
 #endif
 
 	//Draw Result
-	if (result_flag_)
+	if (is_result_)
 	{
 		DrawResult();
 	}
@@ -867,7 +876,7 @@ void Game::Draw()
 
 void Game::UpdateResult(void)
 {
-
+	result_observer->Update();
 }
 
 void Game::DrawResult(void)
@@ -879,18 +888,58 @@ void Game::DrawResult(void)
 	//2Dポリゴン描画
 	auto graphic_device = GET_GRAPHIC_DEVICE();
 	graphic_device->Clear(float4(0.0f, 0.0f, 0.0f, 0.0f), 1.0f);
-	float4 color = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	auto basic_vs = graphic_device->LoadVertexShader("resources/shader/basic.vsc");
 	auto basic_ps = graphic_device->LoadPixelShader("resources/shader/basic.psc");
+	auto gb_vs = graphic_device->LoadVertexShader("resources/shader/graphics_buffer.vsc");
+	auto gb_ps = graphic_device->LoadPixelShader("resources/shader/graphics_buffer.psc");
+
 	basic_vs->SetValue("_view_matrix", (f32*)&observer_2d_->GetViewMatrix(), sizeof(float4x4));
 	basic_vs->SetValue("_projection_matrix", (f32*)&observer_2d_->GetProjectionMatrix(), sizeof(float4x4));
-	basic_vs->SetValue("_world_matrix", (f32*)&debug_sprite_object_->GetMatrix(), sizeof(float4x4));
-	basic_vs->SetValue("_color", (f32*)&color, sizeof(f32) * 4);
-	//basic_ps->SetTexture("_texture_sampler",)
-
-	//チーム
+	
+	//チーム アイコン
+	result_team_icon->Draw();
 	//スコア
 	score_->Draw();
+
+	//プレイヤー描画
+
+	//背景としてフィールド描画
+	graphic_device->SetVertexShader(gb_vs);
+	graphic_device->SetPixelShader(gb_ps);
+
+	// observer
+	gb_vs->SetValue("_view_matrix", (f32*)&result_observer->GetViewMatrix(), 16);
+	gb_vs->SetValue("_projection_matrix", (f32*)&result_observer->GetProjectionMatrix(), 16);
+
+
+	auto view_matrix = result_observer->GetViewMatrix();
+	auto i_view_matrix = utility::math::InverseB(view_matrix);
+
+	auto object = field_->GetObject();
+	auto world_matrix = object->GetMatrix();
+
+	frustum_culling_->SetViewMatrix(view_matrix);
+
+	gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
+	gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());
+
+	object->Draw();
+
+	//フラワーリスト
+	for (auto flower : flower_list_)
+	{
+		object = flower._Get()->GetObject();
+		world_matrix = object->GetMatrix();
+		world_matrix = utility::math::Multiply(i_view_matrix, world_matrix);
+
+		gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
+		gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());
+
+		if (frustum_culling_->IsCulling(object->GetPosition(), 0.5f))
+		{
+			object->Draw();
+		}
+	}
 }
 
 u32 Game::GetPoint(u32 player_number) const

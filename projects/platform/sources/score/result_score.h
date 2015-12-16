@@ -1,6 +1,6 @@
 //*****************************************************************************
 //
-// score
+// result_score
 //
 // Author		: Eyuu Yuminaga
 //
@@ -58,10 +58,13 @@ public:
 	//GetSprite3D
 	TSprite GetSprite(int i) { return back_ground_sprite_[i]; }
 
+	//GetObject
+	TMeshObject GetObject(int i) { return back_ground_mesh_object_[i]; }
+
 private:
 	float2 size_;
-	TSprite back_ground_sprite_[(unsigned int)TEAM::MAX];
-	TMeshObject back_ground_mesh_object_[(unsigned int)TEAM::MAX];
+	TSprite back_ground_sprite_[(unsigned int)TEAM::MAX];			//得点背景スプライト
+	TMeshObject back_ground_mesh_object_[(unsigned int)TEAM::MAX];	//得点背景オブジェクト
 };
 
 #endif

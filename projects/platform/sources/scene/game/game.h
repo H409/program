@@ -30,6 +30,8 @@ class Cylinder;
 class Player;
 class PlayerIcon;
 class Observer2D;
+class Observer3D;
+class ResultObserver;
 class FollowerObserver;
 class MeshObject;
 class Flower;
@@ -37,6 +39,7 @@ class Score;
 class FBXObject ;
 class Timer;
 class FBXTree ;
+class ResultTeamIcon;
 
 namespace utility {
 namespace culling {
@@ -110,8 +113,11 @@ private:
 	std::unique_ptr<Timer> timer_;
 
 	//result関連
-	bool result_flag_;								//リザルト画面表示をするかしないか
-	std::shared_ptr<Score> score_;					//得点表示
+	bool is_result_;									//リザルト画面表示をするかしないか
+	std::shared_ptr<Score> score_;						//得点表示
+	std::shared_ptr<ResultTeamIcon> result_team_icon;	//チームのアイコン
+	//std::shared_ptr<Observer3D> result_observer;		//リザルトにてフィールドを映す為のカメラ
+	std::shared_ptr<ResultObserver> result_observer;		//リザルトにてフィールドを映す為のカメラ
 
 #ifdef _DEBUG
 	std::shared_ptr<MeshObject> debug_sprite_object_;
