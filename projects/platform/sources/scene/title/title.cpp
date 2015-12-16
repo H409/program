@@ -51,7 +51,7 @@ Title::Title()
 	logo_ = std::make_shared<MeshObject>(sprite_logo);
 	sprite_logo->SetAnchorPoint(float2(0.0f, 0.0f));
 	sprite_logo->Apply();
-	logo_->SetPosition(300.0f, 0.0f, 0.0f);
+	logo_->SetPosition(350.0f, 150.0f, 0.0f);
 	logo_->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/title.png"));
 
 	//ƒ{ƒ^ƒ“
