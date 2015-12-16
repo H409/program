@@ -22,9 +22,9 @@
 //------------------------------------------------------------------------
 // マクロ定義
 //------------------------------------------------------------------------
-#ifdef _DEBUG
+#ifndef _RELEASE
 #define _KEYBOAD_DEBUG
-#endif // _DEBUG
+#endif // _RELESE
 
 //------------------------------------------------------------------------
 // 構造体
@@ -37,7 +37,26 @@
 //------------------------------------------------------------------------
 // 静的メンバ変数
 //------------------------------------------------------------------------
-
+int Player::player_anime_data_[][ 3 ] = { //--  ランチャー  --//
+										{ 31  , 60  , 0 } ,		// 取り出し
+										{ 61  , 150 , 1 } ,		// 待機
+										{ 151 , 180 , 1 } ,		// 歩く
+										{ 181 , 240 , 0 } ,		// 行動
+										{ 241 , 300 , 0 } ,		// ダメージ
+										
+										//--  ショットガン  --//
+										{ 331 , 360 , 0 } ,		// 取り出し
+										{ 361 , 450 , 1 } ,		// 待機
+										{ 451 , 480 , 1 } ,		// 歩く
+										{ 481 , 510 , 0 } ,		// 行動
+										{ 511 , 570 , 0 } ,		// ダメージ
+										
+										//--  クワ  --//
+										{ 601 , 630 , 0 } ,		// 取り出し
+										{ 631 , 720 , 1 } ,		// 待機
+										{ 721 , 750 , 1 } ,		// 歩く
+										{ 751 , 810 , 0 } ,		// 行動
+										{ 811 , 870 , 0 } };	// ダメージ
 
 //------------------------------------------------------------------------
 // グローバル変数
@@ -61,6 +80,14 @@ Player::Player( LPDIRECT3DDEVICE9 pDevice ) : Object()
 	ID_ = 0 ;		// 1P
 
 	state_ = STATE::NONE ;
+
+	old_anime_ = ANIME::WAIT ;
+	anime_ = ANIME::WAIT ;
+	wepon_ = WEAPON::GUN ;
+	//player_anime_data_[ NOW_ANIMETION ][ 0 ];
+
+	pKim_ = new Kim( pDevice_ );
+	pKim_->Load( "resources/model/ZZI_1_MO.kim" );
 }
 
 //-------------------------------------------------------------------
@@ -82,11 +109,15 @@ Player::~Player( void )
 //-------------------------------------------------------------------
 void Player::Init( float3 pos )
 {
+	move_ = float3();
 	position_ = pos ;
-	pKim_ = new Kim( pDevice_ );
-	pKim_->Load( "resources/model/ZZI_1_MO.kim" );
+	state_ = STATE::WAIT ;
 
 	rotDest_ = float3();
+
+	old_anime_ = ANIME::WAIT ;
+	anime_ = ANIME::WAIT ;
+	wepon_ = WEAPON::GUN ;
 }
 
 //-------------------------------------------------------------------
@@ -101,6 +132,11 @@ void Player::Update( void )
 
 	//--  移動  --//
 	Control();
+
+	auto a = NOW_ANIMETION ;
+	pKim_->SetAnime( player_anime_data_[ NOW_ANIMETION ][ 0 ] ,
+					 player_anime_data_[ NOW_ANIMETION ][ 1 ] ,
+					 player_anime_data_[ NOW_ANIMETION ][ 2 ] );
 
 	//--  kim更新  --//
 	UpdateKimMatrix();
@@ -137,7 +173,8 @@ void Player::Control( void )
 {
 #ifdef _KEYBOAD_DEBUG
 	ControlKeyBorad();
-	//ControlJoypad();
+	ControlJoypad();
+
 #else
 	ControlJoypad();
 
@@ -161,7 +198,7 @@ void Player::ControlKeyBorad( void )
 	{
 		if( state_ != STATE::AIM )
 		{
-			pKim_->SetAnime( Kim::ANIME::WAIT );
+			anime_ = ANIME::WAIT ;
 			state_ = STATE::AIM ;
 		}
 		else
@@ -229,7 +266,7 @@ void Player::ControlKeyBorad( void )
 		rotDest_._y += 0.4f ;
 
 		//--  アニメーションが待機なら  --//
-		if( pKim_->GetAnime() == Kim::ANIME::WAIT )
+		if( anime_ == ANIME::WAIT )
 		{
 			//--  アクション  --//
 			if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_SPACE ) )
@@ -237,8 +274,13 @@ void Player::ControlKeyBorad( void )
 				if( action_ == false )
 				{
 					action_ = true ;
-					pKim_->SetAnime( Kim::ANIME::ACTION );
-					pKim_->SetOldAnime( Kim::ANIME::WAIT );
+					anime_ = ANIME::ACTION ;
+					old_anime_ = ANIME::WAIT ;
+
+					auto a = OLD_ANIMETION ;
+					pKim_->SetOldAnime( player_anime_data_[ OLD_ANIMETION ][ 0 ] ,
+										player_anime_data_[ OLD_ANIMETION ][ 1 ] ,
+										player_anime_data_[ OLD_ANIMETION ][ 2 ] );
 				}
 			}
 		}
@@ -251,31 +293,29 @@ void Player::ControlKeyBorad( void )
 	{
 		//--  停止時  --//
 		const float stop = 0.02f ;
-		if( pKim_->GetAnime() != Kim::ANIME::TAKE_OUT )
+		if( anime_ != ANIME::TAKE_OUT )
 		{
 			if( move_._x < stop && move_._x > -stop &&
 				move_._z < stop && move_._z > -stop )
 			{
-				pKim_->SetAnime( Kim::ANIME::WAIT );
+				anime_ = ANIME::WAIT ;
 			}
 		}
 	}
 	
 	//--  待機中  --//
-	if( pKim_->GetAnime() == Kim::ANIME::WAIT )
+	if( anime_ == ANIME::WAIT )
 	{
 		//--  武器取り出し  --//
 		if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_E ) == true )
 		{
 			//--  取り出しアニメーションをしていないなら  --//
-			if( pKim_->GetAnimarionPlay( ( int )Kim::ANIME::TAKE_OUT ) == false )
+			if( pKim_->GetAnimarionPlay( ( int )ANIME::TAKE_OUT ) == false )
 			{
-				int wepon = ( int )pKim_->GetWepon();
-				wepon = ( wepon + 1 ) % 3 ;
+				wepon_ = ( WEAPON )( ( ( int )wepon_ + 1 ) % 3 );
 
-				pKim_->SetWepon( ( Kim::WEAPON )wepon );
-				pKim_->SetAnime( Kim::ANIME::TAKE_OUT );
-				pKim_->SetOldAnime( Kim::ANIME::WAIT );
+				anime_ = ANIME::TAKE_OUT ;
+				old_anime_ = ANIME::WAIT ;
 			}
 		}
 	}
@@ -284,7 +324,12 @@ void Player::ControlKeyBorad( void )
 	if( bMove == true )
 	{
 		//--  アニメーション  --//
-		pKim_->SetAnime( Kim::ANIME::WALK );
+		anime_ = ANIME::WALK ;
+	}
+
+	if( pKim_->GetSingleAnimationEnd() == true )
+	{
+		anime_ = old_anime_ ;
 	}
 	
 	//--  移動  --//
@@ -316,17 +361,17 @@ void Player::ControlJoypad( void )
 	action_ = false ;
 	float rot_diff = 0 ;	//
 
-	D3DXVec3Normalize( ( D3DXVECTOR3* )&camera_vector_ , ( D3DXVECTOR3* )&camera_vector_ );
+	//D3DXVec3Normalize( ( D3DXVECTOR3* )&camera_vector_ , ( D3DXVECTOR3* )&camera_vector_ );
 
-	if( GET_INPUT_XPAD( ID_ )->GetPress( XIPad::KEY::L1 ) == true )
+	if( GET_INPUT_XPAD( ID_ )->GetPress( XIPad::KEY::L2 ) == true )
 	{
-		if( state_ != STATE::AIM )
+		state_ = STATE::AIM ;
+	}
+	else
+	{
+		if( GET_INPUT_XPAD( ID_ )->GetRelease( XIPad::KEY::L2 ) == true )
 		{
-			pKim_->SetAnime( Kim::ANIME::WAIT );
-			state_ = STATE::AIM ;
-		}
-		else
-		{
+			anime_ = ANIME::WAIT ;
 			state_ = STATE::WAIT ;
 		}
 	}
@@ -334,11 +379,13 @@ void Player::ControlJoypad( void )
 	//--  移動  --//	
 	auto x_pad_move = GET_INPUT_XPAD( ID_ )->GetLStick();
 	
-	move_._x += camera_vector_._x * speed_._x * x_pad_move._x ; 
-	move_._z += camera_vector_._z * speed_._z * x_pad_move._x ;
+	D3DXVECTOR3 vec ;
+	D3DXVec3Cross( &vec , &D3DXVECTOR3( 0 , 1 , 0 ) , ( D3DXVECTOR3* )&camera_vector_ );
 
-	rotDest_._y = atan2f( x_pad_move._x , x_pad_move._y );
+	move_._x += vec.x * speed_._x * x_pad_move._x ; 
+	move_._z += camera_vector_._z * speed_._z * x_pad_move._y ;
 
+	rotDest_._y = atan2f( move_._x , move_._z );
 
 	//--  エイム  --//
 	if( state_ == STATE::AIM )
@@ -347,16 +394,16 @@ void Player::ControlJoypad( void )
 		rotDest_._y += 0.4f ;
 
 		//--  アニメーションが待機なら  --//
-		if( pKim_->GetAnime() == Kim::ANIME::WAIT )
+		if( anime_ == ANIME::WAIT )
 		{
 			//--  アクション  --//
-			if( GET_INPUT_XPAD( ID_ )->GetPress( XIPad::KEY::R1 ) == true )
+			if( GET_INPUT_XPAD( ID_ )->GetPress( XIPad::KEY::R2 ) == true )
 			{
 				if( action_ == false )
 				{
 					action_ = true ;
-					pKim_->SetAnime( Kim::ANIME::ACTION );
-					pKim_->SetOldAnime( Kim::ANIME::WAIT );
+					anime_ = ANIME::ACTION ;
+					old_anime_ = ANIME::WAIT ;
 				}
 			}
 		}
@@ -369,31 +416,29 @@ void Player::ControlJoypad( void )
 	{
 		//--  停止時  --//
 		const float stop = 0.02f ;
-		if( pKim_->GetAnime() != Kim::ANIME::TAKE_OUT )
+		if( anime_ != ANIME::TAKE_OUT )
 		{
 			if( move_._x < stop && move_._x > -stop &&
 				move_._z < stop && move_._z > -stop )
 			{
-				pKim_->SetAnime( Kim::ANIME::WAIT );
+				anime_ = ANIME::WAIT;
 			}
 		}
 	}
 	
 	//--  待機中  --//
-	if( pKim_->GetAnime() == Kim::ANIME::WAIT )
+	if( anime_ == ANIME::WAIT )
 	{
 		//--  武器取り出し  --//
-		if( GET_INPUT_XPAD( ID_ )->GetPress( XIPad::KEY::B ) == true == true )
+		if( GET_INPUT_XPAD( ID_ )->GetTrigger( XIPad::KEY::Y ) == true == true )
 		{
 			//--  取り出しアニメーションをしていないなら  --//
-			if( pKim_->GetAnimarionPlay( ( int )Kim::ANIME::TAKE_OUT ) == false )
+			if( pKim_->GetAnimarionPlay( ( int )ANIME::TAKE_OUT ) == false )
 			{
-				int wepon = ( int )pKim_->GetWepon();
-				wepon = ( wepon + 1 ) % 3 ;
+				wepon_ = ( WEAPON )( ( ( int )wepon_ + 1 ) % 3 );
 
-				pKim_->SetWepon( ( Kim::WEAPON )wepon );
-				pKim_->SetAnime( Kim::ANIME::TAKE_OUT );
-				pKim_->SetOldAnime( Kim::ANIME::WAIT );
+				anime_ = ANIME::TAKE_OUT ;
+				old_anime_ = ANIME::WAIT ;
 			}
 		}
 	}
@@ -402,7 +447,7 @@ void Player::ControlJoypad( void )
 	if( bMove == true )
 	{
 		//--  アニメーション  --//
-		pKim_->SetAnime( Kim::ANIME::WALK );
+		anime_ = ANIME::WALK ;
 	}
 	
 	//--  移動  --//

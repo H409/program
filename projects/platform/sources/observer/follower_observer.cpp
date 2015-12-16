@@ -13,6 +13,7 @@
 #include "../system/win_system.h"
 #include "../system/input_manager.h"
 #include "../system/input_mouse.h"
+#include "../system/xi_pad.h"
 
 #include "follower_observer.h"
 
@@ -26,6 +27,7 @@ FollowerObserver::FollowerObserver(const f32& in_radian,const f32& in_width,cons
 	rotation_ = float3();
 	eye_ = float3();
 	state_ = STATE::NONE ;
+	ID_ = 0 ;
 }
 
 //=============================================================================
@@ -48,8 +50,11 @@ void FollowerObserver::Update(void)
 	//eye_._z = target_position_._z - length_ ;
 
 
-#ifdef _DEBUG
+#ifndef _RELEASE
 	MouseMove_();
+	TargetLookRotation_();
+#else
+	TargetLookMove_();
 #endif // _DEBUG
 
 	if( state_ == STATE::FOLLWER )
@@ -59,7 +64,6 @@ void FollowerObserver::Update(void)
 		eye_._y = height_ ;
 		eye_._z = target_position_._z - cosf( rotation_._y ) * length_ ;
 
-		//auto look_at = float3(look_at_._x,0.0f,look_at_._z);
 		auto eye = float3( eye_._x , 0.0f , eye_._z );
 		auto vector = target_position_ - eye ;
 		vector = utility::math::Normalize( vector );
@@ -76,8 +80,6 @@ void FollowerObserver::Update(void)
 		auto vector = look_at_ - eye ;
 		vector = utility::math::Normalize( vector );
 
-		//D3DXVECTOR3 vec ;
-		//D3DXVec3Cross( &vec , &D3DXVECTOR3( 0 , 1 , 0 ) , ( D3DXVECTOR3* )&vector );
 		auto vec = feild_icon_ - target_position_ ;
 		D3DXVec3Normalize( ( D3DXVECTOR3* )&vec , ( D3DXVECTOR3* )&vec );
 
@@ -88,17 +90,11 @@ void FollowerObserver::Update(void)
 		eye_._y = height_ ;
 		eye_._z = target_position_._z - cosf( rotation_._y + rot ) * length ;
 
-		//auto look_at = float3(look_at_._x,0.0f,look_at_._z);
-
 		look_at_ = float3( vector._x * target_length_ , 0 , vector._z * target_length_ );
 		look_at_ = look_at_ + target_position_ ;
 	}
 	else
 	{
-		////--  基本座標移動  --//
-		//eye_._x = target_position_._x - sinf( rotation_._y ) * length_ ;
-		//eye_._y = height_ ;
-		//eye_._z = target_position_._z - cosf( rotation_._y ) * length_ ;
 	}
 
 	view_matrix_ = utility::math::LookAtLH(eye_,look_at_,up_);
@@ -107,6 +103,36 @@ void FollowerObserver::Update(void)
 FollowerObserver::STATE FollowerObserver::GetState(void) const
 {
 	return state_;
+}
+
+//=============================================================================
+// 
+//=============================================================================
+void FollowerObserver::TargetLookRotation_( void )
+{
+	const float MOVE_EPSIRON = 0.05f ;		// 誤差
+	const float MOVE_DEST_X = 0.015f ;		// 減数
+	const float MOVE_DEST_Y = 0.005f ;		// 減数
+
+	//--  取得  --//
+	auto x_pad_move = GET_INPUT_XPAD( ID_ )->GetRStick();
+
+	//--  誤差判定  --//
+	if( x_pad_move._x > MOVE_EPSIRON ||  x_pad_move._x < -MOVE_EPSIRON )
+	{
+		rotation_._y += x_pad_move._x * MOVE_DEST_X ;
+	}
+
+	//--  誤差判定  --//
+	if( x_pad_move._y > MOVE_EPSIRON ||  x_pad_move._y < -MOVE_EPSIRON )
+	{
+		rotation_._z += x_pad_move._y * MOVE_DEST_Y ;
+	}
+
+	//if( x_pad_move._z != 0 )
+	//{
+	//	length_ -= length_ / ( x_pad_move._z * 0.025f ) ;	// ズーム
+	//}
 }
 
 //=============================================================================
