@@ -109,6 +109,7 @@ Game::Game()
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
 		players_[i]->Init(float3(0.0f,0.0f,0.0f));
+		players_[i]->SetID( i );
 	}
 
 	field_ = std::make_shared<Field>();
@@ -264,21 +265,24 @@ void Game::Update()
 
 		if( GET_INPUT_KEYBOARD()->GetPress(DIK_B) )
 		{
-			_bullet_debug = !_bullet_debug;
+			_bullet_debug = true ;
+		}
+		if( GET_INPUT_KEYBOARD()->GetRelease(DIK_B) )
+		{
+			_bullet_debug = false ;
 		}
 
-		if( _bullet_debug == true )
+		/*if( _bullet_debug == true )
 		{
 			players_[ i ]->SetAction( true );
 		}
+		else
+		{
+			players_[ i ]->SetAction( false );
+		}*/
 #endif // _DEBUG
 
-//<<<<<<< HEAD
 		if(players_[ i ]->GetAction() == true )
-//=======
-//		if( players_[ i ]->GetWepon() == Player::WEAPON::GUN &&
-//			players_[ i ]->GetAction() == true )
-//>>>>>>> origin/sembon
 		{
 			// Ží‚Ü‚«
 			if(players_[i]->GetWepon() == Player::WEAPON::GUN)

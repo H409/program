@@ -15,6 +15,7 @@
 #include "../system/xi_pad.h"
 
 #include "../system/input_mouse.h"
+#include "develop_tool/develop_tool.h"
 
 #include "math/math.h"
 #include "player.h"
@@ -73,7 +74,7 @@ Player::Player( LPDIRECT3DDEVICE9 pDevice ) : Object()
 	pKim_ = nullptr ;
 	camera_vector_ = float3();
 	move_ = float3();
-	speed_ = float3( 0.01f , 0.01f , 0.01f );
+	speed_ = float3( 0.01f , 0.01f , 0.03f );
 
 	position_ = float3( 0 , 0 , 0 );
 
@@ -171,6 +172,8 @@ void Player::Uninit( void )
 //-------------------------------------------------------------------
 void Player::Control( void )
 {
+	action_ = false ;
+
 #ifdef _KEYBOAD_DEBUG
 	ControlKeyBorad();
 	ControlJoypad();
@@ -179,6 +182,8 @@ void Player::Control( void )
 	ControlJoypad();
 
 #endif // _DEBUG
+
+	DEVELOP_DISPLAY( "action : %d\n" , action_ );
 }
 //-------------------------------------------------------------------
 // 関数名 : キーボード更新
@@ -189,7 +194,6 @@ void Player::Control( void )
 void Player::ControlKeyBorad( void )
 {
 	bool bMove = false ;	// 移動
-	action_ = false ;
 	float rot_diff = 0 ;	//
 
 	D3DXVec3Normalize( ( D3DXVECTOR3* )&camera_vector_ , ( D3DXVECTOR3* )&camera_vector_ );
@@ -358,7 +362,6 @@ void Player::ControlKeyBorad( void )
 void Player::ControlJoypad( void )
 {
 	bool bMove = false ;	// 移動
-	action_ = false ;
 	float rot_diff = 0 ;	//
 
 	//D3DXVec3Normalize( ( D3DXVECTOR3* )&camera_vector_ , ( D3DXVECTOR3* )&camera_vector_ );
@@ -383,7 +386,7 @@ void Player::ControlJoypad( void )
 	D3DXVec3Cross( &vec , &D3DXVECTOR3( 0 , 1 , 0 ) , ( D3DXVECTOR3* )&camera_vector_ );
 
 	move_._x += vec.x * speed_._x * x_pad_move._x ; 
-	move_._z += camera_vector_._z * speed_._z * x_pad_move._y ;
+	move_._z += vec.z * camera_vector_._z * speed_._z * x_pad_move._y ;
 
 	rotDest_._y = atan2f( move_._x , move_._z );
 
