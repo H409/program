@@ -92,7 +92,7 @@
     <Filter Include="sources\result_team_icon">
       <UniqueIdentifier>{58fccb02-0dfc-40d5-a1e7-ce22ce9722a9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="sources\result_score">
+    <Filter Include="sources\score">
       <UniqueIdentifier>{e2c51647-e7aa-4de0-b530-244a534d991c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -260,7 +260,7 @@
       <Filter>sources\result_team_icon</Filter>
     </ClCompile>
     <ClCompile Include="sources\score\result_score.cpp">
-      <Filter>sources\result_score</Filter>
+      <Filter>sources\score</Filter>
     </ClCompile>
     <ClCompile Include="sources\observer\result_observer.cpp">
       <Filter>sources\observer</Filter>
@@ -433,7 +433,7 @@
       <Filter>sources\result_team_icon</Filter>
     </ClInclude>
     <ClInclude Include="sources\score\result_score.h">
-      <Filter>sources\result_score</Filter>
+      <Filter>sources\score</Filter>
     </ClInclude>
     <ClInclude Include="sources\observer\result_observer.h">
       <Filter>sources\observer</Filter>

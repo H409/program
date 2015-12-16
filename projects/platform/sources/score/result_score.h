@@ -27,6 +27,8 @@ namespace mesh {
 }	//namespace mesh
 class MeshObject;
 
+#define SCORE_DIGIT (3)		//スコア表示の桁数
+
 //*****************************************************************************
 // class declaration
 //*****************************************************************************
@@ -62,9 +64,15 @@ public:
 	TMeshObject GetObject(int i) { return back_ground_mesh_object_[i]; }
 
 private:
-	float2 size_;
+	float2 back_ground_size_;
+	float3 back_ground_pos_[(unsigned int)TEAM::MAX];
 	TSprite back_ground_sprite_[(unsigned int)TEAM::MAX];			//得点背景スプライト
 	TMeshObject back_ground_mesh_object_[(unsigned int)TEAM::MAX];	//得点背景オブジェクト
+
+	float2 num_size_;
+	float3 num_pos_[(unsigned int)TEAM::MAX][SCORE_DIGIT];
+	TSprite num_sprite_[(unsigned int)TEAM::MAX][SCORE_DIGIT];		//得点数値スプライト
+	TMeshObject num_object_[(unsigned int)TEAM::MAX][SCORE_DIGIT];	//得点数値オブジェクト
 };
 
 #endif

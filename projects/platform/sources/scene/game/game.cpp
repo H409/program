@@ -158,6 +158,7 @@ Game::Game()
 	fbx_tree_[ 0 ]->SetPosition( -10 , 0 , 5 );
 	fbx_tree_[ 1 ]->SetPosition( -10 , 0 , -5 );
 
+	 is_win_team_ =WIN_TEAM::NONE;
 	is_result_ = false;
 #ifdef _DEBUG
 	debugRenderTarget_ = false;
