@@ -178,7 +178,7 @@ void Player::Control( void )
 {
 	action_ = false ;
 
-#ifdef _KEYBOAD_DEBUG
+#ifdef _DEBUG
 	ControlKeyBorad();
 	ControlJoypad();
 
@@ -188,6 +188,7 @@ void Player::Control( void )
 #endif // _DEBUG
 	DEVELOP_DISPLAY( "camera_vec : %f , %f , %f\n" , camera_vector_._x , camera_vector_._y , camera_vector_._z );
 	DEVELOP_DISPLAY( "pos : %f , %f , %f\n" , position_._x , position_._y , position_._z );
+	DEVELOP_DISPLAY( "move : %f , %f , %f\n" , move_._x , move_._y , move_._z );
 	DEVELOP_DISPLAY( "action : %d\n" , action_ );
 }
 //-------------------------------------------------------------------
@@ -378,9 +379,10 @@ void Player::ControlJoypad( void )
 
 	D3DXVec3Normalize( ( D3DXVECTOR3* )&camera_vector_ , ( D3DXVECTOR3* )&camera_vector_ );
 
-	if( GET_INPUT_XPAD( ID_ )->GetPress( XIPad::KEY::L2 ) == true )
+	if( GET_INPUT_XPAD( ID_ )->GetTrigger( XIPad::KEY::L2 ) == true )
 	{
 		state_ = STATE::AIM ;
+		anime_ = ANIME::WAIT ;
 	}
 	else
 	{
@@ -413,7 +415,7 @@ void Player::ControlJoypad( void )
 		if( anime_ == ANIME::WAIT )
 		{
 			//--  アクション  --//
-			if( GET_INPUT_XPAD( ID_ )->GetPress( XIPad::KEY::R2 ) == true )
+			if( GET_INPUT_XPAD( ID_ )->GetTrigger( XIPad::KEY::R2 ) == true )
 			{
 				if( action_ == false )
 				{
@@ -436,7 +438,12 @@ void Player::ControlJoypad( void )
 			if( move_._x < stop && move_._x > -stop &&
 				move_._z < stop && move_._z > -stop )
 			{
-				anime_ = ANIME::WAIT;
+				anime_ = ANIME::WAIT ;
+			}
+			else
+			{
+				anime_ = ANIME::WALK ;
+				rotDest_._y = atan2f( move_._x , move_._z );
 			}
 		}
 	}
@@ -445,10 +452,10 @@ void Player::ControlJoypad( void )
 	if( anime_ == ANIME::WAIT )
 	{
 		//--  武器取り出し  --//
-		if( GET_INPUT_XPAD( ID_ )->GetTrigger( XIPad::KEY::Y ) == true == true )
+		if( GET_INPUT_XPAD( ID_ )->GetTrigger( XIPad::KEY::Y ) == true )
 		{
 			//--  取り出しアニメーションをしていないなら  --//
-			if( pKim_->GetAnimarionPlay( ( int )ANIME::TAKE_OUT ) == false )
+			//if( pKim_->GetAnimarionPlay( ( int )ANIME::TAKE_OUT ) == false )
 			{
 				wepon_ = ( WEAPON )( ( ( int )wepon_ + 1 ) % 3 );
 
@@ -458,15 +465,25 @@ void Player::ControlJoypad( void )
 		}
 	}
 
-	//--  動いたなら  --//
-	if( x_pad_move._x != 0 && x_pad_move._y != 0 )
+	if( anime_ == ANIME::TAKE_OUT )
 	{
-		//--  アニメーション  --//
-		anime_ = ANIME::WALK ;
-
-		rotDest_._y = atan2f( move_._x , move_._z );
+		move_._x = 0 ;
+		move_._z = 0 ;
 
 	}
+
+	////--  動いたなら  --//
+	//if( move_._x != 0 || move_._z != 0 )
+	//{
+	//	//--  アニメーション  --//
+	//	anime_ = ANIME::WALK ;
+
+	//	rotDest_._y = atan2f( move_._x , move_._z );
+	//}
+	//else
+	//{
+	//	anime_ = ANIME::WAIT ;
+	//}}
 	
 	//--  移動  --//
 	position_._x += move_._x ;

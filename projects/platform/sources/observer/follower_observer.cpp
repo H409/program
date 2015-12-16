@@ -54,7 +54,7 @@ void FollowerObserver::Update(void)
 	MouseMove_();
 	TargetLookRotation_();
 #else
-	TargetLookMove_();
+	TargetLookRotation_();
 #endif // _DEBUG
 
 	if( state_ == STATE::FOLLWER )
@@ -111,8 +111,8 @@ FollowerObserver::STATE FollowerObserver::GetState(void) const
 void FollowerObserver::TargetLookRotation_( void )
 {
 	const float MOVE_EPSIRON = 0.05f ;		// Œë·
-	const float MOVE_DEST_X = 0.015f ;		// Œ¸”
-	const float MOVE_DEST_Y = 0.005f ;		// Œ¸”
+	const float MOVE_DEST_X = 0.05f ;		// Œ¸”
+	const float MOVE_DEST_Y = 0.05f ;		// Œ¸”
 
 	//--  Žæ“¾  --//
 	auto x_pad_move = GET_INPUT_XPAD( ID_ )->GetRStick();
