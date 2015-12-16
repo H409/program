@@ -86,8 +86,17 @@
     <Filter Include="sources\timer">
       <UniqueIdentifier>{a9499020-669f-4407-894c-061f738c59b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\fbx_tree">
+      <UniqueIdentifier>{ef08e838-3022-4c95-8bdb-dc568be2a680}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\result_team_icon">
+      <UniqueIdentifier>{58fccb02-0dfc-40d5-a1e7-ce22ce9722a9}</UniqueIdentifier>
+    </Filter>
     <Filter Include="sources\score">
       <UniqueIdentifier>{e2c51647-e7aa-4de0-b530-244a534d991c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\sound">
+      <UniqueIdentifier>{fc911964-f3aa-4e6c-9a46-ceaa9c66ff91}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -247,8 +256,20 @@
     <ClCompile Include="sources\timer\timer.cpp">
       <Filter>sources\timer</Filter>
     </ClCompile>
-    <ClCompile Include="sources\score\score.cpp">
+    <ClCompile Include="sources\fbx_tree\fbx_tree.cpp">
+      <Filter>sources\fbx_tree</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\result_team_icon\result_team_icon.cpp">
+      <Filter>sources\result_team_icon</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\score\result_score.cpp">
       <Filter>sources\score</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\observer\result_observer.cpp">
+      <Filter>sources\observer</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\sound\sound.cpp">
+      <Filter>sources\sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -411,8 +432,23 @@
     <ClInclude Include="sources\timer\timer.h">
       <Filter>sources\timer</Filter>
     </ClInclude>
-    <ClInclude Include="sources\score\score.h">
+    <ClInclude Include="sources\fbx_tree\fbx_tree.h">
+      <Filter>sources\fbx_tree</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\result_team_icon\result_team_icon.h">
+      <Filter>sources\result_team_icon</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\score\result_score.h">
       <Filter>sources\score</Filter>
     </ClInclude>
+    <ClInclude Include="sources\observer\result_observer.h">
+      <Filter>sources\observer</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\sound\sound.h">
+      <Filter>sources\sound</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\ToDo.txt" />
   </ItemGroup>
 </Project>

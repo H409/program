@@ -20,7 +20,7 @@
 //*****************************************************************************
 // constant definition
 //*****************************************************************************
-const f32 Bullet::GRAVITY[(u32)TYPE::MAX] = { 0.01f,0.01f };
+const f32 Bullet::GRAVITY[(u32)TYPE::MAX] = { 0.01f,0.001f };
 
 //=============================================================================
 // constructor
@@ -105,6 +105,15 @@ void Bullet::SetType(TYPE in_type)
 	char work[256] = { 0 };
 	sprintf_s(work,"resources/texture/bullet_00%d.png",in_type);
 	mesh_object_->SetTexture(0,GET_GRAPHIC_DEVICE()->LoadTexture(work));
+	if(type_ == TYPE::SEED)
+	{
+		sprite_3d_->SetSize(0.1f,0.1f);
+	}
+	if(type_ == TYPE::BOMB)
+	{
+		sprite_3d_->SetSize(0.5f,0.5f);
+	}
+	sprite_3d_->Apply();
 }
 
 //=============================================================================

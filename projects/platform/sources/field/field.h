@@ -46,11 +46,17 @@ public:
 
 	enum class TYPE
 	{
+		NONE = -1,
+		GRAVEL,
+		GREEN_SPACE,
+		STONE_PAVEMENT,
 		SOIL,
-		CONCRETE,
-		ROAD,
-		BUILDING,
 		TREE,
+		SHRINE,
+		LANTERN,
+		SHRINE_2,
+		ROCK_2x2,
+		ROCK_4x4,
 		MAX,
 	};
 	// constructor
@@ -103,7 +109,7 @@ public:
 	void SetType(u32 in_index,u32 in_type);
 
 	// get type
-	u32 GetType(const float3& in_position)const;
+	TYPE GetType(const float3& in_position)const;
 
 	// 
 	u32 CountType(u32 in_type);
@@ -114,6 +120,8 @@ public:
 	bool CheckTypeLeftBottom(const u32& in_x,const u32& in_y,const u32& in_type);
 	bool CheckTypeRightTop(const u32& in_x,const u32& in_y,const u32& in_type);
 	bool CheckTypeRightBottom(const u32& in_x,const u32& in_y,const u32& in_type);
+
+	bool IsObstacle(TYPE in_type);
 
 private:
 	static const float4 DEFAULT_COLOR;
