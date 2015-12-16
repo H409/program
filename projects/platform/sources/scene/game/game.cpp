@@ -102,6 +102,7 @@ Game::Game()
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
 		players_[i] = std::make_shared<Player>(graphic_device->GetDevice());
+		players_[i]->SetID(i);
 	}
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
@@ -887,6 +888,7 @@ void Game::DrawResult(void)
 	basic_vs->SetValue("_projection_matrix", (f32*)&observer_2d_->GetProjectionMatrix(), sizeof(float4x4));
 	basic_vs->SetValue("_world_matrix", (f32*)&debug_sprite_object_->GetMatrix(), sizeof(float4x4));
 	basic_vs->SetValue("_color", (f32*)&color, sizeof(f32) * 4);
+	//basic_ps->SetTexture("_texture_sampler",)
 
 	//チーム
 	//スコア

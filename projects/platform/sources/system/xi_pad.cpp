@@ -95,24 +95,25 @@ void XIPad::Clear(void)
 
 void XIPad::NormalizeAnalogStick()
 {
+	number_;
 	//アナログスティック正規化
 
-	float2 normalize = l_stick_;
-	normalize._x /= 32768.0f;
-	normalize._y /= 32768.0f;
+	float2 l_normalize = l_stick_;
+	l_normalize._x /= 32768.0f;
+	l_normalize._y /= 32768.0f;
 
 	if (l_stick_newtral_param._x >= 0.0f)
 	{
 		if (l_stick_._x >= 0.0f&&l_stick_._x <= l_stick_newtral_param._x)
 		{
-			normalize._x = 0.0f;
+			l_normalize._x = 0.0f;
 		}
 	}
 	else if (l_stick_newtral_param._x <= 0.0f)
 	{
 		if (l_stick_._x <= 0.0f&&l_stick_._x >= l_stick_newtral_param._x)
 		{
-			normalize._x = 0.0f;
+			l_normalize._x = 0.0f;
 		}
 	}
 
@@ -120,53 +121,65 @@ void XIPad::NormalizeAnalogStick()
 	{
 		if (l_stick_._y >= 0.0f&&l_stick_._y <= l_stick_newtral_param._y)
 		{
-			normalize._y = 0.0f;
+			l_normalize._y = 0.0f;
 		}
 	}
 	else if (l_stick_newtral_param._y <= 0.0f)
 	{
 		if (l_stick_._y <= 0.0f&&l_stick_._y >= l_stick_newtral_param._y)
 		{
-			normalize._y = 0.0f;
+			l_normalize._y = 0.0f;
 		}
 	}
 
-	if (normalize._x > 1.0f)
+	//数字が1.0,-1.0を超える場合
+	if (l_normalize._x > 1.0f)
 	{
-		normalize._x = 1.0f;
+		l_normalize._x = 1.0f;
 	}
-	if (normalize._y > 1.0f)
+	if (l_normalize._y > 1.0f)
 	{
-		normalize._y = 1.0f;
+		l_normalize._y = 1.0f;
 	}
-	if (normalize._x < -1.0f)
+	if (l_normalize._x < -1.0f)
 	{
-		normalize._x = -1.0f;
+		l_normalize._x = -1.0f;
 	}
-	if (normalize._y < -1.0f)
+	if (l_normalize._y < -1.0f)
 	{
-		normalize._y = -1.0f;
+		l_normalize._y = -1.0f;
 	}
 
-	l_stick_ = normalize;
+	//数字がごく小さい値の場合
+	if (l_normalize._x<ANALOG_STICK_ASOBI&&l_normalize._x>-ANALOG_STICK_ASOBI)
+	{
+		l_normalize._x = 0.0f;
+	}
+	if (l_normalize._y<ANALOG_STICK_ASOBI&&l_normalize._y>-ANALOG_STICK_ASOBI)
+	{
+		l_normalize._y = 0.0f;
+	}
 
-	normalize = r_stick_;
+	l_stick_ = l_normalize;
 
-	normalize._x /= 32768.0f;
-	normalize._y /= 32768.0f;
+	//右スティック正規化
+	float2 r_normalize = r_stick_;
+
+	r_normalize._x /= 32768.0f;
+	r_normalize._y /= 32768.0f;
 
 	if (r_stick_newtral_param._x >= 0.0f)
 	{
 		if (r_stick_._x >= 0.0f&&r_stick_._x <= r_stick_newtral_param._x)
 		{
-			normalize._x = 0.0f;
+			r_normalize._x = 0.0f;
 		}
 	}
 	else if (r_stick_newtral_param._x <= 0.0f)
 	{
 		if (r_stick_._x <= 0.0f&&r_stick_._x >= r_stick_newtral_param._x)
 		{
-			normalize._x = 0.0f;
+			r_normalize._x = 0.0f;
 		}
 	}
 
@@ -174,35 +187,46 @@ void XIPad::NormalizeAnalogStick()
 	{
 		if (r_stick_._y >= 0.0f&&r_stick_._y <= r_stick_newtral_param._y)
 		{
-			normalize._y = 0.0f;
+			r_normalize._y = 0.0f;
 		}
 	}
 	else if (r_stick_newtral_param._y <= 0.0f)
 	{
 		if (r_stick_._y <= 0.0f&&r_stick_._y >= r_stick_newtral_param._y)
 		{
-			normalize._y = 0.0f;
+			r_normalize._y = 0.0f;
 		}
 	}
 
-	if (normalize._x > 1.0f)
+	//数字が1.0,-1.0を超える場合
+	if (r_normalize._x > 1.0f)
 	{
-		normalize._x = 1.0f;
+		r_normalize._x = 1.0f;
 	}
-	if (normalize._y > 1.0f)
+	if (r_normalize._y > 1.0f)
 	{
-		normalize._y = 1.0f;
+		r_normalize._y = 1.0f;
 	}
-	if (normalize._x < -1.0f)
+	if (r_normalize._x < -1.0f)
 	{
-		normalize._x = -1.0f;
+		r_normalize._x = -1.0f;
 	}
-	if (normalize._y < -1.0f)
+	if (r_normalize._y < -1.0f)
 	{
-		normalize._y = -1.0f;
+		r_normalize._y = -1.0f;
 	}
 
-	r_stick_ = normalize;
+	//数字がごく小さい値の場合
+	if (r_normalize._x<ANALOG_STICK_ASOBI&&r_normalize._x>-ANALOG_STICK_ASOBI)
+	{
+		r_normalize._x = 0.0f;
+	}
+	if (r_normalize._y<ANALOG_STICK_ASOBI&&r_normalize._y>-ANALOG_STICK_ASOBI)
+	{
+		r_normalize._y = 0.0f;
+	}
+
+	r_stick_ = r_normalize;
 }
 
 bool XIPad::GetPress(KEY in_key) const
