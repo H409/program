@@ -48,7 +48,7 @@ Field::Field(void)
 
 #if MESH
 	mesh_sprite_3d_ = std::make_shared<mesh::MeshSprite3D>(block_width_,block_height_,width_count_,height_count_);
-	mesh_sprite_3d_->SetTexcoord(2,2);
+	mesh_sprite_3d_->SetTexcoord(4,3);
 	mesh_object_ = std::make_shared<MeshObject>(mesh_sprite_3d_);
 	mesh_sprite_3d_->SetIndex(types_);
 	mesh_sprite_3d_->Apply();
@@ -118,7 +118,7 @@ void Field::Load(const std::string& in_path)
 
 	for(auto& type : types_)
 	{
-		type = atoi((str.c_str() + offset)) - 1;
+		type = atoi((str.c_str() + offset));
 		
 		if(str.find_first_of(',',offset) != str.npos)
 		{
@@ -132,7 +132,7 @@ void Field::Load(const std::string& in_path)
 
 #if MESH
 	mesh_sprite_3d_ = std::make_shared<mesh::MeshSprite3D>(block_width_,block_height_,width_count_,height_count_);
-	mesh_sprite_3d_->SetTexcoord(2,2);
+	mesh_sprite_3d_->SetTexcoord(4,3);
 	mesh_object_ = std::make_shared<MeshObject>(mesh_sprite_3d_);
 	mesh_sprite_3d_->SetIndex(types_);
 	mesh_sprite_3d_->Apply();
