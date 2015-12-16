@@ -329,6 +329,14 @@ void Player::ControlKeyBorad( void )
 		}
 	}
 
+	if( pKim_->GetAnimarionPlay( ( int )ANIME::TAKE_OUT ) == true )
+	{
+		move_._x = 0 ;
+		move_._z = 0 ;
+
+		anime_ = ANIME::TAKE_OUT ;
+	}
+
 	//--  動いたなら  --//
 	if( bMove == true )
 	{
@@ -366,8 +374,7 @@ void Player::ControlKeyBorad( void )
 //-------------------------------------------------------------------	
 void Player::ControlJoypad( void )
 {
-	bool bMove = false ;	// 移動
-	float rot_diff = 0 ;	//
+	float rot_diff = 0 ;
 
 	D3DXVec3Normalize( ( D3DXVECTOR3* )&camera_vector_ , ( D3DXVECTOR3* )&camera_vector_ );
 
@@ -396,8 +403,6 @@ void Player::ControlJoypad( void )
 	move_._x += vec.x * x_pad_move._x * speed_._x ;
 	move_._z += vec.z * x_pad_move._x * speed_._z ;
 
-	rotDest_._y = atan2f( move_._x , move_._z );
-
 	//--  エイム  --//
 	if( state_ == STATE::AIM )
 	{
@@ -421,7 +426,6 @@ void Player::ControlJoypad( void )
 
 		move_ *= 0 ;
 		rot_diff = 0.11f ;
-		bMove = false ;
 	}
 	else
 	{
@@ -455,10 +459,13 @@ void Player::ControlJoypad( void )
 	}
 
 	//--  動いたなら  --//
-	if( bMove == true )
+	if( x_pad_move._x != 0 && x_pad_move._y != 0 )
 	{
 		//--  アニメーション  --//
 		anime_ = ANIME::WALK ;
+
+		rotDest_._y = atan2f( move_._x , move_._z );
+
 	}
 	
 	//--  移動  --//
