@@ -66,6 +66,7 @@ Title::Title()
 	//2D用カメラ設定
 	observer_2d_ = std::make_shared<Observer2D>(window->GetWidth(), window->GetHeight());
 
+	//BGM
 	Sound::Instance().PlaySound(SOUND_LABEL_BGM000);
 }
 
@@ -91,7 +92,7 @@ bool Title::Initialize(SceneManager* p_scene_manager)
 //=============================================================================
 void Title::Finalize()
 {
-
+	Sound::Instance().StopSound();
 }
 
 //=============================================================================
@@ -104,12 +105,17 @@ void Title::Update()
 	//効果音デバッグ
 	if (GET_INPUT_KEYBOARD()->GetTrigger(DIK_O))
 	{
-//		Sound::Instance().PlaySound(SOUND_LABEL_SE_SHOT);
+		{
+			Sound::Instance().PlaySeSound(SOUND_LABEL_SE_SHOT, 0);
+		}
 	}
 
 	//if (p_input_manager->GetTrigger(InputManager::Command::A, 0))
 	if(GET_INPUT_MOUSE()->GetPress(InputMouse::MOUSE_KEY::LEFT))
 	{
+		//効果音再生
+		Sound::Instance().PlaySeSound(SOUND_LABEL_SE_YES, 0);
+
 		SceneManager::Instance().set_p_next_scene(SceneManager::Instance().get_tutorial());
 		SceneManager::Instance().set_scene_change_flag(true);
 	}

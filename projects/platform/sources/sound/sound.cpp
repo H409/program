@@ -29,8 +29,9 @@ PARAM g_aParam[SOUND_LABEL_MAX] =
 //コンストラクタ
 Sound::Sound()
 :se_index_(0)
-{
 
+{
+	label_ = SOUND_LABEL_SE_YES;
 }
 
 //デストラクタ
@@ -286,7 +287,7 @@ HRESULT Sound::PlaySound(SOUND_LABEL label)
 //=============================================================================
 // セグメント再生(停止)
 //=============================================================================
-HRESULT Sound::PlaySeSound(SOUND_LABEL label)
+HRESULT Sound::PlaySeSound(SOUND_LABEL label,int index)
 {
 	XAUDIO2_VOICE_STATE xa2state;
 	XAUDIO2_BUFFER buffer;
@@ -300,22 +301,36 @@ HRESULT Sound::PlaySeSound(SOUND_LABEL label)
 	{
 		buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
 	}
+
+	if (label_ == label)
+	{
+		index += 1;
+
+		if (index > SE_MAX)
+		{
+
+			index = 0;
+		}
+	}
+
 	// 状態取得
-	m_apSeVoice[label][se_index_]->GetState(&xa2state);
+	m_apSeVoice[label][index]->GetState(&xa2state);
 	if (xa2state.BuffersQueued != 0)
-	{// 再生中
+	{	// 再生中
 		// 一時停止
-		m_apSeVoice[label][se_index_]->Stop(0);
+		m_apSeVoice[label][index]->Stop(0);
 
 		// オーディオバッファの削除
-		m_apSeVoice[label][se_index_]->FlushSourceBuffers();
+		m_apSeVoice[label][index]->FlushSourceBuffers();
 	}
 
 	// オーディオバッファの登録
-	m_apSeVoice[label][se_index_]->SubmitSourceBuffer(&buffer);
+	m_apSeVoice[label][index]->SubmitSourceBuffer(&buffer);
 
 	// 再生
-	m_apSeVoice[label][se_index_]->Start(0);
+	m_apSeVoice[label][index]->Start(0);
+
+	label_ = label;
 
 	return S_OK;
 }
