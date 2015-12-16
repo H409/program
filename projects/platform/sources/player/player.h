@@ -109,7 +109,7 @@ public :
 	//void SetActionAnimationEnd( const int& id ){ ID_ = id ; }
 	bool GetActionAnimationEnd( void ){ return action_animation_end_ ; }
 	bool GetAction( void ){ return action_ ; }
-	void SetAction( bool b ){ action_ = b ; }
+	//void SetAction( bool b ){ action_ = b ; }
 
 	float GetCameraRotY( void ){ return camera_rot_y ; }
 
