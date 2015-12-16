@@ -18,6 +18,7 @@
 #include "system/input_mouse.h"
 #include "scene/base/scene_manager.h"
 #include "develop_tool/develop_tool.h"
+#include "sound/sound.h"
 
 //=============================================================================
 // エントリーポイント
@@ -31,6 +32,10 @@ int main(int argc,char* argv)
 	auto win_system = WinSystem::GetInstance();
 	auto graphic_device = GET_GRAPHIC_DEVICE();
 	bool is_loop = true;
+
+	auto& sound = Sound::Instance();
+	sound.InitSound(win_system->GetWindow()->__hwnd());
+
 	auto& scene_manager = SceneManager::Instance();
 	auto fps = 0;
 	win_system->SetCallbacks(WinSystem::EVENT::STOP,{ [&is_loop] {is_loop = false;} });

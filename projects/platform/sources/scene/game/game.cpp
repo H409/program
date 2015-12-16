@@ -45,6 +45,7 @@
 #include "fbx_tree/fbx_tree.h"
 #include "score/result_score.h"
 #include "result_team_icon/result_team_icon.h"
+#include "sound/sound.h"
 
 //=============================================================================
 // constructor
@@ -184,7 +185,7 @@ Game::Game()
 //=============================================================================
 Game::~Game()
 {
-
+	
 }
 
 //=============================================================================
@@ -221,6 +222,9 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 
 	is_result_ = false;
 
+	//BGM
+	Sound::Instance().PlaySound(SOUND_LABEL_BGM002);
+
 	return true;
 }
 
@@ -229,7 +233,7 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 //=============================================================================
 void Game::Finalize()
 {
-
+	Sound::Instance().StopSound();
 }
 
 //=============================================================================
@@ -359,8 +363,8 @@ void Game::Update()
 
 				if(is_create)
 				{
-					auto bullet = std::make_shared<Bullet>(start_position,end_position);
-					bullet->SetType(Bullet::TYPE::BOMB);
+					auto bullet = std::make_shared<Bullet>(start_position,end_position,Bullet::TYPE::BOMB);
+					//bullet->SetType(Bullet::TYPE::BOMB);
 					bullet->SetTag(i);
 					bullets_.push_back(bullet);
 				}
