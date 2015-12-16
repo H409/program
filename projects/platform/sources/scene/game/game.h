@@ -109,6 +109,9 @@ private:
 
 	std::unique_ptr<Timer> timer_;
 
+	std::shared_ptr<MeshObject> sprite_3D_ ;
+
+
 	//result関連
 	bool result_flag_;								//リザルト画面表示をするかしないか
 	std::shared_ptr<Score> score_;					//得点表示

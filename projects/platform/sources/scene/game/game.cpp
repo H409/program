@@ -147,6 +147,7 @@ Game::Game()
 
 	fbx_object_[ 0 ] = std::make_shared<FBXObject>( graphic_device->GetDevice() );
 	fbx_object_[ 0 ]->Load( "resources/model/iwa_obj_1.kim" );
+	fbx_object_[ 0 ]->SetPosition( -10 , 0 , 0 );
 
 	fbx_tree_[ 0 ] = std::make_shared<FBXTree>( graphic_device->GetDevice() , 0 );
 	fbx_tree_[ 1 ] = std::make_shared<FBXTree>( graphic_device->GetDevice() , 2 );
@@ -154,6 +155,11 @@ Game::Game()
 	fbx_tree_[ 0 ]->SetPosition( -10 , 0 , 5 );
 	fbx_tree_[ 1 ]->SetPosition( -10 , 0 , -5 );
 
+	auto sprite_3d = std::make_shared<mesh::Sprite3D>( float2( 3.0f , 3.0f ) );
+	sprite_3D_ = std::make_shared<MeshObject>(sprite_3d);
+	sprite_3D_->SetPosition( -9.5f , 0.01f , 2.0f );
+	sprite_3D_->SetTexture( 0 , GET_GRAPHIC_DEVICE()->LoadTexture( "resources/texture/s_test_2.jpg" ) );
+	sprite_3D_->SetRotationX( utility::math::ToRadian(90.0f) );
 #ifdef _DEBUG
 	debugRenderTarget_ = false;
 	debug_player_number_ = 0;
@@ -430,8 +436,9 @@ void Game::Update()
 	{
 		flower._Get()->Update();
 	}
-	fbx_object_[ 0 ]->SetPosition( -10 , 0 , 0 );
+
 	fbx_object_[ 0 ]->Update();
+
 	fbx_tree_[ 0 ]->Update();
 	fbx_tree_[ 1 ]->Update();
 
@@ -716,6 +723,10 @@ void Game::Draw()
 				}
 			}
 		}
+
+		gb_vs->SetValue("_world_matrix", (f32*)&sprite_3D_->GetMatrix(), 16);
+		gb_ps->SetTexture("_texture_sampler", sprite_3D_->GetTexture(0)->GetTexture());
+		sprite_3D_->Draw();
 
 		//--  “®‚©‚È‚¢FBX  --//
 		fbx_object_[ 0 ]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[ i ]->GetViewMatrix());
