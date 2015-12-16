@@ -213,7 +213,7 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 
 	timer_->Reset();
 
-	result_flag_ = false;
+	is_result_ = false;
 
 	return true;
 }
