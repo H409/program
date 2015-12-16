@@ -89,6 +89,9 @@
     <Filter Include="sources\score">
       <UniqueIdentifier>{e2c51647-e7aa-4de0-b530-244a534d991c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\fbx_tree">
+      <UniqueIdentifier>{ef08e838-3022-4c95-8bdb-dc568be2a680}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\windows\win_main.cpp">
@@ -249,6 +252,9 @@
     </ClCompile>
     <ClCompile Include="sources\score\score.cpp">
       <Filter>sources\score</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\fbx_tree\fbx_tree.cpp">
+      <Filter>sources\fbx_tree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -414,5 +420,11 @@
     <ClInclude Include="sources\score\score.h">
       <Filter>sources\score</Filter>
     </ClInclude>
+    <ClInclude Include="sources\fbx_tree\fbx_tree.h">
+      <Filter>sources\fbx_tree</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\ToDo.txt" />
   </ItemGroup>
 </Project>
