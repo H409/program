@@ -92,6 +92,9 @@
     <Filter Include="sources\fbx_tree">
       <UniqueIdentifier>{ef08e838-3022-4c95-8bdb-dc568be2a680}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\sound">
+      <UniqueIdentifier>{65130966-452e-4639-bafb-d079ed07c85d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\windows\win_main.cpp">
@@ -255,6 +258,9 @@
     </ClCompile>
     <ClCompile Include="sources\fbx_tree\fbx_tree.cpp">
       <Filter>sources\fbx_tree</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\sound\sound.cpp">
+      <Filter>sources\sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -422,6 +428,9 @@
     </ClInclude>
     <ClInclude Include="sources\fbx_tree\fbx_tree.h">
       <Filter>sources\fbx_tree</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\sound\sound.h">
+      <Filter>sources\sound</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -13,6 +13,7 @@
 #ifndef _XI_PAD_H_
 #define _XI_PAD_H_
 
+#define ANALOG_STICK_ASOBI (0.23f)	//アナログスティックの傾き、"遊び"の範囲
 //namespace input {
 //namespace directinput8 {
 class XIPad

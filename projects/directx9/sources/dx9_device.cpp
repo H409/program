@@ -114,7 +114,8 @@ DX9Device::DX9Device(const HWND& in_hwnd,const u16& in_width,const u16& in_heigh
 	}
 
 	// デバイスオブジェクトの生成
-	if(FAILED(direct3d9_->CreateDevice(D3DADAPTER_DEFAULT,D3DDEVTYPE_HAL,in_hwnd,D3DCREATE_SOFTWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED,&d3dpresent_parameters_,&direct3ddevice9_)))
+	//if(FAILED(direct3d9_->CreateDevice(D3DADAPTER_DEFAULT,D3DDEVTYPE_HAL,in_hwnd,D3DCREATE_SOFTWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED,&d3dpresent_parameters_,&direct3ddevice9_)))
+	if(FAILED(direct3d9_->CreateDevice(D3DADAPTER_DEFAULT,D3DDEVTYPE_HAL,in_hwnd,D3DCREATE_SOFTWARE_VERTEXPROCESSING,&d3dpresent_parameters_,&direct3ddevice9_)))
 	{
 		DEBUG_ASSERT_MESSAGE(false,"デバイスの生成に失敗しました");
 	}
