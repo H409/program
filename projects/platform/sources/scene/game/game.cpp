@@ -205,6 +205,8 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 
 	timer_->Reset();
 
+	result_flag_ = false;
+
 	return true;
 }
 
@@ -270,10 +272,10 @@ void Game::Update()
 #endif // _DEBUG
 
 //<<<<<<< HEAD
-//		if(players_[ i ]->GetAction() == true )
+		if(players_[ i ]->GetAction() == true )
 //=======
-		if( players_[ i ]->GetWepon() == Player::WEAPON::GUN &&
-			players_[ i ]->GetAction() == true )
+//		if( players_[ i ]->GetWepon() == Player::WEAPON::GUN &&
+//			players_[ i ]->GetAction() == true )
 //>>>>>>> origin/sembon
 		{
 			// Ží‚Ü‚«
