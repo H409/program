@@ -158,8 +158,10 @@ float3 FieldIcon::GetVector_(void) const
 	auto keyboard = GET_INPUT_KEYBOARD();
 	auto xi_pad = GET_INPUT_MANAGER()->GetXIPad(number_);
 	auto right_vector = utility::math::CrossProduct(float3(0.0f,1.0f,0.0f),front_vector_);
-	auto vector = float3(xi_pad->GetRStick()._x,0.0f,xi_pad->GetRStick()._y);
+	auto stick_vector = xi_pad->GetRStick();
+	auto vector = front_vector_ * stick_vector._y + right_vector * stick_vector._x;
 
+#ifndef _RELEASE
 	if(keyboard->GetPress(DIK_I))
 	{
 		vector += front_vector_;
@@ -179,6 +181,7 @@ float3 FieldIcon::GetVector_(void) const
 	{
 		vector += right_vector;
 	}
+#endif 
 
 	vector = utility::math::Normalize(vector);
 
