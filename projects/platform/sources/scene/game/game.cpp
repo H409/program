@@ -1,4 +1,5 @@
 
+
 //*****************************************************************************
 //
 // game.cpp
@@ -44,6 +45,7 @@
 #include "fbx_tree/fbx_tree.h"
 #include "score/result_score.h"
 #include "result_team_icon/result_team_icon.h"
+#include "sound/sound.h"
 
 //=============================================================================
 // constructor
@@ -113,6 +115,7 @@ Game::Game()
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
 		players_[i]->Init(float3(0.0f,0.0f,0.0f));
+		players_[i]->SetID( i );
 	}
 
 	field_ = std::make_shared<Field>();
@@ -120,7 +123,7 @@ Game::Game()
 	auto field_size = field_->GetSize();
 	for (u32 i = 0; i < WALL_MAX; ++i)
 	{
-		wall_[i] = std::make_shared<Wall>(float2(30.0f,1.0f));
+		wall_[i] = std::make_shared<Wall>(float2(field_size._x,1.0f));
 		wall_[i]->Update();
 	}
 
@@ -151,6 +154,7 @@ Game::Game()
 
 	fbx_object_[ 0 ] = std::make_shared<FBXObject>( graphic_device->GetDevice() );
 	fbx_object_[ 0 ]->Load( "resources/model/iwa_obj_1.kim" );
+	fbx_object_[ 0 ]->SetPosition( -10 , 0 , 0 );
 
 	fbx_tree_[ 0 ] = std::make_shared<FBXTree>( graphic_device->GetDevice() , 0 );
 	fbx_tree_[ 1 ] = std::make_shared<FBXTree>( graphic_device->GetDevice() , 2 );
@@ -160,6 +164,11 @@ Game::Game()
 
 	 is_win_team_ =WIN_TEAM::NONE;
 	is_result_ = false;
+	auto sprite_3d = std::make_shared<mesh::Sprite3D>( float2( 3.0f , 3.0f ) );
+	sprite_3D_ = std::make_shared<MeshObject>(sprite_3d);
+	sprite_3D_->SetPosition( -9.5f , 0.01f , 2.0f );
+	sprite_3D_->SetTexture( 0 , GET_GRAPHIC_DEVICE()->LoadTexture( "resources/texture/s_test_2.jpg" ) );
+	sprite_3D_->SetRotationX( utility::math::ToRadian(90.0f) );
 #ifdef _DEBUG
 	debugRenderTarget_ = false;
 	debug_player_number_ = 0;
@@ -177,7 +186,7 @@ Game::Game()
 //=============================================================================
 Game::~Game()
 {
-
+	
 }
 
 //=============================================================================
@@ -212,6 +221,11 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 
 	timer_->Reset();
 
+	is_result_ = false;
+
+	//BGM
+	Sound::Instance().PlaySound(SOUND_LABEL_BGM002);
+
 	return true;
 }
 
@@ -220,7 +234,7 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 //=============================================================================
 void Game::Finalize()
 {
-
+	Sound::Instance().StopSound();
 }
 
 //=============================================================================
@@ -267,21 +281,24 @@ void Game::Update()
 
 		if( GET_INPUT_KEYBOARD()->GetPress(DIK_B) )
 		{
-			_bullet_debug = !_bullet_debug;
+			_bullet_debug = true ;
+		}
+		if( GET_INPUT_KEYBOARD()->GetRelease(DIK_B) )
+		{
+			_bullet_debug = false ;
 		}
 
-		if( _bullet_debug == true )
+		/*if( _bullet_debug == true )
 		{
 			players_[ i ]->SetAction( true );
 		}
+		else
+		{
+			players_[ i ]->SetAction( false );
+		}*/
 #endif // _DEBUG
 
-//<<<<<<< HEAD
-//		if(players_[ i ]->GetAction() == true )
-//=======
-		if( players_[ i ]->GetWepon() == Player::WEAPON::GUN &&
-			players_[ i ]->GetAction() == true )
-//>>>>>>> origin/sembon
+		if(players_[ i ]->GetAction() == true )
 		{
 			// Ží‚Ü‚«
 			if(players_[i]->GetWepon() == Player::WEAPON::GUN)
@@ -347,8 +364,8 @@ void Game::Update()
 
 				if(is_create)
 				{
-					auto bullet = std::make_shared<Bullet>(start_position,end_position);
-					bullet->SetType(Bullet::TYPE::BOMB);
+					auto bullet = std::make_shared<Bullet>(start_position,end_position,Bullet::TYPE::BOMB);
+					//bullet->SetType(Bullet::TYPE::BOMB);
 					bullet->SetTag(i);
 					bullets_.push_back(bullet);
 				}
@@ -409,7 +426,7 @@ void Game::Update()
 		//}
 
 		player_position = float3(player_old_position._x + player_move._x,0.0f,player_old_position._z);
-		if(type == (u32)Field::TYPE::BUILDING)
+		if(field_->IsObstacle(type))
 		{
 			auto x = field_->GetBlockPosition(player_position)._x - player_block_position._x;
 			player->SetPositionX(player->GetOldPosition()._x);
@@ -420,7 +437,7 @@ void Game::Update()
 
 		player_position = float3(player_old_position._x,0.0f,player_old_position._z + player_move._z);
 
-		if(type == (u32)Field::TYPE::BUILDING)
+		if(field_->IsObstacle(type))
 		{
 			auto z = field_->GetBlockPosition(player_position)._z - player_block_position._z;
 			player->SetPositionZ(player->GetOldPosition()._z);
@@ -433,8 +450,9 @@ void Game::Update()
 	{
 		flower._Get()->Update();
 	}
-	fbx_object_[ 0 ]->SetPosition( -10 , 0 , 0 );
+
 	fbx_object_[ 0 ]->Update();
+
 	fbx_tree_[ 0 ]->Update();
 	fbx_tree_[ 1 ]->Update();
 
@@ -444,7 +462,7 @@ void Game::Update()
 		if(!bullet->IsDeath())
 		{
 			auto position = bullet->GetPosition();
-			if(field_->GetType(position) == (u32)Field::TYPE::BUILDING)
+			if(field_->IsObstacle(field_->GetType(position)))
 			{
 				bullet->Remove();
 			}
@@ -454,7 +472,7 @@ void Game::Update()
 				{
 					if(bullet->GetType() == Bullet::TYPE::SEED)
 					{
-						if(field_->GetType(position) == (u32)Field::TYPE::SOIL)
+						if(field_->GetType(position) == Field::TYPE::SOIL || field_->GetType(position) == Field::TYPE::TREE)
 						{
 							auto index = field_->GetBlockIndex(position);
 							//field_->SetType(index,(u32)Field::TYPE::FLOWER);
@@ -723,6 +741,10 @@ void Game::Draw()
 				}
 			}
 		}
+
+		gb_vs->SetValue("_world_matrix", (f32*)&sprite_3D_->GetMatrix(), 16);
+		gb_ps->SetTexture("_texture_sampler", sprite_3D_->GetTexture(0)->GetTexture());
+		sprite_3D_->Draw();
 
 		//--  “®‚©‚È‚¢FBX  --//
 		fbx_object_[ 0 ]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[ i ]->GetViewMatrix());

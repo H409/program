@@ -48,7 +48,7 @@ Field::Field(void)
 
 #if MESH
 	mesh_sprite_3d_ = std::make_shared<mesh::MeshSprite3D>(block_width_,block_height_,width_count_,height_count_);
-	mesh_sprite_3d_->SetTexcoord(2,2);
+	mesh_sprite_3d_->SetTexcoord(4,3);
 	mesh_object_ = std::make_shared<MeshObject>(mesh_sprite_3d_);
 	mesh_sprite_3d_->SetIndex(types_);
 	mesh_sprite_3d_->Apply();
@@ -118,7 +118,7 @@ void Field::Load(const std::string& in_path)
 
 	for(auto& type : types_)
 	{
-		type = atoi((str.c_str() + offset)) - 1;
+		type = atoi((str.c_str() + offset));
 		
 		if(str.find_first_of(',',offset) != str.npos)
 		{
@@ -132,7 +132,7 @@ void Field::Load(const std::string& in_path)
 
 #if MESH
 	mesh_sprite_3d_ = std::make_shared<mesh::MeshSprite3D>(block_width_,block_height_,width_count_,height_count_);
-	mesh_sprite_3d_->SetTexcoord(2,2);
+	mesh_sprite_3d_->SetTexcoord(4,3);
 	mesh_object_ = std::make_shared<MeshObject>(mesh_sprite_3d_);
 	mesh_sprite_3d_->SetIndex(types_);
 	mesh_sprite_3d_->Apply();
@@ -354,11 +354,11 @@ void Field::SetType(u32 in_index,u32 in_type)
 //=============================================================================
 // get type
 //=============================================================================
-u32 Field::GetType(const float3& in_position)const
+Field::TYPE Field::GetType(const float3& in_position)const
 {
 	if(!IsInRange(in_position))
 	{
-		return -1;
+		return TYPE::NONE;
 	}
 
 	float3 position = float3(in_position._x + size_._x * 0.5f,in_position._y,-(in_position._z - size_._y * 0.5f));
@@ -370,7 +370,7 @@ u32 Field::GetType(const float3& in_position)const
 
 	DEBUG_ASSERT(types_.size() > index);
 
-	return types_[index];
+	return (TYPE)types_[index];
 }
 
 u32 Field::CountType(u32 in_type)
@@ -592,6 +592,36 @@ bool Field::CheckTypeRightBottom(const u32& in_x,const u32& in_y,const u32& in_t
 	}
 
 	return true;
+}
+
+bool Field::IsObstacle(TYPE in_type)
+{
+	if(in_type == TYPE::SHRINE)
+	{
+		return true;
+	}
+
+	if(in_type == TYPE::LANTERN)
+	{
+		return true;
+	}
+
+	if(in_type == TYPE::SHRINE_2)
+	{
+		return true;
+	}
+
+	if(in_type == TYPE::ROCK_2x2)
+	{
+		return true;
+	}
+
+	if(in_type == TYPE::ROCK_4x4)
+	{
+		return true;
+	}
+
+	return false;
 }
 
 //---------------------------------- EOF --------------------------------------

@@ -15,6 +15,7 @@
 #include "../system/xi_pad.h"
 
 #include "../system/input_mouse.h"
+#include "develop_tool/develop_tool.h"
 
 #include "math/math.h"
 #include "player.h"
@@ -86,6 +87,8 @@ Player::Player( LPDIRECT3DDEVICE9 pDevice ) : Object()
 	wepon_ = WEAPON::GUN ;
 	//player_anime_data_[ NOW_ANIMETION ][ 0 ];
 
+	hit_ = false ;
+
 	pKim_ = new Kim( pDevice_ );
 	pKim_->Load( "resources/model/ZZI_1_MO.kim" );
 }
@@ -118,6 +121,8 @@ void Player::Init( float3 pos )
 	old_anime_ = ANIME::WAIT ;
 	anime_ = ANIME::WAIT ;
 	wepon_ = WEAPON::GUN ;
+
+	hit_ = false ;
 }
 
 //-------------------------------------------------------------------
@@ -171,6 +176,8 @@ void Player::Uninit( void )
 //-------------------------------------------------------------------
 void Player::Control( void )
 {
+	action_ = false ;
+
 #ifdef _KEYBOAD_DEBUG
 	ControlKeyBorad();
 	ControlJoypad();
@@ -179,6 +186,9 @@ void Player::Control( void )
 	ControlJoypad();
 
 #endif // _DEBUG
+	DEVELOP_DISPLAY( "camera_vec : %f , %f , %f\n" , camera_vector_._x , camera_vector_._y , camera_vector_._z );
+	DEVELOP_DISPLAY( "pos : %f , %f , %f\n" , position_._x , position_._y , position_._z );
+	DEVELOP_DISPLAY( "action : %d\n" , action_ );
 }
 //-------------------------------------------------------------------
 // 関数名 : キーボード更新
@@ -189,7 +199,6 @@ void Player::Control( void )
 void Player::ControlKeyBorad( void )
 {
 	bool bMove = false ;	// 移動
-	action_ = false ;
 	float rot_diff = 0 ;	//
 
 	D3DXVec3Normalize( ( D3DXVECTOR3* )&camera_vector_ , ( D3DXVECTOR3* )&camera_vector_ );
@@ -358,10 +367,9 @@ void Player::ControlKeyBorad( void )
 void Player::ControlJoypad( void )
 {
 	bool bMove = false ;	// 移動
-	action_ = false ;
 	float rot_diff = 0 ;	//
 
-	//D3DXVec3Normalize( ( D3DXVECTOR3* )&camera_vector_ , ( D3DXVECTOR3* )&camera_vector_ );
+	D3DXVec3Normalize( ( D3DXVECTOR3* )&camera_vector_ , ( D3DXVECTOR3* )&camera_vector_ );
 
 	if( GET_INPUT_XPAD( ID_ )->GetPress( XIPad::KEY::L2 ) == true )
 	{
@@ -382,8 +390,11 @@ void Player::ControlJoypad( void )
 	D3DXVECTOR3 vec ;
 	D3DXVec3Cross( &vec , &D3DXVECTOR3( 0 , 1 , 0 ) , ( D3DXVECTOR3* )&camera_vector_ );
 
-	move_._x += vec.x * speed_._x * x_pad_move._x ; 
-	move_._z += camera_vector_._z * speed_._z * x_pad_move._y ;
+	move_._x += camera_vector_._x * x_pad_move._y * speed_._x ; 
+	move_._z += camera_vector_._z * x_pad_move._y * speed_._z ;
+
+	move_._x += vec.x * x_pad_move._x * speed_._x ;
+	move_._z += vec.z * x_pad_move._x * speed_._z ;
 
 	rotDest_._y = atan2f( move_._x , move_._z );
 

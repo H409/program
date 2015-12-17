@@ -95,6 +95,9 @@
     <Filter Include="sources\score">
       <UniqueIdentifier>{e2c51647-e7aa-4de0-b530-244a534d991c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\sound">
+      <UniqueIdentifier>{fc911964-f3aa-4e6c-9a46-ceaa9c66ff91}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\windows\win_main.cpp">
@@ -264,6 +267,9 @@
     </ClCompile>
     <ClCompile Include="sources\observer\result_observer.cpp">
       <Filter>sources\observer</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\sound\sound.cpp">
+      <Filter>sources\sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -437,6 +443,9 @@
     </ClInclude>
     <ClInclude Include="sources\observer\result_observer.h">
       <Filter>sources\observer</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\sound\sound.h">
+      <Filter>sources\sound</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

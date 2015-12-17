@@ -120,6 +120,9 @@ private:
 
 	std::unique_ptr<Timer> timer_;
 
+	std::shared_ptr<MeshObject> sprite_3D_ ;
+
+
 	//result関連
 	bool is_result_;									//リザルト画面表示をするかしないか
 	WIN_TEAM is_win_team_;								//勝ったチーム
