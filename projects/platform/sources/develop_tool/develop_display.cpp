@@ -64,20 +64,20 @@ void DevelopDisplay::Draw(void)
 void DevelopDisplay::Print(const char* in_format,...)
 {
 #ifndef _RELEASE
-	//char work[STRING_MAX] = { NULL };
-	//va_list args;
+	char work[STRING_MAX] = { NULL };
+	va_list args;
 
-	//// 可変引数の参照開始
-	//va_start(args,in_format);
+	// 可変引数の参照開始
+	va_start(args,in_format);
 
-	//// 文字列に変更
-	//vsprintf(work,in_format,args);
+	// 文字列に変更
+	vsprintf(work,in_format,args);
 
-	//// 可変引数の参照終了
-	//va_end(args);
+	// 可変引数の参照終了
+	va_end(args);
 
-	//// ログに書込
-	//strcat(string_,work);
+	// ログに書込
+	strcat(string_,work);
 #endif // _RELEASE
 }
 
