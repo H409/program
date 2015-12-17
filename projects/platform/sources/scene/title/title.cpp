@@ -45,7 +45,7 @@ Title::Title()
 	sprite->SetAnchorPoint(float2(0.0f, 0.0f));
 	sprite->Apply();
 	background_->SetPosition(0.0f, 0.0f, 0.0f);
-	background_->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/sky000.jpg"));
+	background_->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/title_background.png"));
 	
 	//ƒƒS
 	auto sprite_logo = std::make_shared<mesh::Sprite>(float2(600, 300));
@@ -53,7 +53,7 @@ Title::Title()
 	sprite_logo->SetAnchorPoint(float2(0.0f, 0.0f));
 	sprite_logo->Apply();
 	logo_->SetPosition(350.0f, 150.0f, 0.0f);
-	logo_->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/title.png"));
+	logo_->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/title_logo.png"));
 
 	//ƒ{ƒ^ƒ“
 	auto sprite_button = std::make_shared<mesh::Sprite>(float2(400, 200));
