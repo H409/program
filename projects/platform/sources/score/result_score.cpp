@@ -49,15 +49,28 @@ Score::Score(void)
 	back_ground_sprite_[(unsigned int)TEAM::RED] = std::make_shared<mesh::Sprite>(back_ground_size_);
 	back_ground_sprite_[(unsigned int)TEAM::RED]->SetAnchorPoint(float2(0.5f, 1.0f));
 	back_ground_mesh_object_[(unsigned int)TEAM::RED] = std::make_shared<MeshObject>(back_ground_sprite_[(unsigned int)TEAM::RED]);
-	back_ground_mesh_object_[(unsigned int)TEAM::RED]->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/window_256x384.png"));
+	back_ground_mesh_object_[(unsigned int)TEAM::RED]->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/kari_window_256x384.png"));
 	back_ground_mesh_object_[(unsigned int)TEAM::RED]->SetPosition(back_ground_pos_[(unsigned int)TEAM::RED]._x, back_ground_pos_[(unsigned int)TEAM::RED]._y, 0.0f);
 
 	//スコア表示背景生成青
 	back_ground_sprite_[(unsigned int)TEAM::BLUE] = std::make_shared<mesh::Sprite>(back_ground_size_);
 	back_ground_sprite_[(unsigned int)TEAM::BLUE]->SetAnchorPoint(float2(0.5f, 1.0f));
 	back_ground_mesh_object_[(unsigned int)TEAM::BLUE] = std::make_shared<MeshObject>(back_ground_sprite_[(unsigned int)TEAM::BLUE]);
-	back_ground_mesh_object_[(unsigned int)TEAM::BLUE]->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/window_256x384.png"));
+	back_ground_mesh_object_[(unsigned int)TEAM::BLUE]->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/kari_window_256x384.png"));
 	back_ground_mesh_object_[(unsigned int)TEAM::BLUE]->SetPosition(GET_DEFAULT_DISPLAY_SIZE()._x * 0.6f, GET_DEFAULT_DISPLAY_SIZE()._y * 0.3, 0.0f);
+
+	//スコア数字表示の生成
+	for (int j = 0; j < (unsigned int)TEAM::MAX; j++)
+	{
+		for (int i = 0; i < SCORE_DIGIT; i++)
+		{
+			num_sprite_[i][j] = std::make_shared<mesh::Sprite>(num_size_);
+			num_sprite_[i][j]->SetAnchorPoint(float2(0.5f, 1.0f));
+			num_object_[i][j] = std::make_shared<MeshObject>(num_sprite_[i][j]);
+			num_object_[i][j]->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/No.png"));
+			num_object_[i][j]->SetPosition(num_pos_[i][j]);
+		}
+	}
 }
 
 //=============================================================================
