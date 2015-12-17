@@ -1,5 +1,3 @@
-
-
 //*****************************************************************************
 //
 // game.cpp
@@ -85,6 +83,7 @@ Game::Game()
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
 		field_icons_[i] = std::make_shared<FieldIcon>();
+		field_icons_[i]->SetNumber(i);
 	}
 
 	float2 positions[]
@@ -288,14 +287,6 @@ void Game::Update()
 			_bullet_debug = false ;
 		}
 
-		/*if( _bullet_debug == true )
-		{
-			players_[ i ]->SetAction( true );
-		}
-		else
-		{
-			players_[ i ]->SetAction( false );
-		}*/
 #endif // _DEBUG
 
 		if(players_[ i ]->GetAction() == true )
@@ -331,7 +322,7 @@ void Game::Update()
 			// Œ@‚è•Ô‚µ
 			if(players_[i]->GetWepon() == Player::WEAPON::HOE)
 			{
-				auto position = players_[i]->GetPosition();
+				auto position = field_icons_[i]->GetPosition();
 				//if(field_->GetType(position) == (u32)Field::TYPE::SOIL)
 				{
 					auto index = field_->GetBlockIndex(position);
@@ -376,7 +367,30 @@ void Game::Update()
 		if( Player::STATE::AIM == players_[ i ]->GetState() )
 		{
 			observers_[i]->SetState( FollowerObserver::STATE::AIM );
-			field_icons_[i]->Show(true);
+
+			if(players_[i]->GetWepon() == Player::WEAPON::GUN)
+			{
+				field_icons_[i]->SetRange(5.0f);
+				field_icons_[i]->SetMin(1.0f);
+				field_icons_[i]->SetSpeed(0.1f);
+				field_icons_[i]->Show(true);
+			}
+
+			if(players_[i]->GetWepon() == Player::WEAPON::HOE)
+			{
+				field_icons_[i]->SetRange(1.0f);
+				field_icons_[i]->SetMin(1.0f);
+				field_icons_[i]->SetSpeed(0.05f);
+				field_icons_[i]->Show(true);
+			}
+
+			if(players_[i]->GetWepon() == Player::WEAPON::LAUNCHER)
+			{
+				field_icons_[i]->SetRange(5.0f);
+				field_icons_[i]->SetMin(1.0f);
+				field_icons_[i]->SetSpeed(0.1f);
+				field_icons_[i]->Show(true,true);
+			}
 		}
 		else
 		{
