@@ -70,12 +70,15 @@ Title::Title()
 	sprite_button_interface_->Apply();
 	button_interface_->SetPosition(500.0f, 550.0f, 0.0f);
 	button_interface_->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/window_256x512.png"));
-
+	
 	//2D—pƒJƒƒ‰İ’è
 	observer_2d_ = std::make_shared<Observer2D>(window->GetWidth(), window->GetHeight());
 
 	//BGM
 	Sound::Instance().PlaySound(SOUND_LABEL_BGM000);
+
+	draw_cnt_ = 0;
+	use_flag_ = false;
 }
 
 //=============================================================================
@@ -100,6 +103,9 @@ bool Title::Initialize(SceneManager* p_scene_manager)
 //=============================================================================
 void Title::Finalize()
 {
+	draw_cnt_ = 0;
+	use_flag_ = false;
+
 	Sound::Instance().StopSound();
 }
 
@@ -170,21 +176,35 @@ void Title::Draw()
 	//ƒƒS
 	logo_->Draw();
 
-	//ƒ{ƒ^ƒ“”wŒi
-	basic_vs->SetValue("_world_matrix", (f32*)&button_interface_->GetMatrix(), 16);
-	basic_vs->SetValue("_color", (f32*)&color, 4);
+	
 
-	basic_ps->SetTexture("_texture_sampler", button_interface_->GetTexture(0)->GetTexture());
-	//ƒ{ƒ^ƒ“”wŒi
-	button_interface_->Draw();
+	draw_cnt_++;
+	if (draw_cnt_ > 200)
+	{
+		use_flag_ = true;
+	}
+	if (draw_cnt_ > 400)
+	{
+		draw_cnt_ = 0;
+		use_flag_ = false;
+	}
+	if (use_flag_)
+	{
+		//ƒ{ƒ^ƒ“”wŒi
+		basic_vs->SetValue("_world_matrix", (f32*)&button_interface_->GetMatrix(), 16);
+		basic_vs->SetValue("_color", (f32*)&color, 4);
 
-	basic_vs->SetValue("_world_matrix", (f32*)&button_->GetMatrix(), 16);
-	basic_vs->SetValue("_color", (f32*)&color, 4);
+		basic_ps->SetTexture("_texture_sampler", button_interface_->GetTexture(0)->GetTexture());
+		//ƒ{ƒ^ƒ“”wŒi
+		button_interface_->Draw();
 
-	basic_ps->SetTexture("_texture_sampler", button_->GetTexture(0)->GetTexture());
-	//ƒ{ƒ^ƒ“
-	button_->Draw();
+		basic_vs->SetValue("_world_matrix", (f32*)&button_->GetMatrix(), 16);
+		basic_vs->SetValue("_color", (f32*)&color, 4);
 
+		basic_ps->SetTexture("_texture_sampler", button_->GetTexture(0)->GetTexture());
+		//ƒ{ƒ^ƒ“
+		button_->Draw();
+	}
 
 
 }
