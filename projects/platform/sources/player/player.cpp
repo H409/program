@@ -11,8 +11,11 @@
 #include "../system/win_system.h"
 #include "../system/input_manager.h"
 #include "../system/input_keyboard.h"
+#include "../system/input_joypad.h"
+#include "../system/xi_pad.h"
 
 #include "../system/input_mouse.h"
+#include "develop_tool/develop_tool.h"
 
 #include "math/math.h"
 #include "player.h"
@@ -20,6 +23,9 @@
 //------------------------------------------------------------------------
 // マクロ定義
 //------------------------------------------------------------------------
+#ifndef _RELEASE
+#define _KEYBOAD_DEBUG
+#endif // _RELESE
 
 //------------------------------------------------------------------------
 // 構造体
@@ -32,7 +38,26 @@
 //------------------------------------------------------------------------
 // 静的メンバ変数
 //------------------------------------------------------------------------
-
+int Player::player_anime_data_[][ 3 ] = { //--  ランチャー  --//
+										{ 31  , 60  , 0 } ,		// 取り出し
+										{ 61  , 150 , 1 } ,		// 待機
+										{ 151 , 180 , 1 } ,		// 歩く
+										{ 181 , 240 , 0 } ,		// 行動
+										{ 241 , 300 , 0 } ,		// ダメージ
+										
+										//--  ショットガン  --//
+										{ 331 , 360 , 0 } ,		// 取り出し
+										{ 361 , 450 , 1 } ,		// 待機
+										{ 451 , 480 , 1 } ,		// 歩く
+										{ 481 , 510 , 0 } ,		// 行動
+										{ 511 , 570 , 0 } ,		// ダメージ
+										
+										//--  クワ  --//
+										{ 601 , 630 , 0 } ,		// 取り出し
+										{ 631 , 720 , 1 } ,		// 待機
+										{ 721 , 750 , 1 } ,		// 歩く
+										{ 751 , 810 , 0 } ,		// 行動
+										{ 811 , 870 , 0 } };	// ダメージ
 
 //------------------------------------------------------------------------
 // グローバル変数
@@ -46,7 +71,7 @@
 Player::Player( LPDIRECT3DDEVICE9 pDevice ) : Object()
 {
 	pDevice_ = pDevice ;
-	pKim_ = nullptr;
+	pKim_ = nullptr ;
 	camera_vector_ = float3();
 	move_ = float3();
 	speed_ = float3( 0.01f , 0.01f , 0.01f );
@@ -54,9 +79,18 @@ Player::Player( LPDIRECT3DDEVICE9 pDevice ) : Object()
 	position_ = float3( 0 , 0 , 0 );
 
 	ID_ = 0 ;		// 1P
-	
+
 	state_ = STATE::NONE ;
 
+	old_anime_ = ANIME::WAIT ;
+	anime_ = ANIME::WAIT ;
+	wepon_ = WEAPON::GUN ;
+	//player_anime_data_[ NOW_ANIMETION ][ 0 ];
+
+	hit_ = false ;
+
+	pKim_ = new Kim( pDevice_ );
+	pKim_->Load( "resources/model/ZZI_1_MO.kim" );
 }
 
 //-------------------------------------------------------------------
@@ -66,7 +100,7 @@ Player::Player( LPDIRECT3DDEVICE9 pDevice ) : Object()
 //-------------------------------------------------------------------
 Player::~Player( void )
 {
-	SafeRelease(pKim_);
+	SafeRelease( pKim_ );
 }
 
 //-------------------------------------------------------------------
@@ -78,11 +112,17 @@ Player::~Player( void )
 //-------------------------------------------------------------------
 void Player::Init( float3 pos )
 {
+	move_ = float3();
 	position_ = pos ;
-	pKim_ = new Kim( pDevice_ );
-	pKim_->Load( "resources/model/ZZI_1_MO.kim" );
+	state_ = STATE::WAIT ;
 
 	rotDest_ = float3();
+
+	old_anime_ = ANIME::WAIT ;
+	anime_ = ANIME::WAIT ;
+	wepon_ = WEAPON::GUN ;
+
+	hit_ = false ;
 }
 
 //-------------------------------------------------------------------
@@ -97,6 +137,11 @@ void Player::Update( void )
 
 	//--  移動  --//
 	Control();
+
+	auto a = NOW_ANIMETION ;
+	pKim_->SetAnime( player_anime_data_[ NOW_ANIMETION ][ 0 ] ,
+					 player_anime_data_[ NOW_ANIMETION ][ 1 ] ,
+					 player_anime_data_[ NOW_ANIMETION ][ 2 ] );
 
 	//--  kim更新  --//
 	UpdateKimMatrix();
@@ -131,13 +176,39 @@ void Player::Uninit( void )
 //-------------------------------------------------------------------
 void Player::Control( void )
 {
+	action_ = false ;
+
+#ifdef _DEBUG
+	ControlKeyBorad();
+	ControlJoypad();
+
+#else
+	ControlJoypad();
+
+#endif // _DEBUG
+	DEVELOP_DISPLAY( "camera_vec : %f , %f , %f\n" , camera_vector_._x , camera_vector_._y , camera_vector_._z );
+	DEVELOP_DISPLAY( "pos : %f , %f , %f\n" , position_._x , position_._y , position_._z );
+	DEVELOP_DISPLAY( "move : %f , %f , %f\n" , move_._x , move_._y , move_._z );
+	DEVELOP_DISPLAY( "action : %d\n" , action_ );
+}
+//-------------------------------------------------------------------
+// 関数名 : キーボード更新
+//
+// 引数   : なし
+// 返り値 : なし
+//-------------------------------------------------------------------	
+void Player::ControlKeyBorad( void )
+{
+	bool bMove = false ;	// 移動
+	float rot_diff = 0 ;	//
+
 	D3DXVec3Normalize( ( D3DXVECTOR3* )&camera_vector_ , ( D3DXVECTOR3* )&camera_vector_ );
-//	pKim_->SetAnime( Kim::ANIME::WAIT );
 
 	if( GET_INPUT_MOUSE()->GetTrigger( InputMouse::MOUSE_KEY::RIGHT ) == true )
 	{
 		if( state_ != STATE::AIM )
 		{
+			anime_ = ANIME::WAIT ;
 			state_ = STATE::AIM ;
 		}
 		else
@@ -146,78 +217,47 @@ void Player::Control( void )
 		}
 	}
 
-	//--  エイム  --//
-	if( state_ == STATE::AIM )
-	{
-		rotDest_._y = atan2f( camera_vector_._x , camera_vector_._z );
-		rotDest_._y += 0.4f ;
-
-		//--  発射  --//
-		if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_SPACE ) )
-		{
-			if( pKim_->GetAnime() != Kim::ANIME::ACTION )
-			{
-				pKim_->SetAnime( Kim::ANIME::ACTION );
-				pKim_->SetOldAnime( Kim::ANIME::WAIT );
-			}
-		}
-	}
-
 	//--  移動　前  --//	
 	if( GET_INPUT_KEYBOARD()->GetPress( DIK_W ) == true )
 	{
-		//move_._x += sinf( camera_vector_._y ) * speed_._x ;
-		//move_._z += cosf( camera_vector_._y ) * speed_._z ;
-
 		move_._x += camera_vector_._x * speed_._x ; 
 		move_._z += camera_vector_._z * speed_._z ;
 
 		rotDest_._y = atan2f( camera_vector_._x , camera_vector_._z );
 
-		//--  アニメーション  --//
-		pKim_->SetAnime( Kim::ANIME::WALK );
+		bMove = true ;
 	}
 
 
 	//--  移動　後  --//
 	if( GET_INPUT_KEYBOARD()->GetPress( DIK_S ) == true )
 	{
-		//move_._x -= sinf( camera_vector_._y ) * speed_._x ;
-		//move_._z -= cosf( camera_vector_._y ) * speed_._z ;
-
 		move_._x -= camera_vector_._x * speed_._x ; 
 		move_._z -= camera_vector_._z * speed_._z ;
 
 		rotDest_._y = atan2f( -camera_vector_._x , -camera_vector_._z );
 
-		//--  アニメーション  --//
-		pKim_->SetAnime( Kim::ANIME::WALK );
+		bMove = true ;
+
 	}
 
 	//--  移動　左  --//
 	if( GET_INPUT_KEYBOARD()->GetPress( DIK_A ) == true )
 	{
-		//move_._x -= sinf( camera_vector_._y + D3DX_PI * 0.5f ) * speed_._x ;
-		//move_._z -= cosf( camera_vector_._y + D3DX_PI * 0.5f ) * speed_._z ;
 		D3DXVECTOR3 vec ;
 		D3DXVec3Cross( &vec , &D3DXVECTOR3( 0 , 1 , 0 ) , ( D3DXVECTOR3* )&camera_vector_ );
 
 		move_._x -= vec.x * speed_._x ;
 		move_._z -= vec.z * speed_._z ;
 
-		//rotDest_._y = -D3DX_PI * 0.5f ;
 		rotDest_._y = atan2f( -vec.x , -vec.z );
 
-		//--  アニメーション  --//
-		pKim_->SetAnime( Kim::ANIME::WALK );
+		bMove = true ;
 	}
 
 	//--  移動　右  --//
 	if( GET_INPUT_KEYBOARD()->GetPress( DIK_D ) == true )
 	{
-		//move_._x += sinf( camera_vector_._y + D3DX_PI * 0.5f ) * speed_._x ;
-		//move_._z += cosf( camera_vector_._y + D3DX_PI * 0.5f ) * speed_._z ;
-
 		D3DXVECTOR3 vec ;
 		D3DXVec3Cross( &vec , &D3DXVECTOR3( 0 , 1 , 0 ) , ( D3DXVECTOR3* )&camera_vector_ );
 
@@ -226,12 +266,90 @@ void Player::Control( void )
 
 		rotDest_._y = atan2f( vec.x , vec.z );
 
-		//rotDest_._y = D3DX_PI * 0.5f ;
-
-		//--  アニメーション  --//
-		pKim_->SetAnime( Kim::ANIME::WALK );
+		bMove = true ;
 	}
 
+	//--  エイム  --//
+	if( state_ == STATE::AIM )
+	{
+		rotDest_._y = atan2f( camera_vector_._x , camera_vector_._z );
+		rotDest_._y += 0.4f ;
+
+		//--  アニメーションが待機なら  --//
+		if( anime_ == ANIME::WAIT )
+		{
+			//--  アクション  --//
+			if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_SPACE ) )
+			{
+				if( action_ == false )
+				{
+					action_ = true ;
+					anime_ = ANIME::ACTION ;
+					old_anime_ = ANIME::WAIT ;
+
+					auto a = OLD_ANIMETION ;
+					pKim_->SetOldAnime( player_anime_data_[ OLD_ANIMETION ][ 0 ] ,
+										player_anime_data_[ OLD_ANIMETION ][ 1 ] ,
+										player_anime_data_[ OLD_ANIMETION ][ 2 ] );
+				}
+			}
+		}
+
+		move_ *= 0 ;
+		rot_diff = 0.11f ;
+		bMove = false ;
+	}
+	else
+	{
+		//--  停止時  --//
+		const float stop = 0.02f ;
+		if( anime_ != ANIME::TAKE_OUT )
+		{
+			if( move_._x < stop && move_._x > -stop &&
+				move_._z < stop && move_._z > -stop )
+			{
+				anime_ = ANIME::WAIT ;
+			}
+		}
+	}
+	
+	//--  待機中  --//
+	if( anime_ == ANIME::WAIT )
+	{
+		//--  武器取り出し  --//
+		if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_E ) == true )
+		{
+			//--  取り出しアニメーションをしていないなら  --//
+			if( pKim_->GetAnimarionPlay( ( int )ANIME::TAKE_OUT ) == false )
+			{
+				wepon_ = ( WEAPON )( ( ( int )wepon_ + 1 ) % 3 );
+
+				anime_ = ANIME::TAKE_OUT ;
+				old_anime_ = ANIME::WAIT ;
+			}
+		}
+	}
+
+	if( pKim_->GetAnimarionPlay( ( int )ANIME::TAKE_OUT ) == true )
+	{
+		move_._x = 0 ;
+		move_._z = 0 ;
+
+		anime_ = ANIME::TAKE_OUT ;
+	}
+
+	//--  動いたなら  --//
+	if( bMove == true )
+	{
+		//--  アニメーション  --//
+		anime_ = ANIME::WALK ;
+	}
+
+	if( pKim_->GetSingleAnimationEnd() == true )
+	{
+		anime_ = old_anime_ ;
+	}
+	
 	//--  移動  --//
 	position_._x += move_._x ;
 	position_._y += move_._y ;
@@ -246,7 +364,142 @@ void Player::Control( void )
 	auto diff = rotDest_._y - rotation_._y ;
 	diff = utility::math::Wrap( diff , ( f32 )-utility::math::PI , ( f32 )utility::math::PI );
 
-	rotation_._y += diff * 0.09f ;
+	rotation_._y += diff * ( 0.09f + rot_diff );
+}
+
+//-------------------------------------------------------------------
+// 関数名 : ジョイパッド更新
+//
+// 引数   : なし
+// 返り値 : なし
+//-------------------------------------------------------------------	
+void Player::ControlJoypad( void )
+{
+	float rot_diff = 0 ;
+
+	D3DXVec3Normalize( ( D3DXVECTOR3* )&camera_vector_ , ( D3DXVECTOR3* )&camera_vector_ );
+
+	if( GET_INPUT_XPAD( ID_ )->GetTrigger( XIPad::KEY::L2 ) == true )
+	{
+		state_ = STATE::AIM ;
+		anime_ = ANIME::WAIT ;
+	}
+	else
+	{
+		if( GET_INPUT_XPAD( ID_ )->GetRelease( XIPad::KEY::L2 ) == true )
+		{
+			anime_ = ANIME::WAIT ;
+			state_ = STATE::WAIT ;
+		}
+	}
+
+	//--  移動  --//	
+	auto x_pad_move = GET_INPUT_XPAD( ID_ )->GetLStick();
+	
+	D3DXVECTOR3 vec ;
+	D3DXVec3Cross( &vec , &D3DXVECTOR3( 0 , 1 , 0 ) , ( D3DXVECTOR3* )&camera_vector_ );
+
+	move_._x += camera_vector_._x * x_pad_move._y * speed_._x ; 
+	move_._z += camera_vector_._z * x_pad_move._y * speed_._z ;
+
+	move_._x += vec.x * x_pad_move._x * speed_._x ;
+	move_._z += vec.z * x_pad_move._x * speed_._z ;
+
+	//--  エイム  --//
+	if( state_ == STATE::AIM )
+	{
+		rotDest_._y = atan2f( camera_vector_._x , camera_vector_._z );
+		rotDest_._y += 0.4f ;
+
+		//--  アニメーションが待機なら  --//
+		if( anime_ == ANIME::WAIT )
+		{
+			//--  アクション  --//
+			if( GET_INPUT_XPAD( ID_ )->GetTrigger( XIPad::KEY::R2 ) == true )
+			{
+				if( action_ == false )
+				{
+					action_ = true ;
+					anime_ = ANIME::ACTION ;
+					old_anime_ = ANIME::WAIT ;
+				}
+			}
+		}
+
+		move_ *= 0 ;
+		rot_diff = 0.11f ;
+	}
+	else
+	{
+		//--  停止時  --//
+		const float stop = 0.02f ;
+		if( anime_ != ANIME::TAKE_OUT )
+		{
+			if( move_._x < stop && move_._x > -stop &&
+				move_._z < stop && move_._z > -stop )
+			{
+				anime_ = ANIME::WAIT ;
+			}
+			else
+			{
+				anime_ = ANIME::WALK ;
+				rotDest_._y = atan2f( move_._x , move_._z );
+			}
+		}
+	}
+	
+	//--  待機中  --//
+	if( anime_ == ANIME::WAIT )
+	{
+		//--  武器取り出し  --//
+		if( GET_INPUT_XPAD( ID_ )->GetTrigger( XIPad::KEY::Y ) == true )
+		{
+			//--  取り出しアニメーションをしていないなら  --//
+			//if( pKim_->GetAnimarionPlay( ( int )ANIME::TAKE_OUT ) == false )
+			{
+				wepon_ = ( WEAPON )( ( ( int )wepon_ + 1 ) % 3 );
+
+				anime_ = ANIME::TAKE_OUT ;
+				old_anime_ = ANIME::WAIT ;
+			}
+		}
+	}
+
+	if( anime_ == ANIME::TAKE_OUT )
+	{
+		move_._x = 0 ;
+		move_._z = 0 ;
+
+	}
+
+	////--  動いたなら  --//
+	//if( move_._x != 0 || move_._z != 0 )
+	//{
+	//	//--  アニメーション  --//
+	//	anime_ = ANIME::WALK ;
+
+	//	rotDest_._y = atan2f( move_._x , move_._z );
+	//}
+	//else
+	//{
+	//	anime_ = ANIME::WAIT ;
+	//}}
+	
+	//--  移動  --//
+	position_._x += move_._x ;
+	position_._y += move_._y ;
+	position_._z += move_._z ;
+
+	move_._x *= 0.855f ;
+	move_._z *= 0.855f ;
+
+	rotDest_._y = utility::math::Wrap( rotDest_._y , ( f32 )-utility::math::PI , ( f32 )utility::math::PI );
+
+	//--  向きの慣性更新  --//
+	auto diff = rotDest_._y - rotation_._y ;
+	diff = utility::math::Wrap( diff , ( f32 )-utility::math::PI , ( f32 )utility::math::PI );
+
+	rotation_._y += diff * ( 0.09f + rot_diff );
 }
 
 

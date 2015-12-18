@@ -39,6 +39,7 @@ public:
 	{
 		NONE = -1,
 		SEED,
+		BOMB,
 		MAX,
 	};
 
@@ -63,6 +64,8 @@ public:
 	// set tag
 	void SetTag(const u32 in_tag);
 
+	void SetType(TYPE in_type);
+
 	// get object
 	TMeshObject GetObject(void)const;
 
@@ -75,7 +78,7 @@ public:
 	// get tag
 	const u32& GetTag(void)const;
 private:
-	static const f32 GRAVITY;
+	static const f32 GRAVITY[(u32)TYPE::MAX];
 
 	float3 position_;
 	float3 start_position_;

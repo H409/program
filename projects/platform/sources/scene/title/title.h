@@ -21,7 +21,8 @@
 //*****************************************************************************
 // forward declaration
 //*****************************************************************************
-
+class Observer2D;
+class MeshObject;
 
 //*****************************************************************************
 // class definition
@@ -29,6 +30,7 @@
 class Title : public SceneBase
 {
 public:
+
 	// コンストラクタ
 	Title();
 
@@ -48,6 +50,10 @@ public:
 	virtual void Draw(void) override;
 private:
 
+	std::shared_ptr<Observer2D> observer_2d_;
+	std::shared_ptr<MeshObject> background_;
+	std::shared_ptr<MeshObject> logo_;
+	std::shared_ptr<MeshObject> button_;
 };
 
 #endif

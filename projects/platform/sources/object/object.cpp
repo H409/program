@@ -14,6 +14,7 @@
 #include "math/math.h"
 #include "system/win_system.h"
 #include "dx9_device.h"
+#include "develop_tool/develop_tool.h"
 
 //*****************************************************************************
 // constant definition

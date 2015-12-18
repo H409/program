@@ -27,10 +27,13 @@ public:
 
 	// print
 	void Print(const char* in_format,...);
+	void PrintR(const char* in_format,...);
 
 private:
 	static const u32 STRING_MAX = 1024;
 	s8 string_[STRING_MAX];
+	s8 stringR_[STRING_MAX];
+
 	bool is_show_;
 	LPD3DXFONT font_;
 	u16 width_;

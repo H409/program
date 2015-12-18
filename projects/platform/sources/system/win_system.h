@@ -16,6 +16,10 @@
 //*****************************************************************************
 // include
 //*****************************************************************************
+#include "window/win_window.h"
+#include "input_manager.h"
+#include "input_keyboard.h"
+#include "input_mouse.h"
 
 //*****************************************************************************
 // forward declaration
@@ -58,6 +62,8 @@ public:
 	};
 	static WinSystem* GetInstance(void);
 
+	TWindow GetWindow(void);
+
 	// get graphic device
 	TGraphicDevice GetGraphicDevice(void);
 
@@ -71,6 +77,7 @@ public:
 	TInputKeyboard GetKeyboard(void);
 	TInputMouse GetMouse(void);
 	TInputManager GetInputManager(void);
+	float2 GetDefaultDisplaySize(void) { return DEFAULT_DISPLAY_SIZE; }
 
 protected:
 	// constructor
@@ -79,6 +86,7 @@ protected:
 	// destructor
 	virtual ~WinSystem(void);
 private:
+	
 	static const float2 DEFAULT_DISPLAY_SIZE;
 	static const std::string DEFAULT_CAPTION_NAME;
 
@@ -92,6 +100,7 @@ private:
 	void Stop_(void);
 };
 
+#define GET_WINDOW() WinSystem::GetInstance()->GetWindow();
 #define GET_GRAPHIC_DEVICE() WinSystem::GetInstance()->GetGraphicDevice()
 #define GET_DIRECTX9_DEVICE() WinSystem::GetInstance()->GetDirectx9Device()
 #define GET_INPUT_KEYBOARD() WinSystem::GetInstance()->GetInputManager()->GetKeyboard()
@@ -99,6 +108,7 @@ private:
 #define GET_INPUT_JOYPAD(player_number) WinSystem::GetInstance()->GetInputManager()->GetJoypad(player_number)
 #define GET_INPUT_XPAD(player_number) WinSystem::GetInstance()->GetInputManager()->GetXIPad(player_number)
 #define GET_INPUT_MANAGER() WinSystem::GetInstance()->GetInputManager()
+#define GET_DEFAULT_DISPLAY_SIZE() WinSystem::GetInstance()->GetDefaultDisplaySize()
 
 #endif // _SYSTEM_H_
 

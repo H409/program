@@ -10,6 +10,7 @@
 // include
 //*****************************************************************************
 #include "game.h"
+#include "../title/title.h"
 #include "system/win_system.h"
 #include "system/input_keyboard.h"
 #include "shader/dx9_vertex_shader.h"
@@ -17,6 +18,8 @@
 #include "texture/dx9_texture.h"
 #include "mesh/sprite.h"
 #include "observer/observer_2d.h"
+#include "observer/observer_3d.h"
+#include "observer/result_observer.h"
 #include "observer/follower_observer.h"
 #include "mesh/sprite_3d.h"
 #include "object/mesh_object.h"
@@ -29,13 +32,20 @@
 #include "x_model/x_model.h"
 #include "develop_tool/develop_tool.h"
 #include "system/input_manager.h"
-//<<<<<<< HEAD
 #include "player_icon/player_icon.h"
 #include "field_object/flower.h"
-//=======
 #include "wall/wall.h"
 #include "dome/dome.h"
-//>>>>>>> origin/yuminaga/菴懈･ｭ
+#include "cylinder/cylinder.h"
+#include "culling/frustum_culling.h"
+#include "fbx_object/fbx_object.h"
+#include "timer/timer.h"
+#include "system/xi_pad.h"
+#include "fbx_tree/fbx_tree.h"
+#include "score/result_score.h"
+#include "result_team_icon/result_team_icon.h"
+#include "sound/sound.h"
+#include "../base/scene_manager.h"
 
 //=============================================================================
 // constructor
@@ -43,42 +53,51 @@
 Game::Game()
 {
 	auto graphic_device = GET_GRAPHIC_DEVICE();
+	auto window = GET_WINDOW();
+
+	timer_ = std::make_unique<Timer>();
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
-		observers_[i] = std::make_shared<FollowerObserver>(utility::math::ToRadian(60.0f),800.0f,600.0f);
+		observers_[i] = std::make_shared<FollowerObserver>(utility::math::ToRadian(60.0f),window->GetWidth(),window->GetHeight());
 		observers_[i]->SetTargetPosition(float3(0.0f,0.0f,0.0f));
 		observers_[i]->SetTargetVector(float3(0.0f,0.0f,1.0f));
 		observers_[i]->SetLength(2.0f);
 		observers_[i]->SetHeight(1.5f);
 		observers_[i]->SetState(FollowerObserver::STATE::FOLLWER);
+		observers_[i]->SetID( i );
 		observers_[i]->Update();
 	}
 
-	observer_2d_ = std::make_shared<Observer2D>(800.0f,600.0f);
+	observer_2d_ = std::make_shared<Observer2D>(window->GetWidth(),window->GetHeight());
+	//result_observer = std::make_shared<Observer3D>(D3DX_PI/3,window->GetWidth(), window->GetHeight());
+	result_observer = std::make_shared<ResultObserver>(D3DX_PI / 3, window->GetWidth(), window->GetHeight());
+
+	frustum_culling_ = std::make_unique<utility::culling::FrustumCulling>(utility::math::ToRadian(70.0f),(f32)window->GetWidth() / window->GetHeight(),0.1f,100.0f);
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
-		color_textures_[i] = graphic_device->CreateTexture(800,600,D3DFMT_A8R8G8B8);
-		normal_textures_[i] = graphic_device->CreateTexture(800,600,D3DFMT_A16B16G16R16F);
-		position_textures_[i] = graphic_device->CreateTexture(800,600,D3DFMT_A16B16G16R16F);
+		color_textures_[i] = graphic_device->CreateTexture(window->GetWidth(),window->GetHeight(),D3DFMT_A8R8G8B8);
+		normal_textures_[i] = graphic_device->CreateTexture(window->GetWidth(),window->GetHeight(),D3DFMT_A16B16G16R16F);
+		position_textures_[i] = graphic_device->CreateTexture(window->GetWidth(),window->GetHeight(),D3DFMT_A16B16G16R16F);
 	}
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
 		field_icons_[i] = std::make_shared<FieldIcon>();
+		field_icons_[i]->SetNumber(i);
 	}
 
 	float2 positions[]
 	{
 		float2(  0.0f,  0.0f),
-		float2(400.0f,  0.0f),
-		float2(  0.0f,300.0f),
-		float2(400.0f,300.0f),
+		float2(window->GetWidth() * 0.5f,  0.0f),
+		float2(  0.0f,window->GetHeight() * 0.5f),
+		float2(window->GetWidth() * 0.5f,window->GetHeight() * 0.5f),
 	};
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
-		auto sprite = std::make_shared<mesh::Sprite>(float2(400,300));
+		auto sprite = std::make_shared<mesh::Sprite>(float2(window->GetWidth() * 0.5f,window->GetHeight() * 0.5f));
 		sprite_objects_[i] = std::make_shared<MeshObject>(sprite);
 		sprite->SetAnchorPoint(float2(0.0f,0.0f));
 		sprite_objects_[i]->SetPosition(positions[i]._x  - 0.5f,positions[i]._y - 0.5f,0.0f);
@@ -91,34 +110,73 @@ Game::Game()
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
 		players_[i] = std::make_shared<Player>(graphic_device->GetDevice());
+		players_[i]->SetID(i);
+	}
+
+	for(u32 i = 0;i < PLAYER_MAX;++i)
+	{
+		players_[i]->Init(float3(0.0f,0.0f,0.0f));
+		players_[i]->SetID( i );
 	}
 
 	field_ = std::make_shared<Field>();
-
+	field_->Load("resources/map/map.txt");
+	auto field_size = field_->GetSize();
 	for (u32 i = 0; i < WALL_MAX; ++i)
 	{
-		wall_[i] = std::make_shared<Wall>();
+		wall_[i] = std::make_shared<Wall>(float2(field_size._x,1.0f));
+		wall_[i]->Update();
 	}
 
-	wall_[0]->GetObject()->SetPosition(0.0f, 0.0f, 15.0f);
+	wall_[0]->GetObject()->SetPosition(0.0f, 0.0f, field_size._y * 0.5f);
 	wall_[0]->GetObject()->SetRotation(0.0f, 0.0f, 0.0f);
-	wall_[1]->GetObject()->SetPosition(15.0f, 0.0f, 0.0f);
+	wall_[1]->GetObject()->SetPosition(field_size._x * 0.5f, 0.0f, 0.0f);
 	wall_[1]->GetObject()->SetRotation(0.0f, D3DX_PI/2, 0.0f);
-	wall_[2]->GetObject()->SetPosition(0.0f, 0.0f, -15.0f);
+	wall_[2]->GetObject()->SetPosition(0.0f, 0.0f,-field_size._y * 0.5f);
 	wall_[2]->GetObject()->SetRotation(0.0f, D3DX_PI, 0.0f);
-	wall_[3]->GetObject()->SetPosition(-15.0f, 0.0f, 0.0f);
+	wall_[3]->GetObject()->SetPosition(-field_size._x * 0.5f, 0.0f, 0.0f);
 	wall_[3]->GetObject()->SetRotation(0.0f, D3DX_PI/-2, 0.0f);
-	
+
 	dome_ = std::make_shared<Dome>();
 	dome_->GetObjectA()->SetPosition(0.0f,-6.0f, 0.0f);
 
+	cylinder_ = std::make_shared<Cylinder>();
+	cylinder_->GetObjectA()->SetPosition(0.0f,-5.0f,0.0f);
+
+	flowers_.resize(field_->GetBlockCount());
+
+	for(auto& flower : flowers_)
+	{
+		flower = std::make_shared<Flower>(0);
+	}
+	
+	score_ = std::make_shared<Score>();
+	result_team_icon = std::make_shared<ResultTeamIcon>();
+
+	fbx_object_[ 0 ] = std::make_shared<FBXObject>( graphic_device->GetDevice() );
+	fbx_object_[ 0 ]->Load( "resources/model/iwa_obj_1.kim" );
+	fbx_object_[ 0 ]->SetPosition( -10 , 0 , 0 );
+
+	fbx_tree_[ 0 ] = std::make_shared<FBXTree>( graphic_device->GetDevice() , 0 );
+	fbx_tree_[ 1 ] = std::make_shared<FBXTree>( graphic_device->GetDevice() , 2 );
+
+	fbx_tree_[ 0 ]->SetPosition( -10 , 0 , 5 );
+	fbx_tree_[ 1 ]->SetPosition( -10 , 0 , -5 );
+
+	 is_win_team_ =WIN_TEAM::NONE;
+	is_result_ = false;
+	auto sprite_3d = std::make_shared<mesh::Sprite3D>( float2( 3.0f , 3.0f ) );
+	sprite_3D_ = std::make_shared<MeshObject>(sprite_3d);
+	sprite_3D_->SetPosition( -9.5f , 0.01f , 2.0f );
+	sprite_3D_->SetTexture( 0 , GET_GRAPHIC_DEVICE()->LoadTexture( "resources/texture/s_test_2.jpg" ) );
+	sprite_3D_->SetRotationX( utility::math::ToRadian(90.0f) );
 #ifdef _DEBUG
 	debugRenderTarget_ = false;
 	debug_player_number_ = 0;
-	auto sprite = std::make_shared<mesh::Sprite>(float2(200,150));
+	auto sprite = std::make_shared<mesh::Sprite>(float2(window->GetWidth() * 0.25f,window->GetHeight() * 0.25f));
 	debug_sprite_object_ = std::make_shared<MeshObject>(sprite);
 	debug_sprite_object_->SetPosition(-0.5f,-0.5f,0.0f);
-	sprite = std::make_shared<mesh::Sprite>(float2(800,600));
+	sprite = std::make_shared<mesh::Sprite>(float2(window->GetWidth(),window->GetHeight()));
 	debug_object_ = std::make_shared<MeshObject>(sprite);
 	debug_object_->SetPosition(-0.5f,-0.5f,0.0f);
 #endif
@@ -129,7 +187,7 @@ Game::Game()
 //=============================================================================
 Game::~Game()
 {
-
+	
 }
 
 //=============================================================================
@@ -147,20 +205,37 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
-		players_[i]->Init(positions[i]);
+		players_[i]->SetPosition(positions[i]);
 	}
+
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
 		player_icons_[i]->SetPosition(players_[i]->GetPosition());
 	}
+
+	for(auto flower : flowers_)
+	{
+		flower->Death();
+	}
+
+	flower_list_.clear();
+
+	timer_->Reset();
+
+	is_result_ = false;
+
+	//BGM
+	Sound::Instance().PlaySound(SOUND_LABEL_BGM002);
+
 	return true;
 }
+
 //=============================================================================
 // finalize
 //=============================================================================
 void Game::Finalize()
 {
-
+	Sound::Instance().StopSound();
 }
 
 //=============================================================================
@@ -168,13 +243,13 @@ void Game::Finalize()
 //=============================================================================
 void Game::Update()
 {
-#ifndef _RELEASE
-	if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_R))
-	{
-		field_->Reset();
-	}
-#endif
+	timer_->Update();
 
+	if(timer_->GetTimeLeft() == 0)
+	{
+		// 終了
+		is_result_ = true;
+	}
 #ifdef _DEBUG
 	if(debugRenderTarget_)
 	{
@@ -202,11 +277,24 @@ void Game::Update()
 		field_icons_[i]->SetBasicPosition(players_[i]->GetPosition());
 		field_icons_[i]->Update();
 
-		//if( players_[ i ]->GetKimPointer()->GetAnime() == Kim::ANIME::GUN_ACTION )
-		if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_SPACE ) )
+#ifdef _DEBUG
+		static bool _bullet_debug = false ;
+
+		if( GET_INPUT_KEYBOARD()->GetPress(DIK_B) )
+		{
+			_bullet_debug = true ;
+		}
+		if( GET_INPUT_KEYBOARD()->GetRelease(DIK_B) )
+		{
+			_bullet_debug = false ;
+		}
+
+#endif // _DEBUG
+
+		if(players_[ i ]->GetAction() == true )
 		{
 			// 種まき
-			if(field_icons_[i]->IsShow())
+			if(players_[i]->GetWepon() == Player::WEAPON::GUN)
 			{
 				auto start_position = players_[i]->GetPosition();
 				start_position._y += 0.7f;
@@ -218,7 +306,9 @@ void Game::Update()
 				{
 					if(bullet->IsDeath())
 					{
+						bullet->SetType(Bullet::TYPE::SEED);
 						bullet->Reset(start_position,end_position);
+						bullet->SetTag(i);
 						is_create = false;
 						break;
 					}
@@ -226,16 +316,51 @@ void Game::Update()
 
 				if(is_create)
 				{
-					bullets_.push_back(std::make_shared<Bullet>(start_position,end_position));
+					auto bullet = std::make_shared<Bullet>(start_position,end_position);
+					bullet->SetTag(i);
+					bullets_.push_back(bullet);
 				}
 			}
 			// 掘り返し
-			else
+			if(players_[i]->GetWepon() == Player::WEAPON::HOE)
 			{
-				auto position = players_[i]->GetPosition();
-				if(field_->GetType(position) == 3)
+				auto position = field_icons_[i]->GetPosition();
+				//if(field_->GetType(position) == (u32)Field::TYPE::SOIL)
 				{
-					field_->SetType(position,1);
+					auto index = field_->GetBlockIndex(position);
+					//field_->SetType(index,(u32)Field::TYPE::SOIL);
+					flowers_[index]->Death();
+					flower_list_.erase(remove_if(flower_list_.begin(),flower_list_.end(),[](std::weak_ptr<Flower> flower)->bool {return !flower._Get()->IsShow();}),flower_list_.end());
+				}
+			}
+
+			// 妨害
+			if(players_[i]->GetWepon() == Player::WEAPON::LAUNCHER)
+			{
+				auto start_position = players_[i]->GetPosition();
+				start_position._y += 0.7f;
+				auto end_position = field_icons_[i]->GetPosition();
+
+				auto is_create = true;
+
+				for(auto bullet : bullets_)
+				{
+					if(bullet->IsDeath())
+					{
+						bullet->SetType(Bullet::TYPE::BOMB);
+						bullet->Reset(start_position,end_position);
+						bullet->SetTag(i);
+						is_create = false;
+						break;
+					}
+				}
+
+				if(is_create)
+				{
+					auto bullet = std::make_shared<Bullet>(start_position,end_position,Bullet::TYPE::BOMB);
+					//bullet->SetType(Bullet::TYPE::BOMB);
+					bullet->SetTag(i);
+					bullets_.push_back(bullet);
 				}
 			}
 		}
@@ -244,7 +369,30 @@ void Game::Update()
 		if( Player::STATE::AIM == players_[ i ]->GetState() )
 		{
 			observers_[i]->SetState( FollowerObserver::STATE::AIM );
-			field_icons_[i]->Show(true);
+
+			if(players_[i]->GetWepon() == Player::WEAPON::GUN)
+			{
+				field_icons_[i]->SetRange(5.0f);
+				field_icons_[i]->SetMin(1.0f);
+				field_icons_[i]->SetSpeed(0.1f);
+				field_icons_[i]->Show(true);
+			}
+
+			if(players_[i]->GetWepon() == Player::WEAPON::HOE)
+			{
+				field_icons_[i]->SetRange(1.0f);
+				field_icons_[i]->SetMin(1.0f);
+				field_icons_[i]->SetSpeed(0.05f);
+				field_icons_[i]->Show(true);
+			}
+
+			if(players_[i]->GetWepon() == Player::WEAPON::LAUNCHER)
+			{
+				field_icons_[i]->SetRange(5.0f);
+				field_icons_[i]->SetMin(1.0f);
+				field_icons_[i]->SetSpeed(0.1f);
+				field_icons_[i]->Show(true,true);
+			}
 		}
 		else
 		{
@@ -266,39 +414,63 @@ void Game::Update()
 		bullet->Update();
 	}
 
+	// 当たり判定
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
+#ifdef _DEBUG
+		if(GET_INPUT_KEYBOARD()->GetPress(DIK_COMMA) || GET_INPUT_MOUSE()->GetPress(InputMouse::MOUSE_KEY::MIDDLE))
+		{
+			continue;
+		}
+#endif
 		auto player = players_[i];
 		auto player_old_position = player->GetOldPosition();
 		auto player_move = player->GetMove();
 		auto player_position = player->GetPosition();
+		auto player_block_position = field_->GetBlockPosition(player_old_position);
 
-		if(field_->GetType(player_position) == 3)
-		{
-			player->SetPosition(player->GetOldPosition());
-			player->SetMove(float3(0.0f,0.0f,0.0f));
-		}
+		player_position._x = utility::math::Clamp(player_position._x,-14.5f,14.5f);
+		player_position._z = utility::math::Clamp(player_position._z,-14.5f,14.5f);
+		player->SetPosition(player_position);
+
+		auto type = field_->GetType(player_position);
+
+		//if(type == (u32)Field::TYPE::BUILDING)
+		//{
+			//player->SetPosition(player->GetOldPosition());
+			//player->SetMove(float3(0.0f,0.0f,0.0f));
+		//}
 
 		player_position = float3(player_old_position._x + player_move._x,0.0f,player_old_position._z);
-		if(field_->GetType(player_position) == 3)
+		if(field_->IsObstacle(type))
 		{
-			player->SetPosition(player->GetOldPosition());
-			player->SetMove(float3(0.0f,0.0f,0.0f));
+			auto x = field_->GetBlockPosition(player_position)._x - player_block_position._x;
+			player->SetPositionX(player->GetOldPosition()._x);
+			//player->SetPositionX(player_block_position._x + x);
+			//player->SetMove(float3(0.0f,player->GetMove()._y,player->GetMove()._z));
+			//player->SetMove(float3(0.0f,0.0f,0.0f));
 		}
 
 		player_position = float3(player_old_position._x,0.0f,player_old_position._z + player_move._z);
 
-		if(field_->GetType(player_position) == 3)
+		if(field_->IsObstacle(type))
 		{
-			player->SetPosition(player->GetOldPosition());
-			player->SetMove(float3(0.0f,0.0f,0.0f));
+			auto z = field_->GetBlockPosition(player_position)._z - player_block_position._z;
+			player->SetPositionZ(player->GetOldPosition()._z);
+			//player->SetPositionZ(player_block_position._z + z);
+			//player->SetMove(float3(player->GetMove()._x,player->GetMove()._y,0.0f));
 		}
 	}
 
-	for(auto flower : flowers_)
+	for(auto flower : flower_list_)
 	{
-		flower->Update();
+		flower._Get()->Update();
 	}
+
+	fbx_object_[ 0 ]->Update();
+
+	fbx_tree_[ 0 ]->Update();
+	fbx_tree_[ 1 ]->Update();
 
 	// 
 	for(auto bullet : bullets_)
@@ -306,7 +478,7 @@ void Game::Update()
 		if(!bullet->IsDeath())
 		{
 			auto position = bullet->GetPosition();
-			if(field_->GetType(position) == 3)
+			if(field_->IsObstacle(field_->GetType(position)))
 			{
 				bullet->Remove();
 			}
@@ -314,32 +486,59 @@ void Game::Update()
 			{
 				if(position._y <= 0.0f)
 				{
-					if(field_->GetType(position) == 1)
+					if(bullet->GetType() == Bullet::TYPE::SEED)
 					{
-						field_->SetType(position,2);
-						auto is_create = true;
-						auto flower_position = field_->GetBlockPosition(position);
-						for(auto flower : flowers_)
+						if(field_->GetType(position) == Field::TYPE::SOIL || field_->GetType(position) == Field::TYPE::TREE)
 						{
-							if(!flower->IsShow())
+							auto index = field_->GetBlockIndex(position);
+							//field_->SetType(index,(u32)Field::TYPE::FLOWER);
+							auto flower_position = field_->GetBlockPosition(position);
+
+							if(!flowers_[index]->IsLive())
 							{
-								flower->SetPosition(flower_position);
-								is_create = false;
-								break;
+								flowers_[index]->SetNumber(bullet->GetTag());
+								flowers_[index]->Show();
+								flowers_[index]->SetPosition(flower_position);
+
+								flower_list_.push_back(flowers_[index]);
 							}
 						}
+					}
 
-						if(is_create)
+					if(bullet->GetType() == Bullet::TYPE::BOMB)
+					{
+						position._y = 0.0f;
+						for(u32 i = 0;i < PLAYER_MAX;++i)
 						{
-							auto flower = std::make_shared<Flower>();
-							flower->SetPosition(flower_position);
-							flowers_.push_back(flower);
+							if(bullet->GetTag() / 2 != i / 2)
+							{
+								auto& player = players_[i];
+								auto player_position = player->GetPosition();
+								if(utility::math::Distance(position,player_position) < 0.5f + 1.0f)
+								{
+									DEBUG_TRACE("hit");
+								}
+							}
 						}
 					}
+
 					bullet->Remove();
 				}
 			}
 		}
+	}
+
+	GET_INPUT_XPAD(0)->GetLStick();
+
+#ifndef _RELEASE
+	for(auto i = 0;i < PLAYER_MAX;++i)
+	{
+		DEVELOP_DISPLAY("player %d : %d\n",i,GetPoint(i));
+	}
+#endif
+	if (is_result_)
+	{
+		UpdateResult();
 	}
 }
 
@@ -356,10 +555,41 @@ void Game::Draw()
 	auto basic_vs = graphic_device->LoadVertexShader("resources/shader/basic.vsc");
 	auto basic_ps = graphic_device->LoadPixelShader("resources/shader/basic.psc");
 	auto gb_vs_fbx = graphic_device->LoadVertexShader("resources/shader/graphics_buffer_fbx.vsc");
-	//auto gb_ps_fbx = graphic_device->LoadVertexShader("resources/shader/graphics_buffer_fbx.psc");
 	auto default_texture = graphic_device->GetRenderTarget(0);
 
+
+#ifdef _DEBUG
+
+	int debug_object_draw_num = 0 ;
+
+	int min = 0;
+	int max = PLAYER_MAX ;
+
+	static bool _d = false ;
+	if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_9))
+	{
+		_d = !_d ;
+	}
+
+	if( _d == true )
+	{
+		max = 1;
+		if(debugRenderTarget_)
+		{
+			min = debug_player_number_;
+			max = debug_player_number_ + 1;
+		}
+	}
+
+	if(GET_INPUT_KEYBOARD()->GetPress(DIK_M))
+	{
+		GET_DIRECTX9_DEVICE()->SetRenderState(D3DRS_FILLMODE,D3DFILL_WIREFRAME);
+	}
+
+	for(u32 i = min;i < max;++i)
+#else
 	for(u32 i = 0;i < PLAYER_MAX;++i)
+#endif // _DEBUG
 	{
 		graphic_device->SetRenderTarget(0,color_textures_[i]);
 		graphic_device->SetRenderTarget(1,normal_textures_[i]);
@@ -390,22 +620,43 @@ void Game::Draw()
 		auto object = field_->GetObject();
 		auto world_matrix = object->GetMatrix();
 
+		frustum_culling_->SetViewMatrix(view_matrix);
+
 		gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
 		gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
 
-		object->Draw();
-
-		if(field_icons_[i]->IsShow())
+		//if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
 		{
-			object = field_icons_[i]->GetObject();
-
-			world_matrix = object->GetMatrix();
-
-			// object
-			gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
-			gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
-
 			object->Draw();
+		}
+
+		for(u32 j = 0;j < PLAYER_MAX;++j)
+		{
+			if(field_icons_[j]->IsShow())
+			{
+				if(i != j)
+				{
+					if(!field_icons_[j]->IsShowAll())
+					{
+						continue;
+					}
+				}
+				object = field_icons_[j]->GetObject();
+
+				world_matrix = object->GetMatrix();
+
+				// object
+				gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
+				gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
+
+				if(frustum_culling_->IsCulling(object->GetPosition(),0.5f))
+				{
+#ifdef _DEBUG
+					debug_object_draw_num++;
+#endif // _DEBUG
+					object->Draw();
+				}
+			}
 		}
 
 		for(auto bullet : bullets_)
@@ -419,36 +670,35 @@ void Game::Draw()
 				gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
 				gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
 
-				object->Draw();
+				if(frustum_culling_->IsCulling(object->GetPosition(),0.5f))
+				{
+#ifdef _DEBUG
+			debug_object_draw_num++ ;
+#endif // _DEBUG
+					object->Draw();
+				}
 			}
 		}
 
-		for(auto flower : flowers_)
+		for(auto flower : flower_list_)
 		{
-			if(flower->IsShow())
-			{
-				object = flower->GetObject();
+			//if(flower->IsShow())
+			//{
+				object = flower._Get()->GetObject();
 				world_matrix = object->GetMatrix();
 				world_matrix = utility::math::Multiply(i_view_matrix,world_matrix);
 
 				gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
 				gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
 
-				object->Draw();
-			}
-		}
-
-		for(u32 j = 0;j < PLAYER_MAX;++j)
-		{
-			if(i != j)
-			{
-				object = player_icons_[j]->GetObject();
-				world_matrix = object->GetMatrix();
-				world_matrix = utility::math::Multiply(i_view_matrix,world_matrix);
-				gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
-				gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
-				object->Draw();
-			}
+				if(frustum_culling_->IsCulling(object->GetPosition(),0.5f))
+				{
+#ifdef _DEBUG
+			debug_object_draw_num++ ;
+#endif // _DEBUG
+					object->Draw();
+				}
+			//}
 		}
 
 		//draw wall
@@ -461,7 +711,10 @@ void Game::Draw()
 			gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
 			gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
 
-			object->Draw();
+			//if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
+			{
+				object->Draw();
+			}
 		}
 
 		//draw dome
@@ -470,18 +723,79 @@ void Game::Draw()
 		gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
 		gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());
 
-		object->Draw();
+		//if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
+		{
+			object->Draw();
+		}
+
+		//draw cylinder
+		object = cylinder_->GetObjectA();
+		world_matrix = object->GetMatrix();
+		gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
+		gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());
+
+		//if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
+		{
+			object->Draw();
+		}
+
+		for(u32 j = 0;j < PLAYER_MAX;++j)
+		{
+			if(i != j)
+			{
+				object = player_icons_[j]->GetObject();
+				world_matrix = object->GetMatrix();
+				world_matrix = utility::math::Multiply(i_view_matrix,world_matrix);
+				gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
+				gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
+				if(frustum_culling_->IsCulling(players_[j]->GetPosition(),0.5f))
+				{
+#ifdef _DEBUG
+			debug_object_draw_num++ ;
+#endif // _DEBUG
+					object->Draw();
+				}
+			}
+		}
+
+		gb_vs->SetValue("_world_matrix", (f32*)&sprite_3D_->GetMatrix(), 16);
+		gb_ps->SetTexture("_texture_sampler", sprite_3D_->GetTexture(0)->GetTexture());
+		sprite_3D_->Draw();
+
+		//--  動かないFBX  --//
+		fbx_object_[ 0 ]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[ i ]->GetViewMatrix());
+		fbx_object_[ 0 ]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[ i ]->GetProjectionMatrix());
+		fbx_object_[ 0 ]->Draw();
 
 		graphic_device->SetVertexShader(gb_vs_fbx);
+
+		fbx_tree_[ 0 ]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[ i ]->GetViewMatrix());
+		fbx_tree_[ 0 ]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[ i ]->GetProjectionMatrix());
+		fbx_tree_[ 0 ]->Draw();
+
+		fbx_tree_[ 1 ]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[ i ]->GetViewMatrix());
+		fbx_tree_[ 1 ]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[ i ]->GetProjectionMatrix());
+		fbx_tree_[ 1 ]->Draw();
 
 		for(u32 j = 0;j < PLAYER_MAX;++j)
 		{
 			players_[j]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[i]->GetViewMatrix());
 			players_[j]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[i]->GetProjectionMatrix());
-			players_[j]->Draw();
+
+			if(frustum_culling_->IsCulling(players_[j]->GetPosition(),1.0f))
+			{
+#ifdef _DEBUG
+			debug_object_draw_num++ ;
+#endif // _DEBUG
+				players_[j]->Draw();
+			}
 		}
 	}
 
+#ifdef _DEBUG
+	DEVELOP_DISPLAY("object_draw : %d\n", debug_object_draw_num );
+	GET_DIRECTX9_DEVICE()->SetRenderState(D3DRS_FILLMODE,D3DFILL_FORCE_DWORD);
+#endif
 	graphic_device->SetRenderTarget(0,default_texture);
 	graphic_device->SetRenderTarget(1,nullptr);
 	graphic_device->SetRenderTarget(2,nullptr);
@@ -506,6 +820,8 @@ void Game::Draw()
 		sprite_objects_[i]->Draw();
 	}
 
+	
+
 #ifdef _DEBUG 
 	static int _debugRenderTargetIndex = 0;
 
@@ -521,6 +837,7 @@ void Game::Draw()
 
 	if(debugRenderTarget_ == true)
 	{
+		DEVELOP_DISPLAY("操作プレイヤー : %d\n",debug_player_number_ + 1);
 		if(GET_INPUT_KEYBOARD()->GetTrigger(DIK_LEFT) == true)
 		{
 			_debugRenderTargetIndex--;
@@ -567,7 +884,7 @@ void Game::Draw()
 		d_vs->SetValue("_projection_matrix",(f32*)&observer_2d_->GetProjectionMatrix(),sizeof(float4x4));
 		d_vs->SetValue("_world_matrix",(f32*)&debug_object_->GetMatrix(),sizeof(float4x4));
 
-		d_ps->SetValue("_light_vector",(f32*)&float3(0.0f,-1.0f,0.0f),sizeof(float3));
+		d_ps->SetValue("_light_vector",(f32*)&float3(0.0f,0.0f,-1.0f),sizeof(float3));
 		d_ps->SetValue("_light_deffuse",(f32*)&float3(1.0f,1.0f,1.0f),sizeof(float3));
 		d_ps->SetTexture("_color_sampler",color_textures_[debug_player_number_]->GetTexture());
 		d_ps->SetTexture("_normal_sampler",normal_textures_[debug_player_number_]->GetTexture());
@@ -588,4 +905,128 @@ void Game::Draw()
 	}
 #endif
 
+	//Draw Result
+	if (is_result_)
+	{
+		DrawResult();
+	}
+
+}
+
+void Game::UpdateResult(void)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		if (GET_INPUT_XPAD(i)->GetTrigger(XIPad::KEY::A)|| GET_INPUT_XPAD(i)->GetTrigger(XIPad::KEY::B))
+		{
+			SceneManager::Instance().set_p_next_scene(SceneManager::Instance().get_title());
+			SceneManager::Instance().set_scene_change_flag(true);
+		}
+	}
+		result_observer->Update();
+}
+
+void Game::DrawResult(void)
+{
+	//クリアー
+	//graphic_device->Clear(float4(1.0f, 0.0f, 0.0f, 0.0f), 1.0f);
+	//フィールド描画
+
+	//2Dポリゴン描画
+	auto graphic_device = GET_GRAPHIC_DEVICE();
+	graphic_device->Clear(float4(0.0f, 0.0f, 0.0f, 0.0f), 1.0f);
+	auto basic_vs = graphic_device->LoadVertexShader("resources/shader/basic.vsc");
+	auto basic_ps = graphic_device->LoadPixelShader("resources/shader/basic.psc");
+	auto gb_vs = graphic_device->LoadVertexShader("resources/shader/graphics_buffer.vsc");
+	auto gb_ps = graphic_device->LoadPixelShader("resources/shader/graphics_buffer.psc");
+
+	basic_vs->SetValue("_view_matrix", (f32*)&observer_2d_->GetViewMatrix(), sizeof(float4x4));
+	basic_vs->SetValue("_projection_matrix", (f32*)&observer_2d_->GetProjectionMatrix(), sizeof(float4x4));
+	
+	//チーム アイコン
+	result_team_icon->Draw();
+	//スコア
+	score_->Draw();
+
+	//プレイヤー描画
+
+	//背景としてフィールド描画
+	graphic_device->SetVertexShader(gb_vs);
+	graphic_device->SetPixelShader(gb_ps);
+
+	// observer
+	gb_vs->SetValue("_view_matrix", (f32*)&result_observer->GetViewMatrix(), 16);
+	gb_vs->SetValue("_projection_matrix", (f32*)&result_observer->GetProjectionMatrix(), 16);
+
+
+	auto view_matrix = result_observer->GetViewMatrix();
+	auto i_view_matrix = utility::math::InverseB(view_matrix);
+
+	//フィールド
+	auto object = field_->GetObject();
+	auto world_matrix = object->GetMatrix();
+
+	frustum_culling_->SetViewMatrix(view_matrix);
+
+	gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
+	gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());
+
+	object->Draw();
+
+	//フラワーリスト
+	for (auto flower : flower_list_)
+	{
+		object = flower._Get()->GetObject();
+		world_matrix = object->GetMatrix();
+		world_matrix = utility::math::Multiply(i_view_matrix, world_matrix);
+
+		gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
+		gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());
+
+		if (frustum_culling_->IsCulling(object->GetPosition(), 0.5f))
+		{
+			object->Draw();
+		}
+	}
+
+	//draw wall
+	for (u32 j = 0; j < WALL_MAX; ++j)
+	{
+		object = wall_[j]->GetObject();
+
+		world_matrix = object->GetMatrix();
+
+		gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
+		gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());
+
+		//if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
+		{
+			object->Draw();
+		}
+	}
+
+	//draw dome
+	object = dome_->GetObjectA();
+	world_matrix = object->GetMatrix();
+	gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
+	gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());
+
+	//if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
+	{
+		object->Draw();
+	}
+}
+
+u32 Game::GetPoint(u32 player_number) const
+{
+	u32 count = 0;
+
+	for(auto flower : flower_list_)
+	{
+		if(flower._Get()->GetNumber() == player_number)
+		{
+			count++;
+		}
+	}
+	return count;
 }

@@ -13,6 +13,7 @@
 #ifndef _XI_PAD_H_
 #define _XI_PAD_H_
 
+#define ANALOG_STICK_ASOBI (0.23f)	//アナログスティックの傾き、"遊び"の範囲
 //namespace input {
 //namespace directinput8 {
 class XIPad
@@ -60,9 +61,12 @@ public:
 	// clear
 	void Clear(void);
 
-	bool IsPress(KEY in_key)const;
-	bool IsTrigger(KEY in_key)const;
-	bool IsRelease(KEY in_key)const;
+	//normalize analogstick
+	void NormalizeAnalogStick();
+
+	bool GetPress(KEY in_key)const;
+	bool GetTrigger(KEY in_key)const;
+	bool GetRelease(KEY in_key)const;
 
 	const float2& GetLStick(void)const;
 	const float2& GetRStick(void)const;
@@ -76,6 +80,8 @@ private:
 
 	float2 l_stick_;
 	float2 r_stick_;
+	float2 l_stick_newtral_param;
+	float2 r_stick_newtral_param;
 	f32 l_trigger_;
 	f32 r_trigger_;
 	bool is_press_[(u32)KEY::MAX];

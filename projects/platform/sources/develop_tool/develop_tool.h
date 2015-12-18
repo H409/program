@@ -39,10 +39,14 @@ private:
 } // namespace develop_tool
 
 #define DEVELOP_DISPLAY(format,...) develop_tool::DevelopTool::GetInstance()->GetDevelopDisplay()->Print(format,__VA_ARGS__)
+#define DEVELOP_DISPLAY_R(format,...) develop_tool::DevelopTool::GetInstance()->GetDevelopDisplay()->PrintR(format,__VA_ARGS__)
+
 #define DEVELOP_TOOL_UPDATE() develop_tool::DevelopTool::GetInstance()->Update()
 #define DEVELOP_TOOL_DRAW() develop_tool::DevelopTool::GetInstance()->Draw()
 #else
 #define DEVELOP_DISPLAY(format,...)
+#define DEVELOP_DISPLAY_R(format,...)
+
 #define DEVELOP_TOOL_UPDATE()
 #define DEVELOP_TOOL_DRAW()
 #endif // _RELEASE

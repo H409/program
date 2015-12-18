@@ -17,7 +17,7 @@
 // forward declaration
 //*****************************************************************************
 namespace mesh {
-	class MeshDome;
+class MeshDome;
 } // namespace mesh
 class MeshObject;
 

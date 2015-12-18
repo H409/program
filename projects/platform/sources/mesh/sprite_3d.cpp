@@ -84,6 +84,7 @@ void Sprite3D::SetAnchorPoint(const float2 & in_anchor_point)
 	DEBUG_ASSERT(in_anchor_point._x >= 0.0f && in_anchor_point._x <= 1.0f);
 	DEBUG_ASSERT(in_anchor_point._y >= 0.0f && in_anchor_point._y <= 1.0f);
 	anchor_point_ = in_anchor_point;
+	UpdateVertexBuffer_();
 	is_dirty_ = true;
 }
 
