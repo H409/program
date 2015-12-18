@@ -14,8 +14,10 @@
 #include "dx9_device.h"
 #include "system/input_mouse.h"
 #include "system/input_manager.h"
+#include "system/xi_pad.h"
 #include "../base/scene_manager.h"
 #include "../tutorial/tutorial.h"
+#include "../game/game.h"
 #include "system/input_keyboard.h"
 #include "shader/dx9_vertex_shader.h"
 #include "shader/dx9_pixel_shader.h"
@@ -126,6 +128,18 @@ void Title::Update()
 
 		SceneManager::Instance().set_p_next_scene(SceneManager::Instance().get_tutorial());
 		SceneManager::Instance().set_scene_change_flag(true);
+	}
+
+	for (int i = 0; i < PLAYER_SUM; i++)
+	{
+		if (GET_INPUT_XPAD(i)->GetPress(XIPad::KEY::A) || GET_INPUT_XPAD(i)->GetPress(XIPad::KEY::B))
+		{
+			//å¯â âπçƒê∂
+			Sound::Instance().PlaySeSound(SOUND_LABEL_SE_YES, 0);
+
+			SceneManager::Instance().set_p_next_scene(SceneManager::Instance().get_game());
+			SceneManager::Instance().set_scene_change_flag(true);
+		}
 	}
 }
 

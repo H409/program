@@ -73,7 +73,7 @@ DX9Device::DX9Device(const HWND& in_hwnd,const u16& in_width,const u16& in_heigh
 	d3dpresent_parameters_.SwapEffect = D3DSWAPEFFECT_DISCARD;
 
 	// ウィンドウモード
-	d3dpresent_parameters_.Windowed = true;
+	d3dpresent_parameters_.Windowed = false;
 #ifdef _RELEASE
 	d3dpresent_parameters_.Windowed = false;
 #endif
@@ -103,8 +103,8 @@ DX9Device::DX9Device(const HWND& in_hwnd,const u16& in_width,const u16& in_heigh
 	else
 	{
 		// バックバッファ
-		//d3dpresent_parameters_.BackBufferFormat = D3DFMT_R5G6B5;
-		d3dpresent_parameters_.BackBufferFormat = D3DFMT_R8G8B8;
+		d3dpresent_parameters_.BackBufferFormat = D3DFMT_R5G6B5;
+		//d3dpresent_parameters_.BackBufferFormat = D3DFMT_R8G8B8;
 
 		// リフレッシュレート
 		d3dpresent_parameters_.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;

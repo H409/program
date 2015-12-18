@@ -253,6 +253,18 @@ void Game::Update()
 		// I—¹
 		is_result_ = true;
 	}
+
+	for (int i = 0; i < PLAYER_SUM; i++)
+	{
+		if (GET_INPUT_XPAD(i)->GetPress(XIPad::KEY::X))
+		{
+			//Œø‰Ê‰¹Ä¶
+			Sound::Instance().PlaySeSound(SOUND_LABEL_SE_YES, 0);
+
+			is_result_ = true;
+		}
+	}
+
 #ifdef _DEBUG
 	if(debugRenderTarget_)
 	{
@@ -747,7 +759,7 @@ void Game::Draw()
 		//draw game_timer_
 		basic_vs->SetValue("_view_matrix", (f32*)&observer_2d_->GetViewMatrix(), sizeof(float4x4));
 		basic_vs->SetValue("_projection_matrix", (f32*)&observer_2d_->GetProjectionMatrix(), sizeof(float4x4));
-		game_timer_->Draw();
+		//game_timer_->Draw();
 
 
 		for(u32 j = 0;j < PLAYER_MAX;++j)
@@ -932,7 +944,7 @@ void Game::UpdateResult(void)
 	{
 		if (GET_INPUT_XPAD(i)->GetTrigger(XIPad::KEY::A)|| GET_INPUT_XPAD(i)->GetTrigger(XIPad::KEY::B))
 		{
-			SceneManager::Instance().set_p_next_scene(SceneManager::Instance().get_title());
+			SceneManager::Instance().set_p_next_scene(SceneManager::Instance().get_game());
 			SceneManager::Instance().set_scene_change_flag(true);
 		}
 	}
