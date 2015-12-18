@@ -98,6 +98,9 @@
     <Filter Include="sources\sound">
       <UniqueIdentifier>{fc911964-f3aa-4e6c-9a46-ceaa9c66ff91}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\game_timer">
+      <UniqueIdentifier>{beeadb2a-3fa0-4c2b-aa42-96683b0cfa21}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\windows\win_main.cpp">
@@ -270,6 +273,9 @@
     </ClCompile>
     <ClCompile Include="sources\sound\sound.cpp">
       <Filter>sources\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\game_timer\game_timer.cpp">
+      <Filter>sources\game_timer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -446,6 +452,9 @@
     </ClInclude>
     <ClInclude Include="sources\sound\sound.h">
       <Filter>sources\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\game_timer\game_timer.h">
+      <Filter>sources\game_timer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

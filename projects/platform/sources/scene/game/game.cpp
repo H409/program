@@ -10,6 +10,7 @@
 // include
 //*****************************************************************************
 #include "game.h"
+#include "../title/title.h"
 #include "system/win_system.h"
 #include "system/input_keyboard.h"
 #include "shader/dx9_vertex_shader.h"
@@ -44,6 +45,7 @@
 #include "score/result_score.h"
 #include "result_team_icon/result_team_icon.h"
 #include "sound/sound.h"
+#include "../base/scene_manager.h"
 
 //=============================================================================
 // constructor
@@ -913,7 +915,15 @@ void Game::Draw()
 
 void Game::UpdateResult(void)
 {
-	result_observer->Update();
+	for (int i = 0; i < 4; i++)
+	{
+		if (GET_INPUT_XPAD(i)->GetTrigger(XIPad::KEY::A)|| GET_INPUT_XPAD(i)->GetTrigger(XIPad::KEY::B))
+		{
+			SceneManager::Instance().set_p_next_scene(SceneManager::Instance().get_title());
+			SceneManager::Instance().set_scene_change_flag(true);
+		}
+	}
+		result_observer->Update();
 }
 
 void Game::DrawResult(void)
@@ -952,6 +962,7 @@ void Game::DrawResult(void)
 	auto view_matrix = result_observer->GetViewMatrix();
 	auto i_view_matrix = utility::math::InverseB(view_matrix);
 
+	//フィールド
 	auto object = field_->GetObject();
 	auto world_matrix = object->GetMatrix();
 
@@ -976,6 +987,33 @@ void Game::DrawResult(void)
 		{
 			object->Draw();
 		}
+	}
+
+	//draw wall
+	for (u32 j = 0; j < WALL_MAX; ++j)
+	{
+		object = wall_[j]->GetObject();
+
+		world_matrix = object->GetMatrix();
+
+		gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
+		gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());
+
+		//if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
+		{
+			object->Draw();
+		}
+	}
+
+	//draw dome
+	object = dome_->GetObjectA();
+	world_matrix = object->GetMatrix();
+	gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
+	gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());
+
+	//if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
+	{
+		object->Draw();
 	}
 }
 
