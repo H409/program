@@ -62,7 +62,7 @@ Game::Game()
 		observers_[i]->SetTargetVector(float3(0.0f,0.0f,1.0f));
 		observers_[i]->SetLength(2.0f);
 		observers_[i]->SetHeight(1.5f);
-		observers_[i]->SetState(FollowerObserver::STATE::FOLLWER);
+		observers_[i]->SetState(FollowerObserver::STATE::NONE);
 		observers_[i]->SetID( i );
 		observers_[i]->Update();
 	}
@@ -203,6 +203,15 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
 		players_[i]->SetPosition(positions[i]);
+		
+		observers_[i]->SetTargetVector(float3(0.0f,0.0f,1.0f));
+		observers_[i]->SetLength(2.0f);
+		observers_[i]->SetHeight(1.5f);
+		observers_[i]->SetTargetPosition( positions[i] );
+		observers_[i]->SetState( FollowerObserver::STATE::FOLLWER );
+		observers_[i]->SetTimer( 1 );
+		observers_[i]->SetRotation( float3() );
+		observers_[i]->Update();
 	}
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
@@ -287,6 +296,21 @@ void Game::Update()
 		}
 
 #endif // _DEBUG
+		
+		// Œ@‚è•Ô‚µ
+		if(players_[i]->GetWepon() == Player::WEAPON::HOE &&
+		   players_[ i ]->GetAnime() == Player::ANIME::ACTION )
+		{
+			auto position = field_icons_[i]->GetPosition();
+			//if(field_->GetType(position) == (u32)Field::TYPE::SOIL)
+			if( players_[ i ]->GetKimPointer()->GetSingleAnimationEnd() == true )
+			{
+				auto index = field_->GetBlockIndex(position);
+				//field_->SetType(index,(u32)Field::TYPE::SOIL);
+				flowers_[index]->Death();
+				flower_list_.erase(remove_if(flower_list_.begin(),flower_list_.end(),[](std::weak_ptr<Flower> flower)->bool {return !flower._Get()->IsShow();}),flower_list_.end());
+			}
+		}
 
 		if(players_[ i ]->GetAction() == true )
 		{
@@ -316,18 +340,6 @@ void Game::Update()
 					auto bullet = std::make_shared<Bullet>(start_position,end_position);
 					bullet->SetTag(i);
 					bullets_.push_back(bullet);
-				}
-			}
-			// Œ@‚è•Ô‚µ
-			if(players_[i]->GetWepon() == Player::WEAPON::HOE)
-			{
-				auto position = field_icons_[i]->GetPosition();
-				//if(field_->GetType(position) == (u32)Field::TYPE::SOIL)
-				{
-					auto index = field_->GetBlockIndex(position);
-					//field_->SetType(index,(u32)Field::TYPE::SOIL);
-					flowers_[index]->Death();
-					flower_list_.erase(remove_if(flower_list_.begin(),flower_list_.end(),[](std::weak_ptr<Flower> flower)->bool {return !flower._Get()->IsShow();}),flower_list_.end());
 				}
 			}
 

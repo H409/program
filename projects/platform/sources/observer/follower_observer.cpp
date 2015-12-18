@@ -28,6 +28,7 @@ FollowerObserver::FollowerObserver(const f32& in_radian,const f32& in_width,cons
 	eye_ = float3();
 	state_ = STATE::NONE ;
 	ID_ = 0 ;
+	timer_ = 0 ;
 }
 
 //=============================================================================
@@ -35,21 +36,15 @@ FollowerObserver::FollowerObserver(const f32& in_radian,const f32& in_width,cons
 //=============================================================================
 void FollowerObserver::Update(void)
 {
-	//look_at_ = target_position_ ;
-	//look_at_._z += target_length_ ;
+	timer_ += 0.2f ;
 
-	//auto look_at = float3(look_at_._x,0.0f,look_at_._z);
-	//auto eye = float3(eye_._x,0.0f,eye_._z);
-	//auto vector = look_at_ - eye ;
-	//vector = utility::math::Normalize(vector);
+	if( timer_ > 1 )
+	{
+		timer_ = 1 ;
+	}
 
-	////auto length = utility::math::Length(vector);
-
-	//eye_._x = look_at_._x ;
-	//eye_._y = height_;
-	//eye_._z = target_position_._z - length_ ;
-
-
+	if( state_ == STATE::FOLLWER )
+	{
 #ifndef _RELEASE
 	MouseMove_();
 	TargetLookRotation_();
@@ -57,52 +52,44 @@ void FollowerObserver::Update(void)
 	TargetLookRotation_();
 #endif // _DEBUG
 
-	if( state_ == STATE::FOLLWER )
-	{
 		//--  基本座標移動  --//
-		eye_._x = target_position_._x - sinf( rotation_._y ) * length_ ;
-		eye_._y = height_ ;
-		eye_._z = target_position_._z - cosf( rotation_._y ) * length_ ;
+		aim_eye_position_._x = target_position_._x - sinf( rotation_._y ) * length_ ;
+		aim_eye_position_._y = height_ ;
+		aim_eye_position_._z = target_position_._z - cosf( rotation_._y ) * length_ ;
 
 		auto eye = float3( eye_._x , 0.0f , eye_._z );
 		auto vector = target_position_ - eye ;
 		vector = utility::math::Normalize( vector );
 
-		look_at_ = float3( vector._x * target_length_ , 0 , vector._z * target_length_ );
-		look_at_ = look_at_ + target_position_ ;
-	}
+		aim_look_position_ = float3( vector._x * target_length_ , 0 , vector._z * target_length_ );
+		aim_look_position_ = aim_look_position_ + target_position_ ;
 
-	if( state_ == STATE::AIM )
-	{
-		float length = length_ * 0.7f ;
-		float rot = -0.2f ;
-		auto eye = float3( eye_._x , 0.0f , eye_._z );
-		auto vector = look_at_ - eye ;
-		vector = utility::math::Normalize( vector );
+		eye_ = old_eye_ * ( 1 - timer_ ) + aim_eye_position_ * timer_ ;
+		look_at_ = old_look_at_ * ( 1 - timer_ ) + aim_look_position_ * timer_ ;
 
-		auto vec = feild_icon_ - target_position_ ;
-		D3DXVec3Normalize( ( D3DXVECTOR3* )&vec , ( D3DXVECTOR3* )&vec );
+		//--  回転時のブレ補正  --//
+		if( timer_ == 1 )
+		{
+			//--  基本座標移動  --//
+			eye_._x = target_position_._x - sinf( rotation_._y ) * length_ ;
+			eye_._y = height_ ;
+			eye_._z = target_position_._z - cosf( rotation_._y ) * length_ ;
 
-		rotation_._y = atan2f( vec._x , vec._z );
+			auto eye = float3( eye_._x , 0.0f , eye_._z );
+			auto vector = target_position_ - eye ;
+			vector = utility::math::Normalize( vector );
 
-		//--  基本座標移動  --//
-		eye_._x = target_position_._x - sinf( rotation_._y + rot ) * length ;
-		eye_._y = height_ ;
-		eye_._z = target_position_._z - cosf( rotation_._y + rot ) * length ;
-
-		look_at_ = float3( vector._x * target_length_ , 0 , vector._z * target_length_ );
-		look_at_ = look_at_ + target_position_ ;
+			look_at_ = float3( vector._x * target_length_ , 0 , vector._z * target_length_ );
+			look_at_ = look_at_ + target_position_ ;
+		}
 	}
 	else
 	{
+		eye_ = old_eye_ * ( 1 - timer_ ) + aim_eye_position_ * timer_ ;
+		look_at_ = old_look_at_ * ( 1 - timer_ ) + aim_look_position_ * timer_ ;
 	}
 
 	view_matrix_ = utility::math::LookAtLH(eye_,look_at_,up_);
-}
-
-FollowerObserver::STATE FollowerObserver::GetState(void) const
-{
-	return state_;
 }
 
 //=============================================================================
@@ -211,6 +198,69 @@ void FollowerObserver::SetLength(const f32 & in_length)
 void FollowerObserver::SetHeight(const f32& in_height)
 {
 	height_ = in_height;
+}
+
+//=============================================================================
+// 
+//=============================================================================
+FollowerObserver::STATE FollowerObserver::GetState(void) const
+{
+	return state_;
+}
+
+//=============================================================================
+// 
+//=============================================================================
+void FollowerObserver::SetState( const STATE state )
+{
+	if( state_ == state )
+	{
+		return ;
+	}
+
+	timer_ = 0 ;
+
+	old_eye_ = eye_ ;
+	old_look_at_ = look_at_ ;
+
+	if( state == STATE::FOLLWER )
+	{
+		//--  基本座標移動  --//
+		aim_eye_position_._x = target_position_._x - sinf( rotation_._y ) * length_ ;
+		aim_eye_position_._y = height_ ;
+		aim_eye_position_._z = target_position_._z - cosf( rotation_._y ) * length_ ;
+
+		auto eye = float3( eye_._x , 0.0f , eye_._z );
+		auto vector = target_position_ - eye ;
+		vector = utility::math::Normalize( vector );
+
+		aim_look_position_ = float3( vector._x * target_length_ , 0 , vector._z * target_length_ );
+		aim_look_position_ = aim_look_position_ + target_position_ ;
+
+	}
+	else if( state == STATE::AIM )
+	{
+		float length = length_ * 0.7f ;
+		float rot = -0.2f ;
+		auto eye = float3( eye_._x , 0.0f , eye_._z );
+		auto vector = look_at_ - eye ;
+		vector = utility::math::Normalize( vector );
+
+		auto vec = feild_icon_ - target_position_ ;
+		D3DXVec3Normalize( ( D3DXVECTOR3* )&vec , ( D3DXVECTOR3* )&vec );
+
+		rotation_._y = atan2f( vec._x , vec._z );
+
+		//--  基本座標移動  --//
+		aim_eye_position_._x = target_position_._x - sinf( rotation_._y + rot ) * length ;
+		aim_eye_position_._y = height_ ;
+		aim_eye_position_._z = target_position_._z - cosf( rotation_._y + rot ) * length ;
+
+		aim_look_position_ = float3( vector._x * target_length_ , 0 , vector._z * target_length_ );
+		aim_look_position_ = aim_look_position_ + target_position_ ;
+	}
+
+	state_ = state ;
 }
 
 //---------------------------------- EOF --------------------------------------

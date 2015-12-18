@@ -117,6 +117,7 @@ void Player::Init( float3 pos )
 	state_ = STATE::WAIT ;
 
 	rotDest_ = float3();
+	rotation_ = float3();
 
 	old_anime_ = ANIME::WAIT ;
 	anime_ = ANIME::WAIT ;
@@ -178,7 +179,7 @@ void Player::Control( void )
 {
 	action_ = false ;
 
-#ifdef _DEBUG
+#ifndef _RELEASE
 	ControlKeyBorad();
 	ControlJoypad();
 
@@ -188,8 +189,8 @@ void Player::Control( void )
 #endif // _DEBUG
 	DEVELOP_DISPLAY( "camera_vec : %f , %f , %f\n" , camera_vector_._x , camera_vector_._y , camera_vector_._z );
 	DEVELOP_DISPLAY( "pos : %f , %f , %f\n" , position_._x , position_._y , position_._z );
-	DEVELOP_DISPLAY( "move : %f , %f , %f\n" , move_._x , move_._y , move_._z );
-	DEVELOP_DISPLAY( "action : %d\n" , action_ );
+	//DEVELOP_DISPLAY( "move : %f , %f , %f\n" , move_._x , move_._y , move_._z );
+	//DEVELOP_DISPLAY( "action : %d\n" , action_ );
 }
 //-------------------------------------------------------------------
 // 関数名 : キーボード更新
