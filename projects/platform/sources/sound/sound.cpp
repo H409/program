@@ -387,12 +387,15 @@ void Sound::StopSound(void)
 		{
 			// 一時停止
 			m_apSourceVoice[nCntSound]->Stop(0);
+			// オーディオバッファの削除
+			m_apSourceVoice[nCntSound]->FlushSourceBuffers();
 		}
 		for (int i = 0; i < SE_MAX; i++)
 		{
 			if (m_apSeVoice[nCntSound][i])
 			{
 				m_apSeVoice[nCntSound][i]->Stop(0);
+				m_apSeVoice[nCntSound][i]->FlushSourceBuffers();
 			}
 		}
 	}

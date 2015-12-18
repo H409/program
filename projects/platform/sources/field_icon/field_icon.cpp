@@ -16,6 +16,7 @@
 #include "dx9_device.h"
 #include "system/input_keyboard.h"
 #include "system/input_manager.h"
+#include "system/xi_pad.h"
 #include "math/math.h"
 
 //*****************************************************************************
@@ -129,16 +130,38 @@ bool FieldIcon::IsShowAll(void) const
 	return is_show_all_;
 }
 
+void FieldIcon::SetRange(f32 in_range)
+{
+	range_ = in_range;
+}
+
+void FieldIcon::SetMin(f32 in_min)
+{
+	min_ = in_min;
+}
+
+void FieldIcon::SetSpeed(f32 in_speed)
+{
+	speed_ = in_speed;
+}
+
+void FieldIcon::SetNumber(u32 in_number)
+{
+	number_ = in_number;
+}
+
 //=============================================================================
 // get vector
 //=============================================================================
 float3 FieldIcon::GetVector_(void) const
 {
 	auto keyboard = GET_INPUT_KEYBOARD();
-
+	auto xi_pad = GET_INPUT_MANAGER()->GetXIPad(number_);
 	auto right_vector = utility::math::CrossProduct(float3(0.0f,1.0f,0.0f),front_vector_);
-	auto vector = float3(0.0f,0.0f,0.0f);
+	auto stick_vector = xi_pad->GetRStick();
+	auto vector = front_vector_ * stick_vector._y + right_vector * stick_vector._x;
 
+#ifndef _RELEASE
 	if(keyboard->GetPress(DIK_I))
 	{
 		vector += front_vector_;
@@ -158,6 +181,7 @@ float3 FieldIcon::GetVector_(void) const
 	{
 		vector += right_vector;
 	}
+#endif 
 
 	vector = utility::math::Normalize(vector);
 
