@@ -64,6 +64,9 @@ public:
 	TMeshObject GetObject(int i) { return back_ground_mesh_object_; }
 
 private:
+	unsigned int timer_count_;				//残り時間
+	unsigned int digit_num_[TIMER_DIGIT];	//桁の番号
+
 	float2 back_ground_size_;
 	float3 back_ground_pos_;
 	TSprite back_ground_sprite_;			//時間背景スプライト
