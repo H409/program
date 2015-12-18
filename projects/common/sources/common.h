@@ -28,6 +28,7 @@
 #include <cstring>
 #include <cstdarg>
 #include <fstream>
+#include <algorithm>
 
 //#include <Windows.h>
 
