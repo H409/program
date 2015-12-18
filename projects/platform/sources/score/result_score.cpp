@@ -59,18 +59,18 @@ Score::Score(void)
 	back_ground_mesh_object_[(unsigned int)TEAM::BLUE]->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/kari_window_256x384.png"));
 	back_ground_mesh_object_[(unsigned int)TEAM::BLUE]->SetPosition(GET_DEFAULT_DISPLAY_SIZE()._x * 0.6f, GET_DEFAULT_DISPLAY_SIZE()._y * 0.3, 0.0f);
 
-	////スコア数字表示の生成
-	//for (int j = 0; j < (unsigned int)TEAM::MAX; j++)
-	//{
-	//	for (int i = 0; i < SCORE_DIGIT; i++)
-	//	{
-	//		num_sprite_[i][j] = std::make_shared<mesh::Sprite>(num_size_);
-	//		num_sprite_[i][j]->SetAnchorPoint(float2(0.5f, 1.0f));
-	//		num_object_[i][j] = std::make_shared<MeshObject>(num_sprite_[i][j]);
-	//		num_object_[i][j]->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/No.png"));
-	//		num_object_[i][j]->SetPosition(num_pos_[i][j]);
-	//	}
-	//}
+	//スコア数字表示の生成
+	for (int j = 0; j < (unsigned int)TEAM::MAX; j++)
+	{
+		for (int i = 0; i < SCORE_DIGIT; i++)
+		{
+			num_sprite_[j][i] = std::make_shared<mesh::Sprite>(num_size_);
+			num_sprite_[j][i]->SetAnchorPoint(float2(0.5f, 1.0f));
+			num_object_[j][i] = std::make_shared<MeshObject>(num_sprite_[j][i]);
+			num_object_[j][i]->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/No.png"));
+			num_object_[j][i]->SetPosition(num_pos_[j][i]);
+		}
+	}
 }
 
 //=============================================================================
