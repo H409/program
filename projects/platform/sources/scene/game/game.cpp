@@ -46,6 +46,7 @@
 #include "result_team_icon/result_team_icon.h"
 #include "sound/sound.h"
 #include "../base/scene_manager.h"
+#include "game_timer/game_timer.h"
 
 //=============================================================================
 // constructor
@@ -142,6 +143,8 @@ Game::Game()
 
 	cylinder_ = std::make_shared<Cylinder>();
 	cylinder_->GetObjectA()->SetPosition(0.0f,-5.0f,0.0f);
+
+	game_timer_ = std::make_shared<GameTimer>();
 
 	flowers_.resize(field_->GetBlockCount());
 
@@ -406,6 +409,8 @@ void Game::Update()
 		observers_[i]->Update();
 
 	}
+
+	game_timer_->Update();
 
 	field_->Update();
 
@@ -739,6 +744,12 @@ void Game::Draw()
 			object->Draw();
 		}
 
+		//draw game_timer_
+		basic_vs->SetValue("_view_matrix", (f32*)&observer_2d_->GetViewMatrix(), sizeof(float4x4));
+		basic_vs->SetValue("_projection_matrix", (f32*)&observer_2d_->GetProjectionMatrix(), sizeof(float4x4));
+		game_timer_->Draw();
+
+
 		for(u32 j = 0;j < PLAYER_MAX;++j)
 		{
 			if(i != j)
@@ -904,6 +915,8 @@ void Game::Draw()
 		debug_sprite_object_->Draw();
 	}
 #endif
+
+	
 
 	//Draw Result
 	if (is_result_)
