@@ -55,6 +55,10 @@ private:
 	std::shared_ptr<MeshObject> logo_;
 	std::shared_ptr<MeshObject> button_;
 	std::shared_ptr<MeshObject> button_interface_;
+
+	//‚Æ‚è‚ ‚¦‚¸ƒSƒŠ‰Ÿ‚µ
+	int  draw_cnt_;
+	bool use_flag_;
 };
 
 #endif
