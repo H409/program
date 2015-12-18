@@ -54,6 +54,7 @@ private:
 	std::shared_ptr<MeshObject> background_;
 	std::shared_ptr<MeshObject> logo_;
 	std::shared_ptr<MeshObject> button_;
+	std::shared_ptr<MeshObject> button_interface_;
 };
 
 #endif
