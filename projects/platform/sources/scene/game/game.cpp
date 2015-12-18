@@ -162,11 +162,16 @@ Game::Game()
 	fbx_tree_[ 1 ]->SetPosition( -10 , 0 , -5 );
 
 	is_result_ = false;
-	auto sprite_3d = std::make_shared<mesh::Sprite3D>( float2( 3.0f , 3.0f ) );
-	sprite_3D_ = std::make_shared<MeshObject>(sprite_3d);
-	sprite_3D_->SetPosition( -9.5f , 0.01f , 2.0f );
-	sprite_3D_->SetTexture( 0 , GET_GRAPHIC_DEVICE()->LoadTexture( "resources/texture/s_test_2.jpg" ) );
-	sprite_3D_->SetRotationX( utility::math::ToRadian(90.0f) );
+
+	for( int i = 0 ; i < PLAYER_MAX ; i++ )
+	{
+		auto sprite_3d = std::make_shared<mesh::Sprite3D>( float2( 0.4f , 0.35f ) );
+		sprite_3D_[ i ] = std::make_shared<MeshObject>(sprite_3d);
+		sprite_3D_[ i ]->SetPosition( -9.5f , 0.01f , 2.0f );
+		sprite_3D_[ i ]->SetTexture( 0 , GET_GRAPHIC_DEVICE()->LoadTexture( "resources/texture/shadow.png" ) );
+		sprite_3D_[ i ]->SetRotationX( utility::math::ToRadian(90.0f) );
+	}
+
 #ifdef _DEBUG
 	debugRenderTarget_ = false;
 	debug_player_number_ = 0;
@@ -202,7 +207,8 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
-		players_[i]->SetPosition(positions[i]);
+		//players_[i]->SetPosition(positions[i]);
+		players_[i]->Init( positions[i] );
 		
 		observers_[i]->SetTargetVector(float3(0.0f,0.0f,1.0f));
 		observers_[i]->SetLength(2.0f);
@@ -767,9 +773,14 @@ void Game::Draw()
 			}
 		}
 
-		gb_vs->SetValue("_world_matrix", (f32*)&sprite_3D_->GetMatrix(), 16);
-		gb_ps->SetTexture("_texture_sampler", sprite_3D_->GetTexture(0)->GetTexture());
-		sprite_3D_->Draw();
+		for( int j = 0 ; j < PLAYER_MAX ; j++ )
+		{
+			gb_vs->SetValue("_world_matrix", (f32*)&sprite_3D_[ j ]->GetMatrix(), 16);
+			gb_ps->SetTexture("_texture_sampler", sprite_3D_[ j ]->GetTexture(0)->GetTexture());
+			sprite_3D_[ j ]->SetPosition( players_[ j ]->GetPosition()._x , 0.01f , players_[ j ]->GetPosition()._z );
+			sprite_3D_[ j ]->Draw();
+		}
+
 
 		//--  “®‚©‚È‚¢FBX  --//
 		fbx_object_[ 0 ]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[ i ]->GetViewMatrix());
