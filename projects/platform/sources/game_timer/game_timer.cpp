@@ -19,25 +19,25 @@
 //*****************************************************************************
 // constant definition
 //*****************************************************************************
-
+const u32 GameTimer::DEFAULT_TIME_MAX = 60 * 60 * 3;
 //=============================================================================
 // constructor
 //=============================================================================
 GameTimer::GameTimer(void)
 {
 	//タイマー背景の設定
-	back_ground_size_._x = GET_DEFAULT_DISPLAY_SIZE()._x / 5.0f;
-	back_ground_size_._y = GET_DEFAULT_DISPLAY_SIZE()._y / 5.0f;
-	back_ground_pos_._x = GET_DEFAULT_DISPLAY_SIZE()._x * 0.8f;
-	back_ground_pos_._y = GET_DEFAULT_DISPLAY_SIZE()._y * 0.1f;
+	back_ground_size_._x = GET_DEFAULT_DISPLAY_SIZE()._x / 6.0f;
+	back_ground_size_._y = GET_DEFAULT_DISPLAY_SIZE()._y / 6.0f;
+	back_ground_pos_._x = GET_DEFAULT_DISPLAY_SIZE()._x * 0.5f - (back_ground_size_._x/2);
+	back_ground_pos_._y = GET_DEFAULT_DISPLAY_SIZE()._y * 0.5f - (back_ground_size_._y/2);
 
 	//タイマー数字表示の設定
 	num_size_._x = back_ground_size_._x / 4.0f;
-	num_size_._y = back_ground_size_._y;
+	num_size_._y = back_ground_size_._y*0.7f;
 	for (int i = 0; i < TIMER_DIGIT; i++)
 	{
-		num_pos_[i]._x = (back_ground_pos_._x + 10.0f )+ num_size_._x*i;
-		num_pos_[i]._y = back_ground_pos_._y;
+		num_pos_[i]._x = (back_ground_pos_._x + back_ground_size_._x*0.15f) + num_size_._x*i;
+		num_pos_[i]._y = back_ground_pos_._y + back_ground_size_._y*0.15f;
 	}
 
 
@@ -69,7 +69,8 @@ GameTimer::GameTimer(void)
 		num_object_[i]->SetPosition(num_pos_[i]);
 	}
 
-	timer_count_ = 180;
+	timer_max_ = DEFAULT_TIME_MAX;
+	timer_count_ = 0;
 	digit_num_[0] = 1;
 	digit_num_[1] = 8;
 	digit_num_[2] = 0;
@@ -88,6 +89,8 @@ GameTimer::~GameTimer(void)
 //=============================================================================
 void GameTimer::Update(void)
 {
+	timer_count_++;
+	timer_left_ = (timer_max_ - timer_count_)/60;
 	back_ground_sprite_->SetAnchorPoint(float2(0.5f, 0.5f));
 
 	for (int i = 0; i < TIMER_DIGIT; i++)
@@ -105,7 +108,7 @@ void GameTimer::Update(void)
 
 	for (int i = 0; i < TIMER_DIGIT; i++)
 	{
-		int number = timer_count_ / digit % 10;
+		int number = timer_left_ / digit % 10;
 		digit_num_[i] = number;
 		digit /= 10;
 	}
@@ -132,4 +135,14 @@ void GameTimer::Draw(void)
 		basic_ps->SetTexture("_texture_sampler", num_object_[i]->GetTexture(digit_num_[i]));
 		num_object_[i]->Draw();
 	}
+}
+
+void GameTimer::Reset(void)
+{
+	timer_count_ = 0;
+}
+
+u32 GameTimer::GetTimeLeft(void) const
+{
+	return timer_left_;
 }

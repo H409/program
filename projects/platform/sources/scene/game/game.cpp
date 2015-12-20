@@ -239,6 +239,7 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 	flower_list_.clear();
 
 	timer_->Reset();
+	game_timer_->Reset();
 
 	is_result_ = false;
 
@@ -774,10 +775,7 @@ void Game::Draw()
 			object->Draw();
 		}
 
-		//draw game_timer_
-		basic_vs->SetValue("_view_matrix", (f32*)&observer_2d_->GetViewMatrix(), sizeof(float4x4));
-		basic_vs->SetValue("_projection_matrix", (f32*)&observer_2d_->GetProjectionMatrix(), sizeof(float4x4));
-		//game_timer_->Draw();
+		
 
 
 		for(u32 j = 0;j < PLAYER_MAX;++j)
@@ -952,6 +950,10 @@ void Game::Draw()
 #endif
 
 	
+	//draw game_timer_
+	basic_vs->SetValue("_view_matrix", (f32*)&observer_2d_->GetViewMatrix(), sizeof(float4x4));
+	basic_vs->SetValue("_projection_matrix", (f32*)&observer_2d_->GetProjectionMatrix(), sizeof(float4x4));
+	game_timer_->Draw();
 
 	//Draw Result
 	if (is_result_)

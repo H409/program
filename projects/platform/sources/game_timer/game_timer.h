@@ -63,7 +63,13 @@ public:
 	//GetObject
 	TMeshObject GetObject(int i) { return back_ground_mesh_object_; }
 
+	void Reset(void);
+	u32 GetTimeLeft(void)const;
+
 private:
+	static const u32 DEFAULT_TIME_MAX;
+	u32 timer_max_;
+	u32 timer_left_;
 	unsigned int timer_count_;				//残り時間
 	unsigned int digit_num_[TIMER_DIGIT];	//桁の番号
 
@@ -76,6 +82,9 @@ private:
 	float3 num_pos_[TIMER_DIGIT];
 	TSprite num_sprite_[TIMER_DIGIT];		//時間数値スプライト
 	TMeshObject num_object_[TIMER_DIGIT];	//時間数値オブジェクト
+
+	/*void Reset(void);
+	u32 GetTimeLeft(void)const;*/
 };
 
 #endif
