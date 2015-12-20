@@ -29,6 +29,8 @@ public:
 	void Print(const char* in_format,...);
 	void PrintR(const char* in_format,...);
 
+	void SetIsShow( const bool is ){ is_show_ = is ; }
+
 private:
 	static const u32 STRING_MAX = 1024;
 	s8 string_[STRING_MAX];

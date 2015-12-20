@@ -122,7 +122,7 @@ private:
 
 	std::unique_ptr<Timer> timer_;
 
-	std::shared_ptr<MeshObject> sprite_3D_ ;
+	std::shared_ptr<MeshObject> sprite_3D_[ 4 ] ;
 
 
 	//resultŠÖ˜A

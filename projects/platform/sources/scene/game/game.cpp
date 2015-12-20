@@ -65,7 +65,7 @@ Game::Game()
 		observers_[i]->SetTargetVector(float3(0.0f,0.0f,1.0f));
 		observers_[i]->SetLength(2.0f);
 		observers_[i]->SetHeight(1.5f);
-		observers_[i]->SetState(FollowerObserver::STATE::FOLLWER);
+		observers_[i]->SetState(FollowerObserver::STATE::NONE);
 		observers_[i]->SetID( i );
 		observers_[i]->Update();
 	}
@@ -168,11 +168,16 @@ Game::Game()
 
 	 is_win_team_ =WIN_TEAM::NONE;
 	is_result_ = false;
-	auto sprite_3d = std::make_shared<mesh::Sprite3D>( float2( 3.0f , 3.0f ) );
-	sprite_3D_ = std::make_shared<MeshObject>(sprite_3d);
-	sprite_3D_->SetPosition( -9.5f , 0.01f , 2.0f );
-	sprite_3D_->SetTexture( 0 , GET_GRAPHIC_DEVICE()->LoadTexture( "resources/texture/s_test_2.jpg" ) );
-	sprite_3D_->SetRotationX( utility::math::ToRadian(90.0f) );
+
+	for( int i = 0 ; i < PLAYER_MAX ; i++ )
+	{
+		auto sprite_3d = std::make_shared<mesh::Sprite3D>( float2( 0.4f , 0.35f ) );
+		sprite_3D_[ i ] = std::make_shared<MeshObject>(sprite_3d);
+		sprite_3D_[ i ]->SetPosition( -9.5f , 0.01f , 2.0f );
+		sprite_3D_[ i ]->SetTexture( 0 , GET_GRAPHIC_DEVICE()->LoadTexture( "resources/texture/shadow.png" ) );
+		sprite_3D_[ i ]->SetRotationX( utility::math::ToRadian(90.0f) );
+	}
+
 #ifdef _DEBUG
 	debugRenderTarget_ = false;
 	debug_player_number_ = 0;
@@ -208,7 +213,17 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
-		players_[i]->SetPosition(positions[i]);
+		//players_[i]->SetPosition(positions[i]);
+		players_[i]->Init( positions[i] );
+		
+		observers_[i]->SetTargetVector(float3(0.0f,0.0f,1.0f));
+		observers_[i]->SetLength(2.0f);
+		observers_[i]->SetHeight(1.5f);
+		observers_[i]->SetTargetPosition( positions[i] );
+		observers_[i]->SetState( FollowerObserver::STATE::FOLLWER );
+		observers_[i]->SetTimer( 1 );
+		observers_[i]->SetRotation( float3() );
+		observers_[i]->Update();
 	}
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
@@ -305,6 +320,21 @@ void Game::Update()
 		}
 
 #endif // _DEBUG
+		
+		// Œ@‚è•Ô‚µ
+		if(players_[i]->GetWepon() == Player::WEAPON::HOE &&
+		   players_[ i ]->GetAnime() == Player::ANIME::ACTION )
+		{
+			auto position = field_icons_[i]->GetPosition();
+			//if(field_->GetType(position) == (u32)Field::TYPE::SOIL)
+			if( players_[ i ]->GetKimPointer()->GetSingleAnimationEnd() == true )
+			{
+				auto index = field_->GetBlockIndex(position);
+				//field_->SetType(index,(u32)Field::TYPE::SOIL);
+				flowers_[index]->Death();
+				flower_list_.erase(remove_if(flower_list_.begin(),flower_list_.end(),[](std::weak_ptr<Flower> flower)->bool {return !flower._Get()->IsShow();}),flower_list_.end());
+			}
+		}
 
 		if(players_[ i ]->GetAction() == true )
 		{
@@ -334,18 +364,6 @@ void Game::Update()
 					auto bullet = std::make_shared<Bullet>(start_position,end_position);
 					bullet->SetTag(i);
 					bullets_.push_back(bullet);
-				}
-			}
-			// Œ@‚è•Ô‚µ
-			if(players_[i]->GetWepon() == Player::WEAPON::HOE)
-			{
-				auto position = field_icons_[i]->GetPosition();
-				//if(field_->GetType(position) == (u32)Field::TYPE::SOIL)
-				{
-					auto index = field_->GetBlockIndex(position);
-					//field_->SetType(index,(u32)Field::TYPE::SOIL);
-					flowers_[index]->Death();
-					flower_list_.erase(remove_if(flower_list_.begin(),flower_list_.end(),[](std::weak_ptr<Flower> flower)->bool {return !flower._Get()->IsShow();}),flower_list_.end());
 				}
 			}
 
@@ -781,9 +799,14 @@ void Game::Draw()
 			}
 		}
 
-		gb_vs->SetValue("_world_matrix", (f32*)&sprite_3D_->GetMatrix(), 16);
-		gb_ps->SetTexture("_texture_sampler", sprite_3D_->GetTexture(0)->GetTexture());
-		sprite_3D_->Draw();
+		for( int j = 0 ; j < PLAYER_MAX ; j++ )
+		{
+			gb_vs->SetValue("_world_matrix", (f32*)&sprite_3D_[ j ]->GetMatrix(), 16);
+			gb_ps->SetTexture("_texture_sampler", sprite_3D_[ j ]->GetTexture(0)->GetTexture());
+			sprite_3D_[ j ]->SetPosition( players_[ j ]->GetPosition()._x , 0.01f , players_[ j ]->GetPosition()._z );
+			sprite_3D_[ j ]->Draw();
+		}
+
 
 		//--  “®‚©‚È‚¢FBX  --//
 		fbx_object_[ 0 ]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[ i ]->GetViewMatrix());
