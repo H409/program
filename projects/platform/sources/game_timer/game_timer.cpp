@@ -91,6 +91,10 @@ void GameTimer::Update(void)
 {
 	timer_count_++;
 	timer_left_ = (timer_max_ - timer_count_)/60;
+	if (timer_left_ < 0)
+	{
+		timer_left_ = 0;
+	}
 	back_ground_sprite_->SetAnchorPoint(float2(0.5f, 0.5f));
 
 	for (int i = 0; i < TIMER_DIGIT; i++)
