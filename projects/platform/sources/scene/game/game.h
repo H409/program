@@ -41,6 +41,7 @@ class Timer;
 class FBXTree ;
 class ResultTeamIcon;
 class GameTimer;
+class Effect;
 
 namespace utility {
 namespace culling {
@@ -132,6 +133,8 @@ private:
 	std::shared_ptr<ResultTeamIcon> result_team_icon;	//チームのアイコン
 	std::shared_ptr<ResultObserver> result_observer;	//リザルトにてフィールドを映す為のカメラ
 
+	//std::list<std::shared_ptr<>> effect_list_;
+	std::list<std::shared_ptr<Effect>> effect_list_;
 
 #ifdef _DEBUG
 	std::shared_ptr<MeshObject> debug_sprite_object_;

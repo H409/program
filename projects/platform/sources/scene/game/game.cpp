@@ -47,6 +47,7 @@
 #include "sound/sound.h"
 #include "../base/scene_manager.h"
 #include "game_timer/game_timer.h"
+#include "effect/smoke.h"
 
 //=============================================================================
 // constructor
@@ -213,7 +214,6 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
-		//players_[i]->SetPosition(positions[i]);
 		players_[i]->Init( positions[i] );
 		
 		observers_[i]->SetTargetVector(float3(0.0f,0.0f,1.0f));
@@ -317,7 +317,7 @@ void Game::Update()
 		}
 		if( GET_INPUT_KEYBOARD()->GetRelease(DIK_B) )
 		{
-			_bullet_debug = false ;
+			_bullet_debug = false;
 		}
 
 #endif // _DEBUG
@@ -377,6 +377,10 @@ void Game::Update()
 
 				auto is_create = true;
 
+				auto smoke = std::make_shared<Smoke>();
+				smoke->Start(60,start_position);
+				effect_list_.push_back(smoke);
+
 				for(auto bullet : bullets_)
 				{
 					if(bullet->IsDeath())
@@ -402,7 +406,7 @@ void Game::Update()
 		//--  ƒGƒCƒ€”»’è  --//
 		if( Player::STATE::AIM == players_[ i ]->GetState() )
 		{
-			observers_[i]->SetState( FollowerObserver::STATE::AIM );
+			observers_[i]->SetState( FollowerObserver::STATE::AIM);
 
 			if(players_[i]->GetWepon() == Player::WEAPON::GUN)
 			{
@@ -444,6 +448,8 @@ void Game::Update()
 	game_timer_->Update();
 
 	field_->Update();
+
+	effect_list_.erase(remove_if(effect_list_.begin(),effect_list_.end(),[](std::weak_ptr<Effect> effect)->bool {return effect._Get()->IsDeath();}),effect_list_.end());
 
 	for(auto bullet : bullets_)
 	{
@@ -503,6 +509,11 @@ void Game::Update()
 		flower._Get()->Update();
 	}
 
+	for(auto effect : effect_list_)
+	{
+		effect._Get()->Update();
+	}
+
 	fbx_object_[ 0 ]->Update();
 
 	fbx_tree_[ 0 ]->Update();
@@ -527,6 +538,7 @@ void Game::Update()
 						if(field_->GetType(position) == Field::TYPE::SOIL || field_->GetType(position) == Field::TYPE::TREE)
 						{
 							auto index = field_->GetBlockIndex(position);
+							field_->SetType(index,Field::TYPE::TREE);
 							//field_->SetType(index,(u32)Field::TYPE::FLOWER);
 							auto flower_position = field_->GetBlockPosition(position);
 
@@ -563,8 +575,6 @@ void Game::Update()
 			}
 		}
 	}
-
-	GET_INPUT_XPAD(0)->GetLStick();
 
 #ifndef _RELEASE
 	for(auto i = 0;i < PLAYER_MAX;++i)
@@ -632,15 +642,6 @@ void Game::Draw()
 		graphic_device->SetRenderTarget(2,position_textures_[i]);
 
 		graphic_device->Clear(float4(1.0f,0.0f,0.0f,0.0f),1.0f);
-
-		if(field_icons_[i]->IsShow())
-		{
-			field_->SelectBlock(field_icons_[i]->GetPosition());
-		}
-		else
-		{
-			field_->NotSelectBlock();
-		}
 
 		graphic_device->SetVertexShader(gb_vs);
 		graphic_device->SetPixelShader(gb_ps);
@@ -737,6 +738,27 @@ void Game::Draw()
 			//}
 		}
 
+		for(auto effect : effect_list_)
+		{
+			//if(flower->IsShow())
+			//{
+			object = effect._Get()->GetObject();
+			world_matrix = object->GetMatrix();
+			world_matrix = utility::math::Multiply(i_view_matrix,world_matrix);
+
+			gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
+			gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
+
+			if(frustum_culling_->IsCulling(object->GetPosition(),0.5f))
+			{
+#ifdef _DEBUG
+				debug_object_draw_num++;
+#endif // _DEBUG
+				object->Draw();
+			}
+			//}
+		}
+
 		//draw wall
 		for(u32 j = 0; j < WALL_MAX; ++j)
 		{
@@ -754,7 +776,7 @@ void Game::Draw()
 		}
 
 		//draw dome
-		object = dome_->GetObjectA();
+		object = dome_->GetObject();
 		world_matrix = object->GetMatrix();
 		gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
 		gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());
@@ -765,7 +787,7 @@ void Game::Draw()
 		}
 
 		//draw cylinder
-		object = cylinder_->GetObjectA();
+		object = cylinder_->GetObject();
 		world_matrix = object->GetMatrix();
 		gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
 		gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());
@@ -1056,7 +1078,7 @@ void Game::DrawResult(void)
 	}
 
 	//draw dome
-	object = dome_->GetObjectA();
+	object = dome_->GetObject();
 	world_matrix = object->GetMatrix();
 	gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
 	gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());

@@ -31,6 +31,8 @@
     <ClCompile Include="sources\develop_tool\develop_tool.cpp" />
     <ClCompile Include="sources\dome\dome.cpp" />
     <ClCompile Include="sources\dome\mesh_dome.cpp" />
+    <ClCompile Include="sources\effect\effect.cpp" />
+    <ClCompile Include="sources\effect\smoke.cpp" />
     <ClCompile Include="sources\fbx\kim.cpp" />
     <ClCompile Include="sources\fbx_object\fbx_object.cpp" />
     <ClCompile Include="sources\fbx_tree\fbx_tree.cpp" />
@@ -91,6 +93,8 @@
     <ClInclude Include="sources\develop_tool\develop_tool.h" />
     <ClInclude Include="sources\dome\dome.h" />
     <ClInclude Include="sources\dome\mesh_dome.h" />
+    <ClInclude Include="sources\effect\effect.h" />
+    <ClInclude Include="sources\effect\smoke.h" />
     <ClInclude Include="sources\fbx\kim.h" />
     <ClInclude Include="sources\fbx_object\fbx_object.h" />
     <ClInclude Include="sources\fbx_tree\fbx_tree.h" />

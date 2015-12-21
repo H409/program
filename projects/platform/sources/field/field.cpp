@@ -317,7 +317,7 @@ std::vector<float3> Field::GetPositionsT(const u32& in_type)
 //=============================================================================
 // set type
 //=============================================================================
-void Field::SetType(const float3& in_position,const u32& in_type)
+void Field::SetType(const float3& in_position,TYPE in_type)
 {
 	if(!IsInRange(in_position))
 	{
@@ -332,20 +332,20 @@ void Field::SetType(const float3& in_position,const u32& in_type)
 	SetType(x,y,in_type);
 }
 
-void Field::SetType(const u32& in_x,const u32& in_y,const u32& in_type)
+void Field::SetType(const u32& in_x,const u32& in_y,TYPE in_type)
 {
 	u32 index = in_y * width_count_ + in_x;
 	SetType(index,in_type);
 }
 
-void Field::SetType(u32 in_index,u32 in_type)
+void Field::SetType(u32 in_index,TYPE in_type)
 {
 	DEBUG_ASSERT(types_.size() > in_index);
 
-	types_[in_index] = in_type;
+	types_[in_index] = (u32)in_type;
 
 #if MESH
-	mesh_sprite_3d_->SetIndex(in_index,in_type);
+	mesh_sprite_3d_->SetIndex(in_index,(u32)in_type);
 
 	mesh_sprite_3d_->Apply();
 #endif

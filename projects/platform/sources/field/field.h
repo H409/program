@@ -104,9 +104,9 @@ public:
 	std::vector<float3> GetPositionsT(const u32& in_type);
 
 	// set type
-	void SetType(const float3& in_position,const u32& in_type);
-	void SetType(const u32& in_x,const u32& in_y,const u32& in_type);
-	void SetType(u32 in_index,u32 in_type);
+	void SetType(const float3& in_position,TYPE in_type);
+	void SetType(const u32& in_x,const u32& in_y,TYPE in_type);
+	void SetType(u32 in_index,TYPE in_type);
 
 	// get type
 	TYPE GetType(const float3& in_position)const;
