@@ -334,6 +334,10 @@ void Game::Update()
 				//field_->SetType(index,(u32)Field::TYPE::SOIL);
 				flowers_[index]->Death();
 				flower_list_.erase(remove_if(flower_list_.begin(),flower_list_.end(),[](std::weak_ptr<Flower> flower)->bool {return !flower._Get()->IsShow();}),flower_list_.end());
+				if(field_->GetType(index) == Field::TYPE::TREE_FLOWER)
+				{
+					field_->SetType(index,Field::TYPE::TREE);
+				}
 			}
 		}
 
@@ -535,11 +539,15 @@ void Game::Update()
 				{
 					if(bullet->GetType() == Bullet::TYPE::SEED)
 					{
-						if(field_->GetType(position) == Field::TYPE::SOIL || field_->GetType(position) == Field::TYPE::TREE)
+						auto index = field_->GetBlockIndex(position);
+						auto field_type = field_->GetType(index);
+						if(field_type == Field::TYPE::SOIL || field_type == Field::TYPE::TREE)
 						{
 							auto index = field_->GetBlockIndex(position);
-							field_->SetType(index,Field::TYPE::TREE);
-							//field_->SetType(index,(u32)Field::TYPE::FLOWER);
+							if(field_type == Field::TYPE::TREE)
+							{
+								field_->SetType(index,Field::TYPE::TREE_FLOWER);
+							}
 							auto flower_position = field_->GetBlockPosition(position);
 
 							if(!flowers_[index]->IsLive())

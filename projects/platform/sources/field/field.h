@@ -57,6 +57,7 @@ public:
 		SHRINE_2,
 		ROCK_2x2,
 		ROCK_4x4,
+		TREE_FLOWER,
 		MAX,
 	};
 	// constructor
@@ -110,6 +111,7 @@ public:
 
 	// get type
 	TYPE GetType(const float3& in_position)const;
+	TYPE GetType(u32 in_index)const;
 
 	// 
 	u32 CountType(u32 in_type);

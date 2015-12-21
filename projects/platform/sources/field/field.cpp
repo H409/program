@@ -345,9 +345,9 @@ void Field::SetType(u32 in_index,TYPE in_type)
 	types_[in_index] = (u32)in_type;
 
 #if MESH
-	mesh_sprite_3d_->SetIndex(in_index,(u32)in_type);
+	//mesh_sprite_3d_->SetIndex(in_index,(u32)in_type);
 
-	mesh_sprite_3d_->Apply();
+	//mesh_sprite_3d_->Apply();
 #endif
 }
 
@@ -368,9 +368,14 @@ Field::TYPE Field::GetType(const float3& in_position)const
 
 	u32 index = y_index * width_count_ + x_index;
 
-	DEBUG_ASSERT(types_.size() > index);
+	return GetType(index);
+}
 
-	return (TYPE)types_[index];
+Field::TYPE Field::GetType(u32 in_index)const
+{
+	DEBUG_ASSERT(types_.size() > in_index);
+
+	return (TYPE)types_[in_index];
 }
 
 u32 Field::CountType(u32 in_type)
