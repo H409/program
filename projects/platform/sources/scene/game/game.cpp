@@ -110,14 +110,12 @@ Game::Game()
 	}
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
-		players_[i] = std::make_shared<Player>(graphic_device->GetDevice());
-		players_[i]->SetID(i);
+		players_[i] = std::make_shared<Player>(graphic_device->GetDevice() , i );
 	}
 
 	for(u32 i = 0;i < PLAYER_MAX;++i)
 	{
 		players_[i]->Init(float3(0.0f,0.0f,0.0f));
-		players_[i]->SetID( i );
 	}
 
 	field_ = std::make_shared<Field>();

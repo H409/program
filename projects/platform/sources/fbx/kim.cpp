@@ -56,7 +56,6 @@ Kim::Kim(LPDIRECT3DDEVICE9 d3d_device)
 	next_key_ = 0 ;
 
 	animation_ = true ;
-	memset( &animation_play_ , 0 , sizeof( animation_play_ ) );
 }
 
 //=============================================================================
@@ -351,7 +350,6 @@ void Kim::Update(void)
 		return ;
 	}
 
-
 	current_key_++;
 
 	Animation();
@@ -484,10 +482,8 @@ void Kim::Update(void)
 		UpdateBone( bone_ , &world);
 	}
 
-	//DEVELOP_DISPLAY( "current_key_ : %d\n" , current_key_ );
-	//DEVELOP_DISPLAY( "anime : %d , %d , %d\n" , anime_data_[ 0 ] , anime_data_[ 1 ] , anime_data_[ 2 ] );
-
-
+	DEVELOP_DISPLAY( "current_key_ : %d\n" , current_key_ );
+	DEVELOP_DISPLAY( "anime : %d , %d , %d\n" , anime_data_[ 0 ] , anime_data_[ 1 ] , anime_data_[ 2 ] );
 }
 
 //=============================================================================
@@ -578,22 +574,21 @@ void Kim::Animation( void )
 		bone_[ i ].bone_matrix = scl * rot * trans * bone_[ i ].init_matrix ;
 	}
 
-	if( current_key_ == anime_data_[ 1 ] - 1 )
+	if( current_key_ >= anime_data_[ 1 ] - 1 )
 	{
-		//animation_play_[ ( int )anime_ ] = false ;	// アニメーション終わり
+		//--    --//
+		if( anime_data_[ 2 ] == 0 )
+		{
+			anime_data_[ 0 ] = old_anime_data_[ 0 ];
+			anime_data_[ 1 ] = old_anime_data_[ 1 ];
+			anime_data_[ 2 ] = old_anime_data_[ 2 ];
 
-		//--  リピートありなら  --//
-		if( anime_data_[ 2 ] == 1 )
-		{
-			current_key_ = anime_data_[ 0 ];
-		}
-		else
-		{
 			single_animation_end_ = true ;
 		}
 
-		animation_ = false ;
+		current_key_ = anime_data_[ 0 ] - 1 ;
 
+		animation_ = false ;
 	}
 }
 
@@ -959,8 +954,8 @@ void Kim::SetOldAnime( int start , int end , int repeat )
 	old_anime_data_[ 1 ] = end ;
 	old_anime_data_[ 2 ] = repeat ;
 
-	old_key_ = start ;
-	current_key_ = start ;
+	//old_key_ = start ;
+	//current_key_ = start ;
 }
 
 // EOF
