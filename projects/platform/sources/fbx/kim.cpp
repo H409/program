@@ -578,7 +578,7 @@ void Kim::Animation( void )
 		bone_[ i ].bone_matrix = scl * rot * trans * bone_[ i ].init_matrix ;
 	}
 
-	if( current_key_ == anime_data_[ 1 ] - 1 )
+	if( current_key_ >= anime_data_[ 1 ] - 1 )
 	{
 		//animation_play_[ ( int )anime_ ] = false ;	// アニメーション終わり
 
@@ -590,6 +590,11 @@ void Kim::Animation( void )
 		else
 		{
 			single_animation_end_ = true ;
+			current_key_ = old_anime_data_[ 0 ];
+			anime_data_[0] = old_anime_data_[0];
+			anime_data_[1] = old_anime_data_[1];
+			anime_data_[2] = old_anime_data_[2];
+
 		}
 
 		animation_ = false ;

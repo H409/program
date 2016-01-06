@@ -423,6 +423,10 @@ void Player::ControlJoypad( void )
 					action_ = true ;
 					anime_ = ANIME::ACTION ;
 					old_anime_ = ANIME::WAIT ;
+
+					pKim_->SetOldAnime(player_anime_data_[OLD_ANIMETION][0],
+						player_anime_data_[OLD_ANIMETION][1],
+						player_anime_data_[OLD_ANIMETION][2]);
 				}
 			}
 		}
@@ -462,6 +466,10 @@ void Player::ControlJoypad( void )
 
 				anime_ = ANIME::TAKE_OUT ;
 				old_anime_ = ANIME::WAIT ;
+
+				pKim_->SetOldAnime(player_anime_data_[OLD_ANIMETION][0],
+					player_anime_data_[OLD_ANIMETION][1],
+					player_anime_data_[OLD_ANIMETION][2]);
 			}
 		}
 	}
