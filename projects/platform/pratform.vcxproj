@@ -54,6 +54,7 @@
     <ClCompile Include="sources\player\player.cpp" />
     <ClCompile Include="sources\player_icon\player_icon.cpp" />
     <ClCompile Include="sources\result_team_icon\result_team_icon.cpp" />
+    <ClCompile Include="sources\result_winlogo\result_winlogo.cpp" />
     <ClCompile Include="sources\scene\base\scene_manager.cpp" />
     <ClCompile Include="sources\scene\demo\demo.cpp" />
     <ClCompile Include="sources\scene\game\game.cpp" />
@@ -115,6 +116,7 @@
     <ClInclude Include="sources\player\player.h" />
     <ClInclude Include="sources\player_icon\player_icon.h" />
     <ClInclude Include="sources\result_team_icon\result_team_icon.h" />
+    <ClInclude Include="sources\result_winlogo\result_winlogo.h" />
     <ClInclude Include="sources\scene\base\scene_base.h" />
     <ClInclude Include="sources\scene\base\scene_factory.h" />
     <ClInclude Include="sources\scene\base\scene_manager.h" />

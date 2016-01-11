@@ -42,6 +42,7 @@ class FBXTree;
 class ResultTeamIcon;
 class GameTimer;
 class WeaponIcon;
+class ResultWinLogo;
 
 namespace utility {
 	namespace culling {
@@ -122,6 +123,7 @@ private:
 	std::shared_ptr<MeshObject> sprite_objects_[PLAYER_MAX];
 	std::shared_ptr<Wall> wall_[WALL_MAX];
 	std::shared_ptr<Dome> dome_;
+	std::shared_ptr<ResultWinLogo>result_winlogo_;
 	std::shared_ptr<GameTimer> game_timer_;
 	std::shared_ptr<WeaponIcon>weapon_icon_;
 	std::shared_ptr<Cylinder> cylinder_;

@@ -48,6 +48,7 @@
 #include "../base/scene_manager.h"
 #include "game_timer/game_timer.h"
 #include "weapon_icon/weapon_icon.h"
+#include "result_winlogo/result_winlogo.h"
 
 //=============================================================================
 // constructor
@@ -158,6 +159,7 @@ Game::Game()
 
 	score_ = std::make_shared<Score>();
 	result_team_icon = std::make_shared<ResultTeamIcon>();
+	result_winlogo_ = std::make_shared<ResultWinLogo>();
 
 	fbx_object_[0] = std::make_shared<FBXObject>(graphic_device->GetDevice());
 	fbx_object_[0]->Load("resources/model/iwa_obj_1.kim");
@@ -275,6 +277,8 @@ void Game::Update()
 		is_result_ = true;
 		is_win_team_ = WIN_TEAM::RED;
 		result_state = RESULT_STATE::TWOTEAM;
+		score_->SetScore(0, GetPoint(0)+GetPoint(1));
+		score_->SetScore(1, GetPoint(2)+GetPoint(3));
 	}
 
 	for (int i = 0; i < PLAYER_SUM; i++)
@@ -287,6 +291,8 @@ void Game::Update()
 			is_result_ = true;
 			is_win_team_ = WIN_TEAM::RED;
 			result_state = RESULT_STATE::TWOTEAM;
+			score_->SetScore(0, GetPoint(0) + GetPoint(1));
+			score_->SetScore(1, GetPoint(2) + GetPoint(3));
 		}
 	}
 
@@ -1001,7 +1007,10 @@ void Game::UpdateResult(void)
 	}
 	else if (result_state == RESULT_STATE::TEAMMOVE)
 	{
-
+		if (result_team_icon->GetState() == ResultTeamIcon::STATE::MOVED)
+		{
+			result_state = RESULT_STATE::WINLOGO;
+		}
 	}
 	else if (result_state == RESULT_STATE::WINLOGO)
 	{
@@ -1053,6 +1062,10 @@ void Game::DrawResult(void)
 		result_team_icon->Draw();
 		//スコア
 		score_->Draw();
+		if (result_state == RESULT_STATE::WINLOGO)
+		{
+			result_winlogo_->Draw();
+		}
 	}
 
 	//プレイヤー描画

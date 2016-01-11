@@ -104,6 +104,9 @@
     <Filter Include="sources\weapon_icon">
       <UniqueIdentifier>{c9931970-41d7-478e-bfda-222a26cc3aaf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\result_winlogo">
+      <UniqueIdentifier>{ae78541e-213b-4187-9dd0-d1d7d4821ca4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\windows\win_main.cpp">
@@ -282,6 +285,9 @@
     </ClCompile>
     <ClCompile Include="sources\weapon_icon\weapon_icon.cpp">
       <Filter>sources\weapon_icon</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\result_winlogo\result_winlogo.cpp">
+      <Filter>sources\result_winlogo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -464,6 +470,9 @@
     </ClInclude>
     <ClInclude Include="sources\weapon_icon\weapon_icon.h">
       <Filter>sources\weapon_icon</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\result_winlogo\result_winlogo.h">
+      <Filter>sources\result_winlogo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
