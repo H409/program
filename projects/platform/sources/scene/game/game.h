@@ -94,6 +94,17 @@ public:
 		DRAW,
 		NONE,
 	};
+
+	//リザルト表示の状態遷移
+	enum class RESULT_STATE
+	{
+		TWOTEAM = 0,	//両チームのチームロゴとスコアを表示
+		TEAMMOVE,		//勝ちチームのチームロゴとスコアが負け側を追い出すように移動
+		WINLOGO,		//勝ちチームのチームロゴとスコア、勝利UIを表示する
+		BACKGROUND,		//2Dの表示をすべて排除してバックグラウンドのみの表示に変更
+		NONE,			//リザルト画面を表示していない
+	};
+
 private:
 	static const u32 PLAYER_MAX = 4;
 	static const u32 WALL_MAX = 4;
@@ -130,6 +141,7 @@ private:
 	//result関連
 	bool is_result_;									//リザルト画面表示をするかしないか
 	WIN_TEAM is_win_team_;								//勝ったチーム
+	RESULT_STATE result_state;							//リザルトの状態
 	std::shared_ptr<Score> score_;						//得点表示
 	std::shared_ptr<ResultTeamIcon> result_team_icon;	//チームのアイコン
 	std::shared_ptr<ResultObserver> result_observer;	//リザルトにてフィールドを映す為のカメラ

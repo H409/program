@@ -19,7 +19,10 @@
 //*****************************************************************************
 // constant definition
 //*****************************************************************************
-
+float2 ResultTeamIcon::moved_pos_win = float2(GET_DEFAULT_DISPLAY_SIZE()._x / 2.0f, GET_DEFAULT_DISPLAY_SIZE()._y * 0.1f);
+float2 ResultTeamIcon::moved_pos_lose_red = float2(0.0f - 500.0f, GET_DEFAULT_DISPLAY_SIZE()._y*0.1f);
+float2 ResultTeamIcon::moved_pos_lose_blue = float2(GET_DEFAULT_DISPLAY_SIZE()._x + 500.0f, GET_DEFAULT_DISPLAY_SIZE()._y*0.1f);
+int ResultTeamIcon::moving_easingtime = 60;
 //=============================================================================
 // constructor
 //=============================================================================
@@ -43,6 +46,8 @@ ResultTeamIcon::ResultTeamIcon(void)
 	object_[(unsigned int)TEAM::BLUE] = std::make_shared<MeshObject>(sprite_[(unsigned int)TEAM::BLUE]);
 	object_[(unsigned int)TEAM::BLUE]->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/window_256x384.png"));
 	object_[(unsigned int)TEAM::BLUE]->SetPosition(GET_DEFAULT_DISPLAY_SIZE()._x * 0.7f, GET_DEFAULT_DISPLAY_SIZE()._y * 0.1, 0.0f);
+	state_ = STATE::NEUTRAL;
+	easingcount = 0;
 }
 
 //=============================================================================
@@ -59,6 +64,46 @@ void ResultTeamIcon::Update(void)
 {
 	sprite_[(unsigned int)TEAM::RED]->SetAnchorPoint(float2(0.5f, 0.5f));
 	sprite_[(unsigned int)TEAM::BLUE]->SetAnchorPoint(float2(0.5f, 0.5f));
+	if (state_ == STATE::NEUTRAL)
+	{
+		
+	}
+	else if (state_ == STATE::MOVE)
+	{
+		easingcount++;
+		float2 red_neutralpos = float2(GET_DEFAULT_DISPLAY_SIZE()._x * 0.15f, GET_DEFAULT_DISPLAY_SIZE()._y * 0.1);
+		float2 blue_neutralpos = float2(GET_DEFAULT_DISPLAY_SIZE()._x * 0.7f, GET_DEFAULT_DISPLAY_SIZE()._y * 0.1);
+
+		//赤が中央に青が右側に
+		if (win_team_ == TEAM::RED)
+		{
+			float2 red_easinglong = moved_pos_win - red_neutralpos;
+			float2 blue_easinglong = moved_pos_lose_blue - blue_neutralpos;
+
+			object_[(unsigned int)TEAM::RED]->SetPosition(red_neutralpos + (red_easinglong)*(easingcount / moving_easingtime));
+			object_[(unsigned int)TEAM::BLUE]->SetPosition(blue_neutralpos + (blue_easinglong)*(easingcount / moving_easingtime));
+		}
+		//青が中央に赤が左側に
+		else if (win_team_ == TEAM::BLUE)
+		{
+			float2 red_easinglong = moved_pos_lose_red - red_neutralpos;
+			float2 blue_easinglong = moved_pos_win - blue_neutralpos;
+
+			object_[(unsigned int)TEAM::RED]->SetPosition(red_neutralpos + (red_easinglong)*(easingcount / moving_easingtime));
+			object_[(unsigned int)TEAM::BLUE]->SetPosition(blue_neutralpos + (blue_easinglong)*(easingcount / moving_easingtime));
+		}
+
+		//線形補間のカウントが規定値に達した時
+		if (easingcount = moving_easingtime)
+		{
+			state_ = STATE::MOVED;
+			easingcount = 0;
+		}
+	}
+	else if (state_ == STATE::MOVED)
+	{
+
+	}
 }
 //=============================================================================
 // draw
