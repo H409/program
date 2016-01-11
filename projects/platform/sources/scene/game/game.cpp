@@ -47,6 +47,7 @@
 #include "sound/sound.h"
 #include "../base/scene_manager.h"
 #include "game_timer/game_timer.h"
+#include "weapon_icon/weapon_icon.h"
 
 //=============================================================================
 // constructor
@@ -145,6 +146,8 @@ Game::Game()
 	cylinder_->GetObjectA()->SetPosition(0.0f,-5.0f,0.0f);
 
 	game_timer_ = std::make_shared<GameTimer>();
+
+	weapon_icon_ = std::make_shared<WeaponIcon>();
 
 	flowers_.resize(field_->GetBlockCount());
 
@@ -442,6 +445,11 @@ void Game::Update()
 	}
 
 	game_timer_->Update();
+	for (int i = 0; i < 4; i++)
+	{
+		weapon_icon_->SetWeaponUsing(i, (int)players_[i]->GetWepon());
+	}
+	weapon_icon_->Update();
 
 	field_->Update();
 
@@ -954,6 +962,10 @@ void Game::Draw()
 	basic_vs->SetValue("_view_matrix", (f32*)&observer_2d_->GetViewMatrix(), sizeof(float4x4));
 	basic_vs->SetValue("_projection_matrix", (f32*)&observer_2d_->GetProjectionMatrix(), sizeof(float4x4));
 	game_timer_->Draw();
+
+
+	//draw weapon_icon
+	weapon_icon_->Draw();
 
 	//Draw Result
 	if (is_result_)

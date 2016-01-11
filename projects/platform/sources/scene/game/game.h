@@ -41,6 +41,7 @@ class Timer;
 class FBXTree ;
 class ResultTeamIcon;
 class GameTimer;
+class WeaponIcon;
 
 namespace utility {
 namespace culling {
@@ -111,6 +112,7 @@ private:
 	std::shared_ptr<Wall> wall_[WALL_MAX];
 	std::shared_ptr<Dome> dome_;
 	std::shared_ptr<GameTimer> game_timer_;
+	std::shared_ptr<WeaponIcon>weapon_icon_;
 	std::shared_ptr<Cylinder> cylinder_;
 	std::shared_ptr<Observer2D> observer_2d_;
 	std::vector<std::shared_ptr<Flower>> flowers_;
