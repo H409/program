@@ -71,6 +71,14 @@ Score::Score(void)
 			num_object_[j][i]->SetPosition(num_pos_[j][i]);
 		}
 	}
+
+	state_ = STATE::NEUTRAL;
+	easingcount = 0;
+
+	moved_pos_win = float2(GET_DEFAULT_DISPLAY_SIZE()._x / 2.0f - back_ground_size_._x / 2.0f, GET_DEFAULT_DISPLAY_SIZE()._y * 0.3f);
+	moved_pos_lose_red = float2(0.0f - 500.0f, GET_DEFAULT_DISPLAY_SIZE()._y * 0.3f);
+	moved_pos_lose_blue = float2(GET_DEFAULT_DISPLAY_SIZE()._x + 500.0f, GET_DEFAULT_DISPLAY_SIZE()._y * 0.3f);
+	Score::moving_easingtime = 60;
 }
 
 //=============================================================================
@@ -87,6 +95,60 @@ void Score::Update(void)
 {
 	back_ground_sprite_[(unsigned int)TEAM::RED]->SetAnchorPoint(float2(0.5f, 0.5f));
 	back_ground_sprite_[(unsigned int)TEAM::BLUE]->SetAnchorPoint(float2(0.5f, 0.5f));
+
+	if (state_ == STATE::NEUTRAL)
+	{
+
+	}
+	else if (state_ == STATE::MOVE)
+	{
+		easingcount++;
+		float2 red_neutralpos = float2(GET_DEFAULT_DISPLAY_SIZE()._x * 0.1f, GET_DEFAULT_DISPLAY_SIZE()._y * 0.3);
+		float2 blue_neutralpos = float2(GET_DEFAULT_DISPLAY_SIZE()._x * 0.6f, GET_DEFAULT_DISPLAY_SIZE()._y * 0.3);
+
+		//赤が中央に青が右側に
+		if (win_team_ == TEAM::RED)
+		{
+			float2 red_easinglong = moved_pos_win - red_neutralpos;
+			float2 blue_easinglong = moved_pos_lose_blue - blue_neutralpos;
+			float2 pos = red_neutralpos + (red_easinglong)*((float)easingcount / (float)moving_easingtime);
+
+			back_ground_mesh_object_[(unsigned int)TEAM::RED]->SetPosition(red_neutralpos + (red_easinglong)*((float)easingcount / (float)moving_easingtime));
+			back_ground_mesh_object_[(unsigned int)TEAM::BLUE]->SetPosition(blue_neutralpos + (blue_easinglong)*((float)easingcount / (float)moving_easingtime));
+
+			for (int i = 0; i < SCORE_DIGIT; i++)
+			{
+				float2 pos;
+				pos._x = back_ground_mesh_object_[(unsigned int)TEAM::RED]->GetPosition()._x + num_size_._x*i;
+				pos._y = back_ground_mesh_object_[(unsigned int)TEAM::RED]->GetPosition()._y;
+				num_object_[(unsigned int)TEAM::RED][i]->SetPosition(pos);
+
+				pos._x = back_ground_mesh_object_[(unsigned int)TEAM::BLUE]->GetPosition()._x + num_size_._x*i;
+				pos._y = back_ground_mesh_object_[(unsigned int)TEAM::BLUE]->GetPosition()._y;
+				num_object_[(unsigned int)TEAM::BLUE][i]->SetPosition(pos);
+			}
+		}
+		//青が中央に赤が左側に
+		else if (win_team_ == TEAM::BLUE)
+		{
+			float2 red_easinglong = moved_pos_lose_red - red_neutralpos;
+			float2 blue_easinglong = moved_pos_win - blue_neutralpos;
+
+			back_ground_mesh_object_[(unsigned int)TEAM::RED]->SetPosition(red_neutralpos + (red_easinglong)*((float)easingcount / (float)moving_easingtime));
+			back_ground_mesh_object_[(unsigned int)TEAM::BLUE]->SetPosition(blue_neutralpos + (blue_easinglong)*((float)easingcount / (float)moving_easingtime));
+		}
+
+		//線形補間のカウントが規定値に達した時
+		if (easingcount == moving_easingtime)
+		{
+			state_ = STATE::MOVED;
+			easingcount = 0;
+		}
+	}
+	else if (state_ == STATE::MOVED)
+	{
+
+	}
 }
 //=============================================================================
 // draw
