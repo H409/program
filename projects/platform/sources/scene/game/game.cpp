@@ -42,7 +42,7 @@
 #include "timer/timer.h"
 #include "system/xi_pad.h"
 #include "fbx_tree/fbx_tree.h"
-#include "result_score/result_score.h"
+#include "score/result_score.h"
 #include "result_team_icon/result_team_icon.h"
 #include "sound/sound.h"
 #include "../base/scene_manager.h"
@@ -171,7 +171,6 @@ Game::Game()
 
 	 is_win_team_ =WIN_TEAM::NONE;
 	is_result_ = false;
-	result_state = RESULT_STATE::NONE;
 
 	for( int i = 0 ; i < PLAYER_MAX ; i++ )
 	{
@@ -246,7 +245,6 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 	game_timer_->Reset();
 
 	is_result_ = false;
-	result_state = RESULT_STATE::NONE;
 
 	//BGM
 	Sound::Instance().PlaySound(SOUND_LABEL_BGM002);
@@ -273,8 +271,6 @@ void Game::Update()
 	{
 		// 終了
 		is_result_ = true;
-		is_win_team_ = WIN_TEAM::RED;
-		result_state = RESULT_STATE::TWOTEAM;
 	}
 
 	for (int i = 0; i < PLAYER_SUM; i++)
@@ -285,8 +281,6 @@ void Game::Update()
 			Sound::Instance().PlaySeSound(SOUND_LABEL_SE_YES, 0);
 
 			is_result_ = true;
-			is_win_team_ = WIN_TEAM::RED;
-			result_state = RESULT_STATE::TWOTEAM;
 		}
 	}
 
@@ -983,43 +977,15 @@ void Game::Draw()
 
 void Game::UpdateResult(void)
 {
-	if (result_state == RESULT_STATE::TWOTEAM)
+	for (int i = 0; i < 4; i++)
 	{
-		for (int i = 0; i < 4; i++)
+		if (GET_INPUT_XPAD(i)->GetTrigger(XIPad::KEY::A)|| GET_INPUT_XPAD(i)->GetTrigger(XIPad::KEY::B))
 		{
-			if (GET_INPUT_XPAD(i)->GetTrigger(XIPad::KEY::A) || GET_INPUT_XPAD(i)->GetTrigger(XIPad::KEY::B))
-			{
-				result_state = RESULT_STATE::TEAMMOVE;
-			}
+			SceneManager::Instance().set_p_next_scene(SceneManager::Instance().get_game());
+			SceneManager::Instance().set_scene_change_flag(true);
 		}
 	}
-	else if (result_state == RESULT_STATE::TEAMMOVE)
-	{
-
-	}
-	else if (result_state == RESULT_STATE::WINLOGO)
-	{
-		for (int i = 0; i < 4; i++)
-		{
-			if (GET_INPUT_XPAD(i)->GetTrigger(XIPad::KEY::A) || GET_INPUT_XPAD(i)->GetTrigger(XIPad::KEY::B))
-			{
-				result_state = RESULT_STATE::BACKGROUND;
-			}
-		}
-	}
-	//リザルト状態がバックグラウンドの表示のみの場合
-	else if (result_state == RESULT_STATE::BACKGROUND)
-	{
-		for (int i = 0; i < 4; i++)
-		{
-			if (GET_INPUT_XPAD(i)->GetTrigger(XIPad::KEY::A) || GET_INPUT_XPAD(i)->GetTrigger(XIPad::KEY::B))
-			{
-				SceneManager::Instance().set_p_next_scene(SceneManager::Instance().get_game());
-				SceneManager::Instance().set_scene_change_flag(true);
-			}
-		}
-	}
-	result_observer->Update();
+		result_observer->Update();
 }
 
 void Game::DrawResult(void)
@@ -1039,13 +1005,10 @@ void Game::DrawResult(void)
 	basic_vs->SetValue("_view_matrix", (f32*)&observer_2d_->GetViewMatrix(), sizeof(float4x4));
 	basic_vs->SetValue("_projection_matrix", (f32*)&observer_2d_->GetProjectionMatrix(), sizeof(float4x4));
 	
-	if (result_state != RESULT_STATE::BACKGROUND)
-	{
-		//チーム アイコン
-		result_team_icon->Draw();
-		//スコア
-		score_->Draw();
-	}
+	//チーム アイコン
+	result_team_icon->Draw();
+	//スコア
+	score_->Draw();
 
 	//プレイヤー描画
 

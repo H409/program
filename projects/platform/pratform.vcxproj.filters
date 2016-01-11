@@ -92,6 +92,9 @@
     <Filter Include="sources\result_team_icon">
       <UniqueIdentifier>{58fccb02-0dfc-40d5-a1e7-ce22ce9722a9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\score">
+      <UniqueIdentifier>{e2c51647-e7aa-4de0-b530-244a534d991c}</UniqueIdentifier>
+    </Filter>
     <Filter Include="sources\sound">
       <UniqueIdentifier>{fc911964-f3aa-4e6c-9a46-ceaa9c66ff91}</UniqueIdentifier>
     </Filter>
@@ -100,9 +103,6 @@
     </Filter>
     <Filter Include="sources\weapon_icon">
       <UniqueIdentifier>{c9931970-41d7-478e-bfda-222a26cc3aaf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="sources\result_score">
-      <UniqueIdentifier>{e2c51647-e7aa-4de0-b530-244a534d991c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -268,6 +268,9 @@
     <ClCompile Include="sources\result_team_icon\result_team_icon.cpp">
       <Filter>sources\result_team_icon</Filter>
     </ClCompile>
+    <ClCompile Include="sources\score\result_score.cpp">
+      <Filter>sources\score</Filter>
+    </ClCompile>
     <ClCompile Include="sources\observer\result_observer.cpp">
       <Filter>sources\observer</Filter>
     </ClCompile>
@@ -279,9 +282,6 @@
     </ClCompile>
     <ClCompile Include="sources\weapon_icon\weapon_icon.cpp">
       <Filter>sources\weapon_icon</Filter>
-    </ClCompile>
-    <ClCompile Include="sources\result_score\result_score.cpp">
-      <Filter>sources\result_score</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -450,6 +450,9 @@
     <ClInclude Include="sources\result_team_icon\result_team_icon.h">
       <Filter>sources\result_team_icon</Filter>
     </ClInclude>
+    <ClInclude Include="sources\score\result_score.h">
+      <Filter>sources\score</Filter>
+    </ClInclude>
     <ClInclude Include="sources\observer\result_observer.h">
       <Filter>sources\observer</Filter>
     </ClInclude>
@@ -461,9 +464,6 @@
     </ClInclude>
     <ClInclude Include="sources\weapon_icon\weapon_icon.h">
       <Filter>sources\weapon_icon</Filter>
-    </ClInclude>
-    <ClInclude Include="sources\result_score\result_score.h">
-      <Filter>sources\result_score</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

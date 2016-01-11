@@ -53,7 +53,6 @@
     <ClCompile Include="sources\observer\result_observer.cpp" />
     <ClCompile Include="sources\player\player.cpp" />
     <ClCompile Include="sources\player_icon\player_icon.cpp" />
-    <ClCompile Include="sources\result_score\result_score.cpp" />
     <ClCompile Include="sources\result_team_icon\result_team_icon.cpp" />
     <ClCompile Include="sources\scene\base\scene_manager.cpp" />
     <ClCompile Include="sources\scene\demo\demo.cpp" />
@@ -61,6 +60,7 @@
     <ClCompile Include="sources\scene\result\result.cpp" />
     <ClCompile Include="sources\scene\title\title.cpp" />
     <ClCompile Include="sources\scene\tutorial\tutorial.cpp" />
+    <ClCompile Include="sources\score\result_score.cpp" />
     <ClCompile Include="sources\sound\sound.cpp" />
     <ClCompile Include="sources\system\input.cpp" />
     <ClCompile Include="sources\system\input_joypad.cpp" />
@@ -114,7 +114,6 @@
     <ClInclude Include="sources\observer\result_observer.h" />
     <ClInclude Include="sources\player\player.h" />
     <ClInclude Include="sources\player_icon\player_icon.h" />
-    <ClInclude Include="sources\result_score\result_score.h" />
     <ClInclude Include="sources\result_team_icon\result_team_icon.h" />
     <ClInclude Include="sources\scene\base\scene_base.h" />
     <ClInclude Include="sources\scene\base\scene_factory.h" />
@@ -124,6 +123,7 @@
     <ClInclude Include="sources\scene\result\result.h" />
     <ClInclude Include="sources\scene\title\title.h" />
     <ClInclude Include="sources\scene\tutorial\tutorial.h" />
+    <ClInclude Include="sources\score\result_score.h" />
     <ClInclude Include="sources\sound\sound.h" />
     <ClInclude Include="sources\system\input.h" />
     <ClInclude Include="sources\system\input_joypad.h" />
