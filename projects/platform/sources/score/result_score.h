@@ -45,6 +45,13 @@ public:
 		MAX
 	};
 
+	enum class STATE
+	{
+		NEUTRAL = 0,
+		MOVE,
+		MOVED,
+	};
+
 	// constructor
 	Score(void);
 
@@ -63,6 +70,15 @@ public:
 	//GetObject
 	TMeshObject GetObject(int i) { return back_ground_mesh_object_[i]; }
 
+	//SetState
+	void SetState(STATE in_state) { state_ = in_state; }
+
+	//GetState
+	STATE GetState(void) { return state_; }
+
+	//0:赤 1:青
+	void SetWinTeam(int i) { win_team_ = (TEAM)i; }
+
 private:
 	float2 back_ground_size_;
 	float3 back_ground_pos_[(unsigned int)TEAM::MAX];
@@ -73,6 +89,13 @@ private:
 	float3 num_pos_[(unsigned int)TEAM::MAX][SCORE_DIGIT];
 	TSprite num_sprite_[(unsigned int)TEAM::MAX][SCORE_DIGIT];		//得点数値スプライト
 	TMeshObject num_object_[(unsigned int)TEAM::MAX][SCORE_DIGIT];	//得点数値オブジェクト
+	float2 moved_pos_win;					//移動後のポジション
+	float2 moved_pos_lose_red;
+	float2 moved_pos_lose_blue;
+	int moving_easingtime;							//線形補間で要する時間
+	int easingcount;								//線形補間カウント
+	STATE state_;									//ステータス
+	TEAM win_team_;									//勝ったチーム
 };
 
 #endif
