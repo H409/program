@@ -18,6 +18,7 @@
 #include "../game/game.h"
 #include "../result/result.h"
 #include "system/win_system.h"
+#include "fade/fade.h"
 
 //=============================================================================
 // constructor
@@ -39,6 +40,8 @@ SceneManager::SceneManager()
 	p_tutorial_ = std::make_shared<Tutorial>();
 	p_game_ = std::make_shared<Game>();
 	p_result_ = std::make_shared<Result>();
+
+	fade_ = std::make_shared<Fade>();
 
 	//カレントシーンに設定する
 //	p_current_scene_ = p_game_;
@@ -68,6 +71,8 @@ void SceneManager::Update()
 	{
 		p_current_scene_->Update();
 	}
+
+	fade_->Update();
 
 #ifndef _RELEASE
 	if(GET_INPUT_KEYBOARD()->GetPress(DIK_LSHIFT))
@@ -103,9 +108,15 @@ void SceneManager::Update()
 	//シーン切り替えフラグがONになっていたらシーン切り替え
 	if (SceneManager::Instance().get_scene_change_flag())
 	{
-		p_current_scene_->Finalize();
-		p_current_scene_ = p_next_scene_;
-		p_current_scene_->Initialize(&Instance());
+		if(!fade_->IsWork())
+		{
+			fade_->Start(180,Fade::TYPE::FADE_OUT,[&]() {
+				p_current_scene_->Finalize();
+				p_current_scene_ = p_next_scene_;
+				p_current_scene_->Initialize(&Instance());
+				fade_->Start(180,Fade::TYPE::FADE_IN);
+			});
+		}
 		scene_change_flag_ = false;
 	}
 }
@@ -120,6 +131,8 @@ void SceneManager::Draw()
 	{
 		p_current_scene_->Draw();
 	}
+
+	fade_->Draw();
 }
 
 //eof

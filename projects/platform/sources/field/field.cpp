@@ -236,6 +236,16 @@ u32 Field::GetBlockIndex(const float3& in_position)
 	return y * width_count_ + x;
 }
 
+u32 Field::GetBlockWidthCount(void) const
+{
+	return width_count_;
+}
+
+u32 Field::GetBlockHeightCount(void) const
+{
+	return height_count_;
+}
+
 u32 Field::GetBlockCount(void) const
 {
 	return width_count_ * height_count_;

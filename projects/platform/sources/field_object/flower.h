@@ -61,11 +61,20 @@ public:
 
 	void SetNumber(u32 in_number);
 
+	void SetIsGrowth(bool in_is_growth);
+
+	void SetTreeIndex(u32 in_index);
+
+	bool IsGrowthTree(void)const;
+
 	bool IsShow(void)const;
 
 	bool IsLive(void)const;
 
 	u32 GetNumber(void)const;
+
+	u32 GetTreeIndex(void)const;
+
 private:
 	float3 position_;
 	TSprite3D sprite_3d_;
@@ -76,6 +85,9 @@ private:
 	u32 number_;
 	u32 time_count_;
 	TYPE type_;
+	bool is_growth_;
+	u32 tree_index_;
+
 	void SetTexture(u32 in_number);
 };
 

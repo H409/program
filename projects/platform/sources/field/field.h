@@ -94,6 +94,8 @@ public:
 
 	u32 GetBlockIndex(const float3& in_position);
 
+	u32 GetBlockWidthCount(void)const;
+	u32 GetBlockHeightCount(void)const;
 	u32 GetBlockCount(void)const;
 
 	u32 GetBlockCount(TYPE in_type);

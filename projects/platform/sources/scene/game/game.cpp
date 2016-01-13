@@ -48,6 +48,7 @@
 #include "../base/scene_manager.h"
 #include "game_timer/game_timer.h"
 #include "effect/smoke.h"
+#include "field_object/tree_creater.h"
 
 //=============================================================================
 // constructor
@@ -513,6 +514,21 @@ void Game::Update()
 		flower._Get()->Update();
 	}
 
+	UpdateFieldObject();
+
+	for(auto tree_creater : tree_creater_map_)
+	{
+		tree_creater.second->Update();
+	}
+
+	for(auto tree_creater : tree_creater_map_)
+	{
+		if(tree_creater.second->IsCreate())
+		{
+			auto tree = std::make_shared<FBXTree>(GET_DIRECTX9_DEVICE(),tree_creater.second->GetNumber());
+			tree_list_.push_back(tree);
+		}
+	}
 	for(auto effect : effect_list_)
 	{
 		effect._Get()->Update();
@@ -544,18 +560,20 @@ void Game::Update()
 						if(field_type == Field::TYPE::SOIL || field_type == Field::TYPE::TREE)
 						{
 							auto index = field_->GetBlockIndex(position);
-							if(field_type == Field::TYPE::TREE)
-							{
-								field_->SetType(index,Field::TYPE::TREE_FLOWER);
-							}
 							auto flower_position = field_->GetBlockPosition(position);
-
+							//auto& flower = flowers_[index];
 							if(!flowers_[index]->IsLive())
 							{
 								flowers_[index]->SetNumber(bullet->GetTag());
 								flowers_[index]->Show();
 								flowers_[index]->SetPosition(flower_position);
 
+
+								if(field_type == Field::TYPE::TREE)
+								{
+									flowers_[index]->SetIsGrowth(true);
+									//field_->SetType(index,Field::TYPE::TREE_FLOWER);
+								}
 								flower_list_.push_back(flowers_[index]);
 							}
 						}
@@ -804,8 +822,6 @@ void Game::Draw()
 		{
 			object->Draw();
 		}
-
-		
 
 
 		for(u32 j = 0;j < PLAYER_MAX;++j)
@@ -1109,4 +1125,86 @@ u32 Game::GetPoint(u32 player_number) const
 		}
 	}
 	return count;
+}
+
+void Game::UpdateFieldObject(void)
+{
+	auto width = field_->GetBlockWidthCount();
+	auto height = field_->GetBlockHeightCount();
+	for(u32 i = 0;i < height;++i)
+	{
+		for(u32 j = 0;j < width;++j)
+		{
+			auto key = i * width + j;
+			if(!(tree_creater_map_.find(key) == tree_creater_map_.end()))
+			{
+				continue;
+			}
+			if(CheckGrowTree(j,i,0))
+			{
+				flowers_[i * width + j]->SetTreeIndex(key);
+				flowers_[i * width + j + 1]->SetTreeIndex(key);
+				flowers_[(i + 1) * width + j]->SetTreeIndex(key);
+				flowers_[(i + 1) * width + j + 1]->SetTreeIndex(key);
+				auto tree_creater = std::make_shared<TreeCreater>();
+				tree_creater_map_.insert(std::make_pair(key,tree_creater));
+			}
+			if(CheckGrowTree(j,i,2))
+			{
+
+			}
+		}
+	}
+}
+
+bool Game::CheckGrowTree(u32 in_x,u32 in_y,u32 in_type)
+{
+	auto width = field_->GetBlockWidthCount();
+
+	if(!(flowers_[in_y * width + in_x]->IsLive() && flowers_[in_y * width + in_x]->IsShow()))
+	{
+		return false;
+	}
+
+	if(!(flowers_[in_y * width + in_x]->GetNumber() == in_type || flowers_[in_y * width + in_x]->GetNumber() == in_type + 1))
+	{
+		return false;
+	}
+
+	if(!flowers_[in_y * width + in_x]->IsGrowthTree())
+	{
+		return false;
+	}
+
+	if(!(flowers_[in_y * width + in_x + 1]->GetNumber() == in_type || flowers_[in_y * width + in_x + 1]->GetNumber() == in_type + 1))
+	{
+		return false;
+	}
+
+	if(!flowers_[in_y * width + in_x + 1]->IsGrowthTree())
+	{
+		return false;
+	}
+
+	if(!(flowers_[(in_y + 1) * width + in_x]->GetNumber() == in_type || flowers_[(in_y + 1) * width + in_x]->GetNumber() == in_type + 1))
+	{
+		return false;
+	}
+
+	if(!flowers_[(in_y + 1) * width + in_x]->IsGrowthTree())
+	{
+		return false;
+	}
+
+	if(!(flowers_[(in_y + 1) * width + in_x + 1]->GetNumber() == in_type || flowers_[(in_y + 1) * width + in_x + 1]->GetNumber() == in_type + 1))
+	{
+		return false;
+	}
+
+	if(!flowers_[(in_y + 1) * width + in_x + 1]->IsGrowthTree())
+	{
+		return false;
+	}
+
+	return true;
 }

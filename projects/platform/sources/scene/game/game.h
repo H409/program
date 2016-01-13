@@ -42,6 +42,7 @@ class FBXTree;
 class ResultTeamIcon;
 class GameTimer;
 class Effect;
+class TreeCreater;
 
 namespace utility {
 namespace culling {
@@ -124,7 +125,7 @@ private:
 	std::unique_ptr<Timer> timer_;
 
 	std::shared_ptr<MeshObject> sprite_3D_[ 4 ] ;
-
+	std::list<std::shared_ptr<FBXTree>> tree_list_;
 
 	//result関連
 	bool is_result_;									//リザルト画面表示をするかしないか
@@ -144,8 +145,9 @@ private:
 #endif
 
 	u32 GetPoint(u32 player_number)const;
-
-
+	void UpdateFieldObject(void);
+	bool CheckGrowTree(u32 in_x,u32 in_y,u32 in_type);
+	std::unordered_map<u32,std::shared_ptr<TreeCreater>> tree_creater_map_;
 };
 
 #endif

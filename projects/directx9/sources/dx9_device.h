@@ -17,6 +17,8 @@
 // include
 //*****************************************************************************
 #include "base/non_copyable.h"
+#include "shader/dx9_vertex_shader.h"
+#include "shader/dx9_pixel_shader.h"
 
 //*****************************************************************************
 // forward declaration

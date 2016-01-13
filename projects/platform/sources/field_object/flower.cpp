@@ -28,6 +28,8 @@ Flower::Flower(u32 in_number)
 	,time_count_(0)
 	,number_(0)
 	,is_live_(false)
+	,is_growth_(false)
+	,tree_index_(-1)
 {
 	sprite_3d_ = std::make_shared<mesh::Sprite3D>(float2(0.5f,0.5f));
 	mesh_object_ = std::make_shared<MeshObject>(sprite_3d_);
@@ -95,6 +97,7 @@ void Flower::Show(void)
 	type_ = TYPE::SPROUT;
 	time_count_ = 0;
 	SetTexture(number_);
+	is_growth_ = false;
 }
 
 void Flower::Hide(void)
@@ -114,6 +117,21 @@ void Flower::SetNumber(u32 in_number)
 	SetTexture(in_number);
 }
 
+void Flower::SetIsGrowth(bool in_is_growth)
+{
+	is_growth_ = in_is_growth;
+}
+
+void Flower::SetTreeIndex(u32 in_index)
+{
+	tree_index_ = in_index;
+}
+
+bool Flower::IsGrowthTree(void) const
+{
+	return is_growth_;
+}
+
 bool Flower::IsShow(void) const
 {
 	return is_show_;
@@ -127,6 +145,11 @@ bool Flower::IsLive(void) const
 u32 Flower::GetNumber(void) const
 {
 	return number_;
+}
+
+u32 Flower::GetTreeIndex(void) const
+{
+	return tree_index_;
 }
 
 void Flower::SetTexture(u32 in_number)

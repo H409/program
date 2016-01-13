@@ -23,6 +23,7 @@ class Demo;
 class Tutorial;
 class Game;
 class Result;
+class Fade;
 
 //*****************************************************************************
 // class definition
@@ -38,6 +39,7 @@ public:
 	using TDemo = std::shared_ptr<Demo>;
 	using TGame = std::shared_ptr<Game>;
 	using TResult = std::shared_ptr<Result>;
+	using TFade = std::shared_ptr<Fade>;
 
 	//インスタンス
 	static SceneManager& Instance(void)
@@ -122,6 +124,8 @@ private:
 
 	//シーン切り替えフラグ
 	bool scene_change_flag_;
+
+	TFade  fade_;
 };
 
 #endif

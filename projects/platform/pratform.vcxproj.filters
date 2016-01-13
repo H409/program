@@ -104,6 +104,9 @@
     <Filter Include="sources\effect">
       <UniqueIdentifier>{51c85197-0da9-42cd-80c5-3178d9b882ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\fade">
+      <UniqueIdentifier>{ad87f8ff-f3de-4ceb-8994-54fc9e9e3036}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\windows\win_main.cpp">
@@ -285,6 +288,12 @@
     </ClCompile>
     <ClCompile Include="sources\effect\effect.cpp">
       <Filter>sources\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\field_object\tree_creater.cpp">
+      <Filter>sources\field_object</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\fade\fade.cpp">
+      <Filter>sources\fade</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -470,6 +479,12 @@
     </ClInclude>
     <ClInclude Include="sources\effect\effect.h">
       <Filter>sources\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\field_object\tree_creater.h">
+      <Filter>sources\field_object</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\fade\fade.h">
+      <Filter>sources\fade</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
