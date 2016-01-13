@@ -152,6 +152,11 @@ u32 Flower::GetTreeIndex(void) const
 	return tree_index_;
 }
 
+bool Flower::IsTreeCreate(void) const
+{
+	return (is_show_ && is_show_ && is_growth_ && type_ == TYPE::FLOWER);
+}
+
 void Flower::SetTexture(u32 in_number)
 {
 	char work[256] = { 0 };

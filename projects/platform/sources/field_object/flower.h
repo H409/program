@@ -75,6 +75,8 @@ public:
 
 	u32 GetTreeIndex(void)const;
 
+	bool IsTreeCreate(void)const;
+
 private:
 	float3 position_;
 	TSprite3D sprite_3d_;

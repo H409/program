@@ -17,6 +17,8 @@ public:
 
 	void Update(void);
 
+	void Death(void);
+
 	void SetNumber(u32 in_number);
 	void SetPosition(const float3& in_position);
 
@@ -25,11 +27,14 @@ public:
 	const float3& GetPosition(void)const;
 
 	bool IsCreate(void)const;
+	bool IsDeath(void)const;
+
 private:
 	u32 number_;
 	float3 position_;
 	u32 frame_count_;
 	bool is_create_;
+	bool is_death_;
 };
 
 #endif // _TREE_CREATER_H_

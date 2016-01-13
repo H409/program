@@ -12,6 +12,7 @@ TreeCreater::TreeCreater(void)
 	,position_(0.0f,0.0f,0.0f)
 	,is_create_(false)
 	,number_(0)
+	,is_death_(false)
 {
 
 }
@@ -28,6 +29,11 @@ void TreeCreater::Update(void)
 	{
 		is_create_ = true;
 	}
+}
+
+void TreeCreater::Death(void)
+{
+	is_death_ = true;
 }
 
 void TreeCreater::SetNumber(u32 in_number)
@@ -53,6 +59,11 @@ const float3& TreeCreater::GetPosition(void) const
 bool TreeCreater::IsCreate(void) const
 {
 	return is_create_;
+}
+
+bool TreeCreater::IsDeath(void) const
+{
+	return is_death_;
 }
 
 //---------------------------------- EOF --------------------------------------
