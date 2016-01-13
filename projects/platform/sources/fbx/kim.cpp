@@ -51,6 +51,8 @@ Kim::Kim(LPDIRECT3DDEVICE9 d3d_device)
 	//--  ‚±‚ÌÌÚ°ÑÜ°¸—p  --//
 //	all_vertex_num_ = 0;
 
+	timer_ = 0 ;
+
 	old_key_ = 0 ;
 	current_key_ = 0 ;
 	next_key_ = 0 ;
@@ -350,7 +352,13 @@ void Kim::Update(void)
 		return ;
 	}
 
-	current_key_++;
+	if( timer_ == 2 )
+	{
+		current_key_++;
+		timer_ = 0 ;
+	}
+	
+	timer_++ ;
 
 	Animation();
 	

@@ -236,6 +236,8 @@ private :
 	int anime_value = 1;
 	int all_vertex_num_ = 0;
 
+	int timer_ ;
+
 	int old_key_ ;
 	int current_key_ ;
 	int next_key_ ;
