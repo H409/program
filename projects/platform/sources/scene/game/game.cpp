@@ -275,7 +275,14 @@ void Game::Update()
 	{
 		// I—¹
 		is_result_ = true;
-		is_win_team_ = WIN_TEAM::RED;
+		if (GetPoint(0) + GetPoint(1) >= GetPoint(2) + GetPoint(3))
+		{
+			is_win_team_ = WIN_TEAM::RED;
+		}
+		else
+		{
+			is_win_team_ = WIN_TEAM::BLUE;
+		}
 		result_state = RESULT_STATE::TWOTEAM;
 		score_->SetScore(0, GetPoint(0)+GetPoint(1));
 		score_->SetScore(1, GetPoint(2)+GetPoint(3));
@@ -289,7 +296,14 @@ void Game::Update()
 			Sound::Instance().PlaySeSound(SOUND_LABEL_SE_YES, 0);
 
 			is_result_ = true;
-			is_win_team_ = WIN_TEAM::RED;
+			if (GetPoint(0) + GetPoint(1) >= GetPoint(2) + GetPoint(3))
+			{
+				is_win_team_ = WIN_TEAM::RED;
+			}
+			else
+			{
+				is_win_team_ = WIN_TEAM::BLUE;
+			}
 			result_state = RESULT_STATE::TWOTEAM;
 			score_->SetScore(0, GetPoint(0) + GetPoint(1));
 			score_->SetScore(1, GetPoint(2) + GetPoint(3));
@@ -1031,6 +1045,8 @@ void Game::UpdateResult(void)
 			{
 				SceneManager::Instance().set_p_next_scene(SceneManager::Instance().get_game());
 				SceneManager::Instance().set_scene_change_flag(true);
+				result_team_icon->Reset();
+				score_->Reset();
 			}
 		}
 	}

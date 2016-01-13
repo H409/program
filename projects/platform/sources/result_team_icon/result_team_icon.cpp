@@ -131,3 +131,12 @@ void ResultTeamIcon::Draw(void)
 
 	object_[(unsigned int)TEAM::BLUE]->Draw();
 }
+
+//=============================================================================
+// reset
+//=============================================================================
+void ResultTeamIcon::Reset(void)
+{
+	object_[(unsigned int)TEAM::RED]->SetPosition(GET_DEFAULT_DISPLAY_SIZE()._x * 0.15f, GET_DEFAULT_DISPLAY_SIZE()._y * 0.1, 0.0f);
+	object_[(unsigned int)TEAM::BLUE]->SetPosition(GET_DEFAULT_DISPLAY_SIZE()._x * 0.7f, GET_DEFAULT_DISPLAY_SIZE()._y * 0.1, 0.0f);
+}

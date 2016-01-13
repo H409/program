@@ -220,3 +220,31 @@ void Score::Draw(void)
 		}
 	}
 }
+
+//=============================================================================
+// reset
+//=============================================================================
+void Score::Reset(void)
+{
+
+	back_ground_pos_[(unsigned int)TEAM::RED]._x = GET_DEFAULT_DISPLAY_SIZE()._x * 0.1f;
+	back_ground_pos_[(unsigned int)TEAM::RED]._y = GET_DEFAULT_DISPLAY_SIZE()._y * 0.3f;
+	back_ground_pos_[(unsigned int)TEAM::BLUE]._x = GET_DEFAULT_DISPLAY_SIZE()._x * 0.6f;
+	back_ground_pos_[(unsigned int)TEAM::BLUE]._y = GET_DEFAULT_DISPLAY_SIZE()._y * 0.3f;
+
+	back_ground_mesh_object_[(unsigned int)TEAM::RED]->SetPosition(back_ground_pos_[(unsigned int)TEAM::RED]);
+	back_ground_mesh_object_[(unsigned int)TEAM::BLUE]->SetPosition(back_ground_pos_[(unsigned int)TEAM::BLUE]);
+
+
+	for (int i = 0; i < SCORE_DIGIT; i++)
+	{
+		num_pos_[(unsigned int)TEAM::RED][i]._x = back_ground_pos_[(unsigned int)TEAM::RED]._x + back_ground_size_._x*0.15f + num_size_._x*i;
+		num_pos_[(unsigned int)TEAM::RED][i]._y = back_ground_pos_[(unsigned int)TEAM::RED]._y + back_ground_size_._y*0.15f;
+		num_pos_[(unsigned int)TEAM::BLUE][i]._x = back_ground_pos_[(unsigned int)TEAM::BLUE]._x + back_ground_size_._x*0.15f + num_size_._x*i;
+		num_pos_[(unsigned int)TEAM::BLUE][i]._y = back_ground_pos_[(unsigned int)TEAM::BLUE]._y + back_ground_size_._y*0.15f;
+
+		num_object_[(unsigned int)TEAM::RED][i]->SetPosition(num_pos_[(unsigned int)TEAM::RED][i]);
+		num_object_[(unsigned int)TEAM::BLUE][i]->SetPosition(num_pos_[(unsigned int)TEAM::BLUE][i]);
+	}
+
+}

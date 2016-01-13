@@ -64,6 +64,9 @@ public:
 	//draw
 	void Draw(void);
 
+	//reset:ƒŠƒUƒ‹ƒg‚ğ”²‚¯‚é‚ÉŒÄ‚Ô
+	void Reset(void);
+
 	//GetSprite3D
 	TSprite GetSprite(int i) { return back_ground_sprite_[i]; }
 

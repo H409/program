@@ -62,6 +62,9 @@ public:
 	//draw
 	void Draw(void);
 
+	//Reset
+	void Reset(void);
+
 	//GetSprite3D
 	TSprite GetSprite(int i) { return sprite_[i]; }
 
