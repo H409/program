@@ -71,7 +71,7 @@ public:
 	//GetState
 	STATE GetState(void) { return state_; }
 
-	//0:Ô 1:Â
+	//0:Ô@1:Â 2:ˆø‚«•ª‚¯
 	void SetWinTeam(int i) { win_team_ = (TEAM)i; }
 
 private:

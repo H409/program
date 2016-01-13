@@ -275,13 +275,17 @@ void Game::Update()
 	{
 		// I—¹
 		is_result_ = true;
-		if (GetPoint(0) + GetPoint(1) >= GetPoint(2) + GetPoint(3))
+		if (GetPoint(0) + GetPoint(1) > GetPoint(2) + GetPoint(3))
 		{
 			is_win_team_ = WIN_TEAM::RED;
 		}
-		else
+		else if (GetPoint(0) + GetPoint(1) < GetPoint(2) + GetPoint(3))
 		{
 			is_win_team_ = WIN_TEAM::BLUE;
+		}
+		else if (GetPoint(0) + GetPoint(1) == GetPoint(2) + GetPoint(3))
+		{
+			is_win_team_ = WIN_TEAM::DRAW;
 		}
 		result_state = RESULT_STATE::TWOTEAM;
 		score_->SetScore(0, GetPoint(0)+GetPoint(1));
@@ -296,14 +300,21 @@ void Game::Update()
 			Sound::Instance().PlaySeSound(SOUND_LABEL_SE_YES, 0);
 
 			is_result_ = true;
-			if (GetPoint(0) + GetPoint(1) >= GetPoint(2) + GetPoint(3))
+
+			if (GetPoint(0) + GetPoint(1) > GetPoint(2) + GetPoint(3))
 			{
 				is_win_team_ = WIN_TEAM::RED;
 			}
-			else
+			else if (GetPoint(0) + GetPoint(1) < GetPoint(2) + GetPoint(3))
 			{
 				is_win_team_ = WIN_TEAM::BLUE;
 			}
+			else if (GetPoint(0) + GetPoint(1) == GetPoint(2) + GetPoint(3))
+			{
+				is_win_team_ = WIN_TEAM::DRAW;
+			}
+
+
 			result_state = RESULT_STATE::TWOTEAM;
 			score_->SetScore(0, GetPoint(0) + GetPoint(1));
 			score_->SetScore(1, GetPoint(2) + GetPoint(3));
@@ -1010,10 +1021,10 @@ void Game::UpdateResult(void)
 			if (GET_INPUT_XPAD(i)->GetTrigger(XIPad::KEY::A) || GET_INPUT_XPAD(i)->GetTrigger(XIPad::KEY::B))
 			{
 				result_team_icon->SetState(ResultTeamIcon::STATE::MOVE);
-				result_team_icon->SetWinTeam(0);
+				result_team_icon->SetWinTeam((unsigned int)is_win_team_);
 
 				score_->SetState(Score::STATE::MOVE);
-				score_->SetWinTeam(0);
+				score_->SetWinTeam((unsigned int)is_win_team_);
 
 				result_state = RESULT_STATE::TEAMMOVE;
 			}
@@ -1024,6 +1035,7 @@ void Game::UpdateResult(void)
 		if (result_team_icon->GetState() == ResultTeamIcon::STATE::MOVED)
 		{
 			result_state = RESULT_STATE::WINLOGO;
+			result_winlogo_->SetWinTeam((unsigned int)is_win_team_);
 		}
 	}
 	else if (result_state == RESULT_STATE::WINLOGO)

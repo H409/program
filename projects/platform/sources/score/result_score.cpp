@@ -163,6 +163,10 @@ void Score::Update(void)
 			}
 		}
 
+		else {
+
+		}
+
 		//線形補間のカウントが規定値に達した時
 		if (easingcount == moving_easingtime)
 		{

@@ -97,6 +97,10 @@ void ResultTeamIcon::Update(void)
 			object_[(unsigned int)TEAM::RED]->SetPosition(red_neutralpos + (red_easinglong)*((float)easingcount / (float)moving_easingtime));
 			object_[(unsigned int)TEAM::BLUE]->SetPosition(blue_neutralpos + (blue_easinglong)*((float)easingcount / (float)moving_easingtime));
 		}
+		//引き分け
+		else {
+
+		}
 
 		//線形補間のカウントが規定値に達した時
 		if (easingcount == moving_easingtime)
