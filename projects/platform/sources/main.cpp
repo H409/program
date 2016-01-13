@@ -75,15 +75,15 @@ int main(int argc,char* argv)
 			st = now;
 		}
 
-		DEVELOP_DISPLAY("FPS : %d\n",fps);
-
+//		DEVELOP_DISPLAY("FPS : %d\n",fps);
+		
 #ifdef _DEBUG
 		static bool r_ctrl = false ;
 		if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_RCONTROL ) || GET_INPUT_KEYBOARD()->GetTrigger(DIK_RSHIFT)){ r_ctrl = !r_ctrl ; }
 		if( r_ctrl == true ){ DEVELOP_DISPLAY_R( debug_command_string ); }
 		else{ DEVELOP_DISPLAY_R( "RCtrl or RShift" ); }
 #endif // _DEBUG
-
+		
 		GET_INPUT_MANAGER()->Update();
 
 		DEVELOP_TOOL_UPDATE();

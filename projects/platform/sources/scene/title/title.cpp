@@ -70,7 +70,20 @@ Title::Title()
 	sprite_button_interface_->Apply();
 	button_interface_->SetPosition(500.0f, 550.0f, 0.0f);
 	button_interface_->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/window_256x512.png"));
-	
+
+	//パーティクル
+	for (u32 i = 0; i < PARTICUL_MAX; ++i)
+	{
+		auto sprite_particul = std::make_shared<mesh::Sprite>(float2(30,30));
+		particul_[i].particul_ = std::make_shared<MeshObject>(sprite_particul);
+		sprite->SetAnchorPoint(float2(0.0f, 0.0f));
+		particul_[i].particul_->SetPosition(f32((rand() % window->GetWidth())), -30.0f, 0.0f);
+		particul_[i].particul_->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/petal.png"));
+		particul_[i].particul_angle_ = 0.0f;
+		particul_[i].start_cnt_ = i * 10;
+		particul_[i].start_flag_ = false;
+	}
+
 	//2D用カメラ設定
 	observer_2d_ = std::make_shared<Observer2D>(window->GetWidth(), window->GetHeight());
 
@@ -79,6 +92,7 @@ Title::Title()
 
 	draw_cnt_ = 0;
 	use_flag_ = false;
+	particul_cnt_ = 0;
 }
 
 //=============================================================================
@@ -115,6 +129,7 @@ void Title::Finalize()
 void Title::Update()
 {
 	auto p_input_manager = GET_INPUT_MANAGER();
+	auto window = GET_WINDOW();
 
 	//効果音デバッグ
 	if (GET_INPUT_KEYBOARD()->GetTrigger(DIK_O))
@@ -133,6 +148,50 @@ void Title::Update()
 		SceneManager::Instance().set_p_next_scene(SceneManager::Instance().get_tutorial());
 		SceneManager::Instance().set_scene_change_flag(true);
 	}
+
+	
+
+	//パーティクル
+	
+	for (u32 i = 0; i < PARTICUL_MAX; ++i)
+	{
+		
+		if (particul_cnt_ == particul_[i].start_cnt_)
+		{
+			particul_[i].start_flag_ = true;
+
+		}	
+		if (particul_[i].start_flag_)
+		{
+			auto position = particul_[i].particul_->GetPosition();
+			particul_[i].particul_angle_ -= D3DX_PI*0.01f;
+			position._x -= sinf(particul_[i].particul_angle_);
+			position._y += 0.5f;
+
+			auto rotate = particul_[i].particul_->GetRotation();
+			rotate._z = 1.2f;
+
+			
+			if (particul_[i].particul_angle_ < -D3DX_PI)
+			{
+				particul_[i].particul_angle_ += 2 * D3DX_PI;
+			}
+			else if (particul_[i].particul_angle_ > D3DX_PI)
+			{
+				particul_[i].particul_angle_ -= 2 * D3DX_PI;
+			}
+			
+			if (position._y > window->GetHeight())
+			{
+				position._x = (rand() % window->GetWidth());
+				position._y = -10.0f;
+			}
+			
+			particul_[i].particul_->SetPosition(position._x, position._y, position._z);
+			particul_[i].particul_->SetRotation(rotate);
+		}
+	}
+	particul_cnt_++;
 }
 
 //=============================================================================
@@ -169,6 +228,16 @@ void Title::Draw()
 	//背景
 	background_->Draw();
 
+	//パーティクル
+	for (u32 i = 0; i < PARTICUL_MAX; ++i)
+	{
+		basic_vs->SetValue("_world_matrix", (f32*)&particul_[i].particul_->GetMatrix(), 16);
+		basic_vs->SetValue("_color", (f32*)&color, 4);
+
+		basic_ps->SetTexture("_texture_sampler", particul_[i].particul_->GetTexture(0)->GetTexture());
+		//ロゴ
+		particul_[i].particul_->Draw();
+	}
 	basic_vs->SetValue("_world_matrix", (f32*)&logo_->GetMatrix(), 16);
 	basic_vs->SetValue("_color", (f32*)&color, 4);
 
@@ -176,7 +245,6 @@ void Title::Draw()
 	//ロゴ
 	logo_->Draw();
 
-	
 
 	draw_cnt_++;
 	if (draw_cnt_ > 200)
@@ -205,6 +273,5 @@ void Title::Draw()
 		//ボタン
 		button_->Draw();
 	}
-
 
 }

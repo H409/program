@@ -34,6 +34,7 @@ DevelopDisplay::~DevelopDisplay(void)
 
 void DevelopDisplay::Update(void)
 {
+	is_show_ = false;
 #ifndef _RELEASE
 #endif // _RELEASE
 }
