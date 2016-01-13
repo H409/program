@@ -385,7 +385,24 @@ void Player::ControlKeyBorad( void )
 		//--  アクション  --//
 		if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_SPACE ) )
 		{
+//<<<<<<< HEAD
 			action_ = true ;
+//=======
+//			//--  アクション  --//
+//			if( GET_INPUT_XPAD( ID_ )->GetTrigger( XIPad::KEY::R2 ) == true )
+//			{
+//				if( action_ == false )
+//				{
+//					action_ = true ;
+//					anime_ = ANIME::ACTION ;
+//					old_anime_ = ANIME::WAIT ;
+//
+//					pKim_->SetOldAnime(player_anime_data_[OLD_ANIMETION][0],
+//						player_anime_data_[OLD_ANIMETION][1],
+//						player_anime_data_[OLD_ANIMETION][2]);
+//				}
+//			}
+//>>>>>>> origin/yuminaga/菴懈･ｭ
 		}
 	}
 
@@ -430,7 +447,22 @@ void Player::ControlJoypad( void )
 		//--  アクション  --//
 		if( GET_INPUT_XPAD( ID_ )->GetTrigger( XIPad::KEY::R2 ) == true )
 		{
+//<<<<<<< HEAD
 			action_ = true ;
+//=======
+//			//--  取り出しアニメーションをしていないなら  --//
+//			//if( pKim_->GetAnimarionPlay( ( int )ANIME::TAKE_OUT ) == false )
+//			{
+//				wepon_ = ( WEAPON )( ( ( int )wepon_ + 1 ) % 3 );
+//
+//				anime_ = ANIME::TAKE_OUT ;
+//				old_anime_ = ANIME::WAIT ;
+//
+//				pKim_->SetOldAnime(player_anime_data_[OLD_ANIMETION][0],
+//					player_anime_data_[OLD_ANIMETION][1],
+//					player_anime_data_[OLD_ANIMETION][2]);
+//			}
+//>>>>>>> origin/yuminaga/菴懈･ｭ
 		}
 	}
 

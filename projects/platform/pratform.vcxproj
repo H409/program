@@ -54,6 +54,7 @@
     <ClCompile Include="sources\player\player.cpp" />
     <ClCompile Include="sources\player_icon\player_icon.cpp" />
     <ClCompile Include="sources\result_team_icon\result_team_icon.cpp" />
+    <ClCompile Include="sources\result_winlogo\result_winlogo.cpp" />
     <ClCompile Include="sources\scene\base\scene_manager.cpp" />
     <ClCompile Include="sources\scene\demo\demo.cpp" />
     <ClCompile Include="sources\scene\game\game.cpp" />
@@ -71,6 +72,7 @@
     <ClCompile Include="sources\system\xi_pad.cpp" />
     <ClCompile Include="sources\timer\timer.cpp" />
     <ClCompile Include="sources\wall\wall.cpp" />
+    <ClCompile Include="sources\weapon_icon\weapon_icon.cpp" />
     <ClCompile Include="sources\windows\win_main.cpp" />
     <ClCompile Include="sources\x_model\x_model.cpp" />
   </ItemGroup>
@@ -114,6 +116,7 @@
     <ClInclude Include="sources\player\player.h" />
     <ClInclude Include="sources\player_icon\player_icon.h" />
     <ClInclude Include="sources\result_team_icon\result_team_icon.h" />
+    <ClInclude Include="sources\result_winlogo\result_winlogo.h" />
     <ClInclude Include="sources\scene\base\scene_base.h" />
     <ClInclude Include="sources\scene\base\scene_factory.h" />
     <ClInclude Include="sources\scene\base\scene_manager.h" />
@@ -133,6 +136,7 @@
     <ClInclude Include="sources\system\xi_pad.h" />
     <ClInclude Include="sources\timer\timer.h" />
     <ClInclude Include="sources\wall\wall.h" />
+    <ClInclude Include="sources\weapon_icon\weapon_icon.h" />
     <ClInclude Include="sources\x_model\x_model.h" />
   </ItemGroup>
   <ItemGroup>

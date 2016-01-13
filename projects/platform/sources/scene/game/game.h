@@ -36,29 +36,31 @@ class FollowerObserver;
 class MeshObject;
 class Flower;
 class Score;
-class FBXObject ;
+class FBXObject;
 class Timer;
-class FBXTree ;
+class FBXTree;
 class ResultTeamIcon;
 class GameTimer;
+class WeaponIcon;
+class ResultWinLogo;
 
 namespace utility {
-namespace culling {
-class FrustumCulling;
-} // namespace utility
+	namespace culling {
+		class FrustumCulling;
+	} // namespace utility
 } // namespace culling
 
 namespace graphic {
-namespace directx9 {
-namespace texture {
-class DX9Texture;
-} // namespace texture
-} // namespace directx9
+	namespace directx9 {
+		namespace texture {
+			class DX9Texture;
+		} // namespace texture
+	} // namespace directx9
 } // namespace graphic
 
-//*****************************************************************************
-// class definition
-//*****************************************************************************
+  //*****************************************************************************
+  // class definition
+  //*****************************************************************************
 class Game : public SceneBase
 {
 public:
@@ -93,10 +95,21 @@ public:
 		DRAW,
 		NONE,
 	};
+
+	//リザルト表示の状態遷移
+	enum class RESULT_STATE
+	{
+		TWOTEAM = 0,	//両チームのチームロゴとスコアを表示
+		TEAMMOVE,		//勝ちチームのチームロゴとスコアが負け側を追い出すように移動
+		WINLOGO,		//勝ちチームのチームロゴとスコア、勝利UIを表示する
+		BACKGROUND,		//2Dの表示をすべて排除してバックグラウンドのみの表示に変更
+		NONE,			//リザルト画面を表示していない
+	};
+
 private:
 	static const u32 PLAYER_MAX = 4;
 	static const u32 WALL_MAX = 4;
-	static const u32 FBX_OBJECT_MAX = 10 ;
+	static const u32 FBX_OBJECT_MAX = 10;
 
 	std::shared_ptr<Player> players_[PLAYER_MAX];
 	std::shared_ptr<PlayerIcon> player_icons_[PLAYER_MAX];
@@ -110,24 +123,27 @@ private:
 	std::shared_ptr<MeshObject> sprite_objects_[PLAYER_MAX];
 	std::shared_ptr<Wall> wall_[WALL_MAX];
 	std::shared_ptr<Dome> dome_;
+	std::shared_ptr<ResultWinLogo>result_winlogo_;
 	std::shared_ptr<GameTimer> game_timer_;
+	std::shared_ptr<WeaponIcon>weapon_icon_;
 	std::shared_ptr<Cylinder> cylinder_;
 	std::shared_ptr<Observer2D> observer_2d_;
 	std::vector<std::shared_ptr<Flower>> flowers_;
 	std::unique_ptr<utility::culling::FrustumCulling> frustum_culling_;
-	
+
 	std::list<std::weak_ptr<Flower>> flower_list_;
-	std::shared_ptr<FBXObject> fbx_object_[ FBX_OBJECT_MAX ];
-	std::shared_ptr<FBXTree> fbx_tree_[ FBX_OBJECT_MAX ];
+	std::shared_ptr<FBXObject> fbx_object_[FBX_OBJECT_MAX];
+	std::shared_ptr<FBXTree> fbx_tree_[FBX_OBJECT_MAX];
 
 	std::unique_ptr<Timer> timer_;
 
-	std::shared_ptr<MeshObject> sprite_3D_[ 4 ] ;
+	std::shared_ptr<MeshObject> sprite_3D_[4];
 
 
 	//result関連
 	bool is_result_;									//リザルト画面表示をするかしないか
 	WIN_TEAM is_win_team_;								//勝ったチーム
+	RESULT_STATE result_state;							//リザルトの状態
 	std::shared_ptr<Score> score_;						//得点表示
 	std::shared_ptr<ResultTeamIcon> result_team_icon;	//チームのアイコン
 	std::shared_ptr<ResultObserver> result_observer;	//リザルトにてフィールドを映す為のカメラ

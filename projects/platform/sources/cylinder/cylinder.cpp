@@ -28,7 +28,7 @@ Cylinder::Cylinder(void)
 {
 	select_index_x_ = 0;
 	select_index_y_ = 0;
-	block_width_ = (f32)4.5;
+	block_width_ = (f32)4.4;
 	block_height_ = (f32)7.5;
 	width_count_ = (u32)36.0;
 	height_count_ = (u32)1.0;
