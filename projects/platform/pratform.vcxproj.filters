@@ -107,6 +107,12 @@
     <Filter Include="sources\result_winlogo">
       <UniqueIdentifier>{ae78541e-213b-4187-9dd0-d1d7d4821ca4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\fade">
+      <UniqueIdentifier>{59b0bbba-ad84-4704-8c56-f6ab5a91c0e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\effect">
+      <UniqueIdentifier>{55097bbc-67c7-4e29-9352-596b7852bbae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\windows\win_main.cpp">
@@ -288,6 +294,18 @@
     </ClCompile>
     <ClCompile Include="sources\result_winlogo\result_winlogo.cpp">
       <Filter>sources\result_winlogo</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\effect\smoke.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\field_object\tree_creater.cpp">
+      <Filter>sources\field_object</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\fade\fade.cpp">
+      <Filter>sources\fade</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\effect\effect.cpp">
+      <Filter>sources\effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -473,6 +491,18 @@
     </ClInclude>
     <ClInclude Include="sources\result_winlogo\result_winlogo.h">
       <Filter>sources\result_winlogo</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\effect\smoke.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\field_object\tree_creater.h">
+      <Filter>sources\field_object</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\fade\fade.h">
+      <Filter>sources\fade</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\effect\effect.h">
+      <Filter>sources\effect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
