@@ -104,11 +104,11 @@ Player::Player( LPDIRECT3DDEVICE9 pDevice , int ID ) : Object()
 			break ;
 
 		case 2 :
-			pKim_->Load( "resources/model/ZZI_1_MO.kim" );
+			pKim_->Load( "resources/model/ZZI_1_MO_b.kim" );
 			break ;
 
 		case 3 :
-			pKim_->Load( "resources/model/ZZI_2_MO.kim" );
+			pKim_->Load( "resources/model/ZZI_2_MO_b.kim" );
 			break ;
 
 		default:
