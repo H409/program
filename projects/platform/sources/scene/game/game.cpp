@@ -521,12 +521,14 @@ void Game::Update()
 		tree_creater.second->Update();
 	}
 
-	for(auto tree_creater : tree_creater_map_)
+	for(auto tree_creater_it : tree_creater_map_)
 	{
-		if(tree_creater.second->IsCreate())
+		auto tree_creater = tree_creater_it.second;
+		if(tree_creater->IsCreate())
 		{
-			auto tree = std::make_shared<FBXTree>(GET_DIRECTX9_DEVICE(),tree_creater.second->GetNumber());
+			auto tree = std::make_shared<FBXTree>(GET_DIRECTX9_DEVICE(),tree_creater->GetNumber());
 			tree_list_.push_back(tree);
+			tree->SetPosition(tree_creater->GetPosition());
 		}
 	}
 	for(auto effect : effect_list_)
@@ -867,6 +869,13 @@ void Game::Draw()
 		fbx_tree_[ 1 ]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[ i ]->GetProjectionMatrix());
 		fbx_tree_[ 1 ]->Draw();
 
+		for(auto tree : tree_list_)
+		{
+			tree->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[i]->GetViewMatrix());
+			tree->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[i]->GetProjectionMatrix());
+			tree->Draw();
+		}
+
 		for(u32 j = 0;j < PLAYER_MAX;++j)
 		{
 			players_[j]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[i]->GetViewMatrix());
@@ -1147,6 +1156,7 @@ void Game::UpdateFieldObject(void)
 				flowers_[(i + 1) * width + j]->SetTreeIndex(key);
 				flowers_[(i + 1) * width + j + 1]->SetTreeIndex(key);
 				auto tree_creater = std::make_shared<TreeCreater>();
+				tree_creater->SetPosition(float3((j + 1) * 0.5f,0.0f,(i + 1) * 0.5f));
 				tree_creater_map_.insert(std::make_pair(key,tree_creater));
 			}
 			if(CheckGrowTree(j,i,2))
