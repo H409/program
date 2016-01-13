@@ -40,6 +40,7 @@ class FBXObject ;
 class Timer;
 class FBXTree ;
 class ResultTeamIcon;
+class GameTimer;
 
 namespace utility {
 namespace culling {
@@ -84,6 +85,14 @@ public:
 
 	//リザルトシーンの描画を行う。
 	void DrawResult(void);
+
+	enum class WIN_TEAM
+	{
+		RED = 0,
+		BLUE,
+		DRAW,
+		NONE,
+	};
 private:
 	static const u32 PLAYER_MAX = 4;
 	static const u32 WALL_MAX = 4;
@@ -101,6 +110,7 @@ private:
 	std::shared_ptr<MeshObject> sprite_objects_[PLAYER_MAX];
 	std::shared_ptr<Wall> wall_[WALL_MAX];
 	std::shared_ptr<Dome> dome_;
+	std::shared_ptr<GameTimer> game_timer_;
 	std::shared_ptr<Cylinder> cylinder_;
 	std::shared_ptr<Observer2D> observer_2d_;
 	std::vector<std::shared_ptr<Flower>> flowers_;
@@ -112,15 +122,16 @@ private:
 
 	std::unique_ptr<Timer> timer_;
 
-	std::shared_ptr<MeshObject> sprite_3D_ ;
+	std::shared_ptr<MeshObject> sprite_3D_[ 4 ] ;
 
 
 	//result関連
 	bool is_result_;									//リザルト画面表示をするかしないか
+	WIN_TEAM is_win_team_;								//勝ったチーム
 	std::shared_ptr<Score> score_;						//得点表示
 	std::shared_ptr<ResultTeamIcon> result_team_icon;	//チームのアイコン
-	//std::shared_ptr<Observer3D> result_observer;		//リザルトにてフィールドを映す為のカメラ
-	std::shared_ptr<ResultObserver> result_observer;		//リザルトにてフィールドを映す為のカメラ
+	std::shared_ptr<ResultObserver> result_observer;	//リザルトにてフィールドを映す為のカメラ
+
 
 #ifdef _DEBUG
 	std::shared_ptr<MeshObject> debug_sprite_object_;

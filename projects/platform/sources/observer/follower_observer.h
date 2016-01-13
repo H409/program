@@ -67,12 +67,15 @@ public:
 	
 	f32 GetHeight( void ){ return height_ ; }
 
-	void SetState( STATE state ){ state_ = state ; }
+	void SetState( const STATE state );
 
 	STATE GetState(void)const;
 
 	void SetID( int id ){ ID_ = id ; };
 	int GetID( void ){ return ID_ ; }
+
+	void SetRotation( float3 rot ){ rotation_ = rot ; };
+	void SetTimer( float timer ){ timer_ = timer ; }
 
 	void SetFieldIconPosition( const float3& pos ){ feild_icon_ = pos ; }
 
@@ -87,7 +90,14 @@ private:
 
 	float3 feild_icon_ ;
 
+	float3 old_eye_ ;
+	float3 old_look_at_ ;
+
+	float3 aim_eye_position_ ;
+	float3 aim_look_position_ ;
+
 	STATE state_ ;
+	float timer_ ;
 
 	void TargetLookRotation_( void );
 	void MouseMove_( void );

@@ -46,6 +46,7 @@ int main(int argc,char* argv)
 
 #ifdef _DEBUG
 	char debug_command_string[] = "debug command \n"
+								  "F11 : デバッグ表示 on / off\n"
 								  "0 : 1画面\n"
 								  "←→レンダーターゲット\n"
 								  "1 , 2 , 3 , 4 : プレイヤー切り替え\n"
@@ -55,6 +56,7 @@ int main(int argc,char* argv)
 								  "E : 武器切り替え\n"
 								  "space : 弾\n"
 								  "M : メッシュ表示\n"
+								  "Q : ゲームタイマー0\n"
 								  "ミドルクリック : 当たり判定無視\n"
 								  "Shift + 数字 : シーン切り替え"
 								  "\n";
@@ -79,9 +81,13 @@ int main(int argc,char* argv)
 		
 #ifdef _DEBUG
 		static bool r_ctrl = false ;
+		static bool debug_show = true ;
 		if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_RCONTROL ) || GET_INPUT_KEYBOARD()->GetTrigger(DIK_RSHIFT)){ r_ctrl = !r_ctrl ; }
 		if( r_ctrl == true ){ DEVELOP_DISPLAY_R( debug_command_string ); }
 		else{ DEVELOP_DISPLAY_R( "RCtrl or RShift" ); }
+		if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_F11 ) == true ){ debug_show = !debug_show ; }
+		develop_tool::DevelopTool::GetInstance()->GetDevelopDisplay()->SetIsShow( debug_show );
+
 #endif // _DEBUG
 		
 		GET_INPUT_MANAGER()->Update();

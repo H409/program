@@ -1,6 +1,6 @@
 //*****************************************************************************
 //
-// result_score
+// game_timer
 //
 // Author		: Eyuu Yuminaga
 //
@@ -10,8 +10,8 @@
 // include guard
 //*****************************************************************************
 #pragma once
-#ifndef _SCORE_H_
-#define _SCORE_H_
+#ifndef _GAME_TIMER_H_
+#define _GAME_TIMER_H_
 
 
 //*****************************************************************************
@@ -27,12 +27,12 @@ namespace mesh {
 }	//namespace mesh
 class MeshObject;
 
-#define SCORE_DIGIT (3)		//スコア表示の桁数
+#define TIMER_DIGIT (3)		//スコア表示の桁数
 
 //*****************************************************************************
 // class declaration
 //*****************************************************************************
-class Score
+class GameTimer
 {
 public:
 	using TSprite = std::shared_ptr<mesh::Sprite>;
@@ -46,10 +46,10 @@ public:
 	};
 
 	// constructor
-	Score(void);
+	GameTimer(void);
 
 	//destructor
-	virtual ~Score(void);
+	virtual ~GameTimer(void);
 
 	// update
 	void Update(void);
@@ -58,21 +58,33 @@ public:
 	void Draw(void);
 
 	//GetSprite3D
-	TSprite GetSprite(int i) { return back_ground_sprite_[i]; }
+	TSprite GetSprite(int i) { return back_ground_sprite_; }
 
 	//GetObject
-	TMeshObject GetObject(int i) { return back_ground_mesh_object_[i]; }
+	TMeshObject GetObject(int i) { return back_ground_mesh_object_; }
+
+	void Reset(void);
+	u32 GetTimeLeft(void)const;
 
 private:
+	static const u32 DEFAULT_TIME_MAX;
+	u32 timer_max_;
+	u32 timer_left_;
+	unsigned int timer_count_;				//残り時間
+	unsigned int digit_num_[TIMER_DIGIT];	//桁の番号
+
 	float2 back_ground_size_;
-	float3 back_ground_pos_[(unsigned int)TEAM::MAX];
-	TSprite back_ground_sprite_[(unsigned int)TEAM::MAX];			//得点背景スプライト
-	TMeshObject back_ground_mesh_object_[(unsigned int)TEAM::MAX];	//得点背景オブジェクト
+	float3 back_ground_pos_;
+	TSprite back_ground_sprite_;			//時間背景スプライト
+	TMeshObject back_ground_mesh_object_;	//時間背景オブジェクト
 
 	float2 num_size_;
-	float3 num_pos_[(unsigned int)TEAM::MAX][SCORE_DIGIT];
-	TSprite num_sprite_[(unsigned int)TEAM::MAX][SCORE_DIGIT];		//得点数値スプライト
-	TMeshObject num_object_[(unsigned int)TEAM::MAX][SCORE_DIGIT];	//得点数値オブジェクト
+	float3 num_pos_[TIMER_DIGIT];
+	TSprite num_sprite_[TIMER_DIGIT];		//時間数値スプライト
+	TMeshObject num_object_[TIMER_DIGIT];	//時間数値オブジェクト
+
+	/*void Reset(void);
+	u32 GetTimeLeft(void)const;*/
 };
 
 #endif
