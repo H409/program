@@ -247,6 +247,9 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 	timer_->Reset();
 	game_timer_->Reset();
 
+	result_team_icon->Reset();
+	score_->Reset();
+
 	is_result_ = false;
 	result_state = RESULT_STATE::NONE;
 
@@ -1127,8 +1130,7 @@ void Game::UpdateResult(void)
 			{
 				SceneManager::Instance().set_p_next_scene(SceneManager::Instance().get_game());
 				SceneManager::Instance().set_scene_change_flag(true);
-				result_team_icon->Reset();
-				score_->Reset();
+				
 			}
 		}
 	}
