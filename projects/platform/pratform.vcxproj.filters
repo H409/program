@@ -295,9 +295,6 @@
     <ClCompile Include="sources\result_winlogo\result_winlogo.cpp">
       <Filter>sources\result_winlogo</Filter>
     </ClCompile>
-    <ClCompile Include="sources\effect\smoke.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
     <ClCompile Include="sources\field_object\tree_creater.cpp">
       <Filter>sources\field_object</Filter>
     </ClCompile>
@@ -305,6 +302,9 @@
       <Filter>sources\fade</Filter>
     </ClCompile>
     <ClCompile Include="sources\effect\effect.cpp">
+      <Filter>sources\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\effect\smoke.cpp">
       <Filter>sources\effect</Filter>
     </ClCompile>
   </ItemGroup>
@@ -492,9 +492,6 @@
     <ClInclude Include="sources\result_winlogo\result_winlogo.h">
       <Filter>sources\result_winlogo</Filter>
     </ClInclude>
-    <ClInclude Include="sources\effect\smoke.h">
-      <Filter>sources</Filter>
-    </ClInclude>
     <ClInclude Include="sources\field_object\tree_creater.h">
       <Filter>sources\field_object</Filter>
     </ClInclude>
@@ -502,6 +499,9 @@
       <Filter>sources\fade</Filter>
     </ClInclude>
     <ClInclude Include="sources\effect\effect.h">
+      <Filter>sources\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\effect\smoke.h">
       <Filter>sources\effect</Filter>
     </ClInclude>
   </ItemGroup>
