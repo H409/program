@@ -249,6 +249,10 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 	is_result_ = false;
 	result_state = RESULT_STATE::NONE;
 
+	tree_list_.clear();
+
+	tree_creater_map_.clear();
+
 	//BGM
 	Sound::Instance().PlaySound(SOUND_LABEL_BGM002);
 
