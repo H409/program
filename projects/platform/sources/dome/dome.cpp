@@ -45,7 +45,7 @@ Dome::Dome(void)
 	mesh_sprite_dome_->Apply();
 
 	mesh_object_ = std::make_shared<MeshObject>(mesh_sprite_dome_);
-	mesh_object_->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/sky000.jpg"));
+	mesh_object_->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/“V‹…texture.jpg"));
 }
 
 //=============================================================================

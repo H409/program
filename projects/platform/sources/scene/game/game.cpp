@@ -1250,6 +1250,14 @@ u32 Game::GetPoint(u32 player_number) const
 			count++;
 		}
 	}
+
+	for(auto tree : tree_list_)
+	{
+		if(tree->GetID() == player_number)
+		{
+			count += 10;
+		}
+	}
 	return count;
 }
 
