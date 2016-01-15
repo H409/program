@@ -96,8 +96,8 @@ Game::Game()
 	float2 positions[]
 	{
 		float2(0.0f,  0.0f),
-		float2(window->GetWidth() * 0.5f,  0.0f),
 		float2(0.0f,window->GetHeight() * 0.5f),
+		float2(window->GetWidth() * 0.5f,  0.0f),
 		float2(window->GetWidth() * 0.5f,window->GetHeight() * 0.5f),
 	};
 	for (u32 i = 0; i < PLAYER_MAX; ++i)
@@ -1267,9 +1267,13 @@ void Game::UpdateFieldObject(void)
 			if(CheckGrowTree(j,i,0))
 			{
 				flowers_[i * width + j]->SetTreeIndex(key);
+				flowers_[i * width + j]->SetGrow();
 				flowers_[i * width + j + 1]->SetTreeIndex(key);
+				flowers_[i * width + j + 1]->SetGrow();
 				flowers_[(i + 1) * width + j]->SetTreeIndex(key);
+				flowers_[(i + 1) * width + j]->SetGrow();
 				flowers_[(i + 1) * width + j + 1]->SetTreeIndex(key);
+				flowers_[(i + 1) * width + j + 1]->SetGrow();
 				auto tree_creater = std::make_shared<TreeCreater>();
 				//tree_creater->SetPosition(float3(0.0f,0.0f,0.0f));
 				tree_creater->SetPosition(float3((j + 1) * 0.5f - width * 0.25f,0.0f,-((i + 1) * 0.5f) + height * 0.25f));

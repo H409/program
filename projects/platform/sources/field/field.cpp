@@ -324,6 +324,29 @@ std::vector<float3> Field::GetPositionsT(const u32& in_type)
 	return positions;
 }
 
+std::vector<float3> Field::GetPositions4x4(const u32 & in_type)
+{
+	std::vector<float3> positions;
+
+	for(u32 i = 0;i < height_count_;++i)
+	{
+		for(u32 j = 0;j < width_count_;++j)
+		{
+			if(CheckTypeRightBottom(j,i,in_type))
+			{
+				if(CheckTypeRightBottom(j + 2,i + 2,in_type))
+				{
+					float3 position = float3((j + 2) * block_width_,0.0f,(i + 2) * block_height_);
+					positions.push_back(position);
+					j += 3;
+				}
+			}
+		}
+	}
+
+	return positions;
+}
+
 //=============================================================================
 // set type
 //=============================================================================
