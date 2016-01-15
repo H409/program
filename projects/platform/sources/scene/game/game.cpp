@@ -162,28 +162,24 @@ Game::Game()
 	result_team_icon = std::make_shared<ResultTeamIcon>();
 	result_winlogo_ = std::make_shared<ResultWinLogo>();
 
-	fbx_object_[0] = std::make_shared<FBXObject>(graphic_device->GetDevice());
-	fbx_object_[0]->Load("resources/model/iwa_obj_1.kim");
-	fbx_object_[0]->SetPosition(-10, 0, 0);
-
-	fbx_tree_[0] = std::make_shared<FBXTree>(graphic_device->GetDevice(), 0);
-	fbx_tree_[1] = std::make_shared<FBXTree>(graphic_device->GetDevice(), 2);
-
-	fbx_tree_[0]->SetPosition(-10, 0, 5);
-	fbx_tree_[1]->SetPosition(-10, 0, -5);
-
 	is_win_team_ = WIN_TEAM::NONE;
 	is_result_ = false;
 	result_state = RESULT_STATE::NONE;
 
 	for (int i = 0; i < PLAYER_MAX; i++)
 	{
-		auto sprite_3d = std::make_shared<mesh::Sprite3D>(float2(0.4f, 0.35f));
+		auto sprite_3d = std::make_shared<mesh::Sprite3D>(float2(0.5f, 0.5f));
 		sprite_3D_[i] = std::make_shared<MeshObject>(sprite_3d);
 		sprite_3D_[i]->SetPosition(-9.5f, 0.01f, 2.0f);
 		sprite_3D_[i]->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/shadow.png"));
 		sprite_3D_[i]->SetRotationX(utility::math::ToRadian(90.0f));
 	}
+
+	field_object_ = std::make_shared<FBXObject>(graphic_device->GetDevice());
+	field_object_->Load("resources/model/test_map_obj_3.kim");
+	field_object_->SetPosition(0, 0, 0);
+	field_object_->SetScale( 1.2f , 1.2f , 1.2f );
+	field_object_->Update();
 
 #ifdef _DEBUG
 	debugRenderTarget_ = false;
@@ -601,10 +597,6 @@ void Game::Update()
 		effect._Get()->Update();
 	}
 
-	fbx_object_[ 0 ]->Update();
-
-	fbx_tree_[0]->Update();
-	fbx_tree_[1]->Update();
 
 	// 
 	for (auto bullet : bullets_)
@@ -875,7 +867,7 @@ void Game::Draw()
 
 		//if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
 		{
-			object->Draw();
+			//object->Draw();
 		}
 
 		//draw cylinder
@@ -916,21 +908,11 @@ void Game::Draw()
 			sprite_3D_[j]->Draw();
 		}
 
-
-		//--  “®‚©‚È‚¢FBX  --//
-		fbx_object_[0]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[i]->GetViewMatrix());
-		fbx_object_[0]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[i]->GetProjectionMatrix());
-		fbx_object_[0]->Draw();
-
 		graphic_device->SetVertexShader(gb_vs_fbx);
 
-		fbx_tree_[0]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[i]->GetViewMatrix());
-		fbx_tree_[0]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[i]->GetProjectionMatrix());
-		fbx_tree_[0]->Draw();
-
-		fbx_tree_[1]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[i]->GetViewMatrix());
-		fbx_tree_[1]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[i]->GetProjectionMatrix());
-		fbx_tree_[1]->Draw();
+		field_object_->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[i]->GetViewMatrix());
+		field_object_->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[i]->GetProjectionMatrix());
+		field_object_->Draw();
 
 		for(auto tree : tree_list_)
 		{
@@ -1152,6 +1134,7 @@ void Game::DrawResult(void)
 	auto basic_ps = graphic_device->LoadPixelShader("resources/shader/basic.psc");
 	auto gb_vs = graphic_device->LoadVertexShader("resources/shader/graphics_buffer.vsc");
 	auto gb_ps = graphic_device->LoadPixelShader("resources/shader/graphics_buffer.psc");
+	auto gb_vs_fbx = graphic_device->LoadVertexShader("resources/shader/graphics_buffer_fbx.vsc");
 
 	basic_vs->SetValue("_view_matrix", (f32*)&observer_2d_->GetViewMatrix(), sizeof(float4x4));
 	basic_vs->SetValue("_projection_matrix", (f32*)&observer_2d_->GetProjectionMatrix(), sizeof(float4x4));
@@ -1235,6 +1218,12 @@ void Game::DrawResult(void)
 	{
 		object->Draw();
 	}
+
+	graphic_device->SetVertexShader(gb_vs_fbx);
+
+	field_object_->GetKimPointer()->SetView((D3DXMATRIX*)&result_observer->GetViewMatrix());
+	field_object_->GetKimPointer()->SetProjection((D3DXMATRIX*)&result_observer->GetProjectionMatrix());
+	field_object_->Draw();
 }
 
 u32 Game::GetPoint(u32 player_number) const

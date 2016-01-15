@@ -220,8 +220,8 @@ void Player::Control( void )
 	}
 
 #ifndef _RELEASE
+	ControlJoypad();
 	ControlKeyBorad();
-
 #else
 	ControlJoypad();
 	ControlKeyBorad();
@@ -323,11 +323,11 @@ void Player::Control( void )
 
 	rotation_._y += diff * ( 0.09f + rot_diff );
 
-	DEVELOP_DISPLAY( "camera_vec : %f , %f , %f\n" , camera_vector_._x , camera_vector_._y , camera_vector_._z );
-	DEVELOP_DISPLAY( "pos : %f , %f , %f\n" , position_._x , position_._y , position_._z );
+	//DEVELOP_DISPLAY( "camera_vec : %f , %f , %f\n" , camera_vector_._x , camera_vector_._y , camera_vector_._z );
+	//DEVELOP_DISPLAY( "pos : %f , %f , %f\n" , position_._x , position_._y , position_._z );
 	//DEVELOP_DISPLAY( "move : %f , %f , %f\n" , move_._x , move_._y , move_._z );
 	//DEVELOP_DISPLAY( "action : %d\n" , action_ );
-	DEVELOP_DISPLAY( "anime : %d\n" , anime_ );
+	//DEVELOP_DISPLAY( "anime : %d\n" , anime_ );
 }
 //-------------------------------------------------------------------
 // 関数名 : キーボード更新
@@ -337,7 +337,7 @@ void Player::Control( void )
 //-------------------------------------------------------------------	
 void Player::ControlKeyBorad( void )
 {
-	pad_move_ = float3( 0 , 0 , 0 );
+	//pad_move_ = float3( 0 , 0 , 0 );
 
 	//--  移動　前  --//	
 	if( GET_INPUT_KEYBOARD()->GetPress( DIK_W ) == true )
@@ -386,24 +386,7 @@ void Player::ControlKeyBorad( void )
 		//--  アクション  --//
 		if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_SPACE ) )
 		{
-//<<<<<<< HEAD
 			action_ = true ;
-//=======
-//			//--  アクション  --//
-//			if( GET_INPUT_XPAD( ID_ )->GetTrigger( XIPad::KEY::R2 ) == true )
-//			{
-//				if( action_ == false )
-//				{
-//					action_ = true ;
-//					anime_ = ANIME::ACTION ;
-//					old_anime_ = ANIME::WAIT ;
-//
-//					pKim_->SetOldAnime(player_anime_data_[OLD_ANIMETION][0],
-//						player_anime_data_[OLD_ANIMETION][1],
-//						player_anime_data_[OLD_ANIMETION][2]);
-//				}
-//			}
-//>>>>>>> origin/yuminaga/菴懈･ｭ
 		}
 	}
 
@@ -433,14 +416,18 @@ void Player::ControlJoypad( void )
 	if( GET_INPUT_XPAD( ID_ )->GetTrigger( XIPad::KEY::L2 ) == true )
 	{
 		aim_ = true ;
+		anime_ = ANIME::WAIT ;
+		state_ = STATE::AIM ;
 	}
 	else
 	{
 		if( GET_INPUT_XPAD( ID_ )->GetRelease( XIPad::KEY::L2 ) == true )
 		{
+			state_ = STATE::WAIT ;
 			aim_ = false ;
 		}
 	}
+
 
 	//--  エイム  --//
 	if( state_ == STATE::AIM )
@@ -448,22 +435,7 @@ void Player::ControlJoypad( void )
 		//--  アクション  --//
 		if( GET_INPUT_XPAD( ID_ )->GetTrigger( XIPad::KEY::R2 ) == true )
 		{
-//<<<<<<< HEAD
 			action_ = true ;
-//=======
-//			//--  取り出しアニメーションをしていないなら  --//
-//			//if( pKim_->GetAnimarionPlay( ( int )ANIME::TAKE_OUT ) == false )
-//			{
-//				wepon_ = ( WEAPON )( ( ( int )wepon_ + 1 ) % 3 );
-//
-//				anime_ = ANIME::TAKE_OUT ;
-//				old_anime_ = ANIME::WAIT ;
-//
-//				pKim_->SetOldAnime(player_anime_data_[OLD_ANIMETION][0],
-//					player_anime_data_[OLD_ANIMETION][1],
-//					player_anime_data_[OLD_ANIMETION][2]);
-//			}
-//>>>>>>> origin/yuminaga/菴懈･ｭ
 		}
 	}
 
