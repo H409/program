@@ -113,6 +113,9 @@
     <Filter Include="sources\effect">
       <UniqueIdentifier>{55097bbc-67c7-4e29-9352-596b7852bbae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\game_score">
+      <UniqueIdentifier>{1b53f12d-8009-442c-9723-ccb5ef828492}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\windows\win_main.cpp">
@@ -306,6 +309,9 @@
     </ClCompile>
     <ClCompile Include="sources\effect\smoke.cpp">
       <Filter>sources\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\game_score\game_score.cpp">
+      <Filter>sources\game_score</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -503,6 +509,9 @@
     </ClInclude>
     <ClInclude Include="sources\effect\smoke.h">
       <Filter>sources\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\game_score\game_score.h">
+      <Filter>sources\game_score</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
