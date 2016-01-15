@@ -659,6 +659,10 @@ bool Field::IsObstacle(TYPE in_type)
 		return true;
 	}
 
+	if(in_type == TYPE::TREE_FLOWER)
+	{
+		return true;
+	}
 	return false;
 }
 

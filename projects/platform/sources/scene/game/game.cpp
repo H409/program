@@ -162,16 +162,6 @@ Game::Game()
 	result_team_icon = std::make_shared<ResultTeamIcon>();
 	result_winlogo_ = std::make_shared<ResultWinLogo>();
 
-	fbx_object_[0] = std::make_shared<FBXObject>(graphic_device->GetDevice());
-	fbx_object_[0]->Load("resources/model/iwa_obj_1.kim");
-	fbx_object_[0]->SetPosition(-10, 0, 0);
-
-	fbx_tree_[0] = std::make_shared<FBXTree>(graphic_device->GetDevice(), 0);
-	fbx_tree_[1] = std::make_shared<FBXTree>(graphic_device->GetDevice(), 2);
-
-	fbx_tree_[0]->SetPosition(-10, 0, 5);
-	fbx_tree_[1]->SetPosition(-10, 0, -5);
-
 	is_win_team_ = WIN_TEAM::NONE;
 	is_result_ = false;
 	result_state = RESULT_STATE::NONE;
@@ -375,7 +365,13 @@ void Game::Update()
 			{
 				auto index = field_->GetBlockIndex(position);
 				//field_->SetType(index,(u32)Field::TYPE::SOIL);
+				auto tree_index = flowers_[index]->GetTreeIndex();
 				flowers_[index]->Death();
+				auto tree_it = tree_creater_map_.find(tree_index);
+				if(tree_it != tree_creater_map_.end())
+				{
+					tree_it->second->Death();
+				}
 				if(field_->GetType(index) == Field::TYPE::TREE_FLOWER)
 				{
 					field_->SetType(index,Field::TYPE::TREE);
@@ -587,6 +583,10 @@ void Game::Update()
 				flowers_[index + 1]->Hide();
 				flowers_[index + field_->GetBlockWidthCount()]->Hide();
 				flowers_[index + field_->GetBlockWidthCount() + 1]->Hide();
+				field_->SetType(index,Field::TYPE::TREE_FLOWER);
+				field_->SetType(index + 1,Field::TYPE::TREE_FLOWER);
+				field_->SetType(index + field_->GetBlockWidthCount(),Field::TYPE::TREE_FLOWER);
+				field_->SetType(index + field_->GetBlockWidthCount() + 1,Field::TYPE::TREE_FLOWER);
 			}
 		}
 	}
@@ -600,11 +600,6 @@ void Game::Update()
 	{
 		effect._Get()->Update();
 	}
-
-	fbx_object_[ 0 ]->Update();
-
-	fbx_tree_[0]->Update();
-	fbx_tree_[1]->Update();
 
 	// 
 	for (auto bullet : bullets_)
@@ -916,21 +911,7 @@ void Game::Draw()
 			sprite_3D_[j]->Draw();
 		}
 
-
-		//--  “®‚©‚È‚¢FBX  --//
-		fbx_object_[0]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[i]->GetViewMatrix());
-		fbx_object_[0]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[i]->GetProjectionMatrix());
-		fbx_object_[0]->Draw();
-
 		graphic_device->SetVertexShader(gb_vs_fbx);
-
-		fbx_tree_[0]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[i]->GetViewMatrix());
-		fbx_tree_[0]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[i]->GetProjectionMatrix());
-		fbx_tree_[0]->Draw();
-
-		fbx_tree_[1]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[i]->GetViewMatrix());
-		fbx_tree_[1]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[i]->GetProjectionMatrix());
-		fbx_tree_[1]->Draw();
 
 		for(auto tree : tree_list_)
 		{
@@ -1275,14 +1256,24 @@ void Game::UpdateFieldObject(void)
 				flowers_[(i + 1) * width + j + 1]->SetTreeIndex(key);
 				flowers_[(i + 1) * width + j + 1]->SetGrow();
 				auto tree_creater = std::make_shared<TreeCreater>();
-				//tree_creater->SetPosition(float3(0.0f,0.0f,0.0f));
 				tree_creater->SetPosition(float3((j + 1) * 0.5f - width * 0.25f,0.0f,-((i + 1) * 0.5f) + height * 0.25f));
 				tree_creater->SetNumber(0);
 				tree_creater_map_.insert(std::make_pair(key,tree_creater));
 			}
 			if(CheckGrowTree(j,i,2))
 			{
-
+				flowers_[i * width + j]->SetTreeIndex(key);
+				flowers_[i * width + j]->SetGrow();
+				flowers_[i * width + j + 1]->SetTreeIndex(key);
+				flowers_[i * width + j + 1]->SetGrow();
+				flowers_[(i + 1) * width + j]->SetTreeIndex(key);
+				flowers_[(i + 1) * width + j]->SetGrow();
+				flowers_[(i + 1) * width + j + 1]->SetTreeIndex(key);
+				flowers_[(i + 1) * width + j + 1]->SetGrow();
+				auto tree_creater = std::make_shared<TreeCreater>();
+				tree_creater->SetPosition(float3((j + 1) * 0.5f - width * 0.25f,0.0f,-((i + 1) * 0.5f) + height * 0.25f));
+				tree_creater->SetNumber(2);
+				tree_creater_map_.insert(std::make_pair(key,tree_creater));
 			}
 		}
 	}

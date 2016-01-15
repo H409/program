@@ -137,18 +137,11 @@ private:
 	std::unique_ptr<utility::culling::FrustumCulling> frustum_culling_;
 
 	std::list<std::weak_ptr<Flower>> flower_list_;
-	std::shared_ptr<FBXObject> fbx_object_[FBX_OBJECT_MAX];
-	std::shared_ptr<FBXTree> fbx_tree_[FBX_OBJECT_MAX];
 
 	std::unique_ptr<Timer> timer_;
 
-//<<<<<<< HEAD
-//	std::shared_ptr<MeshObject> sprite_3D_[4];
-
-//=======
 	std::shared_ptr<MeshObject> sprite_3D_[ 4 ] ;
 	std::list<std::shared_ptr<FBXTree>> tree_list_;
-//>>>>>>> kab/effect
 
 	//result関連
 	bool is_result_;									//リザルト画面表示をするかしないか
