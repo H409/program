@@ -77,6 +77,7 @@ Player::Player( LPDIRECT3DDEVICE9 pDevice , int ID ) : Object()
 	speed_ = float3( 0.01f , 0.01f , 0.01f );
 
 	position_ = float3( 0 , 0 , 0 );
+	launcher_timer_ = 0 ;
 
 	ID_ = 0 ;		// 1P
 
@@ -138,6 +139,7 @@ void Player::Init( float3 pos )
 {
 	move_ = float3();
 	position_ = pos ;
+	init_position_ = pos ;
 	state_ = STATE::WAIT ;
 
 	rotDest_ = float3();
@@ -427,6 +429,7 @@ void Player::ControlJoypad( void )
 		}
 	}
 
+	launcher_timer_++ ;
 
 	//--  エイム  --//
 	if( state_ == STATE::AIM )
@@ -434,7 +437,19 @@ void Player::ControlJoypad( void )
 		//--  アクション  --//
 		if( GET_INPUT_XPAD( ID_ )->GetTrigger( XIPad::KEY::R2 ) == true )
 		{
-			action_ = true ;
+			if( weapon_ == WEAPON::LAUNCHER )
+			{
+				if( launcher_timer_ > 420 )
+				{
+					action_ = true ;
+					launcher_timer_ = 0 ;
+				}
+			}
+			else
+			{
+				action_ = true ;
+			}
+			
 		}
 	}
 

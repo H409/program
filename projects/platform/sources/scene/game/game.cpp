@@ -367,7 +367,7 @@ void Game::Update()
 		{
 			auto position = field_icons_[i]->GetPosition();
 			//if(field_->GetType(position) == (u32)Field::TYPE::SOIL)
-			if (players_[i]->GetKimPointer()->GetSingleAnimationEnd() == true)
+			//if (players_[i]->GetKimPointer()->GetSingleAnimationEnd() == true)
 			{
 				auto index = field_->GetBlockIndex(position);
 				//field_->SetType(index,(u32)Field::TYPE::SOIL);
@@ -649,6 +649,7 @@ void Game::Update()
 								if (utility::math::Distance(position, player_position) < 0.5f + 1.0f)
 								{
 									players_[i]->SetHit( true );
+									bullet->Remove();
 								}
 							}
 						}

@@ -80,6 +80,8 @@ public :
 	void Draw( void );					// 描画
 	void Uninit( void );				// 終了
 
+	void Restore( void ){ position_ = init_position_ ; };						// 再設定
+
 	//--  kimのポインタ  --//
 	Kim* GetKimPointer( void ){ return pKim_ ; }
 	
@@ -128,6 +130,7 @@ private :
 	float3 rotDest_ ;			// 目的の向き
 	float3 old_position_ ;		// 前の位置
 	float3 pad_move_ ;
+	float3 init_position_ ;
 
 	int ID_ ;
 	bool action_animation_end_ ;
@@ -140,6 +143,8 @@ private :
 
 	float camera_rot_y ;
 
+	int launcher_timer_ ;
+	
 	ANIME anime_ ;
 	ANIME old_anime_ ;
 	WEAPON weapon_ ;		// 0 : ランチャー , 1 : 銃 , 2 : クワ
