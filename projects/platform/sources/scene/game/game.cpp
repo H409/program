@@ -49,6 +49,8 @@
 #include "game_timer/game_timer.h"
 #include "weapon_icon/weapon_icon.h"
 #include "result_winlogo/result_winlogo.h"
+#include "effect/smoke.h"
+#include "field_object/tree_creater.h"
 
 //=============================================================================
 // constructor
@@ -112,8 +114,7 @@ Game::Game()
 	}
 	for (u32 i = 0; i < PLAYER_MAX; ++i)
 	{
-		players_[i] = std::make_shared<Player>(graphic_device->GetDevice());
-		players_[i]->SetID(i);
+		players_[i] = std::make_shared<Player>(graphic_device->GetDevice() , i );
 	}
 
 	for (u32 i = 0; i < PLAYER_MAX; ++i)
@@ -219,10 +220,9 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 
 	for (u32 i = 0; i < PLAYER_MAX; ++i)
 	{
-		//players_[i]->SetPosition(positions[i]);
 		players_[i]->Init(positions[i]);
 
-		observers_[i]->SetTargetVector(float3(0.0f, 0.0f, 1.0f));
+		observers_[i]->SetTargetVector(float3(0.0f,0.0f,1.0f));
 		observers_[i]->SetLength(2.0f);
 		observers_[i]->SetHeight(1.5f);
 		observers_[i]->SetTargetPosition(positions[i]);
@@ -376,7 +376,10 @@ void Game::Update()
 				auto index = field_->GetBlockIndex(position);
 				//field_->SetType(index,(u32)Field::TYPE::SOIL);
 				flowers_[index]->Death();
-				flower_list_.erase(remove_if(flower_list_.begin(), flower_list_.end(), [](std::weak_ptr<Flower> flower)->bool {return !flower._Get()->IsShow(); }), flower_list_.end());
+				if(field_->GetType(index) == Field::TYPE::TREE_FLOWER)
+				{
+					field_->SetType(index,Field::TYPE::TREE);
+				}
 			}
 		}
 
@@ -420,7 +423,11 @@ void Game::Update()
 
 				auto is_create = true;
 
-				for (auto bullet : bullets_)
+				auto smoke = std::make_shared<Smoke>();
+				smoke->Start(60,start_position);
+				effect_list_.push_back(smoke);
+
+				for(auto bullet : bullets_)
 				{
 					if (bullet->IsDeath())
 					{
@@ -493,7 +500,9 @@ void Game::Update()
 
 	field_->Update();
 
-	for (auto bullet : bullets_)
+	effect_list_.erase(remove_if(effect_list_.begin(),effect_list_.end(),[](std::weak_ptr<Effect> effect)->bool {return effect._Get()->IsDeath();}),effect_list_.end());
+
+	for(auto bullet : bullets_)
 	{
 		bullet->Update();
 	}
@@ -551,7 +560,48 @@ void Game::Update()
 		flower._Get()->Update();
 	}
 
-	fbx_object_[0]->Update();
+	flower_list_.erase(remove_if(flower_list_.begin(),flower_list_.end(),[](std::weak_ptr<Flower> flower)->bool {return !flower._Get()->IsShow();}),flower_list_.end());
+
+	UpdateFieldObject();
+
+	for(auto tree_creater : tree_creater_map_)
+	{
+		tree_creater.second->Update();
+	}
+
+	for(auto tree_creater_it : tree_creater_map_)
+	{
+		auto tree_creater = tree_creater_it.second;
+		if(!tree_creater->IsDeath())
+		{
+			if(tree_creater->IsCreate())
+			{
+				auto tree = std::make_shared<FBXTree>(GET_DIRECTX9_DEVICE(),tree_creater->GetNumber());
+				tree->SetPosition(tree_creater->GetPosition());
+				tree_list_.push_back(tree);
+				tree_creater->Death();
+
+				auto index = tree_creater_it.first;
+
+				flowers_[index]->Hide();
+				flowers_[index + 1]->Hide();
+				flowers_[index + field_->GetBlockWidthCount()]->Hide();
+				flowers_[index + field_->GetBlockWidthCount() + 1]->Hide();
+			}
+		}
+	}
+
+	for(auto& tree : tree_list_)
+	{
+		tree->Update();
+	}
+
+	for(auto effect : effect_list_)
+	{
+		effect._Get()->Update();
+	}
+
+	fbx_object_[ 0 ]->Update();
 
 	fbx_tree_[0]->Update();
 	fbx_tree_[1]->Update();
@@ -572,18 +622,24 @@ void Game::Update()
 				{
 					if (bullet->GetType() == Bullet::TYPE::SEED)
 					{
-						if (field_->GetType(position) == Field::TYPE::SOIL || field_->GetType(position) == Field::TYPE::TREE)
+						auto index = field_->GetBlockIndex(position);
+						auto field_type = field_->GetType(index);
+						if(field_type == Field::TYPE::SOIL || field_type == Field::TYPE::TREE)
 						{
 							auto index = field_->GetBlockIndex(position);
-							//field_->SetType(index,(u32)Field::TYPE::FLOWER);
 							auto flower_position = field_->GetBlockPosition(position);
-
-							if (!flowers_[index]->IsLive())
+							if(!flowers_[index]->IsLive())
 							{
 								flowers_[index]->SetNumber(bullet->GetTag());
 								flowers_[index]->Show();
 								flowers_[index]->SetPosition(flower_position);
 
+
+								if(field_type == Field::TYPE::TREE)
+								{
+									flowers_[index]->SetIsGrowth(true);
+									//field_->SetType(index,Field::TYPE::TREE_FLOWER);
+								}
 								flower_list_.push_back(flowers_[index]);
 							}
 						}
@@ -611,8 +667,6 @@ void Game::Update()
 			}
 		}
 	}
-
-	GET_INPUT_XPAD(0)->GetLStick();
 
 #ifndef _RELEASE
 	for (auto i = 0; i < PLAYER_MAX; ++i)
@@ -680,15 +734,6 @@ void Game::Draw()
 		graphic_device->SetRenderTarget(2, position_textures_[i]);
 
 		graphic_device->Clear(float4(1.0f, 0.0f, 0.0f, 0.0f), 1.0f);
-
-		if (field_icons_[i]->IsShow())
-		{
-			field_->SelectBlock(field_icons_[i]->GetPosition());
-		}
-		else
-		{
-			field_->NotSelectBlock();
-		}
 
 		graphic_device->SetVertexShader(gb_vs);
 		graphic_device->SetPixelShader(gb_ps);
@@ -785,6 +830,27 @@ void Game::Draw()
 			//}
 		}
 
+		for(auto effect : effect_list_)
+		{
+			//if(flower->IsShow())
+			//{
+			object = effect._Get()->GetObject();
+			world_matrix = object->GetMatrix();
+			world_matrix = utility::math::Multiply(i_view_matrix,world_matrix);
+
+			gb_vs->SetValue("_world_matrix",(f32*)&world_matrix,16);
+			gb_ps->SetTexture("_texture_sampler",object->GetTexture(0)->GetTexture());
+
+			if(frustum_culling_->IsCulling(object->GetPosition(),0.5f))
+			{
+#ifdef _DEBUG
+				debug_object_draw_num++;
+#endif // _DEBUG
+				object->Draw();
+			}
+			//}
+		}
+
 		//draw wall
 		for (u32 j = 0; j < WALL_MAX; ++j)
 		{
@@ -802,7 +868,7 @@ void Game::Draw()
 		}
 
 		//draw dome
-		object = dome_->GetObjectA();
+		object = dome_->GetObject();
 		world_matrix = object->GetMatrix();
 		gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
 		gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());
@@ -813,7 +879,7 @@ void Game::Draw()
 		}
 
 		//draw cylinder
-		object = cylinder_->GetObjectA();
+		object = cylinder_->GetObject();
 		world_matrix = object->GetMatrix();
 		gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
 		gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());
@@ -822,9 +888,6 @@ void Game::Draw()
 		{
 			object->Draw();
 		}
-
-
-
 
 		for (u32 j = 0; j < PLAYER_MAX; ++j)
 		{
@@ -869,7 +932,14 @@ void Game::Draw()
 		fbx_tree_[1]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[i]->GetProjectionMatrix());
 		fbx_tree_[1]->Draw();
 
-		for (u32 j = 0; j < PLAYER_MAX; ++j)
+		for(auto tree : tree_list_)
+		{
+			tree->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[i]->GetViewMatrix());
+			tree->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[i]->GetProjectionMatrix());
+			tree->Draw();
+		}
+
+		for(u32 j = 0;j < PLAYER_MAX;++j)
 		{
 			players_[j]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[i]->GetViewMatrix());
 			players_[j]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[i]->GetProjectionMatrix());
@@ -1156,7 +1226,7 @@ void Game::DrawResult(void)
 	}
 
 	//draw dome
-	object = dome_->GetObjectA();
+	object = dome_->GetObject();
 	world_matrix = object->GetMatrix();
 	gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
 	gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());
@@ -1179,4 +1249,84 @@ u32 Game::GetPoint(u32 player_number) const
 		}
 	}
 	return count;
+}
+
+void Game::UpdateFieldObject(void)
+{
+	auto width = field_->GetBlockWidthCount();
+	auto height = field_->GetBlockHeightCount();
+	for(u32 i = 0;i < height;++i)
+	{
+		for(u32 j = 0;j < width;++j)
+		{
+			auto key = i * width + j;
+			if(!(tree_creater_map_.find(key) == tree_creater_map_.end()))
+			{
+				continue;
+			}
+			if(CheckGrowTree(j,i,0))
+			{
+				flowers_[i * width + j]->SetTreeIndex(key);
+				flowers_[i * width + j + 1]->SetTreeIndex(key);
+				flowers_[(i + 1) * width + j]->SetTreeIndex(key);
+				flowers_[(i + 1) * width + j + 1]->SetTreeIndex(key);
+				auto tree_creater = std::make_shared<TreeCreater>();
+				//tree_creater->SetPosition(float3(0.0f,0.0f,0.0f));
+				tree_creater->SetPosition(float3((j + 1) * 0.5f - width * 0.25f,0.0f,-((i + 1) * 0.5f) + height * 0.25f));
+				tree_creater->SetNumber(0);
+				tree_creater_map_.insert(std::make_pair(key,tree_creater));
+			}
+			if(CheckGrowTree(j,i,2))
+			{
+
+			}
+		}
+	}
+}
+
+bool Game::CheckGrowTree(u32 in_x,u32 in_y,u32 in_type)
+{
+	auto width = field_->GetBlockWidthCount();
+
+	if(!(flowers_[in_y * width + in_x]->IsTreeCreate()))
+	{
+		return false;
+	}
+
+	if(!(flowers_[in_y * width + in_x]->GetNumber() == in_type || flowers_[in_y * width + in_x]->GetNumber() == in_type + 1))
+	{
+		return false;
+	}
+
+	if(!flowers_[in_y * width + in_x + 1]->IsTreeCreate())
+	{
+		return false;
+	}
+
+	if(!(flowers_[in_y * width + in_x + 1]->GetNumber() == in_type || flowers_[in_y * width + in_x + 1]->GetNumber() == in_type + 1))
+	{
+		return false;
+	}
+
+	if(!flowers_[(in_y + 1) * width + in_x]->IsTreeCreate())
+	{
+		return false;
+	}
+
+	if(!(flowers_[(in_y + 1) * width + in_x]->GetNumber() == in_type || flowers_[(in_y + 1) * width + in_x]->GetNumber() == in_type + 1))
+	{
+		return false;
+	}
+
+	if(!flowers_[(in_y + 1) * width + in_x + 1]->IsTreeCreate())
+	{
+		return false;
+	}
+
+	if(!(flowers_[(in_y + 1) * width + in_x + 1]->GetNumber() == in_type || flowers_[(in_y + 1) * width + in_x + 1]->GetNumber() == in_type + 1))
+	{
+		return false;
+	}
+
+	return true;
 }

@@ -31,13 +31,20 @@
     <ClCompile Include="sources\develop_tool\develop_tool.cpp" />
     <ClCompile Include="sources\dome\dome.cpp" />
     <ClCompile Include="sources\dome\mesh_dome.cpp" />
+    <ClCompile Include="sources\effect\effect.cpp" />
+    <ClCompile Include="sources\effect\smoke.cpp" />
+    <ClCompile Include="sources\fade\fade.cpp" />
     <ClCompile Include="sources\fbx\kim.cpp" />
     <ClCompile Include="sources\fbx_object\fbx_object.cpp" />
     <ClCompile Include="sources\fbx_tree\fbx_tree.cpp" />
     <ClCompile Include="sources\field\field.cpp" />
     <ClCompile Include="sources\field_icon\field_icon.cpp" />
     <ClCompile Include="sources\field_object\flower.cpp" />
+<<<<<<< HEAD
     <ClCompile Include="sources\game_score\game_score.cpp" />
+=======
+    <ClCompile Include="sources\field_object\tree_creater.cpp" />
+>>>>>>> 63fc2b9c07d11406fdb0607e940ba7a192e67950
     <ClCompile Include="sources\game_timer\game_timer.cpp" />
     <ClCompile Include="sources\main.cpp" />
     <ClCompile Include="sources\mesh\mesh.cpp" />
@@ -94,13 +101,20 @@
     <ClInclude Include="sources\develop_tool\develop_tool.h" />
     <ClInclude Include="sources\dome\dome.h" />
     <ClInclude Include="sources\dome\mesh_dome.h" />
+    <ClInclude Include="sources\effect\effect.h" />
+    <ClInclude Include="sources\effect\smoke.h" />
+    <ClInclude Include="sources\fade\fade.h" />
     <ClInclude Include="sources\fbx\kim.h" />
     <ClInclude Include="sources\fbx_object\fbx_object.h" />
     <ClInclude Include="sources\fbx_tree\fbx_tree.h" />
     <ClInclude Include="sources\field\field.h" />
     <ClInclude Include="sources\field_icon\field_icon.h" />
     <ClInclude Include="sources\field_object\flower.h" />
+<<<<<<< HEAD
     <ClInclude Include="sources\game_score\game_score.h" />
+=======
+    <ClInclude Include="sources\field_object\tree_creater.h" />
+>>>>>>> 63fc2b9c07d11406fdb0607e940ba7a192e67950
     <ClInclude Include="sources\game_timer\game_timer.h" />
     <ClInclude Include="sources\main.h" />
     <ClInclude Include="sources\mesh\mesh.h" />

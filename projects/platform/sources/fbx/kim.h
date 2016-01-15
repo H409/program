@@ -164,8 +164,6 @@ public :
 
 	LPDIRECT3DTEXTURE9 GetTexture( int i ){ return mesh_[ i ].texture_ ; }
 
-	bool GetAnimarionPlay( int i ){ return animation_play_[ i ]; }	// trueで終わっている
-
 	bool GetSingleAnimationEnd( void ){ return single_animation_end_ ; }
 
 	void SetOldKey( int i ){ old_key_ = i ; }
@@ -238,14 +236,14 @@ private :
 	int anime_value = 1;
 	int all_vertex_num_ = 0;
 
+	int timer_ ;
+
 	int old_key_ ;
 	int current_key_ ;
 	int next_key_ ;
 
 	bool animation_ ;
 	bool single_animation_end_ ;
-
-	bool animation_play_[ 5 ];	// 新しいアニメーション終わったか
 
 	int anime_data_[ 3 ];
 	int old_anime_data_[ 3 ];

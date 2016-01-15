@@ -104,11 +104,19 @@
     <Filter Include="sources\result_winlogo">
       <UniqueIdentifier>{ae78541e-213b-4187-9dd0-d1d7d4821ca4}</UniqueIdentifier>
     </Filter>
+<<<<<<< HEAD
     <Filter Include="sources\game_score">
       <UniqueIdentifier>{91047c96-d46e-429a-9a24-8c4cc49f3fd6}</UniqueIdentifier>
     </Filter>
     <Filter Include="sources\result_score">
       <UniqueIdentifier>{e2c51647-e7aa-4de0-b530-244a534d991c}</UniqueIdentifier>
+=======
+    <Filter Include="sources\fade">
+      <UniqueIdentifier>{59b0bbba-ad84-4704-8c56-f6ab5a91c0e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\effect">
+      <UniqueIdentifier>{55097bbc-67c7-4e29-9352-596b7852bbae}</UniqueIdentifier>
+>>>>>>> 63fc2b9c07d11406fdb0607e940ba7a192e67950
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -292,8 +300,22 @@
     <ClCompile Include="sources\result_winlogo\result_winlogo.cpp">
       <Filter>sources\result_winlogo</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="sources\game_score\game_score.cpp">
       <Filter>sources\game_score</Filter>
+=======
+    <ClCompile Include="sources\field_object\tree_creater.cpp">
+      <Filter>sources\field_object</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\fade\fade.cpp">
+      <Filter>sources\fade</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\effect\effect.cpp">
+      <Filter>sources\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\effect\smoke.cpp">
+      <Filter>sources\effect</Filter>
+>>>>>>> 63fc2b9c07d11406fdb0607e940ba7a192e67950
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -480,8 +502,22 @@
     <ClInclude Include="sources\result_winlogo\result_winlogo.h">
       <Filter>sources\result_winlogo</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="sources\game_score\game_score.h">
       <Filter>sources\game_score</Filter>
+=======
+    <ClInclude Include="sources\field_object\tree_creater.h">
+      <Filter>sources\field_object</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\fade\fade.h">
+      <Filter>sources\fade</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\effect\effect.h">
+      <Filter>sources\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\effect\smoke.h">
+      <Filter>sources\effect</Filter>
+>>>>>>> 63fc2b9c07d11406fdb0607e940ba7a192e67950
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

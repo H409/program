@@ -57,6 +57,7 @@ public:
 		SHRINE_2,
 		ROCK_2x2,
 		ROCK_4x4,
+		TREE_FLOWER,
 		MAX,
 	};
 	// constructor
@@ -93,6 +94,8 @@ public:
 
 	u32 GetBlockIndex(const float3& in_position);
 
+	u32 GetBlockWidthCount(void)const;
+	u32 GetBlockHeightCount(void)const;
 	u32 GetBlockCount(void)const;
 
 	u32 GetBlockCount(TYPE in_type);
@@ -104,12 +107,13 @@ public:
 	std::vector<float3> GetPositionsT(const u32& in_type);
 
 	// set type
-	void SetType(const float3& in_position,const u32& in_type);
-	void SetType(const u32& in_x,const u32& in_y,const u32& in_type);
-	void SetType(u32 in_index,u32 in_type);
+	void SetType(const float3& in_position,TYPE in_type);
+	void SetType(const u32& in_x,const u32& in_y,TYPE in_type);
+	void SetType(u32 in_index,TYPE in_type);
 
 	// get type
 	TYPE GetType(const float3& in_position)const;
+	TYPE GetType(u32 in_index)const;
 
 	// 
 	u32 CountType(u32 in_type);

@@ -35,8 +35,8 @@
 class Player : public Object
 {
 public : 
-#define NOW_ANIMETION ( int )wepon_ * ( int )ANIME::MAX + ( int )anime_
-#define OLD_ANIMETION ( int )wepon_ * ( int )ANIME::MAX + ( int )old_anime_
+#define NOW_ANIMETION ( int )weapon_ * ( int )ANIME::MAX + ( int )anime_
+#define OLD_ANIMETION ( int )weapon_ * ( int )ANIME::MAX + ( int )old_anime_
 
 	enum class STATE
 	{
@@ -72,7 +72,7 @@ public :
 		MAX
 	};
 
-	Player( LPDIRECT3DDEVICE9 pDevice );		// コンストラクタ
+	Player( LPDIRECT3DDEVICE9 pDevice , int ID );		// コンストラクタ
 	~Player();									// デストラクタ
 
 	void Init( float3 pos );			// 初期化
@@ -103,8 +103,8 @@ public :
 	ANIME GetOldAnime( void ){ return anime_ ; }
 	void SetOldAnime( const ANIME& anime ){ old_anime_ = anime ; };
 
-	WEAPON GetWepon( void ){ return wepon_ ; };
-	void SetWepon( const WEAPON& wepon ){ wepon_ = wepon ; };
+	WEAPON GetWepon( void ){ return weapon_ ; };
+	void SetWepon( const WEAPON& weapon ){ weapon_ = weapon ; };
 
 	//void SetActionAnimationEnd( const int& id ){ ID_ = id ; }
 	bool GetActionAnimationEnd( void ){ return action_animation_end_ ; }
@@ -112,7 +112,7 @@ public :
 	//void SetAction( bool b ){ action_ = b ; }
 
 	bool GetHit( void ){ return hit_ ; }
-	void SetHit( bool b ){ hit_ = b ; }
+	void SetHit( bool b );
 
 	float GetCameraRotY( void ){ return camera_rot_y ; }
 
@@ -127,11 +127,14 @@ private :
 	float3 speed_ ;				// 速度
 	float3 rotDest_ ;			// 目的の向き
 	float3 old_position_ ;		// 前の位置
+	float3 pad_move_ ;
 
 	int ID_ ;
 	bool action_animation_end_ ;
 	bool action_ ;
 	bool hit_ ;
+	bool take_out_ ;
+	bool aim_ ;
 
 	STATE state_ ;
 
@@ -139,7 +142,7 @@ private :
 
 	ANIME anime_ ;
 	ANIME old_anime_ ;
-	WEAPON wepon_ ;		// 0 : ランチャー , 1 : 銃 , 2 : クワ
+	WEAPON weapon_ ;		// 0 : ランチャー , 1 : 銃 , 2 : クワ
 
 	void Control( void );
 	void UpdateKimMatrix( void );

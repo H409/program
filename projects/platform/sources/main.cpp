@@ -87,7 +87,6 @@ int main(int argc,char* argv)
 		else{ DEVELOP_DISPLAY_R( "RCtrl or RShift" ); }
 		if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_F11 ) == true ){ debug_show = !debug_show ; }
 		develop_tool::DevelopTool::GetInstance()->GetDevelopDisplay()->SetIsShow( debug_show );
-
 #endif // _DEBUG
 
 		GET_INPUT_MANAGER()->Update();
