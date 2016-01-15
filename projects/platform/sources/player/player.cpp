@@ -445,6 +445,14 @@ void Player::ControlJoypad( void )
 					launcher_timer_ = 0 ;
 				}
 			}
+			//if(  weapon_ == WEAPON::GUN )
+			//{
+				//if( launcher_timer_ > 420 )
+			//	{
+					//action_ = true ;
+					//launcher_timer_ = 0 ;
+			//	}
+			//}
 			else
 			{
 				action_ = true ;

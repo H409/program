@@ -176,7 +176,7 @@ Game::Game()
 	}
 
 	field_object_ = std::make_shared<FBXObject>(graphic_device->GetDevice());
-	field_object_->Load("resources/model/test_map_obj_3.kim");
+	field_object_->Load("resources/model/map_obj.kim");
 	field_object_->SetPosition(0, 0, 0);
 	field_object_->SetScale( 1.2f , 1.2f , 1.2f );
 	field_object_->Update();
