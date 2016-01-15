@@ -856,7 +856,7 @@ void Game::Draw()
 
 			//if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
 			{
-				object->Draw();
+				//object->Draw();
 			}
 		}
 
@@ -868,7 +868,7 @@ void Game::Draw()
 
 		//if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
 		{
-			//object->Draw();
+			object->Draw();
 		}
 
 		//draw cylinder
@@ -879,7 +879,7 @@ void Game::Draw()
 
 		//if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
 		{
-			object->Draw();
+			//object->Draw();
 		}
 
 		for (u32 j = 0; j < PLAYER_MAX; ++j)
@@ -1205,7 +1205,7 @@ void Game::DrawResult(void)
 
 		//if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
 		{
-			object->Draw();
+			//object->Draw();
 		}
 	}
 
