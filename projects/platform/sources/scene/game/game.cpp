@@ -597,6 +597,34 @@ void Game::Update()
 				field_->SetType(index + 1,Field::TYPE::TREE_FLOWER);
 				field_->SetType(index + field_->GetBlockWidthCount(),Field::TYPE::TREE_FLOWER);
 				field_->SetType(index + field_->GetBlockWidthCount() + 1,Field::TYPE::TREE_FLOWER);
+
+				//
+				for(auto i = 0;i < PLAYER_MAX;++i)
+				{
+					auto p_pos = players_[i]->GetPosition();
+					auto p_index = field_->GetBlockIndex(p_pos);
+
+					if(index == p_index)
+					{
+						
+					}
+
+					if(index + 1 == p_index)
+					{
+
+					}
+
+					if(index + field_->GetBlockWidthCount() == p_index)
+					{
+
+					}
+
+					if(index + field_->GetBlockWidthCount() + 1 == p_index)
+					{
+
+					}
+				}
+
 			}
 		}
 	}
