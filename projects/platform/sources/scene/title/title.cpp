@@ -132,7 +132,7 @@ void Title::Update()
 		//Œø‰Ê‰¹Ä¶
 		Sound::Instance().PlaySeSound(SOUND_LABEL_SE_YES, 0);
 
-		SceneManager::Instance().set_p_next_scene(SceneManager::Instance().get_tutorial());
+		SceneManager::Instance().set_p_next_scene(SceneManager::Instance().get_game());
 		SceneManager::Instance().set_scene_change_flag(true);
 	}
 
