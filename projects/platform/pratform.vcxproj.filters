@@ -92,9 +92,6 @@
     <Filter Include="sources\result_team_icon">
       <UniqueIdentifier>{58fccb02-0dfc-40d5-a1e7-ce22ce9722a9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="sources\score">
-      <UniqueIdentifier>{e2c51647-e7aa-4de0-b530-244a534d991c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="sources\sound">
       <UniqueIdentifier>{fc911964-f3aa-4e6c-9a46-ceaa9c66ff91}</UniqueIdentifier>
     </Filter>
@@ -106,6 +103,12 @@
     </Filter>
     <Filter Include="sources\result_winlogo">
       <UniqueIdentifier>{ae78541e-213b-4187-9dd0-d1d7d4821ca4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\game_score">
+      <UniqueIdentifier>{91047c96-d46e-429a-9a24-8c4cc49f3fd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\result_score">
+      <UniqueIdentifier>{e2c51647-e7aa-4de0-b530-244a534d991c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -272,7 +275,7 @@
       <Filter>sources\result_team_icon</Filter>
     </ClCompile>
     <ClCompile Include="sources\score\result_score.cpp">
-      <Filter>sources\score</Filter>
+      <Filter>sources\result_score</Filter>
     </ClCompile>
     <ClCompile Include="sources\observer\result_observer.cpp">
       <Filter>sources\observer</Filter>
@@ -288,6 +291,9 @@
     </ClCompile>
     <ClCompile Include="sources\result_winlogo\result_winlogo.cpp">
       <Filter>sources\result_winlogo</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\game_score\game_score.cpp">
+      <Filter>sources\game_score</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -457,7 +463,7 @@
       <Filter>sources\result_team_icon</Filter>
     </ClInclude>
     <ClInclude Include="sources\score\result_score.h">
-      <Filter>sources\score</Filter>
+      <Filter>sources\result_score</Filter>
     </ClInclude>
     <ClInclude Include="sources\observer\result_observer.h">
       <Filter>sources\observer</Filter>
@@ -473,6 +479,9 @@
     </ClInclude>
     <ClInclude Include="sources\result_winlogo\result_winlogo.h">
       <Filter>sources\result_winlogo</Filter>
+    </ClInclude>
+    <ClInclude Include="sources\game_score\game_score.h">
+      <Filter>sources\game_score</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
