@@ -137,7 +137,7 @@ void Title::Update()
 	if (GET_INPUT_KEYBOARD()->GetTrigger(DIK_O))
 	{
 		{
-			Sound::Instance().PlaySeSound(SOUND_LABEL_SE_SHOT, 0);
+			Sound::Instance().PlaySeSound(SOUND_LABEL_SE_PMOVE, 0);
 		}
 	}
 

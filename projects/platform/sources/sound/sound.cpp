@@ -22,7 +22,7 @@ PARAM g_aParam[SOUND_LABEL_MAX] =
 	{ "resources/sound/se/Cyancel1.wav", false },			// 衝突音0
 	{ "resources/sound/se/enemyexprosion.wav", false },			// 衝突音1
 	{ "resources/sound/se/CursorMove1.wav", false },		// 防御音
-	{ "resources/sound/se/pause2.wav", false },		// ロックオン音
+	{ "resources/sound/se/pmove.wav", false },		// ロックオン音
 };
 
 

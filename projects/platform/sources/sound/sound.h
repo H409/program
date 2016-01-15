@@ -25,7 +25,7 @@ typedef enum
 	SOUND_LABEL_SE_CYANCEL,		// キャンセル音0
 	SOUND_LABEL_SE_EXPRODE,		// 爆発音1
 	SOUND_LABEL_SE_MOVE,		// カーソル移動音
-	SOUND_LABEL_SE_PAUSE,		// ロックオン音
+	SOUND_LABEL_SE_PMOVE,		// ロックオン音
 	SOUND_LABEL_MAX,
 } SOUND_LABEL;
 
