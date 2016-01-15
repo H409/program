@@ -224,8 +224,7 @@ void Player::Control( void )
 	ControlKeyBorad();
 #else
 	ControlJoypad();
-	ControlKeyBorad();
-
+	//ControlKeyBorad();
 #endif // _DEBUG
 
 	D3DXVECTOR3 vec ;

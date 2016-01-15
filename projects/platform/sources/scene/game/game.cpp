@@ -648,7 +648,7 @@ void Game::Update()
 								auto player_position = player->GetPosition();
 								if (utility::math::Distance(position, player_position) < 0.5f + 1.0f)
 								{
-									DEBUG_TRACE("hit");
+									players_[i]->SetHit( true );
 								}
 							}
 						}
