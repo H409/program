@@ -20,6 +20,7 @@
 #include "input_manager.h"
 #include "input_keyboard.h"
 #include "input_mouse.h"
+#include "dx9_device.h"
 
 //*****************************************************************************
 // forward declaration

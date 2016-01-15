@@ -592,6 +592,11 @@ void Kim::Animation( void )
 			anime_data_[ 2 ] = old_anime_data_[ 2 ];
 
 			single_animation_end_ = true ;
+			current_key_ = old_anime_data_[ 0 ];
+			anime_data_[0] = old_anime_data_[0];
+			anime_data_[1] = old_anime_data_[1];
+			anime_data_[2] = old_anime_data_[2];
+
 		}
 
 		current_key_ = anime_data_[ 0 ] - 1 ;

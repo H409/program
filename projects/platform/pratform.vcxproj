@@ -31,12 +31,16 @@
     <ClCompile Include="sources\develop_tool\develop_tool.cpp" />
     <ClCompile Include="sources\dome\dome.cpp" />
     <ClCompile Include="sources\dome\mesh_dome.cpp" />
+    <ClCompile Include="sources\effect\effect.cpp" />
+    <ClCompile Include="sources\effect\smoke.cpp" />
+    <ClCompile Include="sources\fade\fade.cpp" />
     <ClCompile Include="sources\fbx\kim.cpp" />
     <ClCompile Include="sources\fbx_object\fbx_object.cpp" />
     <ClCompile Include="sources\fbx_tree\fbx_tree.cpp" />
     <ClCompile Include="sources\field\field.cpp" />
     <ClCompile Include="sources\field_icon\field_icon.cpp" />
     <ClCompile Include="sources\field_object\flower.cpp" />
+    <ClCompile Include="sources\field_object\tree_creater.cpp" />
     <ClCompile Include="sources\game_timer\game_timer.cpp" />
     <ClCompile Include="sources\main.cpp" />
     <ClCompile Include="sources\mesh\mesh.cpp" />
@@ -54,6 +58,7 @@
     <ClCompile Include="sources\player\player.cpp" />
     <ClCompile Include="sources\player_icon\player_icon.cpp" />
     <ClCompile Include="sources\result_team_icon\result_team_icon.cpp" />
+    <ClCompile Include="sources\result_winlogo\result_winlogo.cpp" />
     <ClCompile Include="sources\scene\base\scene_manager.cpp" />
     <ClCompile Include="sources\scene\demo\demo.cpp" />
     <ClCompile Include="sources\scene\game\game.cpp" />
@@ -71,6 +76,7 @@
     <ClCompile Include="sources\system\xi_pad.cpp" />
     <ClCompile Include="sources\timer\timer.cpp" />
     <ClCompile Include="sources\wall\wall.cpp" />
+    <ClCompile Include="sources\weapon_icon\weapon_icon.cpp" />
     <ClCompile Include="sources\windows\win_main.cpp" />
     <ClCompile Include="sources\x_model\x_model.cpp" />
   </ItemGroup>
@@ -91,12 +97,16 @@
     <ClInclude Include="sources\develop_tool\develop_tool.h" />
     <ClInclude Include="sources\dome\dome.h" />
     <ClInclude Include="sources\dome\mesh_dome.h" />
+    <ClInclude Include="sources\effect\effect.h" />
+    <ClInclude Include="sources\effect\smoke.h" />
+    <ClInclude Include="sources\fade\fade.h" />
     <ClInclude Include="sources\fbx\kim.h" />
     <ClInclude Include="sources\fbx_object\fbx_object.h" />
     <ClInclude Include="sources\fbx_tree\fbx_tree.h" />
     <ClInclude Include="sources\field\field.h" />
     <ClInclude Include="sources\field_icon\field_icon.h" />
     <ClInclude Include="sources\field_object\flower.h" />
+    <ClInclude Include="sources\field_object\tree_creater.h" />
     <ClInclude Include="sources\game_timer\game_timer.h" />
     <ClInclude Include="sources\main.h" />
     <ClInclude Include="sources\mesh\mesh.h" />
@@ -114,6 +124,7 @@
     <ClInclude Include="sources\player\player.h" />
     <ClInclude Include="sources\player_icon\player_icon.h" />
     <ClInclude Include="sources\result_team_icon\result_team_icon.h" />
+    <ClInclude Include="sources\result_winlogo\result_winlogo.h" />
     <ClInclude Include="sources\scene\base\scene_base.h" />
     <ClInclude Include="sources\scene\base\scene_factory.h" />
     <ClInclude Include="sources\scene\base\scene_manager.h" />
@@ -133,6 +144,7 @@
     <ClInclude Include="sources\system\xi_pad.h" />
     <ClInclude Include="sources\timer\timer.h" />
     <ClInclude Include="sources\wall\wall.h" />
+    <ClInclude Include="sources\weapon_icon\weapon_icon.h" />
     <ClInclude Include="sources\x_model\x_model.h" />
   </ItemGroup>
   <ItemGroup>
