@@ -41,13 +41,10 @@ class Timer;
 class FBXTree;
 class ResultTeamIcon;
 class GameTimer;
-//<<<<<<< HEAD
 class WeaponIcon;
 class ResultWinLogo;
-//=======
 class Effect;
 class TreeCreater;
-//>>>>>>> kab/effect
 
 namespace utility {
 	namespace culling {
@@ -139,6 +136,8 @@ private:
 	std::list<std::weak_ptr<Flower>> flower_list_;
 
 	std::unique_ptr<Timer> timer_;
+
+	std::shared_ptr<FBXObject> field_object_ ;
 
 	std::shared_ptr<MeshObject> sprite_3D_[ 4 ] ;
 	std::list<std::shared_ptr<FBXTree>> tree_list_;

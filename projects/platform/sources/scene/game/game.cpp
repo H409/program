@@ -168,12 +168,18 @@ Game::Game()
 
 	for (int i = 0; i < PLAYER_MAX; i++)
 	{
-		auto sprite_3d = std::make_shared<mesh::Sprite3D>(float2(0.4f, 0.35f));
+		auto sprite_3d = std::make_shared<mesh::Sprite3D>(float2(0.5f, 0.5f));
 		sprite_3D_[i] = std::make_shared<MeshObject>(sprite_3d);
 		sprite_3D_[i]->SetPosition(-9.5f, 0.01f, 2.0f);
 		sprite_3D_[i]->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/shadow.png"));
 		sprite_3D_[i]->SetRotationX(utility::math::ToRadian(90.0f));
 	}
+
+	field_object_ = std::make_shared<FBXObject>(graphic_device->GetDevice());
+	field_object_->Load("resources/model/test_map_obj_3.kim");
+	field_object_->SetPosition(0, 0, 0);
+	field_object_->SetScale( 1.2f , 1.2f , 1.2f );
+	field_object_->Update();
 
 #ifdef _DEBUG
 	debugRenderTarget_ = false;
@@ -651,7 +657,7 @@ void Game::Update()
 								auto player_position = player->GetPosition();
 								if (utility::math::Distance(position, player_position) < 0.5f + 1.0f)
 								{
-									DEBUG_TRACE("hit");
+									players_[i]->SetHit( true );
 								}
 							}
 						}
@@ -870,7 +876,7 @@ void Game::Draw()
 
 		//if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
 		{
-			object->Draw();
+			//object->Draw();
 		}
 
 		//draw cylinder
@@ -912,6 +918,10 @@ void Game::Draw()
 		}
 
 		graphic_device->SetVertexShader(gb_vs_fbx);
+
+		field_object_->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[i]->GetViewMatrix());
+		field_object_->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[i]->GetProjectionMatrix());
+		field_object_->Draw();
 
 		for(auto tree : tree_list_)
 		{
@@ -1133,6 +1143,7 @@ void Game::DrawResult(void)
 	auto basic_ps = graphic_device->LoadPixelShader("resources/shader/basic.psc");
 	auto gb_vs = graphic_device->LoadVertexShader("resources/shader/graphics_buffer.vsc");
 	auto gb_ps = graphic_device->LoadPixelShader("resources/shader/graphics_buffer.psc");
+	auto gb_vs_fbx = graphic_device->LoadVertexShader("resources/shader/graphics_buffer_fbx.vsc");
 
 	basic_vs->SetValue("_view_matrix", (f32*)&observer_2d_->GetViewMatrix(), sizeof(float4x4));
 	basic_vs->SetValue("_projection_matrix", (f32*)&observer_2d_->GetProjectionMatrix(), sizeof(float4x4));
@@ -1216,6 +1227,12 @@ void Game::DrawResult(void)
 	{
 		object->Draw();
 	}
+
+	graphic_device->SetVertexShader(gb_vs_fbx);
+
+	field_object_->GetKimPointer()->SetView((D3DXMATRIX*)&result_observer->GetViewMatrix());
+	field_object_->GetKimPointer()->SetProjection((D3DXMATRIX*)&result_observer->GetProjectionMatrix());
+	field_object_->Draw();
 }
 
 u32 Game::GetPoint(u32 player_number) const
