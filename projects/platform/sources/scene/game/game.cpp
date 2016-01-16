@@ -96,8 +96,8 @@ Game::Game()
 	float2 positions[]
 	{
 		float2(0.0f,  0.0f),
-		float2(window->GetWidth() * 0.5f,  0.0f),
 		float2(0.0f,window->GetHeight() * 0.5f),
+		float2(window->GetWidth() * 0.5f,  0.0f),
 		float2(window->GetWidth() * 0.5f,window->GetHeight() * 0.5f),
 	};
 	for (u32 i = 0; i < PLAYER_MAX; ++i)
@@ -249,6 +249,10 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 	is_result_ = false;
 	result_state = RESULT_STATE::NONE;
 
+	tree_list_.clear();
+
+	tree_creater_map_.clear();
+
 	//BGM
 	Sound::Instance().PlaySound(SOUND_LABEL_BGM002);
 
@@ -371,7 +375,13 @@ void Game::Update()
 			{
 				auto index = field_->GetBlockIndex(position);
 				//field_->SetType(index,(u32)Field::TYPE::SOIL);
+				auto tree_index = flowers_[index]->GetTreeIndex();
 				flowers_[index]->Death();
+				auto tree_it = tree_creater_map_.find(tree_index);
+				if(tree_it != tree_creater_map_.end())
+				{
+					tree_it->second->Death();
+				}
 				if(field_->GetType(index) == Field::TYPE::TREE_FLOWER)
 				{
 					field_->SetType(index,Field::TYPE::TREE);
@@ -583,6 +593,38 @@ void Game::Update()
 				flowers_[index + 1]->Hide();
 				flowers_[index + field_->GetBlockWidthCount()]->Hide();
 				flowers_[index + field_->GetBlockWidthCount() + 1]->Hide();
+				field_->SetType(index,Field::TYPE::TREE_FLOWER);
+				field_->SetType(index + 1,Field::TYPE::TREE_FLOWER);
+				field_->SetType(index + field_->GetBlockWidthCount(),Field::TYPE::TREE_FLOWER);
+				field_->SetType(index + field_->GetBlockWidthCount() + 1,Field::TYPE::TREE_FLOWER);
+
+				//
+				for(auto i = 0;i < PLAYER_MAX;++i)
+				{
+					auto p_pos = players_[i]->GetPosition();
+					auto p_index = field_->GetBlockIndex(p_pos);
+
+					if(index == p_index)
+					{
+						
+					}
+
+					if(index + 1 == p_index)
+					{
+
+					}
+
+					if(index + field_->GetBlockWidthCount() == p_index)
+					{
+
+					}
+
+					if(index + field_->GetBlockWidthCount() + 1 == p_index)
+					{
+
+					}
+				}
+
 			}
 		}
 	}
@@ -596,7 +638,6 @@ void Game::Update()
 	{
 		effect._Get()->Update();
 	}
-
 
 	// 
 	for (auto bullet : bullets_)
@@ -1236,6 +1277,14 @@ u32 Game::GetPoint(u32 player_number) const
 			count++;
 		}
 	}
+
+	for(auto tree : tree_list_)
+	{
+		if(tree->GetID() == player_number)
+		{
+			count += 10;
+		}
+	}
 	return count;
 }
 
@@ -1255,18 +1304,32 @@ void Game::UpdateFieldObject(void)
 			if(CheckGrowTree(j,i,0))
 			{
 				flowers_[i * width + j]->SetTreeIndex(key);
+				flowers_[i * width + j]->SetGrow();
 				flowers_[i * width + j + 1]->SetTreeIndex(key);
+				flowers_[i * width + j + 1]->SetGrow();
 				flowers_[(i + 1) * width + j]->SetTreeIndex(key);
+				flowers_[(i + 1) * width + j]->SetGrow();
 				flowers_[(i + 1) * width + j + 1]->SetTreeIndex(key);
+				flowers_[(i + 1) * width + j + 1]->SetGrow();
 				auto tree_creater = std::make_shared<TreeCreater>();
-				//tree_creater->SetPosition(float3(0.0f,0.0f,0.0f));
 				tree_creater->SetPosition(float3((j + 1) * 0.5f - width * 0.25f,0.0f,-((i + 1) * 0.5f) + height * 0.25f));
 				tree_creater->SetNumber(0);
 				tree_creater_map_.insert(std::make_pair(key,tree_creater));
 			}
 			if(CheckGrowTree(j,i,2))
 			{
-
+				flowers_[i * width + j]->SetTreeIndex(key);
+				flowers_[i * width + j]->SetGrow();
+				flowers_[i * width + j + 1]->SetTreeIndex(key);
+				flowers_[i * width + j + 1]->SetGrow();
+				flowers_[(i + 1) * width + j]->SetTreeIndex(key);
+				flowers_[(i + 1) * width + j]->SetGrow();
+				flowers_[(i + 1) * width + j + 1]->SetTreeIndex(key);
+				flowers_[(i + 1) * width + j + 1]->SetGrow();
+				auto tree_creater = std::make_shared<TreeCreater>();
+				tree_creater->SetPosition(float3((j + 1) * 0.5f - width * 0.25f,0.0f,-((i + 1) * 0.5f) + height * 0.25f));
+				tree_creater->SetNumber(2);
+				tree_creater_map_.insert(std::make_pair(key,tree_creater));
 			}
 		}
 	}

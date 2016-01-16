@@ -105,6 +105,7 @@ public:
 	// get positions
 	std::vector<float3> GetPositionsF(const u32& in_type);
 	std::vector<float3> GetPositionsT(const u32& in_type);
+	std::vector<float3> GetPositions4x4(const u32& in_type);
 
 	// set type
 	void SetType(const float3& in_position,TYPE in_type);
