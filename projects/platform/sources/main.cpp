@@ -79,7 +79,7 @@ int main(int argc,char* argv)
 
 //		DEVELOP_DISPLAY("FPS : %d\n",fps);
 		
-#ifdef _DEBUG
+#ifndef _RELEASE
 		static bool r_ctrl = false ;
 		static bool debug_show = true ;
 		if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_RCONTROL ) || GET_INPUT_KEYBOARD()->GetTrigger(DIK_RSHIFT)){ r_ctrl = !r_ctrl ; }
