@@ -844,21 +844,21 @@ void Game::Draw()
 			//}
 		}
 
-		//draw wall
-		for (u32 j = 0; j < WALL_MAX; ++j)
-		{
-			object = wall_[j]->GetObject();
+		////draw wall
+		//for (u32 j = 0; j < WALL_MAX; ++j)
+		//{
+		//	object = wall_[j]->GetObject();
 
-			world_matrix = object->GetMatrix();
+		//	world_matrix = object->GetMatrix();
 
-			gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
-			gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());
+		//	gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
+		//	gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());
 
-			//if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
-			{
-				//object->Draw();
-			}
-		}
+		//	//if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
+		//	{
+		//		//object->Draw();
+		//	}
+		//}
 
 		//draw dome
 		object = dome_->GetObject();
@@ -871,16 +871,16 @@ void Game::Draw()
 			object->Draw();
 		}
 
-		//draw cylinder
-		object = cylinder_->GetObject();
-		world_matrix = object->GetMatrix();
-		gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
-		gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());
+		////draw cylinder
+		//object = cylinder_->GetObject();
+		//world_matrix = object->GetMatrix();
+		//gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
+		//gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());
 
-		//if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
-		{
-			//object->Draw();
-		}
+		////if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
+		//{
+		//	//object->Draw();
+		//}
 
 		for (u32 j = 0; j < PLAYER_MAX; ++j)
 		{
@@ -964,8 +964,6 @@ void Game::Draw()
 		d_ps->SetTexture("_position_sampler", position_textures_[i]->GetTexture());
 		sprite_objects_[i]->Draw();
 	}
-
-
 
 #ifdef _DEBUG 
 	static int _debugRenderTargetIndex = 0;
@@ -1193,21 +1191,21 @@ void Game::DrawResult(void)
 		}
 	}
 
-	//draw wall
-	for (u32 j = 0; j < WALL_MAX; ++j)
-	{
-		object = wall_[j]->GetObject();
+	////draw wall
+	//for (u32 j = 0; j < WALL_MAX; ++j)
+	//{
+	//	object = wall_[j]->GetObject();
 
-		world_matrix = object->GetMatrix();
+	//	world_matrix = object->GetMatrix();
 
-		gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
-		gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());
+	//	gb_vs->SetValue("_world_matrix", (f32*)&world_matrix, 16);
+	//	gb_ps->SetTexture("_texture_sampler", object->GetTexture(0)->GetTexture());
 
-		//if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
-		{
-			//object->Draw();
-		}
-	}
+	//	//if(frustum_culling_->IsCulling(object->GetPosition(),2.0f))
+	//	{
+	//		//object->Draw();
+	//	}
+	//}
 
 	//draw dome
 	object = dome_->GetObject();

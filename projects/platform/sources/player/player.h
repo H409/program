@@ -144,6 +144,7 @@ private :
 	float camera_rot_y ;
 
 	int launcher_timer_ ;
+	int gun_timer_ ;
 	
 	ANIME anime_ ;
 	ANIME old_anime_ ;
