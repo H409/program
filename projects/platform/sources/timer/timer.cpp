@@ -9,7 +9,7 @@
 #include "develop_tool/develop_tool.h"
 #include "system/win_system.h"
 
-const u32 Timer::DEFAULT_TIME_MAX = 60 * 60 * 3;
+const u32 Timer::DEFAULT_TIME_MAX = 60 * 60 ;
 
 Timer::Timer(void)
 	:time_count_(0)

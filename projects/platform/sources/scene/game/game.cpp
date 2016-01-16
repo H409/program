@@ -272,7 +272,7 @@ void Game::Finalize()
 //=============================================================================
 void Game::Update()
 {
-	//timer_->Update();
+	timer_->Update();
 
 	if (timer_->GetTimeLeft() == 0)
 	{
