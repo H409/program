@@ -82,6 +82,9 @@ public :
 
 	void Restore( void ){ position_ = init_position_ ; };						// Äİ’è
 
+	void SetDest( float3 dest ){ rotDest_ = dest ; }
+	float3 GetDest( void ){ return rotDest_ ; }
+
 	//--  kim‚Ìƒ|ƒCƒ“ƒ^  --//
 	Kim* GetKimPointer( void ){ return pKim_ ; }
 	

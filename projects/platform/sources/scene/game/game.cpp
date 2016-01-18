@@ -224,9 +224,26 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 		observers_[i]->SetTargetPosition(positions[i]);
 		observers_[i]->SetState(FollowerObserver::STATE::FOLLWER);
 		observers_[i]->SetTimer(1);
-		observers_[i]->SetRotation(float3());
+		//observers_[i]->SetRotation(float3());
 		observers_[i]->Update();
 	}
+
+	observers_[0]->SetRotation( float3( 0 , D3DX_PI * 0.25f , 0 ) );
+	observers_[1]->SetRotation( float3( 0 , -D3DX_PI * 0.25f , 0 ) );
+	observers_[2]->SetRotation( float3( 0 , D3DX_PI * 0.75f , 0 ) );
+	observers_[3]->SetRotation( float3( 0 , -D3DX_PI * 0.75f , 0 ) );
+
+	players_[0]->SetRotationY( D3DX_PI * 0.25f );
+	players_[0]->SetDest( float3( 0 , D3DX_PI * 0.25f , 0 ) );
+
+	players_[1]->SetRotationY( -D3DX_PI * 0.25f );
+	players_[1]->SetDest( float3( 0 , -D3DX_PI * 0.25f , 0 ) );
+
+	players_[2]->SetRotationY( D3DX_PI * 0.75f );
+	players_[2]->SetDest( float3( 0 , D3DX_PI * 0.75f , 0 ) );
+
+	players_[3]->SetRotationY( -D3DX_PI * 0.75f );
+	players_[3]->SetDest( float3( 0 , -D3DX_PI * 0.75f , 0 ) );
 
 	for (u32 i = 0; i < PLAYER_MAX; ++i)
 	{
@@ -297,7 +314,7 @@ void Game::Update()
 
 	for (int i = 0; i < PLAYER_SUM; i++)
 	{
-		if (GET_INPUT_XPAD(i)->GetTrigger(XIPad::KEY::X))
+		if (GET_INPUT_XPAD(i)->GetTrigger(XIPad::KEY::X) || GET_INPUT_KEYBOARD()->GetTrigger( DIK_5 ) )
 		{
 			//Œø‰Ê‰¹Ä¶
 			Sound::Instance().PlaySeSound(SOUND_LABEL_SE_YES, 0);
