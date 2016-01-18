@@ -352,7 +352,7 @@ void Kim::Update(void)
 		return ;
 	}
 
-	if( timer_ == 2 )
+	if( timer_ == 1 )
 	{
 		current_key_++;
 		timer_ = 0 ;

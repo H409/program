@@ -77,6 +77,9 @@ Player::Player( LPDIRECT3DDEVICE9 pDevice , int ID ) : Object()
 	speed_ = float3( 0.01f , 0.01f , 0.01f );
 
 	position_ = float3( 0 , 0 , 0 );
+	
+	launcher_timer_ = 0 ;
+	gun_timer_ = 0 ;
 
 	ID_ = 0 ;		// 1P
 
@@ -138,6 +141,7 @@ void Player::Init( float3 pos )
 {
 	move_ = float3();
 	position_ = pos ;
+	init_position_ = pos ;
 	state_ = STATE::WAIT ;
 
 	rotDest_ = float3();
@@ -218,6 +222,9 @@ void Player::Control( void )
 		}
 		return ;
 	}
+
+	launcher_timer_++ ;
+	gun_timer_++ ;
 
 #ifndef _RELEASE
 	ControlJoypad();
@@ -336,8 +343,6 @@ void Player::Control( void )
 //-------------------------------------------------------------------	
 void Player::ControlKeyBorad( void )
 {
-	//pad_move_ = float3( 0 , 0 , 0 );
-
 	//--  移動　前  --//	
 	if( GET_INPUT_KEYBOARD()->GetPress( DIK_W ) == true )
 	{
@@ -374,18 +379,38 @@ void Player::ControlKeyBorad( void )
 			state_ = STATE::WAIT ;
 		}
 	}
-	//if( GET_INPUT_MOUSE()->GetRelease( InputMouse::MOUSE_KEY::RIGHT ) == true )
-	//{
-	//	aim_ = false ;
-	//}
 
 	//--  エイム  --//
 	if( state_ == STATE::AIM )
 	{
 		//--  アクション  --//
-		if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_SPACE ) )
+		if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_SPACE ) == true )
 		{
-			action_ = true ;
+			if( weapon_ == WEAPON::LAUNCHER )
+			{
+				if( launcher_timer_ > 420 )
+				{
+					action_ = true ;
+					launcher_timer_ = 0 ;
+				}
+			}
+			else if( weapon_ == WEAPON::HOE )
+			{
+				action_ = true ;
+			}
+		}
+
+		//--  アクション  --//
+		if( GET_INPUT_KEYBOARD()->GetPress( DIK_SPACE ) == true )
+		{
+			if( weapon_ == WEAPON::GUN )
+			{
+				if( gun_timer_ > 10 )
+				{
+					action_ = true ;
+					gun_timer_ = 0 ;
+				}
+			}
 		}
 	}
 
@@ -427,14 +452,37 @@ void Player::ControlJoypad( void )
 		}
 	}
 
-
 	//--  エイム  --//
 	if( state_ == STATE::AIM )
 	{
 		//--  アクション  --//
 		if( GET_INPUT_XPAD( ID_ )->GetTrigger( XIPad::KEY::R2 ) == true )
 		{
-			action_ = true ;
+			if( weapon_ == WEAPON::LAUNCHER )
+			{
+				if( launcher_timer_ > 420 )
+				{
+					action_ = true ;
+					launcher_timer_ = 0 ;
+				}
+			}
+			else
+			{
+				action_ = true ;
+			}
+		}
+
+		//--  アクション  --//
+		if( GET_INPUT_XPAD( ID_ )->GetPress( XIPad::KEY::R2 ) == true )
+		{
+			if( weapon_ == WEAPON::GUN )
+			{
+				if( gun_timer_ > 10 )
+				{
+					action_ = true ;
+					gun_timer_ = 0 ;
+				}
+			}
 		}
 	}
 

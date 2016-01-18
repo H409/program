@@ -77,9 +77,9 @@ int main(int argc,char* argv)
 			st = now;
 		}
 
-		DEVELOP_DISPLAY("FPS : %d\n",fps);
-
-#ifdef _DEBUG
+//		DEVELOP_DISPLAY("FPS : %d\n",fps);
+		
+#ifndef _RELEASE
 		static bool r_ctrl = false ;
 		static bool debug_show = true ;
 		if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_RCONTROL ) || GET_INPUT_KEYBOARD()->GetTrigger(DIK_RSHIFT)){ r_ctrl = !r_ctrl ; }
@@ -88,7 +88,7 @@ int main(int argc,char* argv)
 		if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_F11 ) == true ){ debug_show = !debug_show ; }
 		develop_tool::DevelopTool::GetInstance()->GetDevelopDisplay()->SetIsShow( debug_show );
 #endif // _DEBUG
-
+		
 		GET_INPUT_MANAGER()->Update();
 
 		DEVELOP_TOOL_UPDATE();
