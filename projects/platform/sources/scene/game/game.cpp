@@ -693,6 +693,11 @@ void Game::Update()
 								}
 							}
 						}
+						//
+						auto smoke = std::make_shared<Smoke>();
+						position._y = 0.3f;
+						smoke->Start(60,position);
+						effect_list_.push_back(smoke);
 					}
 
 					bullet->Remove();
