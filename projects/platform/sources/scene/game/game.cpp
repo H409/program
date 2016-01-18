@@ -378,11 +378,14 @@ void Game::Update()
 				auto tree_index = flowers_[index]->GetTreeIndex();
 				flowers_[index]->Death();
 				auto tree_it = tree_creater_map_.find(tree_index);
+
 				if (tree_it != tree_creater_map_.end())
 				{
 					tree_it->second->Death();
 				}
-				if (field_->GetType(index) == Field::TYPE::TREE_FLOWER)
+
+				if(field_->GetType(index) == Field::TYPE::TREE_FLOWER)
+
 				{
 					field_->SetType(index, Field::TYPE::TREE);
 				}
@@ -593,10 +596,39 @@ void Game::Update()
 				flowers_[index + 1]->Hide();
 				flowers_[index + field_->GetBlockWidthCount()]->Hide();
 				flowers_[index + field_->GetBlockWidthCount() + 1]->Hide();
+
 				field_->SetType(index, Field::TYPE::TREE_FLOWER);
 				field_->SetType(index + 1, Field::TYPE::TREE_FLOWER);
 				field_->SetType(index + field_->GetBlockWidthCount(), Field::TYPE::TREE_FLOWER);
 				field_->SetType(index + field_->GetBlockWidthCount() + 1, Field::TYPE::TREE_FLOWER);
+
+				//
+				for(auto i = 0;i < PLAYER_MAX;++i)
+				{
+					auto p_pos = players_[i]->GetPosition();
+					auto p_index = field_->GetBlockIndex(p_pos);
+
+					if(index == p_index)
+					{
+						
+					}
+
+					if(index + 1 == p_index)
+					{
+
+					}
+
+					if(index + field_->GetBlockWidthCount() == p_index)
+					{
+
+					}
+
+					if(index + field_->GetBlockWidthCount() + 1 == p_index)
+					{
+
+					}
+				}
+
 			}
 		}
 	}
@@ -1266,6 +1298,7 @@ u32 Game::GetPoint(u32 player_number) const
 	for (auto tree : tree_list_)
 	{
 		if (tree->GetID() == player_number)
+
 		{
 			count += 10;
 		}

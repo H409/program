@@ -109,6 +109,7 @@ void Flower::Death(void)
 {
 	is_show_ = false;
 	is_live_ = false;
+	is_growing_ = false;
 }
 
 void Flower::SetNumber(u32 in_number)
@@ -154,7 +155,17 @@ u32 Flower::GetTreeIndex(void) const
 
 bool Flower::IsTreeCreate(void) const
 {
-	return (is_show_ && is_show_ && is_growth_ && type_ == TYPE::FLOWER);
+	return (is_show_ && is_live_ && is_growth_ && type_ == TYPE::FLOWER && !is_growing_);
+}
+
+bool Flower::IsGrowing(void) const
+{
+	return is_growing_;
+}
+
+void Flower::SetGrow(void)
+{
+	is_growing_ = true;
 }
 
 void Flower::SetTexture(u32 in_number)

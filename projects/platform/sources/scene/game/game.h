@@ -41,13 +41,10 @@ class Timer;
 class FBXTree;
 class ResultTeamIcon;
 class GameTimer;
-//<<<<<<< HEAD
 class WeaponIcon;
 class ResultWinLogo;
-//=======
 class Effect;
 class TreeCreater;
-//>>>>>>> kab/effect
 
 namespace utility {
 	namespace culling {
@@ -137,21 +134,13 @@ private:
 	std::unique_ptr<utility::culling::FrustumCulling> frustum_culling_;
 
 	std::list<std::weak_ptr<Flower>> flower_list_;
-	//std::shared_ptr<FBXObject> fbx_object_[FBX_OBJECT_MAX];
-
 
 	std::unique_ptr<Timer> timer_;
 
 	std::shared_ptr<FBXObject> field_object_ ;
 
-
-//<<<<<<< HEAD
-//	std::shared_ptr<MeshObject> sprite_3D_[4];
-
-//=======
 	std::shared_ptr<MeshObject> sprite_3D_[ 4 ] ;
 	std::list<std::shared_ptr<FBXTree>> tree_list_;
-//>>>>>>> kab/effect
 
 	//result関連
 	bool is_result_;									//リザルト画面表示をするかしないか

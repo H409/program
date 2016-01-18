@@ -33,8 +33,9 @@ ResultWinLogo::ResultWinLogo(void)
 	sprite_ = std::make_shared<mesh::Sprite>(size_);
 	sprite_->SetAnchorPoint(float2(0.5f, 1.0f));
 	object_ = std::make_shared<MeshObject>(sprite_);
-	object_->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/window_256x384.png"));//勝利UI
-	object_->SetTexture(1, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/window_256x384.png"));//引き分けUI
+	object_->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/window_256x384_redwin.png"));//勝利UI
+	object_->SetTexture(1, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/window_256x384_bluewin.png"));//引き分けUI
+	object_->SetTexture(2, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/window_256x384_wake.png"));//引き分けUI
 	object_->SetPosition(GET_DEFAULT_DISPLAY_SIZE()._x * 0.5f-size_._x/2.0f, GET_DEFAULT_DISPLAY_SIZE()._y * 0.75f, 0.0f);
 }
 
@@ -76,13 +77,19 @@ void ResultWinLogo::Draw(void)
 
 
 	basic_vs->SetValue("_world_matrix", (f32*)&object_->GetMatrix(), sizeof(float4x4));	//シェーダーに値を設定
-	if (win_team_ == TEAM::RED || win_team_ == TEAM::BLUE)
+	if (win_team_ == TEAM::RED)
 	{
 		basic_ps->SetTexture("_texture_sampler", object_->GetTexture(0));
 	}
-	else if (win_team_ == TEAM::MAX)
+
+	else if (win_team_ == TEAM::BLUE)
 	{
 		basic_ps->SetTexture("_texture_sampler", object_->GetTexture(1));
+	}
+
+	else if (win_team_ == TEAM::MAX)
+	{
+		basic_ps->SetTexture("_texture_sampler", object_->GetTexture(2));
 	}
 	object_->Draw();
 

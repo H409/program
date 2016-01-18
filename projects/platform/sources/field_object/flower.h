@@ -77,6 +77,9 @@ public:
 
 	bool IsTreeCreate(void)const;
 
+	bool IsGrowing(void)const;
+
+	void SetGrow(void);
 private:
 	float3 position_;
 	TSprite3D sprite_3d_;
@@ -89,6 +92,7 @@ private:
 	TYPE type_;
 	bool is_growth_;
 	u32 tree_index_;
+	bool is_growing_;
 
 	void SetTexture(u32 in_number);
 };
