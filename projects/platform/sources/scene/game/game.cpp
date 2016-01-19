@@ -1117,6 +1117,8 @@ void Game::Draw()
 	}
 #endif
 
+	graphic_device->SetVertexShader(basic_vs);
+	graphic_device->SetPixelShader(basic_ps);
 
 	//draw game_timer_
 	basic_vs->SetValue("_view_matrix", (f32*)&observer_2d_->GetViewMatrix(), sizeof(float4x4));
