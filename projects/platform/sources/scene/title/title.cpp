@@ -258,11 +258,11 @@ void Title::Draw()
 
 
 	draw_cnt_++;
-	if (draw_cnt_ > 100)
+	if (draw_cnt_ > 20)
 	{
 		use_flag_ = true;
 	}
-	if (draw_cnt_ > 200)
+	if (draw_cnt_ > 40)
 	{
 		draw_cnt_ = 0;
 		use_flag_ = false;
