@@ -43,6 +43,7 @@ int main(int argc,char* argv)
 	auto sum_time = 0;
 	u32 frame_count = 0;
 	auto st = timeGetTime();
+	auto old_time = timeGetTime();
 
 #ifdef _DEBUG
 	char debug_command_string[] = "debug command \n"
@@ -64,43 +65,53 @@ int main(int argc,char* argv)
 
 	while(is_loop)
 	{
-		auto start_time = std::chrono::system_clock::now();
-		frame_count++;
-		sum_time = timeGetTime() - st;
-
-		if(sum_time >= 500)
+		
+		
+		if (timeGetTime()-old_time>1000/30)
 		{
-			auto now = timeGetTime();
-			fps = frame_count * 1000 / sum_time;
-			sum_time = 0;
-			frame_count = 0;
-			st = now;
-		}
+			old_time = timeGetTime();
 
-//		DEVELOP_DISPLAY("FPS : %d\n",fps);
-		
+			auto start_time = std::chrono::system_clock::now();
+			frame_count++;
+			sum_time = timeGetTime() - st;
+
+			if (sum_time >= 500)
+			{
+				auto now = timeGetTime();
+				fps = frame_count * 1000 / sum_time;
+				sum_time = 0;
+				frame_count = 0;
+				st = now;
+			}
+
+			DEVELOP_DISPLAY("FPS : %d\n", fps);
+
 #ifndef _RELEASE
-		static bool r_ctrl = false ;
-		static bool debug_show = true ;
-		if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_RCONTROL ) || GET_INPUT_KEYBOARD()->GetTrigger(DIK_RSHIFT)){ r_ctrl = !r_ctrl ; }
-		if( r_ctrl == true ){ DEVELOP_DISPLAY_R( debug_command_string ); }
-		else{ DEVELOP_DISPLAY_R( "RCtrl or RShift" ); }
-		if( GET_INPUT_KEYBOARD()->GetTrigger( DIK_F11 ) == true ){ debug_show = !debug_show ; }
-		develop_tool::DevelopTool::GetInstance()->GetDevelopDisplay()->SetIsShow( debug_show );
+			static bool r_ctrl = false;
+			static bool debug_show = true;
+			if (GET_INPUT_KEYBOARD()->GetTrigger(DIK_RCONTROL) || GET_INPUT_KEYBOARD()->GetTrigger(DIK_RSHIFT)) { r_ctrl = !r_ctrl; }
+			if (r_ctrl == true) { DEVELOP_DISPLAY_R(debug_command_string); }
+			else { DEVELOP_DISPLAY_R("RCtrl or RShift"); }
+			if (GET_INPUT_KEYBOARD()->GetTrigger(DIK_F11) == true) { debug_show = !debug_show; }
+			develop_tool::DevelopTool::GetInstance()->GetDevelopDisplay()->SetIsShow(debug_show);
 #endif // _DEBUG
-		
-		GET_INPUT_MANAGER()->Update();
 
-		DEVELOP_TOOL_UPDATE();
+			GET_INPUT_MANAGER()->Update();
 
-		scene_manager.Update();
+			DEVELOP_TOOL_UPDATE();
 
-		graphic_device->BeginRendering();
+			scene_manager.Update();
 
-		scene_manager.Draw();
+			graphic_device->BeginRendering();
 
-		DEVELOP_TOOL_DRAW();
-		graphic_device->EndRendering();
+			scene_manager.Draw();
+
+			DEVELOP_TOOL_DRAW();
+			graphic_device->EndRendering();
+		}
+		else {
+			Sleep(1);
+		}
 
 	//	std::this_thread::sleep_until(start_time + std::chrono::milliseconds(16));
 	}

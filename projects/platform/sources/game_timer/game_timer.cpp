@@ -19,7 +19,7 @@
 //*****************************************************************************
 // constant definition
 //*****************************************************************************
-const u32 GameTimer::DEFAULT_TIME_MAX = 60 * 60 * 3;
+const u32 GameTimer::DEFAULT_TIME_MAX = 30 * 60 * 3;	//フレーム数*一分の秒数*分数
 //=============================================================================
 // constructor
 //=============================================================================
@@ -90,7 +90,7 @@ GameTimer::~GameTimer(void)
 void GameTimer::Update(void)
 {
 	timer_count_++;
-	timer_left_ = (timer_max_ - timer_count_)/60;
+	timer_left_ = (timer_max_ - timer_count_)/30;	//(最大フレーム-カウント)/一秒のフレーム数
 	if (timer_left_ < 0)
 	{
 		timer_left_ = 0;

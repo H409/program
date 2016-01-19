@@ -50,11 +50,11 @@ Title::Title()
 	background_->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/title_background.png"));
 	
 	//ロゴ
-	auto sprite_logo = std::make_shared<mesh::Sprite>(float2(600, 300));
+	auto sprite_logo = std::make_shared<mesh::Sprite>(float2(800, 400));
 	logo_ = std::make_shared<MeshObject>(sprite_logo);
 	sprite_logo->SetAnchorPoint(float2(0.0f, 0.0f));
 	sprite_logo->Apply();
-	logo_->SetPosition(350.0f, 150.0f, 0.0f);
+	logo_->SetPosition(window->GetWidth()/2-400.0f, window->GetHeight()/2-250.0f, 0.0f);
 	logo_->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/title_logo.png"));
 
 	//ボタン
@@ -62,7 +62,7 @@ Title::Title()
 	button_ = std::make_shared<MeshObject>(sprite_button);
 	sprite_button->SetAnchorPoint(float2(0.0f, 0.0f));
 	sprite_logo->Apply();
-	button_->SetPosition(450.0f, 500.0f, 0.0f);
+	button_->SetPosition(window->GetWidth() / 2 - 210.0f, window->GetHeight() - 250.0f, 0.0f);
 	button_->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/Start.png"));
 
 	//ボタン背景
@@ -70,7 +70,7 @@ Title::Title()
 	button_interface_ = std::make_shared<MeshObject>(sprite_button_interface_);
 	sprite_button_interface_->SetAnchorPoint(float2(0.0f, 0.0f));
 	sprite_button_interface_->Apply();
-	button_interface_->SetPosition(500.0f, 550.0f, 0.0f);
+	button_interface_->SetPosition(window->GetWidth() / 2 - 150.0f, window->GetHeight() - 200.0f, 0.0f);
 	button_interface_->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/window_256x512.png"));
 
 	//パーティクル
@@ -258,11 +258,11 @@ void Title::Draw()
 
 
 	draw_cnt_++;
-	if (draw_cnt_ > 200)
+	if (draw_cnt_ > 100)
 	{
 		use_flag_ = true;
 	}
-	if (draw_cnt_ > 400)
+	if (draw_cnt_ > 200)
 	{
 		draw_cnt_ = 0;
 		use_flag_ = false;

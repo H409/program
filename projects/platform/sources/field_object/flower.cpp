@@ -37,6 +37,9 @@ Flower::Flower(u32 in_number)
 	sprite_3d_->Apply();
 	height_ = 0.25f;
 	SetNumber(in_number);
+	is_show_ = false;
+	is_live_ = false;
+	is_growing_ = false;
 }
 
 //=============================================================================

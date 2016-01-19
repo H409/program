@@ -110,11 +110,11 @@ void SceneManager::Update()
 	{
 		if(!fade_->IsWork())
 		{
-			fade_->Start(180,Fade::TYPE::FADE_OUT,[&]() {
+			fade_->Start(30,Fade::TYPE::FADE_OUT,[&]() {
 				p_current_scene_->Finalize();
 				p_current_scene_ = p_next_scene_;
 				p_current_scene_->Initialize(&Instance());
-				fade_->Start(180,Fade::TYPE::FADE_IN);
+				fade_->Start(30,Fade::TYPE::FADE_IN);
 			});
 		}
 		scene_change_flag_ = false;
