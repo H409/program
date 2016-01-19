@@ -477,7 +477,7 @@ void Player::ControlJoypad( void )
 		{
 			if( weapon_ == WEAPON::GUN )
 			{
-				if( gun_timer_ > 10 )
+				if( gun_timer_ > 5 )
 				{
 					action_ = true ;
 					gun_timer_ = 0 ;

@@ -110,6 +110,7 @@ public:
 
 private:
 	static const u32 PLAYER_MAX = 4;
+	u32 player_num ;
 	static const u32 WALL_MAX = 4;
 	static const u32 FBX_OBJECT_MAX = 10;
 

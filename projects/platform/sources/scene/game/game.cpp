@@ -62,6 +62,7 @@ Game::Game()
 
 	timer_ = std::make_unique<Timer>();
 
+	player_num = PLAYER_MAX;
 	for (u32 i = 0; i < PLAYER_MAX; ++i)
 	{
 		observers_[i] = std::make_shared<FollowerObserver>(utility::math::ToRadian(60.0f), window->GetWidth(), window->GetHeight());
@@ -214,6 +215,8 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 		float3(10.0f,0.0f, 10.0f),
 	};
 
+	player_num = PLAYER_MAX;
+
 	for (u32 i = 0; i < PLAYER_MAX; ++i)
 	{
 		players_[i]->Init(positions[i]);
@@ -291,10 +294,11 @@ void Game::Update()
 {
 	timer_->Update();
 
-	if (timer_->GetTimeLeft() == 0)
+	if (game_timer_->GetTimeLeft() == 0)
 	{
 		// I—¹
 		is_result_ = true;
+		player_num = 1;
 		if (GetPoint(0) + GetPoint(1) > GetPoint(2) + GetPoint(3))
 		{
 			is_win_team_ = WIN_TEAM::RED;
@@ -320,7 +324,7 @@ void Game::Update()
 			Sound::Instance().PlaySeSound(SOUND_LABEL_SE_YES, 0);
 
 			is_result_ = true;
-
+			player_num = 1;
 			if (GetPoint(0) + GetPoint(1) > GetPoint(2) + GetPoint(3))
 			{
 				is_win_team_ = WIN_TEAM::RED;
@@ -391,21 +395,59 @@ void Game::Update()
 			//if (players_[i]->GetKimPointer()->GetSingleAnimationEnd() == true)
 			{
 				auto index = field_->GetBlockIndex(position);
-				//field_->SetType(index,(u32)Field::TYPE::SOIL);
-				auto tree_index = flowers_[index]->GetTreeIndex();
-				flowers_[index]->Death();
-				auto tree_it = tree_creater_map_.find(tree_index);
+				auto x_index = index % field_->GetBlockWidthCount();
+				auto y_index = index / field_->GetBlockWidthCount();
 
-				if (tree_it != tree_creater_map_.end())
+				auto func = [&](u32 index)
 				{
-					tree_it->second->Death();
+					//field_->SetType(index,(u32)Field::TYPE::SOIL);
+					auto tree_index = flowers_[index]->GetTreeIndex();
+					flowers_[index]->Death();
+					auto tree_it = tree_creater_map_.find(tree_index);
+
+					if (tree_it != tree_creater_map_.end())
+					{
+						tree_it->second->Death();
+					}
+
+					if (field_->GetType(index) == Field::TYPE::TREE_FLOWER)
+
+					{
+						field_->SetType(index, Field::TYPE::TREE);
+					}
+				};
+				func(index);
+				if(x_index < field_->GetBlockWidthCount())
+				{
+					func(y_index * field_->GetBlockWidthCount() + x_index + 1);
+					if(y_index > 0)
+					{
+						func((y_index - 1) * field_->GetBlockWidthCount() + x_index + 1);
+					}
+					if (y_index < field_->GetBlockHeightCount())
+					{
+						func((y_index + 1) * field_->GetBlockWidthCount() + x_index + 1);
+					}
 				}
 
-				if(field_->GetType(index) == Field::TYPE::TREE_FLOWER)
-
+				if (x_index > 0)
 				{
-					field_->SetType(index, Field::TYPE::TREE);
+					func(y_index * field_->GetBlockWidthCount() + x_index + 1);
+					if (y_index > 0)
+					{
+						func((y_index - 1) * field_->GetBlockWidthCount() + x_index - 1);
+					}
+					if (y_index < field_->GetBlockHeightCount())
+					{
+						func((y_index + 1) * field_->GetBlockWidthCount() + x_index - 1);
+					}
 				}
+
+				func(index - 1);
+				func(index + 1);
+				func(index - 1);
+				func(index + 1);
+				func(index - 1);
 			}
 		}
 
@@ -761,7 +803,7 @@ void Game::Draw()
 	int debug_object_draw_num = 0;
 
 	int min = 0;
-	int max = PLAYER_MAX;
+	int max = player_num;
 
 	static bool _d = false;
 	if (GET_INPUT_KEYBOARD()->GetTrigger(DIK_9))
@@ -786,7 +828,7 @@ void Game::Draw()
 
 	for (u32 i = min; i < max; ++i)
 #else
-	for (u32 i = 0; i < PLAYER_MAX; ++i)
+	for (u32 i = 0; i < player_num; ++i)
 #endif // _DEBUG
 	{
 		graphic_device->SetRenderTarget(0, color_textures_[i]);
@@ -819,7 +861,7 @@ void Game::Draw()
 			object->Draw();
 		}
 
-		for (u32 j = 0; j < PLAYER_MAX; ++j)
+		for (u32 j = 0; j < player_num; ++j)
 		{
 			if (field_icons_[j]->IsShow())
 			{
@@ -949,7 +991,7 @@ void Game::Draw()
 		//	//object->Draw();
 		//}
 
-		for (u32 j = 0; j < PLAYER_MAX; ++j)
+		for (u32 j = 0; j < player_num; ++j)
 		{
 			if (i != j)
 			{
@@ -968,7 +1010,7 @@ void Game::Draw()
 			}
 		}
 
-		for (int j = 0; j < PLAYER_MAX; j++)
+		for (int j = 0; j < player_num; j++)
 		{
 			gb_vs->SetValue("_world_matrix", (f32*)&sprite_3D_[j]->GetMatrix(), 16);
 			gb_ps->SetTexture("_texture_sampler", sprite_3D_[j]->GetTexture(0)->GetTexture());
@@ -989,7 +1031,7 @@ void Game::Draw()
 			tree->Draw();
 		}
 
-		for (u32 j = 0; j < PLAYER_MAX; ++j)
+		for (u32 j = 0; j < player_num; ++j)
 		{
 			players_[j]->GetKimPointer()->SetView((D3DXMATRIX*)&observers_[i]->GetViewMatrix());
 			players_[j]->GetKimPointer()->SetProjection((D3DXMATRIX*)&observers_[i]->GetProjectionMatrix());
@@ -1023,7 +1065,7 @@ void Game::Draw()
 	d_ps->SetValue("_light_vector", (f32*)&float3(0.0f, -1.0f, 0.0f), 3);
 	d_ps->SetValue("_light_deffuse", (f32*)&float3(1.0f, 1.0f, 1.0f), 3);
 
-	for (u32 i = 0; i < PLAYER_MAX; ++i)
+	for (u32 i = 0; i < player_num; ++i)
 	{
 		d_vs->SetValue("_world_matrix", (f32*)&sprite_objects_[i]->GetMatrix(), 16);
 		d_ps->SetTexture("_color_sampler", color_textures_[i]->GetTexture());
