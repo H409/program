@@ -318,7 +318,7 @@ void Game::Update()
 
 	for (int i = 0; i < PLAYER_SUM; i++)
 	{
-		if (GET_INPUT_XPAD(i)->GetTrigger(XIPad::KEY::X) || GET_INPUT_KEYBOARD()->GetTrigger( DIK_5 ) )
+		if (/*GET_INPUT_XPAD(i)->GetTrigger(XIPad::KEY::X) ||*/ GET_INPUT_KEYBOARD()->GetTrigger( DIK_5 ) )
 		{
 			//Œø‰Ê‰¹Ä¶
 			Sound::Instance().PlaySeSound(SOUND_LABEL_SE_YES, 0);

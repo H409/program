@@ -32,11 +32,11 @@ GameTimer::GameTimer(void)
 	back_ground_pos_._y = GET_DEFAULT_DISPLAY_SIZE()._y * 0.5f - (back_ground_size_._y/2);
 
 	//タイマー数字表示の設定
-	num_size_._x = back_ground_size_._x / 4.0f;
-	num_size_._y = back_ground_size_._y*0.7f;
+	num_size_._x = back_ground_size_._x / 3.0f;
+	num_size_._y = back_ground_size_._y*0.8f;
 	for (int i = 0; i < TIMER_DIGIT; i++)
 	{
-		num_pos_[i]._x = (back_ground_pos_._x + back_ground_size_._x*0.15f) + num_size_._x*i;
+		num_pos_[i]._x = (back_ground_pos_._x + back_ground_size_._x*0.05f) + num_size_._x*i;
 		num_pos_[i]._y = back_ground_pos_._y + back_ground_size_._y*0.15f;
 	}
 

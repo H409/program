@@ -86,8 +86,8 @@ Score::Score(void)
 	easingcount = 0;
 
 	moved_pos_win = float2(GET_DEFAULT_DISPLAY_SIZE()._x / 2.0f - back_ground_size_._x / 2.0f, GET_DEFAULT_DISPLAY_SIZE()._y * 0.3f);
-	moved_pos_lose_red = float2(0.0f - 500.0f, GET_DEFAULT_DISPLAY_SIZE()._y * 0.3f);
-	moved_pos_lose_blue = float2(GET_DEFAULT_DISPLAY_SIZE()._x + 500.0f, GET_DEFAULT_DISPLAY_SIZE()._y * 0.3f);
+	moved_pos_lose_red = float2(0.0f - 800.0f, GET_DEFAULT_DISPLAY_SIZE()._y * 0.3f);
+	moved_pos_lose_blue = float2(GET_DEFAULT_DISPLAY_SIZE()._x + 800.0f, GET_DEFAULT_DISPLAY_SIZE()._y * 0.3f);
 	Score::moving_easingtime = 60;
 
 	score[0] = 0;
