@@ -250,12 +250,14 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 		player_icons_[i]->SetPosition(players_[i]->GetPosition());
 	}
 
+	field_->Load("resources/map/map.txt");
+
 	for (auto flower : flowers_)
 	{
-		//flower->Death();
+		flower->Death();
 	}
 
-	//flower_list_.clear();
+	flower_list_.clear();
 
 	timer_->Reset();
 	game_timer_->Reset();
@@ -266,7 +268,7 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 	is_result_ = false;
 	result_state = RESULT_STATE::NONE;
 
-	//tree_list_.clear();
+	tree_list_.clear();
 
 	tree_creater_map_.clear();
 
