@@ -253,6 +253,8 @@ bool Game::Initialize(SceneManager* p_scene_manager)
 		player_icons_[i]->SetPosition(players_[i]->GetPosition());
 	}
 
+	field_->Load("resources/map/map.txt");
+
 	for (auto flower : flowers_)
 	{
 		flower->Death();
@@ -292,6 +294,11 @@ void Game::Finalize()
 //=============================================================================
 void Game::Update()
 {
+	/*if (!is_start_flag_)
+	{
+		return;
+	}*/
+
 	timer_->Update();
 
 	if (game_timer_->GetTimeLeft() == 0)
@@ -392,7 +399,7 @@ void Game::Update()
 		{
 			auto position = field_icons_[i]->GetPosition();
 			//if(field_->GetType(position) == (u32)Field::TYPE::SOIL)
-			//if (players_[i]->GetKimPointer()->GetSingleAnimationEnd() == true)
+			if (players_[i]->GetKimPointer()->GetSingleAnimationEnd() == true)
 			{
 				auto index = field_->GetBlockIndex(position);
 				auto x_index = index % field_->GetBlockWidthCount();
@@ -402,18 +409,21 @@ void Game::Update()
 				{
 					//field_->SetType(index,(u32)Field::TYPE::SOIL);
 					auto tree_index = flowers_[index]->GetTreeIndex();
-					flowers_[index]->Death();
-					auto tree_it = tree_creater_map_.find(tree_index);
-
-					if (tree_it != tree_creater_map_.end())
+					//if (flowers_[index]->GetNumber() / 2 == i / 2)
 					{
-						tree_it->second->Death();
-					}
+						flowers_[index]->Death();
+						auto tree_it = tree_creater_map_.find(tree_index);
 
-					if (field_->GetType(index) == Field::TYPE::TREE_FLOWER)
+						if (tree_it != tree_creater_map_.end())
+						{
+							tree_it->second->Death();
+						}
 
-					{
-						field_->SetType(index, Field::TYPE::TREE);
+						if (field_->GetType(index) == Field::TYPE::TREE_FLOWER)
+
+						{
+							field_->SetType(index, Field::TYPE::TREE);
+						}
 					}
 				};
 				func(index);
@@ -491,9 +501,9 @@ void Game::Update()
 
 				auto is_create = true;
 
-				auto smoke = std::make_shared<Smoke>();
-				smoke->Start(60, start_position);
-				effect_list_.push_back(smoke);
+				//auto smoke = std::make_shared<Smoke>();
+				//smoke->Start(60, start_position);
+				//effect_list_.push_back(smoke);
 
 				for (auto bullet : bullets_)
 				{
@@ -669,22 +679,22 @@ void Game::Update()
 
 					if(index == p_index)
 					{
-						
+						players_[i]->Restore();
 					}
 
 					if(index + 1 == p_index)
 					{
-
+						players_[i]->Restore();
 					}
 
 					if(index + field_->GetBlockWidthCount() == p_index)
 					{
-
+						players_[i]->Restore();
 					}
 
 					if(index + field_->GetBlockWidthCount() + 1 == p_index)
 					{
-
+						players_[i]->Restore();
 					}
 				}
 
@@ -1159,6 +1169,7 @@ void Game::Draw()
 
 	graphic_device->SetVertexShader(basic_vs);
 	graphic_device->SetPixelShader(basic_ps);
+
 	//draw game_timer_
 	basic_vs->SetValue("_view_matrix", (f32*)&observer_2d_->GetViewMatrix(), sizeof(float4x4));
 	basic_vs->SetValue("_projection_matrix", (f32*)&observer_2d_->GetProjectionMatrix(), sizeof(float4x4));

@@ -9,7 +9,7 @@
 //*****************************************************************************
 // include
 //*****************************************************************************
-#include "game_timer.h"
+#include "game_start_logo.h"
 #include "mesh/sprite.h"
 #include "system/win_system.h"
 #include "dx9_device.h"
@@ -19,25 +19,25 @@
 //*****************************************************************************
 // constant definition
 //*****************************************************************************
-const u32 GameTimer::DEFAULT_TIME_MAX = (u32)(30 * 60 * 2.0f);	//フレーム数*一分の秒数*分数
-//=============================================================================
-// constructor
-//=============================================================================
-GameTimer::GameTimer(void)
+const u32 GameStartLogo::DEFAULT_TIME_MAX = (u32)(30 * 3);	//フレーム数*一分の秒数*分数
+																//=============================================================================
+																// constructor
+																//=============================================================================
+GameStartLogo::GameStartLogo(void)
 {
 	//タイマー背景の設定
 	back_ground_size_._x = GET_DEFAULT_DISPLAY_SIZE()._x / 6.0f;
 	back_ground_size_._y = GET_DEFAULT_DISPLAY_SIZE()._y / 6.0f;
-	back_ground_pos_._x = GET_DEFAULT_DISPLAY_SIZE()._x * 0.5f - (back_ground_size_._x/2);
-	back_ground_pos_._y = GET_DEFAULT_DISPLAY_SIZE()._y * 0.5f - (back_ground_size_._y/2);
+	back_ground_pos_._x = GET_DEFAULT_DISPLAY_SIZE()._x * 0.5f - (back_ground_size_._x / 2);
+	back_ground_pos_._y = GET_DEFAULT_DISPLAY_SIZE()._y * 0.5f - (back_ground_size_._y / 2);
 
 	//タイマー数字表示の設定
 	num_size_._x = back_ground_size_._x / 3.0f;
 	num_size_._y = back_ground_size_._y*0.8f;
 	for (int i = 0; i < TIMER_DIGIT; i++)
 	{
-		num_pos_[i]._x = (back_ground_pos_._x + back_ground_size_._x*0.05f) + num_size_._x*i;
-		num_pos_[i]._y = back_ground_pos_._y + back_ground_size_._y*0.15f;
+		num_pos_._x = (back_ground_pos_._x + back_ground_size_._x*0.05f) + num_size_._x*i;
+		num_pos_._y = back_ground_pos_._y + back_ground_size_._y*0.15f;
 	}
 
 
@@ -51,77 +51,60 @@ GameTimer::GameTimer(void)
 
 
 	//タイマー数字表示の生成
-	for (int i = 0; i < TIMER_DIGIT; i++)
-	{
-		num_sprite_[i] = std::make_shared<mesh::Sprite>(num_size_);
-		num_sprite_[i]->SetAnchorPoint(float2(0.5f, 1.0f));
-		num_object_[i] = std::make_shared<MeshObject>(num_sprite_[i]);
-		num_object_[i]->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/zero.png"));
-		num_object_[i]->SetTexture(1, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/one.png"));
-		num_object_[i]->SetTexture(2, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/two.png"));
-		num_object_[i]->SetTexture(3, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/three.png"));
-		num_object_[i]->SetTexture(4, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/four.png"));
-		num_object_[i]->SetTexture(5, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/five.png"));
-		num_object_[i]->SetTexture(6, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/six.png"));
-		num_object_[i]->SetTexture(7, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/seven.png"));
-		num_object_[i]->SetTexture(8, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/eight.png"));
-		num_object_[i]->SetTexture(9, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/nine.png"));
-		num_object_[i]->SetPosition(num_pos_[i]);
-	}
+	num_sprite_ = std::make_shared<mesh::Sprite>(num_size_);
+	num_sprite_->SetAnchorPoint(float2(0.5f, 1.0f));
+	num_object_ = std::make_shared<MeshObject>(num_sprite_);
+	num_object_->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/kaimaku.png"));
+	num_object_->SetTexture(1, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/one.png"));
+	num_object_->SetTexture(2, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/two.png"));
+	num_object_->SetTexture(3, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/three.png"));
+	num_object_->SetPosition(num_pos_);
 
 	timer_max_ = DEFAULT_TIME_MAX;
 	timer_count_ = 0;
-	digit_num_[0] = 1;
-	digit_num_[1] = 8;
-	digit_num_[2] = 0;
+	digit_num_ = 3;
 
 }
 
 //=============================================================================
 // destructor
 //=============================================================================
-GameTimer::~GameTimer(void)
+GameStartLogo::~GameStartLogo(void)
 {
 
 }
 //=============================================================================
 // update
 //=============================================================================
-void GameTimer::Update(void)
+void GameStartLogo::Update(void)
 {
 	timer_count_++;
-	timer_left_ = (timer_max_ - timer_count_)/30;	//(最大フレーム-カウント)/一秒のフレーム数
+	timer_left_ = (timer_max_ - timer_count_) / 30;	//(最大フレーム-カウント)/一秒のフレーム数
 	if (timer_left_ < 0)
 	{
 		timer_left_ = 0;
 	}
 	back_ground_sprite_->SetAnchorPoint(float2(0.5f, 0.5f));
 
-	for (int i = 0; i < TIMER_DIGIT; i++)
-	{
-		num_sprite_[i]->SetAnchorPoint(float2(0.5f, 0.5f));
-	}
+
+	num_sprite_->SetAnchorPoint(float2(0.5f, 0.5f));
 
 	//タイマー数字設定
 	unsigned int digit = 1;
 
-	for (int i = 0; i < (TIMER_DIGIT - 1); i++)
-	{
-		digit *= 10;
-	}
 
 	for (int i = 0; i < TIMER_DIGIT; i++)
 	{
 		int number = timer_left_ / digit % 10;
-		digit_num_[i] = number;
+		digit_num_ = number;
 		digit /= 10;
 	}
-	
+
 }
 //=============================================================================
 // draw
 //=============================================================================
-void GameTimer::Draw(void)
+void GameStartLogo::Draw(void)
 {
 	auto graphic_device = GET_GRAPHIC_DEVICE();
 	auto basic_vs = graphic_device->LoadVertexShader("resources/shader/basic.vsc");
@@ -133,22 +116,19 @@ void GameTimer::Draw(void)
 	back_ground_mesh_object_->Draw();
 
 	//スコア数字の描画
-	for (int i = 0; i < TIMER_DIGIT; i++)
-	{
-		basic_vs->SetValue("_world_matrix", (f32*)&num_object_[i]->GetMatrix(), sizeof(float4x4));
-		basic_ps->SetTexture("_texture_sampler", num_object_[i]->GetTexture(digit_num_[i]));
-		num_object_[i]->Draw();
-	}
+	basic_vs->SetValue("_world_matrix", (f32*)&num_object_->GetMatrix(), sizeof(float4x4));
+	basic_ps->SetTexture("_texture_sampler", num_object_->GetTexture(digit_num_));
+	num_object_->Draw();
 }
 
-void GameTimer::Reset(void)
+void GameStartLogo::Reset(void)
 {
 	timer_count_ = 0;
 	timer_max_ = DEFAULT_TIME_MAX;
 	timer_count_ = 0;
 }
 
-u32 GameTimer::GetTimeLeft(void) const
+u32 GameStartLogo::GetTimeLeft(void) const
 {
 	return timer_left_;
 }
