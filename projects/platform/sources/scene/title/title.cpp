@@ -62,7 +62,7 @@ Title::Title()
 	button_ = std::make_shared<MeshObject>(sprite_button);
 	sprite_button->SetAnchorPoint(float2(0.0f, 0.0f));
 	sprite_logo->Apply();
-	button_->SetPosition(window->GetWidth() / 2 - 210.0f, window->GetHeight() - 250.0f, 0.0f);
+	button_->SetPosition(window->GetWidth() / 2 - 200.0f, window->GetHeight() - 250.0f, 0.0f);
 	button_->SetTexture(0, GET_GRAPHIC_DEVICE()->LoadTexture("resources/texture/Start.png"));
 
 	//ボタン背景
@@ -89,8 +89,7 @@ Title::Title()
 	//2D用カメラ設定
 	observer_2d_ = std::make_shared<Observer2D>(window->GetWidth(), window->GetHeight());
 
-	//BGM
-	Sound::Instance().PlaySound(SOUND_LABEL_BGM000);
+	
 
 	draw_cnt_ = 0;
 	use_flag_ = false;
@@ -110,7 +109,8 @@ Title::~Title()
 //=============================================================================
 bool Title::Initialize(SceneManager* p_scene_manager)
 {
-
+	//BGM
+	Sound::Instance().PlaySound(SOUND_LABEL_BGM000);
 
 	return 0;
 }
@@ -165,7 +165,7 @@ void Title::Update()
 			auto position = particul_[i].particul_->GetPosition();
 			particul_[i].particul_angle_ -= D3DX_PI*0.01f;
 			position._x -= sinf(particul_[i].particul_angle_);
-			position._y += 0.5f;
+			position._y += 1.5f;
 
 			auto rotate = particul_[i].particul_->GetRotation();
 			rotate._z = 1.2f;
